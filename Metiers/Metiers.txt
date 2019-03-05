@@ -1,5 +1,5 @@
 A GitHub repository for managing and documenting the metier assignment to transversal data.
-Made by the Interessional Sub-Group on Metier Issues 2019
+Made by the Intersessional Sub-Group on Metier Issues 2019
 
 ToR 1: To facilitate harmonization of métier assignment, set up and manage a public repository 
 for storing reference lists, documentation of procedures, scripts related to assigning métiers 
