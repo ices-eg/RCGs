@@ -63,14 +63,14 @@ pointsMap_func = function(df,
    mdf %>% summarise(!!var := sum(!!var)) -> value
    missing %>% select(!!eval_tidy(quo(UQ(groupBy)))[[1]]) %>% distinct() %>% unlist() -> missing_names
    
-   missing_caption = paste('\n', missing_names %>% nrow, ' top ',groupBy_name,'s (',
+   missing_caption = paste('\n', length(missing_names), ' top ',groupBy_name,'s (',
            paste0(missing_names, collapse = ' , ') , 
            ') with missing coordinates were not presented on the map. This accounted for ', 
      round(missing_value/value*100), '% of ', var_name, ' of top ', groupBy_name ,'s', sep = '')
    message(missing_caption)
    
    if(length(missing_names)>10){
-     missing_caption = paste('\n', missing_names %>% nrow, ' top ',groupBy_name,'s with missing coordinates were not presented on the map. This accounted for ', 
+     missing_caption = paste('\n', length(missing_names), ' top ',groupBy_name,'s with missing coordinates were not presented on the map. This accounted for ', 
                              round(missing_value/value*100), '% of ', var_name, ' of top ', groupBy_name ,'s', sep = '')
    }
 
