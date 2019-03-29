@@ -1,3 +1,5 @@
 
 *.tiff
 RegionalOverviews/.Rhistory
+.Rproj.user
+RegionalOverviews/RegionalOverviews.Rproj
