@@ -9,8 +9,7 @@ pointsMap_func = function(df,
                           points_coord,
                           plot_labels = TRUE,
                           time,
-                          outputPath
-                          ){
+                          outputPath) {
   # df - a data frame
   # var -  a column to be summmarised e.g. var = OfficialLandingCatchWeight
   # groupBy - names of columns, by which the grouping should be carried out. IMPORTANT to write it as groupBy = quos(...) e.g. groupBy = quos(Harbours, HarboursDesc)
@@ -45,145 +44,214 @@ pointsMap_func = function(df,
   time = enquo(time)
   
   # creating the groupped df
-  grouping_result =  eval_tidy(quo(UQ(group_func)(df = df, var = !!var,  groupBy = !!groupBy, func = !!func, type_of_threshold = type_of_threshold, value_of_threshold = value_of_threshold)))
-  tdf =grouping_result[[1]]
-  if(is.null(tdf)){
+  grouping_result =  eval_tidy(quo(
+    UQ(group_func)(
+      df = df,
+      var = !!var,
+      groupBy = !!groupBy,
+      func = !!func,
+      type_of_threshold = type_of_threshold,
+      value_of_threshold = value_of_threshold
+    )
+  ))
+  tdf = grouping_result[[1]]
+  if (is.null(tdf)) {
     stop('The chosen data set is empty')
   }
   missing_entries = grouping_result[[2]]
-
-    # add coordinates info
+  
+  # add coordinates info
   tdf %>%
-    left_join(points_coord)->mdf
+    left_join(points_coord) -> mdf
   
   # add info about records without coordinates
-  if(sum(is.na(mdf$lat))!=0 | sum(is.na(mdf$lon))!=0){
+  if (sum(is.na(mdf$lat)) != 0 | sum(is.na(mdf$lon)) != 0) {
+    mdf %>% filter(is.na(lat) | is.na(lon)) -> missing
+    missing %>% summarise(!!var := sum(!!var)) -> missing_value
+    mdf %>% summarise(!!var := sum(!!var)) -> value
+    missing %>% select(!!eval_tidy(quo(UQ(groupBy)))[[1]]) %>% distinct() %>% unlist() -> missing_names
     
-   mdf %>% filter(is.na(lat)|is.na(lon)) -> missing
-   missing %>% summarise(!!var := sum(!!var)) -> missing_value
-   mdf %>% summarise(!!var := sum(!!var)) -> value
-   missing %>% select(!!eval_tidy(quo(UQ(groupBy)))[[1]]) %>% distinct() %>% unlist() -> missing_names
-   
-   missing_caption = paste('\n', length(missing_names), ' top ',groupBy_name,'s (',
-           paste0(missing_names, collapse = ' , ') , 
-           ') with missing coordinates were not presented on the map. This accounted for ', 
-     round(missing_value/value*100), '% of ', var_name, ' of top ', groupBy_name ,'s', sep = '')
-   message(missing_caption)
-   
-   if(length(missing_names)>10){
-     missing_caption = paste('\n', length(missing_names), ' top ',groupBy_name,'s with missing coordinates were not presented on the map. This accounted for ', 
-                             round(missing_value/value*100), '% of ', var_name, ' of top ', groupBy_name ,'s', sep = '')
-   }
-
-  }else{
-   missing_caption = '' 
+    missing_caption = paste(
+      '\n',
+      length(missing_names),
+      ' top ',
+      groupBy_name,
+      's (',
+      paste0(missing_names, collapse = ' , ') ,
+      ') with missing coordinates were not presented on the map. This accounted for ',
+      round(missing_value / value * 100),
+      '% of ',
+      var_name,
+      ' of top ',
+      groupBy_name ,
+      's',
+      sep = ''
+    )
+    message(missing_caption)
+    
+    if (length(missing_names) > 10) {
+      missing_caption = paste(
+        '\n',
+        length(missing_names),
+        ' top ',
+        groupBy_name,
+        's with missing coordinates were not presented on the map. This accounted for ',
+        round(missing_value / value * 100),
+        '% of ',
+        var_name,
+        ' of top ',
+        groupBy_name ,
+        's',
+        sep = ''
+      )
+    }
+    
+  } else{
+    missing_caption = ''
   }
-
+  
   # set the limits
   xlim = range(mdf[!is.na(mdf$lat) &
-                    !is.na(mdf$lon), ]$lon)
-  ylim = range(mdf[!is.na(mdf$lat) & !is.na(mdf$lon), ]$lat)
+                     !is.na(mdf$lon),]$lon)
+  ylim = range(mdf[!is.na(mdf$lat) & !is.na(mdf$lon),]$lat)
   
   # load world map
   m <-
     map_data("worldHires",
              xlim =  xlim + c(-1, 1),
-             ylim = ylim + c(-0.5, +0.5))
+             ylim = ylim + c(-0.5,+0.5))
   
   # Take only rows with coordinates
-  mdf %>% filter(!is.na(lon) & !is.na(lat))->mdf2
+  mdf %>% filter(!is.na(lon) & !is.na(lat)) -> mdf2
   
   time = mdf2 %>% distinct(!!time)
   
-  # Set the plot parameters 
+  # Set the plot parameters
   
   # title
-  if(func_name %in% c('sum')){
-    title = paste(func_name, ' of ', var_name, ' per ',  groupBy_name, ', ',time, sep = '')  
-  }else{
-    title = paste(func_name, ' ', var_name, ' per ',  groupBy_name, ', ',time, sep = '')  
+  if (func_name %in% c('sum')) {
+    title = paste(func_name,
+                  ' of ',
+                  var_name,
+                  ' per ',
+                  groupBy_name,
+                  ', ',
+                  time,
+                  sep = '')
+  } else{
+    title = paste(func_name, ' ', var_name, ' per ',  groupBy_name, ', ', time, sep = '')
   }
   
   
   # subtitle - as the information about used thresholds
-  if((type_of_threshold=='percent' & value_of_threshold==100) | type_of_threshold=='none'){
+  if ((type_of_threshold == 'percent' &
+       value_of_threshold == 100) | type_of_threshold == 'none') {
     subtitle = 'All data'
-  }else if(type_of_threshold=='percent'){
-    subtitle = paste ('Including ',groupBy_name, 's accounting for ', value_of_threshold, '% of ', var_name, sep = "")
-  }else{
-    subtitle = paste('Including top ', value_of_threshold,' ', groupBy_name, 's', sep = "")
+  } else if (type_of_threshold == 'percent') {
+    subtitle = paste (
+      'Including ',
+      groupBy_name,
+      's accounting for ',
+      value_of_threshold,
+      '% of ',
+      var_name,
+      sep = ""
+    )
+  } else{
+    subtitle = paste('Including top ',
+                     value_of_threshold,
+                     ' ',
+                     groupBy_name,
+                     's',
+                     sep = "")
   }
   
   # caption - as the inromation about any missingnes
-    caption = paste(round(missing_entries$pr,2), '% of ', var_name, ' were reported for missing ',groupBy_name,
-                    missing_caption, sep = '')
+  caption = paste(
+    ifelse(nrow(missing_entries)>0, round(missing_entries$pr, 2),0),
+    '% of ',
+    var_name,
+    ' were reported for missing ',
+    groupBy_name,
+    missing_caption,
+    sep = ''
+  )
   
-
+  
   
   
   # make a map
-  mdf2 %>% 
-    arrange(!!var) %>% 
-    mutate(name =factor(!!eval_tidy(quo(UQ(groupBy)[[1]])), unique(!!eval_tidy(quo(UQ(groupBy)[[1]]))))
-           ) %>% 
-  ggplot() +
-    geom_polygon(data = m,
-                 aes(long, lat, group = group),
-                 fill = 'white', color = 'grey') +
-    coord_quickmap(xlim = xlim, ylim = ylim)+
-    geom_point(aes(lon, lat, fill := !!var, size := !!var),
-               stroke = FALSE,
-               colour = 'black',
-               #size = 4,
-               shape = 21,
-               alpha = 0.8
-               )+
-    scale_size(range = c(0,10))+
-    guides(colour = guide_legend())+
-    labs(title = title,
-         x = 'Longitude',
-         y = 'Latitude',
-         subtitle = subtitle,
-         caption = caption)+
+  mdf2 %>%
+    arrange(!!var) %>%
+    mutate(name = factor(!!eval_tidy(quo(UQ(
+      groupBy
+    )[[1]])), unique(!!eval_tidy(quo(
+      UQ(groupBy)[[1]]
+    ))))) %>%
+    ggplot() +
+    geom_polygon(
+      data = m,
+      aes(long, lat, group = group),
+      fill = 'white',
+      color = 'grey'
+    ) +
+    coord_quickmap(xlim = xlim, ylim = ylim) +
+    geom_point(
+      aes(lon, lat, fill := !!var, size := !!var),
+      stroke = FALSE,
+      colour = 'black',
+      #size = 4,
+      shape = 21,
+      alpha = 0.8
+    ) +
+    scale_size(range = c(0, 10), guide = FALSE) +
+    viridis::scale_fill_viridis(
+      option = "magma",
+      # trans = "log",
+      begin = 1,
+      end = 0,
+      name = var_name
+    )+
+    #guides(colour = guide_legend())+
+    labs(
+      title = title,
+      x = 'Longitude',
+      y = 'Latitude',
+      subtitle = subtitle,
+      caption = caption
+    ) +
     theme_classic() +
     theme(
       text = element_text(color = "#22211d"),
       plot.background = element_rect(fill = "#ffffff", color = NA),
       panel.background = element_rect(fill = "#ffffff", color = NA),
       legend.background = element_rect(fill = "#ffffff", color = NA),
-      panel.border = element_rect(colour = "black", fill=NA, size=1.5)
-    )->plot
+      panel.border = element_rect(
+        colour = "black",
+        fill = NA,
+        size = 1.5
+      )
+    ) -> plot
+  
+  if (plot_labels == TRUE) {
+    # display labels on the plot
+    plot +
+      ggrepel::geom_text_repel(
+        data = mdf2,
+        aes(lon, lat, label := !!eval_tidy(quo(UQ(
+          groupBy
+        )[[1]]))),
+        box.padding = unit(0.2, "lines"),
+        point.padding = unit(0.2, "lines"),
+        size = 2
+      ) -> plot
+  }
+  
+  write.table(mdf, file = paste(outputPath, "/pointsMap_", func_name,'_', var_name, '_', groupBy_name,'_', time, '_',type_of_threshold, '_',value_of_threshold, ".txt", sep = ""), sep = '\t', dec = '.')
+  ggsave(paste(outputPath, "/pointsMap_", func_name,'_', var_name, '_', groupBy_name,'_', time, '_',type_of_threshold, '_',value_of_threshold, ".tiff", sep = ""), units="in", width=15, height=10, dpi=300, compression = 'lzw')
 
-  if(plot_labels == TRUE){ # display labels on the plot
-  plot +
-    ggrepel::geom_text_repel(
-      data = mdf2,
-      aes(lon, lat, label := !!eval_tidy(quo(UQ(groupBy)[[1]]))),
-      box.padding = unit(0.2, "lines"),
-      point.padding = unit(0.2, "lines"),
-      size = 2
-    )->plot
-  }
-  
-  if(func_name != 'n_distinct'){
-    plot = plot+
-      viridis::scale_fill_viridis(option = "magma",
-                                 # trans = "log", 
-                                  begin = 1, end =0,
-                                  name = "")
-  }else{
-    plot = plot+
-      viridis::scale_fill_viridis(option = "magma",
-                                  begin = 1, end =0,
-                                  name = "")
-  }
- 
-  
- write.table(mdf, file = paste(outputPath, "/pointsMap_", func_name,'_', var_name, '_', groupBy_name,'_', time, '_',type_of_threshold, '_',value_of_threshold, ".txt", sep = ""), sep = '\t', dec = '.')
- ggsave(paste(outputPath, "/pointsMap_", func_name,'_', var_name, '_', groupBy_name,'_', time, '_',type_of_threshold, '_',value_of_threshold, ".tiff", sep = ""), units="in", width=15, height=10, dpi=300, compression = 'lzw')
-  
-  return(list(mdf, plot))
-  }
+    return(list(mdf, plot))
+}
 
 # example
 # pointsMap_func(CL_2014_NSEA, var = OfficialLandingCatchWeight,  groupBy=quos(Harbour, Year), func = sum, type_of_threshold = 'percent',value_of_threshold = 95,
