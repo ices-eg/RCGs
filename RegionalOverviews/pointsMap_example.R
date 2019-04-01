@@ -7,7 +7,7 @@
 
 # eg
 # data loading
-CL = read_csv('D:/WG/RCG/IntersessionalWork/Subgroup on Regional Overviews/TestData/CL Landing 2009-2017.csv')
+CL = read_csv2('D:/WG/RCG/IntersessionalWork/Subgroup on Regional Overviews/TestData/CL Landing 2009-2018.csv')
 CL_2014_NA = CL %>% filter(is.na(Region), Year==2014)
 
 # where to get the harbours with coordinates from?
