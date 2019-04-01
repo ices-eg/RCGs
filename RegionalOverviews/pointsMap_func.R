@@ -10,7 +10,8 @@ pointsMap_func = function(df,
                           plot_labels = TRUE,
                           time,
                           saveResults = FALSE,
-                          outputPath) {
+                          outputPath,
+                          Catch_group = NA) {
   # df - a data frame
   # var -  a column to be summmarised e.g. var = OfficialLandingCatchWeight
   # groupBy - names of columns, by which the grouping should be carried out. IMPORTANT to write it as groupBy = quos(...) e.g. groupBy = quos(Harbours, HarboursDesc)
@@ -23,6 +24,7 @@ pointsMap_func = function(df,
   # time = name of column describing time, must be also included into the groupBy parameter
   #saveResults - TRUE/FALSE - do you want to save the results?
   # outputPath - path for saving plots and tables
+  # Catch_group - if NA then all species will be included, other options: demersal/flatfish/smallpelagic/largepelagic
   
   # Marta Suska
   # NMFRI
@@ -53,7 +55,8 @@ pointsMap_func = function(df,
       groupBy = !!groupBy,
       func = !!func,
       type_of_threshold = type_of_threshold,
-      value_of_threshold = value_of_threshold
+      value_of_threshold = value_of_threshold,
+      Catch_group = Catch_group
     )
   ))
   tdf = grouping_result[[1]]
@@ -143,6 +146,9 @@ pointsMap_func = function(df,
   } else{
     title = paste(func_name, ' ', var_name, ' per ',  groupBy_name, ', ', time, sep = '')
   }
+  
+  # If Catch_group is known
+  if(!is.na(Catch_group)){ title = paste(title, ' (',Catch_group, ')', sep ='')}
   
   
   # subtitle - as the information about used thresholds
@@ -271,3 +277,4 @@ pointsMap_func = function(df,
 # where to get Harbours coordinates from?
 # ... as the parameter to ggplot
 # dopisac sciezke do shapefile
+# if saveResults = TRUE -> outputPath musst be known - add check

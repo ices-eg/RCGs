@@ -5,13 +5,15 @@ group_func = function(df,
                       groupBy,
                       func,
                       type_of_threshold = 'none',
-                      value_of_threshold = NA) {
+                      value_of_threshold = NA,
+                      Catch_group = NA) {
   # df - a data frame
   # var -  a column to be summmarised e.g. var = OfficialLandingCatchWeight
   # groupBy - names of columns, by which the grouping should be carried out. IMPORTANT to write it as groupBy = quos(...) e.g. groupBy = quos(Harbours, HarboursDesc)
   # func - function summarising the data: sum,  n_distinct,  e.g. func = sum
   # type_of_threshold - default set to 'none', other options: 'top_n', 'percent'
   # value_of_threshold - set it, if you defined any type_of_threshold
+  # Catch_group - if NA then all species will be included, other options: demersal/flatfish/smallpelagic/largepelagic
   
   # Marta Suska
   # NMFRI
@@ -96,6 +98,15 @@ group_func = function(df,
   }
   ################################################################################
   # SUMMARISE
+  
+  # If catch group is defined
+  if(!is.na(Catch_group)){
+    if(Catch_group %in% c('demersal', 'smallpelagic', 'flatfish', 'largepelagic')){
+      df = df %>% filter(Catch_group==Catch_group)
+    }else{
+      stop('Not defined catch group')
+    }
+  }
   
   df  %>% group_by(!!!groupBy) %>%  summarise(!!var := func(!!var, na.rm = TRUE),
                                               analysis_type = func_name) -> gdf
