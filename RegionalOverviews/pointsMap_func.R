@@ -256,8 +256,12 @@ pointsMap_func = function(df,
   }
   
   if(saveResults==TRUE){
-  write.table(mdf, file = paste(outputPath, "/pointsMap_", func_name,'_', var_name, '_', groupBy_name,'_', time, '_',type_of_threshold, '_',value_of_threshold, ".txt", sep = ""), sep = '\t', dec = '.')
-  ggsave(paste(outputPath, "/pointsMap_", func_name,'_', var_name, '_', groupBy_name,'_', time, '_',type_of_threshold, '_',value_of_threshold, ".tiff", sep = ""), units="in", width=15, height=10, dpi=300, compression = 'lzw')
+  fileName =   paste(outputPath, "/pointsMap_", func_name,'_', var_name, '_', groupBy_name,'_', time, '_',type_of_threshold, '_',value_of_threshold, sep = '')
+  if(!is.na(Catch_group)){
+    fileName = paste(fileName, Catch_group, sep = "")
+  }
+  write.table(mdf, file = paste(fileName, ".txt", sep = ""), sep = '\t', dec = '.')
+  ggsave(paste(fileName, ".tiff", sep = ""), units="in", width=15, height=10, dpi=300, compression = 'lzw')
   }
   
   return(list(mdf, plot))
@@ -278,3 +282,4 @@ pointsMap_func = function(df,
 # ... as the parameter to ggplot
 # dopisac sciezke do shapefile
 # if saveResults = TRUE -> outputPath musst be known - add check
+# xlim and ylim= adjusted to the data, or whole rcg region??

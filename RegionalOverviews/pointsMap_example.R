@@ -36,6 +36,6 @@ Harbours_Codes %>%
 
 # on sharepoint
 pointsMap_func(CL_2014_NA, var = OfficialLandingCatchWeight,  groupBy=quos(Harbour, Year), func = sum, type_of_threshold = 'percent',value_of_threshold = 90,
-               points_coord = Harbours, plot_labels = FALSE, time = Year, saveResults = FALSE, outputPath = 'D:/WG/RCG/IntersessionalWork/Github/RCGs/RegionalOverviews',
-               Catch_group = NA)
+               points_coord = Harbours, plot_labels = FALSE, time = Year, saveResults = TRUE, outputPath = 'D:/WG/RCG/IntersessionalWork/Github/RCGs/RegionalOverviews',
+               Catch_group = 'Merluccius merluccius')
 
