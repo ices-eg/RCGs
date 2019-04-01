@@ -8,7 +8,7 @@
 # eg
 # data loading
 CL = read_csv('D:/WG/RCG/IntersessionalWork/Subgroup on Regional Overviews/TestData/CL Landing 2009-2017.csv')
-CL_2014_NSEA = CL %>% filter(Region == 'NSEA', Year==2014)
+CL_2014_NA = CL %>% filter(is.na(Region), Year==2014)
 
 # where to get the harbours with coordinates from?
 # RCG datacall attachement  - no coordinates, encoding errors
@@ -23,13 +23,13 @@ Harbours_Codes %>%
 ##################################################################################################################################################
 ##################################################################################################################################################
 
-#group_func(CL_2014_NSEA, var = OfficialLandingValue,  groupBy=quos(Harbour, HarbourDesc), func = sum, threshold_type = 'percent',threshold = 90)
+#group_func(CL_2014_NA, var = OfficialLandingValue,  groupBy=quos(Harbour, HarbourDesc), func = sum, type_of_threshold = 'percent',value_of_threshold = 90)
 
-pointsMap_func(CL_2014_NSEA, var = OfficialLandingCatchWeight,  groupBy=quos(Harbour, Year), func = sum, threshold_type = 'percent',threshold = 95,
-               points_coord = Harbours, plot_labels = FALSE, time = Year)
+pointsMap_func(CL_2014_NA, var = OfficialLandingCatchWeight,  groupBy=quos(Harbour, Year), func = sum, type_of_threshold = 'percent',value_of_threshold = 90,
+               points_coord = Harbours, plot_labels = TRUE, time = Year)
 
-ggsave("pointsMap_example.tiff", units="in", width=15, height=10, dpi=300, compression = 'lzw')
+ggsave("pointsMap_example3.tiff", units="in", width=15, height=10, dpi=300, compression = 'lzw')
 
-pointsMap_func(CL_2014_NSEA, var = OfficialLandingValue,  groupBy=quos(Harbour, HarbourDesc, Year), func = sum, threshold_type = 'top_n',threshold = 10,
+pointsMap_func(CL_2014_NA, var = OfficialLandingValue,  groupBy=quos(Harbour, HarbourDesc, Year), func = sum, type_of_threshold = 'top_n',value_of_threshold = 10,
                points_coord = Harbours, plot_labels = FALSE, time = Year)
 

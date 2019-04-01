@@ -4,8 +4,8 @@ pointsMap_func = function(df,
                           var,
                           groupBy,
                           func,
-                          threshold_type = 'none',
-                          threshold = NA,
+                          type_of_threshold = 'none',
+                          value_of_threshold = NA,
                           points_coord,
                           plot_labels = TRUE,
                           time 
@@ -15,8 +15,8 @@ pointsMap_func = function(df,
   # groupBy - names of columns, by which the grouping should be carried out. IMPORTANT to write it as groupBy = quos(...) e.g. groupBy = quos(Harbours, HarboursDesc)
   #         - IMPORTANT - on the first place put sth you will be plotting by, eg Harbour
   # func - function summarising the data: sum, n_distinct, e.g. func = sum
-  # threshold_type - default set to 'none', other options: 'top_n', 'percent'
-  # threshold - set it, if you defined any threshold_type
+  # type_of_threshold - default set to 'none', other options: 'top_n', 'percent'
+  # value_of_threshold - set it, if you defined any type_of_threshold
   # points_coord - dataset with coordinates of a variable that was listed first in groupBy parameter, eg Harbour. Must have at least columns called lat, lon and column named the same as the appropriate column in the df
   # plot_labels  - TRUE/FALSE - should the labels of e.g. Harbours be displayed on a map?
   # time = name of column describing time, must be also included into the groupBy parameter
@@ -44,7 +44,7 @@ pointsMap_func = function(df,
   time = enquo(time)
   
   # creating the groupped df
-  grouping_result =  eval_tidy(quo(UQ(group_func)(df = df, var = !!var,  groupBy = !!groupBy, func = !!func, threshold_type = threshold_type, threshold = threshold)))
+  grouping_result =  eval_tidy(quo(UQ(group_func)(df = df, var = !!var,  groupBy = !!groupBy, func = !!func, type_of_threshold = type_of_threshold, value_of_threshold = value_of_threshold)))
   tdf =grouping_result[[1]]
   if(is.null(tdf)){
     stop('The chosen data set is empty')
@@ -105,12 +105,12 @@ pointsMap_func = function(df,
   
   
   # subtitle - as the information about used thresholds
-  if((threshold_type=='percent' & threshold==100) | threshold_type=='none'){
+  if((type_of_threshold=='percent' & value_of_threshold==100) | type_of_threshold=='none'){
     subtitle = 'All data'
-  }else if(threshold_type=='percent'){
-    subtitle = paste ('Including ',groupBy_name, 's accounting for ', threshold, '% of ', var_name, sep = "")
+  }else if(type_of_threshold=='percent'){
+    subtitle = paste ('Including ',groupBy_name, 's accounting for ', value_of_threshold, '% of ', var_name, sep = "")
   }else{
-    subtitle = paste('Including top ', threshold,' ', groupBy_name, 's', sep = "")
+    subtitle = paste('Including top ', value_of_threshold,' ', groupBy_name, 's', sep = "")
   }
   
   # caption - as the inromation about any missingnes
@@ -185,7 +185,7 @@ pointsMap_func = function(df,
 
 
 # example
-# pointsMap_func(CL_2014_NSEA, var = OfficialLandingCatchWeight,  groupBy=quos(Harbour, Year), func = sum, threshold_type = 'percent',threshold = 95,
+# pointsMap_func(CL_2014_NSEA, var = OfficialLandingCatchWeight,  groupBy=quos(Harbour, Year), func = sum, type_of_threshold = 'percent',value_of_threshold = 95,
 #                points_coord = Harbours, plot_labels = FALSE, time = Year)
 
 
@@ -202,3 +202,4 @@ pointsMap_func = function(df,
 # add check for joining df with points_coord - check if in both dataset there is a column with the same name
 # where to get Harbours coordinates from?
 # ... as the parameter to ggplot
+# dopisac sciezke do shapefile

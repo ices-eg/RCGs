@@ -4,14 +4,14 @@ group_func = function(df,
                       var,
                       groupBy,
                       func,
-                      threshold_type = 'none',
-                      threshold = NA) {
+                      type_of_threshold = 'none',
+                      value_of_threshold = NA) {
   # df - a data frame
   # var -  a column to be summmarised e.g. var = OfficialLandingCatchWeight
   # groupBy - names of columns, by which the grouping should be carried out. IMPORTANT to write it as groupBy = quos(...) e.g. groupBy = quos(Harbours, HarboursDesc)
   # func - function summarising the data: sum,  n_distinct,  e.g. func = sum
-  # threshold_type - default set to 'none', other options: 'top_n', 'percent'
-  # threshold - set it, if you defined any threshold_type
+  # type_of_threshold - default set to 'none', other options: 'top_n', 'percent'
+  # value_of_threshold - set it, if you defined any type_of_threshold
   
   # Marta Suska
   # NMFRI
@@ -85,14 +85,14 @@ group_func = function(df,
   # To do: check if everything is ok with NAs now
   
   # Check if the threshold is defined properly
-  if(threshold_type %in% c('top_n', 'percent')){
-    if(is.na(threshold)){
-      stop('threshold is missing')
-    } else if(!is.numeric(threshold)){
-      stop('threshold must be a number')
+  if(type_of_threshold %in% c('top_n', 'percent')){
+    if(is.na(value_of_threshold)){
+      stop('value_of_threshold is missing')
+    } else if(!is.numeric(value_of_threshold)){
+      stop('value_of_threshold must be a number')
     }
-  }else if(threshold_type!='none'){
-    stop(paste('No method  defined for threshold type = ', threshold_type))
+  }else if(type_of_threshold!='none'){
+    stop(paste('No method  defined for threshold type = ', type_of_threshold))
   }
   ################################################################################
   # SUMMARISE
@@ -105,23 +105,23 @@ group_func = function(df,
 
 
   # apply the threshold
-  if (threshold_type == 'percent') {
+  if (type_of_threshold == 'percent') {
     tdf = gdf %>% ungroup() %>%
       arrange(desc(!!var)) %>%
       mutate(pr := !!var / sum(!!var) * 100) %>%
       mutate(cum_pr = cumsum(pr)) %>%
-      filter(cum_pr <= threshold) %>% 
-      mutate(threshold_type = threshold_type,
-             threshold = threshold)
+      filter(cum_pr <= value_of_threshold) %>% 
+      mutate(type_of_threshold = type_of_threshold,
+             value_of_threshold = value_of_threshold)
     
-  } else if (threshold_type == 'top_n') {
-    tdf = gdf %>% ungroup() %>% arrange(desc(!!var)) %>% top_n(threshold,!!var)%>% 
-      mutate(threshold_type = threshold_type,
-             threshold = threshold)
-  } else if (threshold_type == 'none') {
+  } else if (type_of_threshold == 'top_n') {
+    tdf = gdf %>% ungroup() %>% arrange(desc(!!var)) %>% top_n(value_of_threshold,!!var)%>% 
+      mutate(type_of_threshold = type_of_threshold,
+             value_of_threshold = value_of_threshold)
+  } else if (type_of_threshold == 'none') {
     tdf = gdf %>%  ungroup()%>% arrange(desc(!!var))
   } else{
-    message(paste('No method  defined for threshold type = ', threshold_type))
+    message(paste('No method  defined for threshold type = ', type_of_threshold))
     tdf = NULL
   }
   
@@ -133,7 +133,7 @@ group_func = function(df,
 
 
 # Examples:
-#group_func(CL_2014_NSEA, var = OfficialLandingValue,  groupBy=quos(FlagCountry), func = sum, threshold_type = 'none')
-#group_func(CL_2014_NSEA, var = OfficialLandingCatchWeight,  groupBy=quos(FlagCountry, LandingCountry), func = sum, threshold_type = 'percent',threshold = 90)
-#group_func(CL_2014_NSEA, var = FlagCountry,  groupBy=quos(LandingCountry), func = n_distinct, threshold_type = 'top_n', threshold = 10)
-#group_func(CL_2014_NSEA, var = OfficialLandingCatchWeight,  groupBy=quos(FlagCountry, LandingCountry), func = sum, threshold_type = 'percent', threshold =90)
+#group_func(CL_2014_NSEA, var = OfficialLandingValue,  groupBy=quos(FlagCountry), func = sum, type_of_threshold = 'none')
+#group_func(CL_2014_NSEA, var = OfficialLandingCatchWeight,  groupBy=quos(FlagCountry, LandingCountry), func = sum, type_of_threshold = 'percent',value_of_threshold = 90)
+#group_func(CL_2014_NSEA, var = FlagCountry,  groupBy=quos(LandingCountry), func = n_distinct, type_of_threshold = 'top_n', value_of_threshold = 10)
+#group_func(CL_2014_NSEA, var = OfficialLandingCatchWeight,  groupBy=quos(FlagCountry, LandingCountry), func = sum, type_of_threshold = 'percent', value_of_threshold =90)
