@@ -9,6 +9,7 @@ pointsMap_func = function(df,
                           points_coord,
                           plot_labels = TRUE,
                           time,
+                          saveResults = FALSE,
                           outputPath) {
   # df - a data frame
   # var -  a column to be summmarised e.g. var = OfficialLandingCatchWeight
@@ -20,6 +21,7 @@ pointsMap_func = function(df,
   # points_coord - dataset with coordinates of a variable that was listed first in groupBy parameter, eg Harbour. Must have at least columns called lat, lon and column named the same as the appropriate column in the df
   # plot_labels  - TRUE/FALSE - should the labels of e.g. Harbours be displayed on a map?
   # time = name of column describing time, must be also included into the groupBy parameter
+  #saveResults - TRUE/FALSE - do you want to save the results?
   # outputPath - path for saving plots and tables
   
   # Marta Suska
@@ -247,15 +249,15 @@ pointsMap_func = function(df,
       ) -> plot
   }
   
+  if(saveResults==TRUE){
   write.table(mdf, file = paste(outputPath, "/pointsMap_", func_name,'_', var_name, '_', groupBy_name,'_', time, '_',type_of_threshold, '_',value_of_threshold, ".txt", sep = ""), sep = '\t', dec = '.')
   ggsave(paste(outputPath, "/pointsMap_", func_name,'_', var_name, '_', groupBy_name,'_', time, '_',type_of_threshold, '_',value_of_threshold, ".tiff", sep = ""), units="in", width=15, height=10, dpi=300, compression = 'lzw')
-
-    return(list(mdf, plot))
+  }
+  
+  return(list(mdf, plot))
 }
 
-# example
-# pointsMap_func(CL_2014_NSEA, var = OfficialLandingCatchWeight,  groupBy=quos(Harbour, Year), func = sum, type_of_threshold = 'percent',value_of_threshold = 95,
-#                points_coord = Harbours, plot_labels = FALSE, time = Year)
+
 
 # TO DO:
 # points_coords - should it be a dataset, or a path to a dataset?
