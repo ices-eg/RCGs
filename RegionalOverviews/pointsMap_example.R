@@ -25,11 +25,18 @@ Harbours_Codes %>%
 
 #group_func(CL_2014_NA, var = OfficialLandingValue,  groupBy=quos(Harbour, HarbourDesc), func = sum, type_of_threshold = 'percent',value_of_threshold = 90)
 
+# pointsMap_func(CL_2014_NA, var = OfficialLandingCatchWeight,  groupBy=quos(Harbour, Year), func = sum, type_of_threshold = 'percent',value_of_threshold = 90,
+#                points_coord = Harbours, plot_labels = TRUE, time = Year)
+# 
+# #ggsave("pointsMap_example3.tiff", units="in", width=15, height=10, dpi=300, compression = 'lzw')
+# 
+# pointsMap_func(CL_2014_NA, var = OfficialLandingValue,  groupBy=quos(Harbour, HarbourDesc, Year), func = sum, type_of_threshold = 'top_n',value_of_threshold = 10,
+#                points_coord = Harbours, plot_labels = FALSE, time = Year)
+
+##################################################################################################################################################
+##################################################################################################################################################
+
+# on sharepoint
 pointsMap_func(CL_2014_NA, var = OfficialLandingCatchWeight,  groupBy=quos(Harbour, Year), func = sum, type_of_threshold = 'percent',value_of_threshold = 90,
-               points_coord = Harbours, plot_labels = TRUE, time = Year)
-
-ggsave("pointsMap_example3.tiff", units="in", width=15, height=10, dpi=300, compression = 'lzw')
-
-pointsMap_func(CL_2014_NA, var = OfficialLandingValue,  groupBy=quos(Harbour, HarbourDesc, Year), func = sum, type_of_threshold = 'top_n',value_of_threshold = 10,
-               points_coord = Harbours, plot_labels = FALSE, time = Year)
+               points_coord = Harbours, plot_labels = FALSE, time = Year, outputPath = 'D:/WG/RCG/IntersessionalWork/Github/RCGs/RegionalOverviews')
 

@@ -8,7 +8,8 @@ pointsMap_func = function(df,
                           value_of_threshold = NA,
                           points_coord,
                           plot_labels = TRUE,
-                          time 
+                          time,
+                          outputPath
                           ){
   # df - a data frame
   # var -  a column to be summmarised e.g. var = OfficialLandingCatchWeight
@@ -20,7 +21,7 @@ pointsMap_func = function(df,
   # points_coord - dataset with coordinates of a variable that was listed first in groupBy parameter, eg Harbour. Must have at least columns called lat, lon and column named the same as the appropriate column in the df
   # plot_labels  - TRUE/FALSE - should the labels of e.g. Harbours be displayed on a map?
   # time = name of column describing time, must be also included into the groupBy parameter
-  
+  # outputPath - path for saving plots and tables
   
   # Marta Suska
   # NMFRI
@@ -90,9 +91,9 @@ pointsMap_func = function(df,
              ylim = ylim + c(-0.5, +0.5))
   
   # Take only rows with coordinates
-  mdf %>% filter(!is.na(lon) & !is.na(lat))->mdf
+  mdf %>% filter(!is.na(lon) & !is.na(lat))->mdf2
   
-  time = mdf %>% distinct(!!time)
+  time = mdf2 %>% distinct(!!time)
   
   # Set the plot parameters 
   
@@ -121,7 +122,7 @@ pointsMap_func = function(df,
   
   
   # make a map
-  mdf %>% 
+  mdf2 %>% 
     arrange(!!var) %>% 
     mutate(name =factor(!!eval_tidy(quo(UQ(groupBy)[[1]])), unique(!!eval_tidy(quo(UQ(groupBy)[[1]]))))
            ) %>% 
@@ -130,13 +131,14 @@ pointsMap_func = function(df,
                  aes(long, lat, group = group),
                  fill = 'white', color = 'grey') +
     coord_quickmap(xlim = xlim, ylim = ylim)+
-    geom_point(aes(lon, lat, fill := !!var),
+    geom_point(aes(lon, lat, fill := !!var, size := !!var),
                stroke = FALSE,
                colour = 'black',
-               size = 4,
+               #size = 4,
                shape = 21,
-               alpha = 0.9
+               alpha = 0.8
                )+
+    scale_size(range = c(0,10))+
     guides(colour = guide_legend())+
     labs(title = title,
          x = 'Longitude',
@@ -155,18 +157,18 @@ pointsMap_func = function(df,
   if(plot_labels == TRUE){ # display labels on the plot
   plot +
     ggrepel::geom_text_repel(
-      data = mdf,
+      data = mdf2,
       aes(lon, lat, label := !!eval_tidy(quo(UQ(groupBy)[[1]]))),
       box.padding = unit(0.2, "lines"),
       point.padding = unit(0.2, "lines"),
-      size = 3
+      size = 2
     )->plot
   }
   
   if(func_name != 'n_distinct'){
     plot = plot+
       viridis::scale_fill_viridis(option = "magma",
-                                  trans = "log", 
+                                 # trans = "log", 
                                   begin = 1, end =0,
                                   name = "")
   }else{
@@ -177,24 +179,21 @@ pointsMap_func = function(df,
   }
  
   
+ write.table(mdf, file = paste(outputPath, "/pointsMap_", func_name,'_', var_name, '_', groupBy_name,'_', time, '_',type_of_threshold, '_',value_of_threshold, ".txt", sep = ""), sep = '\t', dec = '.')
+ ggsave(paste(outputPath, "/pointsMap_", func_name,'_', var_name, '_', groupBy_name,'_', time, '_',type_of_threshold, '_',value_of_threshold, ".tiff", sep = ""), units="in", width=15, height=10, dpi=300, compression = 'lzw')
   
   return(list(mdf, plot))
   }
 
-
-
-
 # example
 # pointsMap_func(CL_2014_NSEA, var = OfficialLandingCatchWeight,  groupBy=quos(Harbour, Year), func = sum, type_of_threshold = 'percent',value_of_threshold = 95,
 #                points_coord = Harbours, plot_labels = FALSE, time = Year)
-
 
 # TO DO:
 # points_coords - should it be a dataset, or a path to a dataset?
 # add warning in case of enormous number of points to plot
 # df - should it be prepared inside the function, or before running the func?
 # add type of plot (by harbour, by (what else could be?))
-# add path for saving the maps
 # make better legend
 # assumption that the first parameter in groupBy will be plotted - how to avoid it
 # add facets (yearly)
