@@ -117,8 +117,8 @@ pointsMap_func = function(df,
   
   # set the limits
   xlim = range(mdf[!is.na(mdf$lat) &
-                     !is.na(mdf$lon),]$lon)
-  ylim = range(mdf[!is.na(mdf$lat) & !is.na(mdf$lon),]$lat)
+                     !is.na(mdf$lon),]$lon)+ c(-1, 1)
+  ylim = range(mdf[!is.na(mdf$lat) & !is.na(mdf$lon),]$lat) + c(-0.5,+0.5)
   
   # load world map
   m <-
