@@ -264,8 +264,7 @@ pointsMap_func = function(df,
 # add warning in case of enormous number of points to plot
 # df - should it be prepared inside the function, or before running the func?
 # add type of plot (by harbour, by (what else could be?))
-# make better legend
-# assumption that the first parameter in groupBy will be plotted - how to avoid it
+# assumption that the first parameter in groupBy will be plotted
 # add facets (yearly)
 # zoom options
 # add check for joining df with points_coord - check if in both dataset there is a column with the same name
