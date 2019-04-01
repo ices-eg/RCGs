@@ -77,6 +77,8 @@ group_func = function(df,
         )
       df %>% mutate(!!var_name := as.numeric(!!var)) -> df
     }
+    df %>% mutate(!!var_name := as.numeric(!!var)) -> df # put it in both places to avoid error with integer overflow
+    
   }
   
   # Inform about missing values
