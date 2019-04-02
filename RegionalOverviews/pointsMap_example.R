@@ -7,6 +7,7 @@
 
 # eg
 # data loading
+library(tidyverse)
 CL = read_csv2('D:/WG/RCG/IntersessionalWork/Subgroup on Regional Overviews/TestData/CL Landing 2009-2018.csv')
 CL_2014_NA = CL %>% filter(is.na(Region), Year==2014)
 
@@ -33,6 +34,7 @@ Harbours_Codes %>%
 
 ##################################################################################################################################################
 ##################################################################################################################################################
+options(scipen=10000) # to remove scientific notation from the legend
 
 # on sharepoint
 pointsMap_func(CL_2014_NA, var = OfficialLandingCatchWeight,  groupBy=quos(Harbour, Year), func = sum, type_of_threshold = 'percent',value_of_threshold = 90,

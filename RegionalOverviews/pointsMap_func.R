@@ -121,10 +121,8 @@ pointsMap_func = function(df,
   ylim = range(mdf[!is.na(mdf$lat) & !is.na(mdf$lon),]$lat) + c(-0.5,+0.5)
   
   # load world map
-  m <-
-    map_data("worldHires",
-             xlim =  xlim + c(-1, 1),
-             ylim = ylim + c(-0.5,+0.5))
+  require("rnaturalearth")
+  m <- ne_countries(scale = "medium", returnclass = "sf")
   
   # Take only rows with coordinates
   mdf %>% filter(!is.na(lon) & !is.na(lat)) -> mdf2
@@ -197,13 +195,8 @@ pointsMap_func = function(df,
       UQ(groupBy)[[1]]
     ))))) %>%
     ggplot() +
-    geom_polygon(
-      data = m,
-      aes(long, lat, group = group),
-      fill = 'white',
-      color = 'grey'
-    ) +
-    coord_quickmap(xlim = xlim, ylim = ylim) +
+    geom_sf(data = m) +
+    coord_sf( crs = "+init=epsg:4326", xlim =xlim, ylim = ylim)+
     geom_point(
       aes(lon, lat, fill := !!var, size := !!var),
       stroke = FALSE,
