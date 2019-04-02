@@ -1,5 +1,3 @@
-# Working version
-
 pointsMap_func = function(df,
                           var,
                           groupBy,

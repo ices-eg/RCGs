@@ -1,5 +1,3 @@
-# Working version
-
 group_func = function(df,
                       var,
                       groupBy,
