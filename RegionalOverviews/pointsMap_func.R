@@ -195,7 +195,7 @@ pointsMap_func = function(df,
       UQ(groupBy)[[1]]
     ))))) %>%
     ggplot() +
-    geom_sf(data = m) +
+    geom_sf(data = m, fill = "antiquewhite") +
     coord_sf( crs = "+init=epsg:4326", xlim =xlim, ylim = ylim)+
     geom_point(
       aes(lon, lat, fill := !!var, size := !!var),
@@ -209,7 +209,7 @@ pointsMap_func = function(df,
     viridis::scale_fill_viridis(
       option = "magma",
       # trans = "log",
-      begin = 1,
+      begin = 0.8,
       end = 0,
       name = var_name
     )+
@@ -225,17 +225,18 @@ pointsMap_func = function(df,
     theme(
       text = element_text(color = "#22211d"),
       plot.background = element_rect(fill = "#ffffff", color = NA),
-      panel.background = element_rect(fill = "#ffffff", color = NA),
+      panel.background = element_rect(fill = "aliceblue", color = NA),
       legend.background = element_rect(fill = "#ffffff", color = NA),
       panel.border = element_rect(
         colour = "black",
         fill = NA,
         size = 1.5
-      )
+      ),
+     panel.grid.major = element_line(color = gray(.5), linetype ='dashed', size = 0.5)
     ) -> plot
   
   if (plot_labels == TRUE) {
-    # display labels on the plot
+    #display labels on the plot
     plot +
       ggrepel::geom_text_repel(
         data = mdf2,
@@ -244,7 +245,10 @@ pointsMap_func = function(df,
         )[[1]]))),
         box.padding = unit(0.2, "lines"),
         point.padding = unit(0.2, "lines"),
-        size = 2
+        color = 'black',
+        size = 2,
+        fontface = 'bold'
+
       ) -> plot
   }
   
