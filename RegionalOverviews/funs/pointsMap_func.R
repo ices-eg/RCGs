@@ -34,7 +34,7 @@ pointsMap_func = function(df,
   require(ggplot2)
   require(mapdata)
   
-  source('group_func.R')
+  source('funs/group_func.R')
   
   # parameters
   var = enquo(var)
