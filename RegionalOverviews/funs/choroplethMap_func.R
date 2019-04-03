@@ -11,15 +11,15 @@ choroplethMap_func = function(df,
                               outputPath,
                               Catch_group = NA) {
   # df - a data frame
-  # var -  a column to be summmarised e.g. var = as.symbol('OfficialLandingCatchWeight') or var = OfficialLandingCatchWeight
-  # groupBy - names of columns, by which the grouping should be carried out. IMPORTANT to write it as groupBy = quos(...) e.g. groupBy = quos(Harbours, HarboursDesc)
+  # var -  a column to be summmarised e.g. var = as.symbol('OfficialLandingCatchWeight')
+  # groupBy - names of columns, by which the grouping should be carried out. IMPORTANT to write it as groupBy = c(...) e.g. groupBy = c('Harbours', 'HarboursDesc')
   #         - IMPORTANT - on the first place put sth you will be plotting by, eg Harbour
-  # func - function summarising the data: sum, n_distinct, e.g. func = sum
+  # func - function summarising the data: sum, n_distinct, e.g. func = as.symbol('sum')
   # type_of_threshold - default set to 'none', other options: 'top_n', 'percent'
   # value_of_threshold - set it, if you defined any type_of_threshold
-  # points_coord - shapefile, must have the same column name as in the df, e.g. Area if grooupBy = quos(Area...)
+  # points_coord - shapefile, must have the same column name as in the df, e.g. Area if grooupBy = c('Area',...)
   # plot_labels  - TRUE/FALSE - should the labels of e.g. Harbours be displayed on a map?
-  # time = name of column describing time, must be also included into the groupBy parameter
+  # time = name of column describing time, must be also included into the groupBy parameter, as.symbol('Year')
   #saveResults - TRUE/FALSE - do you want to save the results?
   # outputPath - path for saving plots and tables
   # Catch_group - if NA then all species will be included, other options: demersal/flatfish/smallpelagic/largepelagic
@@ -37,14 +37,23 @@ choroplethMap_func = function(df,
   source('funs/group_func.R')
   
   # parameters
+  
   #var = enquo(var) # this one if the var is set like var = OfficialLandingCatchWeight
-  var = quo(UQ(var)) # to make it work with RCG_NA_CL_Graphical_details, this one if var is qith quotations
-  func = enquo(func)
+  var = quo(UQ(var)) # this one to make it work with RCG_NA_CL_Graphical_details, this one if var is with quotations
+  
+  #func = enquo(func)  # this one if the var is set like func = sum
+  func = quo(UQ(func)) # to make it work with RCG_NA_CL_Graphical_details, this one if func is with quotations
+  
+  groupBy = parse_quos(groupBy, env = caller_env()) # to make it work with RCG_NA_CL_Graphical_details, this one if groupBy is with quotations
   groupBy = enquo(groupBy)
   groupBy_name = quo_name(eval_tidy(quo(UQ(groupBy)))[[1]])
+  
   var_name =  quo_text(var)
   func_name = quo_text(func)
-  time = enquo(time)
+  
+  #time = enquo(time) # this one if time is set like time = Year
+  time = quo(UQ(time)) # to make it work with RCG_NA_CL_Graphical_details, this one if time is with quotations, time = 'Year'
+  
   
   
   # creating the groupped df
@@ -252,13 +261,13 @@ choroplethMap_func = function(df,
 # choroplethMap_func(
 #   cl_rcg,
 #   var = as.symbol('OfficialLandingCatchWeight'),
-#   groupBy = quos(Area, Year),
-#   func = sum,
+#   groupBy = c('Area', 'Year'),
+#   func = as.symbol('sum'),
 #   type_of_threshold = 'percent',
 #   value_of_threshold = 100,
 #   points_coord = FAOshp,
 #   plot_labels = FALSE,
-#   time = Year,
+#   time = as.symbol('Year'),
 #   saveResults = FALSE,
 #   outputPath = 'D:/WG/RCG/IntersessionalWork/Github/RCGs/RegionalOverviews'
 # )
