@@ -4,6 +4,15 @@
 	
 # script prepares datasets for further analysis
 
+# note on CS subsets
+	# two types of objects are produced: hh_rcg_all and hh_rcg
+	# object rcg_all includes all hauls, etc of trips that registered >=1 haul in RCG areas [i.e., may be pan-regional]
+	# object rcg includes only data from hauls RCG area
+		# example:
+			# if a long trip fished in BA and NSEA
+				# all its data will be in rcg_all from BA and NSEA
+				# only the data from hauls in BA will be in rcg (BA), only the data from hauls in NA will be in rcg (NA). If you merge the two you get the full trip present in rcg_all.
+
 # ========================
 # downloads data from sharepoint
 # ======================== 
@@ -16,7 +25,6 @@ source("funs/func_download_data_from_sharepoint.r")
 	#download_data_from_sharepoint (sharepoint_address, filename_vector = c("CL Landing 2009-2018.zip","CE Effort 2009-2018.zip"), dir_download_browser = "ADD_HERE_download_folder_adress", dir_download_target = getwd(), unzip=TRUE)
 
 
-library(data.table)
 
 # ========================
 # reads in data
@@ -25,14 +33,13 @@ library(data.table)
  rm(list=ls())
  library(data.table)
  
- 	file_cl <- "CL Landing 2009-2018.csv" 
-	file_ce <- "CE Effort 2009-2018.csv" 
-	# to be developed
-		#file_tr <- "Table TR 2009-2017 NSEA.csv" 
-		#file_hh <- "Table HH 2009-2017 NSEA.csv" 
-		#file_sl <- "Table SL 2009-2017 NSEA.csv" 
-		#file_hl <- "Table HL 2009-2017 NSEA.csv" 
-		#file_ca <- "Table CA 2009-2017 NSEA.csv" 
+ 	file_cl <- "data\\CL Landing 2009-2018.csv" 
+	file_ce <- "data\\CE Effort 2009-2018.csv" 
+	file_tr <- "data\\CS TR Trip 2009-2018.csv" 
+	file_hh <- "data\\CS HH Station 2009-2018.csv" 
+	file_sl <- "data\\CS SL SpeciesList 2009-2018.csv" 
+	file_hl <- "data\\CS HL Length 2009-2018.csv" 
+	file_ca <- "data\\CS CA SMAWL 2009-2018.csv" 
 	 
  
 # read CL and CE
@@ -41,31 +48,78 @@ library(data.table)
  
 # read CS data
 
- # tr<-fread(file_cl, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=",", nrow=3990)
- # hh<-fread(file_hh, stringsAsFactors=FALSE, verbose=FALSE, fill=TRUE, sep=",", nrow = 8510)
- # sl<-fread(file_sl, stringsAsFactors=FALSE, verbose=FALSE, fill=TRUE, sep=",", nrow = 8510)
- # hh<-fread(file_hh, stringsAsFactors=FALSE, verbose=FALSE, fill=TRUE, sep=",", nrow = 8510)
- # ca<-fread(file_ca, stringsAsFactors=FALSE, verbose=FALSE, fill=TRUE, sep=",", nrow = 8510)
+ tr<-fread(file_tr, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL", colClasses=c(Trip  = "character"))
+ hh<-fread(file_hh, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL", colClasses=c(Trip  = "character"))
+ sl<-fread(file_sl, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL", colClasses=c(Trip  = "character"))
+ hl<-fread(file_hl, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL", colClasses=c(Trip  = "character", SizeCategory = "character"))
+ ca<-fread(file_ca, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL", colClasses=c(Trip  = "character", SizeCategory = "character"))
 
+ 
+# ========================
+# clean duplicates(should be moved to extraction)
+# ======================== 		
+
+	dim(tr); tr<-unique(tr); dim(tr)
+	dim(hh); hh<-unique(hh); dim(hh)
+	dim(sl); sl<-unique(sl); dim(sl)
+	dim(hl); hl<-unique(hl); dim(hl)
+	dim(ca); ca<-unique(ca); dim(ca)
+ 
+ # ========================
+# check and correct on reverse dependencies (should be moved to extraction)
+# ======================== 		
+	
+	# check on hh
+	hh[!CS_TripId %in% tr$CS_TripId,] 
+	 
+	# check on sl
+	sl[!CS_StationId %in% hh$CS_StationId,] 
+		# 297 EST records from 2011 and 2012
+			sl[!CS_StationId %in% hh$CS_StationId,.N,by=c("FlagCountry","Year")]
+			# decision: delete
+				sl<-sl[CS_StationId %in% hh$CS_StationId] 
+
+	
+	# check on hl
+	hl[!CS_SpeciesListId %in% sl$CS_SpeciesListId,] 
+		# 5185 EST records from 2011 and 2012
+			hl[!CS_SpeciesListId %in% sl$CS_SpeciesListId,.N,by=c("FlagCountry","Year")]
+			# decision: delete
+				hl<-hl[CS_SpeciesListId %in% sl$CS_SpeciesListId] 
+	
+	# check on ca
+	ca[!CS_TripId %in% tr$CS_TripId,] 
+
+ 
 # ========================
 # rename column (should be moved to extraction)
 # ======================== 	
 	
 	colnames(cl)[colnames(cl)=="vesselLengthCategory"]<-"VesselLengthCategory"
-  
 
+	
+# ======================== 		
+# adds a few convenient Ids (should be moved to extraction)
+# ======================== 	
+	
+	dim(sl); sl<-merge(sl, hh[,list(CS_StationId,CS_TripId)], by="CS_StationId", all.x=T); dim(sl)
+	dim(hl); hl<-merge(hl, sl[,list(CS_SpeciesListId,CS_StationId,CS_TripId)], by="CS_SpeciesListId", all.x=T); dim(hl)
+	
+	
 # ====================== 
 # Set Prep Options 
 # ======================  
  
 target_region <- "RCG_NA" # "RCG_BA", "RCG_NSEA"
-target_region <- "RCG_NSEA" # "RCG_NSEA"
 year_start <- 2009
 year_end <- 2017
+
 
 # ======================
 # Tweak on areas/region 
 # ====================== 
+ 
+# CL and CE 
  
  # there are a few ambiguous records
 	# Area 27.7
@@ -84,6 +138,28 @@ year_end <- 2017
 			ce[Area=="27.3" & FlagCountry=="LTU","FishingGround"]<-NA
 			ce[Area=="27.3" & FlagCountry=="LTU","Area"]<-"27.3.a"
  
+ 
+# CS
+	# visual check
+	table(hh$Area, hh$Region, useNA="al")
+		# 20190403
+			# RCG_BA: ok
+			# RCG_NSEA: no NAFO (21.)
+			# RCG_NA: should not have NAFO (21.)
+	table(ca$Area, ca$Region, useNA="al")
+		prob_ids<-unique(ca[Area=="27.8" & Region=="BS",]$CS_TripId)
+		hh[CS_TripId %in% prob_ids,"Area"]
+			# conclusion: ca records with no trip
+				# decision: delete
+					ca<-ca[!(Area=="27.8" & Region=="BS"),]
+ 		prob_ids<-unique(ca[Area=="27.7" & Region=="BS",]$CS_TripId)
+		hh[CS_TripId %in% prob_ids,"Area"]
+			# conclusion: ca records with no trip
+				# decision: delete
+					ca<-ca[!(Area=="27.7" & Region=="BS"),]
+		# should yield 0
+		ca[!CS_TripId %in% tr$CS_TripId,]
+		
 # ========================
 # subsets data and RCG specific preparations
 # ========================	
@@ -116,6 +192,14 @@ year_end <- 2017
 				# corrects
 					#ce_rcg[!Region=="BS",FishingGround:=NA,]				
 					#ce_rcg[!Region=="BS",Region:="BS",]	
+		
+		target_trips <- hh[Area %in% target_areas & Year>=year_start & Year<=year_end,unique(CS_TripId),]
+		tr_rcg_all <- tr[CS_TripId %in% target_trips,]
+		hh_rcg_all <- hh[CS_TripId %in% target_trips,]
+		sl_rcg_all <- sl[CS_TripId %in% target_trips,]
+		hh_rcg_all <- hh[CS_TripId %in% target_trips,]
+		ca_rcg_all <- ca[CS_TripId %in% target_trips,]
+		
 		}
 
 # RCM NS&EA: the  North  Sea  (ICES  areas  IIIa,  IV  and  VIId),  the  Eastern  Arctic  (ICES  areas  I  and  II),  the  ICES  divisions Va, XII & XIV and the NAFO areas.
@@ -151,7 +235,19 @@ year_end <- 2017
 					# corrects	
 					ce_rcg[!Region=="NSEA" & grepl(Area, pat="21."),Region:="NSEA",]
 					table(ce_rcg$Region)
-					
+	
+		
+		
+		target_trips <- hh[(Area %in% target_areas_nsea | grepl(Area, pat="21.") ) & Year>=year_start & Year<=year_end,unique(CS_TripId),]
+		tr_rcg_all <- tr[CS_TripId %in% target_trips,]
+		hh_rcg_all <- hh[CS_TripId %in% target_trips,]
+		sl_rcg_all <- sl[CS_TripId %in% target_trips,]
+		hh_rcg_all <- hh[CS_TripId %in% target_trips,]
+		ca_rcg_all <- ca[CS_TripId %in% target_trips,]
+					# corrects	
+					hh_rcg_all[!Region=="NSEA" & grepl(Area, pat="21."),Region:="NSEA",]
+					ca_rcg_all[!Region=="NSEA" & grepl(Area, pat="21."),Region:="NSEA",]
+	
 		}	
 		
 # RCM NA: the North Atlantic (ICES areas V-X, excluding Va and VIId)
@@ -199,35 +295,73 @@ year_end <- 2017
 					#ce_rcg[!Region=="NA",FishingGround:=NA,]		
 					#ce_rcg[!Region=="NA",Region:="NA",]
 					
-					
+		# cs	
+		target_trips<-hh[(grepl(Area, pat="27.5") | 
+							grepl (Area, pat="27.6") | 
+								grepl (Area, pat="27.7") | 
+									grepl (Area, pat="27.8") | 
+										grepl (Area, pat="27.9")	 | 
+											grepl (Area, pat="27.10") ) &  
+												!grepl (Area, pat="27.5.a") &  !grepl (Area, pat="27.7.d") & Year>=year_start & Year<=year_end,unique(CS_TripId)]
+		
+		tr_rcg_all <- tr[CS_TripId %in% target_trips,]
+		hh_rcg_all <- hh[CS_TripId %in% target_trips,]
+		sl_rcg_all <- sl[CS_TripId %in% target_trips,]
+		hl_rcg_all <- hl[CS_TripId %in% target_trips,]
+		ca_rcg_all <- ca[CS_TripId %in% target_trips,]		
 				
 	}	
-
-	
 	
 # ========================
 # formats variables
 # ======================== 
  
 	# formats CL 
-	cl_rcg[,HarbourDesc:=iconv(cl_rcg$HarbourDesc, from="UTF-8", to="")]
+	cl_rcg[,HarbourDesc:=iconv(HarbourDesc, from="UTF-8", to="")]
 	cl_rcg[,HarbourDesc:=toupper(HarbourDesc)]
 	cl_rcg[,OfficialLandingCatchWeight:=as.numeric(OfficialLandingCatchWeight)]
 	
 	# formats CE 
-	ce_rcg[,HarbourDesc:=iconv(ce_rcg$HarbourDesc, from="UTF-8", to="")]
+	ce_rcg[,HarbourDesc:=iconv(HarbourDesc, from="UTF-8", to="")]
+	ce_rcg[,HarbourDesc:=toupper(HarbourDesc)]
+	ce_rcg[,HarbourDesc:=iconv(HarbourDesc, from="UTF-8", to="")]
 	ce_rcg[,HarbourDesc:=toupper(HarbourDesc)]
 
 	# formats CS	
-	 #to add
+	tr_rcg_all[,HarbourDesc:=iconv(HarbourDesc, from="UTF-8", to="")]
+	tr_rcg_all[,HarbourDesc:=iconv(HarbourDesc, from="UTF-8", to="")]
 
 		
 # ========================	
 # Creates additional variables
 # ========================	
 
-	cl_rcg[,OfficialLandingCatchWeight_ton := OfficialLandingCatchWeight/1000]
-	cl_rcg[,OfficialLandingCatchWeight_1000ton := OfficialLandingCatchWeight/1000000]
+	# CL
+
+		cl_rcg[,OfficialLandingCatchWeight_ton := OfficialLandingCatchWeight/1000]
+		cl_rcg[,OfficialLandingCatchWeight_1000ton := OfficialLandingCatchWeight/1000000]
+	
+	# CS
+
+		tr_rcg_all[!is.na(VesselLength) & VesselLength<10,VesselLengthCategory:="<10"]
+		tr_rcg_all[!is.na(VesselLength) & VesselLength>=10 & VesselLength<12,VesselLengthCategory:="10-<12"]
+		tr_rcg_all[!is.na(VesselLength) & VesselLength>=12 & VesselLength<18,VesselLengthCategory:="12-<18"]
+		tr_rcg_all[!is.na(VesselLength) & VesselLength>=18 & VesselLength<24,VesselLengthCategory:="18-<24"]
+		tr_rcg_all[!is.na(VesselLength) & VesselLength>=24 & VesselLength<40,VesselLengthCategory:="24-<40"]
+		tr_rcg_all[!is.na(VesselLength) & VesselLength>=40 ,VesselLengthCategory:=">40"]
+	
+		sl_rcg_all[, Weight_kg := Weight/1000]
+		sl_rcg_all[, Weight_ton := Weight/1000000]
+		sl_rcg_all[, SubSampleWeight_kg := SubSampleWeight/1000]
+		sl_rcg_all[, SubSampleWeight_ton := SubSampleWeight/1000000]
+		
+		hl_rcg_all[, LengthClass_cm := LengthClass/10]
+		hl_rcg_all[, NoAtLengthInSample_ThousandIndiv := NoAtLengthInSample/1000]
+		hl_rcg_all[, NoAtLengthInSample_MillionIndiv := NoAtLengthInSample/1000000]
+		
+		ca_rcg_all[,Weight_kg := Weight/1000]
+		ca_rcg_all[,LengthClass_cm := LengthClass/10]
+
 	
 # ========================	
 # Creates and tweaks ISSCAAP codes
@@ -243,7 +377,11 @@ year_end <- 2017
 	# 2019-04-02: so far no answer - to allow review of code an updated version of fishPiCodes::ASFIS_WoRMS table (ASFIS_WoRMS_updt.csv) will be kept on the data sharepoint of the RCG subgroup (acessible only to Subgroup members)
 	
 	ASFIS_WoRMS_updt <- read.table (file="ASFIS_WoRMS_updt.csv", header=T, sep=";", stringsAsFactors=FALSE) # on the data sharepoint of the RCG subgroup
-		
+
+
+		# =====================
+		# CL
+		# =====================		
 				
 		cl_rcg[,ISSCAAP:=ASFIS_WoRMS_updt$ISSCAAP[match(cl_rcg$SpeciesAphiaID, ASFIS_WoRMS_updt$AphiaID_accepted)]]
 		
@@ -307,25 +445,147 @@ year_end <- 2017
 			
 			# give it a check (see if it makes sense)
 			 # check demersal
-				head(cl_rcg[cl_rcg$Catch_group == "demersal",list(Kg=sum(OfficialLandingCatchWeight)),list(Species)] [order(-Kg),],20)
+				head(cl_rcg[Catch_group == "demersal",list(Kg=sum(OfficialLandingCatchWeight)),list(Species)] [order(-Kg),],20)
 			# check flatfish
-				head(cl_rcg[cl_rcg$Catch_group == "flatfish",list(Kg=sum(OfficialLandingCatchWeight)),list(Species)] [order(-Kg),],20)
+				head(cl_rcg[Catch_group == "flatfish",list(Kg=sum(OfficialLandingCatchWeight)),list(Species)] [order(-Kg),],20)
 			# check small pelagic
-				head(cl_rcg[cl_rcg$Catch_group == "small pelagic",list(Kg=sum(OfficialLandingCatchWeight)),list(Species)] [order(-Kg),],20)
+				head(cl_rcg[Catch_group == "small pelagic",list(Kg=sum(OfficialLandingCatchWeight)),list(Species)] [order(-Kg),],20)
 			# check large pelagic
-				head(cl_rcg[cl_rcg$Catch_group == "large pelagic",list(Kg=sum(OfficialLandingCatchWeight)),list(Species)] [order(-Kg),],20)
+				head(cl_rcg[Catch_group == "large pelagic",list(Kg=sum(OfficialLandingCatchWeight)),list(Species)] [order(-Kg),],20)
 			# check molluscs
-				head(cl_rcg[cl_rcg$Catch_group == "molluscs",list(Kg=sum(OfficialLandingCatchWeight)),list(Species)] [order(-Kg),],20)
+				head(cl_rcg[Catch_group == "molluscs",list(Kg=sum(OfficialLandingCatchWeight)),list(Species)] [order(-Kg),],20)
 			# check crustaceans
-				head(cl_rcg[cl_rcg$Catch_group == "crustaceans",list(Kg=sum(OfficialLandingCatchWeight)),list(Species)] [order(-Kg),],20)
+				head(cl_rcg[Catch_group == "crustaceans",list(Kg=sum(OfficialLandingCatchWeight)),list(Species)] [order(-Kg),],20)
 			# check	elasmobranchs
-				head(cl_rcg[cl_rcg$Catch_group == "elasmobranchs",list(Kg=sum(OfficialLandingCatchWeight)),list(Species)] [order(-Kg),],20)
+				head(cl_rcg[Catch_group == "elasmobranchs",list(Kg=sum(OfficialLandingCatchWeight)),list(Species)] [order(-Kg),],20)
 			# check	diadromous
-				head(cl_rcg[cl_rcg$Catch_group == "diadromous",list(Kg=sum(OfficialLandingCatchWeight)),list(Species)] [order(-Kg),],20)
+				head(cl_rcg[Catch_group == "diadromous",list(Kg=sum(OfficialLandingCatchWeight)),list(Species)] [order(-Kg),],20)
+			# check	incidental by-catch
+				head(cl_rcg[Catch_group == "incidental by-catch",list(Kg=sum(OfficialLandingCatchWeight)),list(Species)] [order(-Kg),],20)			
 			# check	other
-				head(cl_rcg[cl_rcg$Catch_group == "other",list(Kg=sum(OfficialLandingCatchWeight)),list(Species)] [order(-Kg),],20)
-	
+				head(cl_rcg[Catch_group == "other",list(Kg=sum(OfficialLandingCatchWeight)),list(Species)] [order(-Kg),],20)
 
+		# =====================
+		# SL
+		# =====================	
+	
+			sl_rcg_all[,ISSCAAP:=ASFIS_WoRMS_updt$ISSCAAP[match(sl_rcg_all$SpeciesAphiaID, ASFIS_WoRMS_updt$AphiaID_accepted)]]
+	
+			# QCA should yield zero, if not more tweaks are needed
+			sum(is.na(sl_rcg_all$ISSCAAP))
+
+			sort(unique(sl_rcg_all$Species[is.na(sl_rcg_all$ISSCAAP)]))
+
+			sl_rcg_all[Species == "Gaidropsarus guttatus",ISSCAAP:=32] # Cods, hakes, haddocks
+			sl_rcg_all[Species == "Mullus barbatus",ISSCAAP:=33] # Miscellaneous coastal fishes
+			sl_rcg_all[Species == "Auxis rochei",ISSCAAP:=36] # Tunas, bonitos, billfishes
+			sl_rcg_all[Species == "Auxis thazard",ISSCAAP:=36] # Tunas, bonitos, billfishes
+			sl_rcg_all[Species == "Scombrinae Rafinesque",ISSCAAP:=36] # Tunas, bonitos, billfishes
+			sl_rcg_all[Species == "Scomberesox saurus",ISSCAAP:=37] # Miscellaneous pelagic fishes
+			sl_rcg_all[Species == "Selachii",ISSCAAP:=38] # Sharks, rays, chimaeras
+			sl_rcg_all[Species == "Squatina",ISSCAAP:=38] # Sharks, rays, chimaeras
+			sl_rcg_all[Species == "Pisces",ISSCAAP:=39] # Marine fishes not identified
+			sl_rcg_all[Species == "Macropodia",ISSCAAP:=42] # Crabs, sea-spiders
+			sl_rcg_all[Species == "Pasiphaea",ISSCAAP:=45] # Shrimps, prawns
+			sl_rcg_all[Species == "Dendrobranchiata",ISSCAAP:=45] # Shrimps, prawns
+			sl_rcg_all[Species == "Crangon",ISSCAAP:=45] # Shrimps, prawns
+			sl_rcg_all[Species == "Decapodiformes",ISSCAAP:=47] # Miscellaneous marine crustaceans
+			sl_rcg_all[Species == "Gibbula",ISSCAAP:=52] # Abalones, winkles, conchs
+			sl_rcg_all[Species == "Venerupis philippinarum",ISSCAAP:=56] # Clams, cockles, arkshells
+			sl_rcg_all[Species == "Arcopagia crassa",ISSCAAP:=56] # Clams, cockles, arkshells
+			sl_rcg_all[Species == "Loligo forbesii",ISSCAAP:=57] # Squids, cuttlefishes, octopuses
+			sl_rcg_all[Species == "Echinidae",ISSCAAP:=76] # Sea-urchins and other echinoderms
+			sl_rcg_all[Species == "Laminaria",ISSCAAP:=91] # Brown seaweeds
+			
+			sl_rcg_all[grepl(Species, pat = "Callionymus"),ISSCAAP:=33] # Miscellaneous coastal fishes
+			sl_rcg_all[grepl(Species, pat = "Pomatoschistus"),ISSCAAP:=33] # Miscellaneous coastal fishes
+			sl_rcg_all[grepl(Species, pat = "Dipturus"),ISSCAAP:=38] # Sharks, rays, chimaeras
+			sl_rcg_all[grepl(Species, pat = "Bathynectes"),ISSCAAP:=42]
+			sl_rcg_all[grepl(Species, pat = "Liocarcinus"),ISSCAAP:=42] # Crabs, sea-spiders
+			sl_rcg_all[grepl(Species, pat = "Munida"),ISSCAAP:=44]
+			sl_rcg_all[grepl(Species, pat = "Sergestes"),ISSCAAP:=45] # Shrimps, prawns
+			sl_rcg_all[grepl(Species, pat = "Ophiura"),ISSCAAP:=76] # Sea-urchins and other echinoderms
+			sl_rcg_all[grepl(Species, pat = "Pagurus"),ISSCAAP:= 52] # Abalones, winkles, conchs
+			sl_rcg_all[grepl(Species, pat = "Astropecten"),ISSCAAP:= 76]  # Sea-urchins and other echinoderms
+			sl_rcg_all[grepl(Species, pat = "Inachus"),ISSCAAP:=42]  # Crabs, sea-spiders
+			
+				# fast and dirty correspondence via a reference table of genus and ISSCAAP
+					aux<-as.data.table(unique(ASFIS_WoRMS_updt[!is.na(ASFIS_WoRMS_updt$Genus) & !is.na(ASFIS_WoRMS_updt$ISSCAAP), c("Genus","ISSCAAP")]))
+					aux1<-aux[,.N,"Genus"][N==1,]
+					ref_table<-as.data.frame(aux[Genus %in% aux1$Genus,])
+					
+					a<-sort(unique(sl_rcg_all$Species[is.na(sl_rcg_all$ISSCAAP)]))
+					vector_genus<-do.call("rbind", strsplit(a, " "))[,1]
+
+					ref_table<-merge(data.frame(Species=a, Genus=vector_genus), ref_table, by="Genus", all.x=T)
+			
+					sl_rcg_all[is.na(ISSCAAP),]$ISSCAAP<-ref_table$ISSCAAP[match(sl_rcg_all[is.na(ISSCAAP),]$Species,ref_table$Species)]
+			
+				# and the few remaining (manually...)
+					sl_rcg_all[Species == "Indostomus",ISSCAAP:= 13] # Miscellaneous freshwater fishes
+					sl_rcg_all[Species == "Dagetichthys lusitanicus",ISSCAAP:=31]  # Flounders, halibuts, soles
+					sl_rcg_all[Species == "Scorpaeniformes",ISSCAAP:=34] # Miscellaneous demersal fishes
+					sl_rcg_all[Species %in% c("Atelecyclus undecimdentatus","Majidae","Goneplax rhomboides","Macropodia longipes","Monodaeus couchii", "Corystes cassivelaunus"),ISSCAAP:=42] # Crabs, sea-spiders
+					sl_rcg_all[Species == "Caridea",ISSCAAP:=47] # Miscellaneous marine crustaceans
+					sl_rcg_all[Species %in% c("Dardanus arrosor","Paguristes eremita"),ISSCAAP:=44] # King crabs, squat-lobsters
+					sl_rcg_all[Species == "Sergia robusta",ISSCAAP:= 45] # Shrimps, prawns
+					sl_rcg_all[Species %in% c("Ampulla priamus","Neptunea contraria","Ranella olearium","Scaphander lignarius"),ISSCAAP:=52] # Abalones, winkles, conchs
+					sl_rcg_all[Species %in% c("Cidaris cidaris","Ophiothrix fragilis","Marthasterias glacialis"),ISSCAAP:=76] # Sea-urchins and other echinoderms
+					sl_rcg_all[Species %in% c("Sepiida","Sepiolidae"),ISSCAAP:=57]  # Squids, cuttlefishes, octopuses
+					sl_rcg_all[Species %in% c("Tealia","Adamsia palliata","Holothuriidae"),ISSCAAP:=77] #Miscellaneous aquatic invertebrates
+					sl_rcg_all[Species == "Plantae",ISSCAAP:=94] # Miscellaneous aquatic plants
+		
+			# QCA should be zero
+			sum(is.na(sl_rcg_all$ISSCAAP))
+
+		# Ammodytes and Norway Pout appear classified as "33" - better assign to "37"
+			sl_rcg_all[grepl(Species, pat= "Ammodytes"),ISSCAAP:=37] # Miscellaneous pelagic fishes
+			sl_rcg_all[grepl(Species, pat= "Ammodytidae"),ISSCAAP:=37]  # Miscellaneous pelagic fishes
+			sl_rcg_all[grepl(Species, pat= "Trisopterus esmarkii"),ISSCAAP:=37] # Miscellaneous pelagic fishes
+			
+		# Actinopterygii 39
+			sl_rcg_all[grepl(Species, pat= "Actinopterygii"),ISSCAAP:=39]
+		
+
+		# Adds RCG Catch_group
+			aux_spp_categ<-read.table("001_Inputs_Species_Categ/Table_Species_Categ.txt", header=T, sep="\t")
+			sl_rcg_all[,Catch_group:=aux_spp_categ$RCM_NSEA_categ[match(sl_rcg_all$ISSCAAP,aux_spp_categ$ISSCAAP)]]
+			
+		# QCA should be zero			
+			sum(is.na(sl_rcg_all$Catch_group))
+			
+			# some additional tweaks
+			sl_rcg_all[grepl(Species, pat="Trachurus"),Species:="Trachurus spp."]
+			sl_rcg_all[grepl(Species, pat="Lepidorhombus"),Species:="Lepidorhombus spp."]
+			sl_rcg_all[grepl(Species, pat="Lophi"),Species:="Lophiidae"]
+			
+			sl_rcg_all[Species == "Myxine glutinosa",Catch_group:="other"]
+			sl_rcg_all[Species == "Lichia amia",Catch_group:="large pelagic"]
+			sl_rcg_all[Species == "Acipenser sturio",Catch_group:="diadromous"]
+				
+			# give it a check (see if it makes sense)
+			 # check demersal
+				head(sl_rcg_all[Catch_group == "demersal",list(Kg=sum(Weight_kg)),list(Species)] [order(-Kg),],20)
+			# check flatfish
+				head(sl_rcg_all[Catch_group == "flatfish",list(Kg=sum(Weight_kg)),list(Species)] [order(-Kg),],20)
+			# check small pelagic
+				head(sl_rcg_all[Catch_group == "small pelagic",list(Kg=sum(Weight_kg)),list(Species)] [order(-Kg),],20)
+			# check large pelagic
+				head(sl_rcg_all[Catch_group == "large pelagic",list(Kg=sum(Weight_kg)),list(Species)] [order(-Kg),],20)
+			# check molluscs
+				head(sl_rcg_all[Catch_group == "molluscs",list(Kg=sum(Weight_kg)),list(Species)] [order(-Kg),],20)
+			# check crustaceans
+				head(sl_rcg_all[Catch_group == "crustaceans",list(Kg=sum(Weight_kg)),list(Species)] [order(-Kg),],20)
+			# check	elasmobranchs
+				head(sl_rcg_all[Catch_group == "elasmobranchs",list(Kg=sum(Weight_kg)),list(Species)] [order(-Kg),],20)
+			# check	diadromous
+				head(sl_rcg_all[Catch_group == "diadromous",list(Kg=sum(Weight_kg)),list(Species)] [order(-Kg),],20)
+			# check	incidental by-catch
+				head(sl_rcg_all[Catch_group == "incidental by-catch",list(Kg=sum(Weight_kg)),list(Species)] [order(-Kg),],20)
+			# check	other
+				head(sl_rcg_all[Catch_group == "other",list(Kg=sum(Weight_kg)),list(Species)] [order(-Kg),],20)
+			
+			
 # ========================
 # factorization [establishes the order in unsorted bar graphs]
 # ========================
@@ -337,8 +597,6 @@ year_end <- 2017
 	cl_rcg[,Harbour:=factor(Harbour, levels=sort(unique(Harbour))),]
 	cl_rcg[,Species:=factor(Species, levels=sort(unique(Species))),]
 	cl_rcg[,VesselLengthCategory:=factor(VesselLengthCategory, levels=c("<10","10-<12","12-<18","18-<24","24-<40",">40"))]
-	
-
 
 	ce_rcg[,FlagCountry:=factor(FlagCountry, levels=sort(unique(FlagCountry))),]
 	ce_rcg[,FishingActivityCategoryEuropeanLvl5:=factor(FishingActivityCategoryEuropeanLvl5, levels=sort(unique(FishingActivityCategoryEuropeanLvl5))),]
@@ -346,6 +604,13 @@ year_end <- 2017
 	ce_rcg[,Harbour:=factor(Harbour, levels=sort(unique(Harbour))),]
 	ce_rcg[,VesselLengthCategory:=factor(VesselLengthCategory, levels=c("<10","10-<12","12-<18","18-<24","24-<40",">40"))]
 
+	tr_rcg_all[,FlagCountry:=factor(FlagCountry, levels=sort(unique(FlagCountry))),]
+	tr_rcg_all[,Harbour:=factor(Harbour, levels=sort(unique(Harbour))),]
+	tr_rcg_all[,VesselLengthCategory:=factor(VesselLengthCategory, levels=c("<10","10-<12","12-<18","18-<24","24-<40",">40"))]
+
+	hh_rcg_all[,FishingActivityCategoryEuropeanLvl5:=factor(FishingActivityCategoryEuropeanLvl5, levels=sort(unique(FishingActivityCategoryEuropeanLvl5))),]
+	hh_rcg_all[,FishingActivityCategoryEuropeanLvl6:=factor(FishingActivityCategoryEuropeanLvl6, levels=sort(unique(FishingActivityCategoryEuropeanLvl6))),]
+	
 	# region specific	
 	if(target_region=="RCG_BA"){stop("define")}
 	if(target_region=="RCG_NSEA"){stop("define")}
@@ -354,8 +619,30 @@ year_end <- 2017
 		cl_rcg[,Area:=factor(Area, levels=c('27.5.b','27.5.b.1','27.5.b.2','27.6','27.6.a','27.6.a.n','27.6.a.s','27.6.b','27.7','27.7.a','27.7.b','27.7.c','27.7.e','27.7.f','27.7.g','27.7.h','27.7.j','27.7.k','27.8.a','27.8.b','27.8.c','27.8.d','27.8.e','27.9.a','27.9.b','27.9.b.1','27.9.b.2','27.10','27.10.a','27.10.b')),]
 		ce_rcg[,FishingGround:=factor(FishingGround, levels=c("5b","6","7a","7bcjk","7e","7fgh","8abde","8c+9","10")),]
 		ce_rcg[,Area:=factor(Area, levels=c('27.5.b','27.5.b.1','27.5.b.2','27.6','27.6.a','27.6.a.n','27.6.a.s','27.6.b','27.7','27.7.a','27.7.b','27.7.c','27.7.e','27.7.f','27.7.g','27.7.h','27.7.j','27.7.k','27.8.a','27.8.b','27.8.c','27.8.d','27.8.e','27.9.a','27.9.b','27.9.b.1','27.9.b.2','27.10','27.10.a','27.10.b')),]
+		
+		hh_rcg_all[,FishingGround:=factor(FishingGround, levels=c("5b","6","7a","7bcjk","7e","7fgh","8abde","8c+9","10")),]
+		hh_rcg_all[,Area:=factor(Area, levels=c('27.5.b','27.5.b.1','27.5.b.2','27.6','27.6.a','27.6.a.n','27.6.a.s','27.6.b','27.7','27.7.a','27.7.b','27.7.c','27.7.e','27.7.f','27.7.g','27.7.h','27.7.j','27.7.k','27.8.a','27.8.b','27.8.c','27.8.d','27.8.e','27.9.a','27.9.b','27.9.b.1','27.9.b.2','27.10','27.10.a','27.10.b')),]
+		ca_rcg_all[,FishingGround:=factor(FishingGround, levels=c("5b","6","7a","7bcjk","7e","7fgh","8abde","8c+9","10")),]
+		ca_rcg_all[,Area:=factor(Area, levels=c('27.5.b','27.5.b.1','27.5.b.2','27.6','27.6.a','27.6.a.n','27.6.a.s','27.6.b','27.7','27.7.a','27.7.b','27.7.c','27.7.e','27.7.f','27.7.g','27.7.h','27.7.j','27.7.k','27.8.a','27.8.b','27.8.c','27.8.d','27.8.e','27.9.a','27.9.b','27.9.b.1','27.9.b.2','27.10','27.10.a','27.10.b')),]
 		}	
 	
+#=========================
+# creates CS objects to hauls and samples restricted in RCG region
+#=========================
+
+	tr_rcg<-tr_rcg_all
+	
+	if(target_region=="RCG_NA"){hh_rcg<-hh_rcg_all[Region=="NA",]}
+	if(target_region=="RCG_BA"){hh_rcg<-hh_rcg_all[Region=="BA",]}
+	if(target_region=="RCG_NSEA"){hh_rcg<-hh_rcg_all[Region=="NSEA",]}
+	
+	sl_rcg<-sl_rcg_all[CS_StationId %in% hh_rcg$CS_StationId,]
+	hl_rcg<-sl_rcg_all[CS_SpeciesListId %in% sl_rcg$CS_SpeciesListId,]
+	
+	if(target_region=="RCG_NA"){ca_rcg<-ca_rcg_all[Region=="NA",]}
+	if(target_region=="RCG_BA"){ca_rcg<-ca_rcg_all[Region=="BA",]}
+	if(target_region=="RCG_NSEA"){ca_rcg<-ca_rcg_all[Region=="NSEA",]}
+
 	
 # ========================
 # saves data
@@ -363,11 +650,17 @@ year_end <- 2017
 
 	file_info_cl<-file.info(file_cl)
 	file_info_ce<-file.info(file_ce)
+	file_info_cs<-rbind(file.info(file_tr), file.info(file_hh), file.info(file_sl), file.info(file_hl), file.info(file_ca))
 
 	time_tag<-format(Sys.time(), "%Y%m%d%H%M")
 
 	save(cl_rcg, file_info_cl, file = paste(paste("RDB",target_region,"CL", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
 	save(ce_rcg, file_info_ce, file = paste(paste("RDB",target_region,"CE", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
+	
+	
+	
+	save(tr_rcg_all, hh_rcg_all, sl_rcg_all, hl_rcg_all ,ca_rcg_all, file_info_cs, file = paste(paste("RDB",target_region,"CSall", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
+	save(tr_rcg, hh_rcg, sl_rcg, hl_rcg ,ca_rcg, file_info_cs, file = paste(paste("RDB",target_region,"CSrcg", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
 		
 	
 	# develop!

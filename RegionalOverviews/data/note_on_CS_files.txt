@@ -1,0 +1,8 @@
+Two types of objects were produced:
+
+    # object "*_rcg_all" includes all hauls, etc of trips that registered >=1 haul in RCG areas [i.e., may be pan-regional]
+    # object "*_rcg" includes only data and samples from hauls RCG area
+        # example:
+              # take a long trip that fished in BA and NSEA...
+                # all its data and bio samples will be in "*_rcg_all". trip data will be similar in files for RCG_BA and RCG_NSEA
+                # only the data from hauls in BA will be in "*_rcg" (RCG_BA), only the data from hauls in NA will be in "*_rcg" (RCG_NA). If you merge the two you get the full trip present in "*_rcg_all".
