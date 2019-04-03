@@ -11,7 +11,7 @@ pointsMap_func = function(df,
                           outputPath,
                           Catch_group = NA) {
   # df - a data frame
-  # var -  a column to be summmarised e.g. var = OfficialLandingCatchWeight
+  # var -  a column to be summmarised e.g. var = as.symbol('OfficialLandingCatchWeight') or var = OfficialLandingCatchWeight
   # groupBy - names of columns, by which the grouping should be carried out. IMPORTANT to write it as groupBy = quos(...) e.g. groupBy = quos(Harbours, HarboursDesc)
   #         - IMPORTANT - on the first place put sth you will be plotting by, eg Harbour
   # func - function summarising the data: sum, n_distinct, e.g. func = sum
@@ -27,17 +27,18 @@ pointsMap_func = function(df,
   # Marta Suska
   # NMFRI
   # msuska@mir.gdynia.pl
-  
+
   ################################################################################
   
   require(rlang)
   require(ggplot2)
-  require(mapdata)
-  
+  require(sf)
+
   source('funs/group_func.R')
-  
-  # parameters
-  var = enquo(var)
+
+    # parameters
+  #var = enquo(var) # this one if the var is set like var = OfficialLandingCatchWeight
+  var = quo(UQ(var)) # to make it work with RCG_NA_CL_Graphical_details, this one if var is qith quotations
   func = enquo(func)
   groupBy = enquo(groupBy)
   groupBy_name = quo_name(eval_tidy(quo(UQ(groupBy)))[[1]])
@@ -45,6 +46,7 @@ pointsMap_func = function(df,
   func_name = quo_text(func)
   time = enquo(time)
   
+
   # creating the groupped df
   grouping_result =  eval_tidy(quo(
     UQ(group_func)(
@@ -205,9 +207,9 @@ pointsMap_func = function(df,
     ) +
     scale_size(range = c(0, 10), guide = FALSE) +
     viridis::scale_fill_viridis(
-      option = "magma",
+      option = "viridis",
       # trans = "log",
-      begin = 0.8,
+      begin = 1,
       end = 0,
       name = var_name
     )+
@@ -263,6 +265,19 @@ pointsMap_func = function(df,
 }
 
 
+# pointsMap_func(
+#   cl_rcg,
+#   var = as.symbol('OfficialLandingCatchWeight'),
+#   groupBy = quos(Harbour, Year),
+#   func = sum,
+#   type_of_threshold = 'percent',
+#   value_of_threshold = 100,
+#   points_coord = Harbour,
+#   plot_labels = FALSE,
+#   time = Year,
+#   saveResults = FALSE,
+#   outputPath = 'D:/WG/RCG/IntersessionalWork/Github/RCGs/RegionalOverviews'
+# )
 
 # TO DO:
 # points_coords - should it be a dataset, or a path to a dataset?
