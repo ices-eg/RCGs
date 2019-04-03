@@ -11,7 +11,7 @@ pointsMap_func = function(df,
                           outputPath,
                           Catch_group = NA) {
   # df - a data frame
-  # var -  a column to be summmarised e.g. var = OfficialLandingCatchWeight
+  # var -  a column to be summmarised e.g. var = as.symbol('OfficialLandingCatchWeight') or var = OfficialLandingCatchWeight
   # groupBy - names of columns, by which the grouping should be carried out. IMPORTANT to write it as groupBy = quos(...) e.g. groupBy = quos(Harbours, HarboursDesc)
   #         - IMPORTANT - on the first place put sth you will be plotting by, eg Harbour
   # func - function summarising the data: sum, n_distinct, e.g. func = sum
