@@ -21,6 +21,8 @@
 		# read data
 		rm(list=ls())
 		
+		load("D:/WG/RCG/IntersessionalWork/Subgroup on Regional Overviews/TestData/RDB_RCG_NA_CL_2009_2017_prepared_201904020909.Rdata")
+		
 		load("RDB_RCG_NA_CL_2009_2017_prepared_201904020909.Rdata")
 		load("RDB_RCG_NA_CE_2009_2017_prepared_201904020909.Rdata")
 		
@@ -103,6 +105,8 @@
 		
 	# maps
 		library(tidyverse)
+		
+		#pointsMaps
 		source("funs/pointsMap_func.R")
 
 		########################################################################################################################################################################
@@ -134,8 +138,61 @@
 		    print(i)
 		    if(graph_det$Graph_type[i]==3)
 		    {
-		      res = pointsMap_func(cl_rcg_group, var = OfficialLandingCatchWeight,  groupBy=quos(Harbour, Year), func = sum, type_of_threshold = graph_det$type_of_threshold[i], value_of_threshold =  graph_det$value_of_threshold[i],
-		                     points_coord = Harbours, plot_labels = TRUE, time = Year, saveResults = FALSE)
+		      res = pointsMap_func(cl_rcg_group, var = as.symbol(graph_det$var[i]),  groupBy=str_split(graph_det$groupBy[i], '_')[[1]],
+		                           func = as.symbol(graph_det$func[i]), type_of_threshold = graph_det$type_of_threshold[i], value_of_threshold =  graph_det$value_of_threshold[i],
+		                     points_coord = Harbours, plot_labels = as.symbol(graph_det$plot_labels[i]), time = as.symbol(graph_det$time[i]), saveResults = FALSE)
+		      res[[2]]
+		      ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], ".tiff", sep = ""), sep="/"), units="in", width=15, height=10, dpi=300, compression = 'lzw')
+		      write.table(res[[1]], file =  paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),".txt", sep=""), sep = '\t', dec = '.')
+		      
+		    }
+		  }
+		  
+		}
+		
+		# choroplethMap
+		source("funs/choroplethMap_func.R")
+		
+		########################################################################################################################################################################
+		# Prepare the dataset with coordinates <----------------------- TO DO -  WORK on this part
+		# load shapefile
+		shp  = sf::st_read(
+		  'D:/WG/RCG/IntersessionalWork/Subgroup on Regional Overviews/TestData/shp/FAO_AREAS_NOCOASTLINE.shp' # shp uploaded on sharepoint by Hans
+		)
+		shp %>%
+		  filter((!is.na(F_DIVISION) &
+		            is.na(F_SUBDIVIS)) |
+		           (F_SUBDIVIS == '27.5.b.1' &
+		              is.na(F_SUBUNIT)) |
+		           (F_SUBDIVIS == '27.9.b.2' & is.na(F_SUBUNIT)) # to avoid duplicates, another solution?
+		  ) %>%
+		  mutate(Area = F_CODE) -> shp
+		# add centroids - to put areas labels there
+		FAOshp = cbind(shp,  sf::st_coordinates(sf::st_centroid(shp$geometry)))
+
+		########################################################################################################################################################################
+		
+		graph_det_all <- read.table("RCG_NA_CL_Graphical_details4.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+		
+		for(group in unique(graph_det_all$Catch_group))
+		{
+		  
+		  print(group)	
+		  
+		  # subsets group		
+		  graph_det<-graph_det_all[graph_det_all$Catch_group==group,]
+		  if(group!="NULL") cl_rcg_group<-cl_rcg[Catch_group==group] else cl_rcg_group<-cl_rcg
+		  
+		  # runs graphs		
+		  for (i in 1:nrow(graph_det))
+		  {
+		    print(i)
+		    if(graph_det$Graph_type[i]==4)
+		    {
+		      res = choroplethMap_func(cl_rcg_group, var = as.symbol(graph_det$var[i]),  groupBy=str_split(graph_det$groupBy[i], '_')[[1]],
+		                               func = as.symbol(graph_det$func[i]), type_of_threshold = graph_det$type_of_threshold[i], value_of_threshold =  graph_det$value_of_threshold[i],
+		                               points_coord = FAOshp,
+		                               plot_labels = as.symbol(graph_det$plot_labels[i]), time = as.symbol(graph_det$time[i]), saveResults = FALSE)
 		      res[[2]]
 		      ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], ".tiff", sep = ""), sep="/"), units="in", width=15, height=10, dpi=300, compression = 'lzw')
 		      write.table(res[[1]], file =  paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),".txt", sep=""), sep = '\t', dec = '.')
