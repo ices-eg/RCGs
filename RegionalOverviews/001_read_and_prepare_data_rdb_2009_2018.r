@@ -105,7 +105,64 @@ source("funs/func_download_data_from_sharepoint.r")
 	dim(sl); sl<-merge(sl, hh[,list(CS_StationId,CS_TripId)], by="CS_StationId", all.x=T); dim(sl)
 	dim(hl); hl<-merge(hl, sl[,list(CS_SpeciesListId,CS_StationId,CS_TripId)], by="CS_SpeciesListId", all.x=T); dim(hl)
 	
+# ======================== 		
+# adds an additional convenient Id to ca
+# ======================== 		
 	
+	# adds a column with probable hauls to ca [useful to identify positions of bio samples]
+		# auxID is made with mandatory fields [note: length is not used - can be attempted but probably too much resolution and prone to error when samples brought back to lab]
+		# pass 1
+			# for SamplingType == S auxID includes StatisticalRectangle
+			# for SamplingType != S StatisticalRectangle is not included
+		# pass 2 (only in remaining NAs for SamplingType == S)
+			# auxID a bit more crude, excluding StatisticalRectangle
+			# not much improvement
+			
+		# note: might be worth testing inclusion of SamplingType in auxID, i.e., forcing non-S records of ca to fully correspond in terms of SamplingType
+	
+	aux<-sl
+	dim(aux); aux<-merge(aux, hh[,list(CS_StationId,Area,StatisticalRectangle)], by="CS_StationId", all.x=T); dim(aux)
+	
+	# pass 1 [both SamplingType with the ID]
+	
+	# builds ID with mandatory variables
+		dim(aux); aux[, auxID:=paste(CS_TripId, Area, SpeciesAphiaID, CatchCategory, LandingCategory, StatisticalRectangle),]; dim(aux)
+		aux[!SamplingType=="S", auxID:=paste(CS_TripId, Area, SpeciesAphiaID, CatchCategory, LandingCategory),] 
+		dim(ca); ca[, auxID:=paste(CS_TripId, Area, SpeciesAphiaID, CatchCategory, LandingCategory, StatisticalRectangle),]; dim(ca)
+		ca[!SamplingType=="S", auxID:=paste(CS_TripId, Area, SpeciesAphiaID, CatchCategory, LandingCategory),]
+	
+		aux1<-unique(aux[,list(CS_StationId,auxID, CS_TripId)])
+		aux2<-aux1[,list(CS_StationId_Probable=paste(CS_StationId, collapse=",")), by=list(auxID)]	
+
+		# assignment	
+		dim(ca); ca<-merge(ca, aux2, by="auxID", all.x=T); dim(ca)	
+	
+			# some results on assignment:
+				# % allocated
+				 sum(!is.na(ca$CS_StationId_Probable))/nrow(ca)*100
+				# % allocated to single haul
+				 sum(!is.na(ca$CS_StationId_Probable) & !grepl(ca$CS_StationId_Probable, pat=","))/nrow(ca)*100
+			 
+	# pass 2 [only SamplingType=="S"]
+		dim(aux); aux[SamplingType=="S", auxID:=paste(CS_TripId, Area, SpeciesAphiaID, CatchCategory, LandingCategory),]; dim(aux)
+		dim(ca); ca[SamplingType=="S", auxID:=paste(CS_TripId, Area, SpeciesAphiaID, CatchCategory, LandingCategory),]; dim(ca)
+		
+		aux1<-unique(aux[,list(SamplingType,CS_StationId,auxID, CS_TripId)])
+		aux2<-aux1[,list(CS_StationId_Probable=paste(CS_StationId, collapse=",")), by=list(SamplingType,auxID)]	
+		
+		# assignment
+		ca[SamplingType=="S" & is.na(CS_StationId_Probable),]$CS_StationId_Probable <- aux2[SamplingType=="S",]$CS_StationId_Probable[match(ca[SamplingType=="S" & is.na(CS_StationId_Probable),"auxID"]$auxID,aux2[SamplingType=="S","auxID"]$auxID)]
+		
+			# some results on assignment:
+				# % allocated
+				 sum(!is.na(ca$CS_StationId_Probable))/nrow(ca)*100
+				# % allocated to single haul
+				 sum(!is.na(ca$CS_StationId_Probable) & !grepl(ca$CS_StationId_Probable, pat=","))/nrow(ca)*100
+	
+	# deletes auxID
+		ca[,auxID:=NULL]
+
+		
 # ====================== 
 # Set Prep Options 
 # ======================  
@@ -585,6 +642,10 @@ year_end <- 2017
 			# check	other
 				head(sl_rcg_all[Catch_group == "other",list(Kg=sum(Weight_kg)),list(Species)] [order(-Kg),],20)
 			
+		# adds ISCAAP and Catch_group to ca
+			ref_table<-unique(sl_rcg_all[,list(SpeciesAphiaID, ISSCAAP,Catch_group)])
+			sum(duplicated(ref_table$SpeciesAphiaID))
+			dim(ca_rcg_all); ca_rcg_all<-merge(ca_rcg_all, ref_table, by="SpeciesAphiaID", all.x=T); dim(ca_rcg_all)
 			
 # ========================
 # factorization [establishes the order in unsorted bar graphs]
