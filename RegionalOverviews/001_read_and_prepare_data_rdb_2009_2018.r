@@ -11,6 +11,7 @@
 source("funs/func_download_data_from_sharepoint.r")
  
 # downloads rdb data from sharepoint 
+	
 	#sharepoint_address <- "ADD_HERE_website_address"
 	#download_data_from_sharepoint (sharepoint_address, filename_vector = c("CL Landing 2009-2018.zip","CE Effort 2009-2018.zip"), dir_download_browser = "ADD_HERE_download_folder_adress", dir_download_target = getwd(), unzip=TRUE)
 
@@ -58,10 +59,30 @@ library(data.table)
 # ======================  
  
 target_region <- "RCG_NA" # "RCG_BA", "RCG_NSEA"
+target_region <- "RCG_NSEA" # "RCG_NSEA"
 year_start <- 2009
 year_end <- 2017
+
+# ======================
+# Tweak on areas/region 
+# ====================== 
  
- 
+ # there are a few ambiguous records
+	# Area 27.7
+		# records from IRL are likely NA
+			ce[Area=="27.7" & FlagCountry=="IRL","Region"]<-"NA"
+			ce[Area=="27.7" & FlagCountry=="IRL","FishingGround"]<-NA
+			# note some strange rectangles subsist (passed all to NA)
+				ce[Area=="27.7" & FlagCountry=="IRL" & !is.na(StatisticalRectangle),"StatisticalRectangle"]
+				ce[Area=="27.7" & FlagCountry=="IRL" & !is.na(StatisticalRectangle),"StatisticalRectangle"]<-NA
+		# records from LTU are likely OTM_SPF_40-59_0_0 and likely NA (only 5%-20% in 7.d) 
+			ce[Area=="27.7" & FlagCountry=="LTU","Region"]<-"NA"
+			ce[Area=="27.7" & FlagCountry=="LTU","FishingGround"]<-NA
+	# Area 27.3
+		# records from LTU "OTM_SPF_32-69_0_0" are likely NSEA
+			ce[Area=="27.3" & FlagCountry=="LTU","Region"]<-"NSEA"
+			ce[Area=="27.3" & FlagCountry=="LTU","FishingGround"]<-NA
+			ce[Area=="27.3" & FlagCountry=="LTU","Area"]<-"27.3.a"
  
 # ========================
 # subsets data and RCG specific preparations
@@ -77,22 +98,24 @@ year_end <- 2017
 
 		cl_rcg <- cl[Area %in% target_areas & Year>=year_start & Year<=year_end,]
 			# QCA: should yield 0
-			#table(cl[Region=="BS" &  !target_rows,"Area"])
+			table(cl[Region=="BS" &  !Area %in% target_areas,"Area"])
+			table(cl[!Region=="BS" &  Area %in% target_areas,"Area"])
 			# QCA: should yield BS 
 			#table(cl_rcg$Region)
 				# corrects
-				cl_rcg[!Region=="BS",FishingGround:=NA,]	
-				cl_rcg[!Region=="BS",Region:="BS",]		
+				#cl_rcg[!Region=="BS",FishingGround:=NA,]	
+				#cl_rcg[!Region=="BS",Region:="BS",]		
 		
 		ce_rcg <- ce[Area %in% target_areas & Year>=year_start & Year<=year_end,]
 			# QCA: should yield 0
 				# ATT: a few records 27.3 and 27.7 in BA?! 
-				#table(ce[Region=="BS" &  !target_rows,"Area"])	 
+				table(ce[Region=="BS" &  !Area %in% target_areas,"Area"])	 
+				table(ce[!Region=="BS" &  Area %in% target_areas,"Area"])	 
 			# QCA: should yield BS 
 				#table(ce_rcg$Region)
 				# corrects
-					ce_rcg[!Region=="BS",FishingGround:=NA,]				
-					ce_rcg[!Region=="BS",Region:="BS",]	
+					#ce_rcg[!Region=="BS",FishingGround:=NA,]				
+					#ce_rcg[!Region=="BS",Region:="BS",]	
 		}
 
 # RCM NS&EA: the  North  Sea  (ICES  areas  IIIa,  IV  and  VIId),  the  Eastern  Arctic  (ICES  areas  I  and  II),  the  ICES  divisions Va, XII & XIV and the NAFO areas.
@@ -105,28 +128,30 @@ year_end <- 2017
 		cl_rcg <-cl[ (Area %in% target_areas_nsea | grepl(Area, pat="21.") ) & Year>=year_start & Year<=year_end,]
 		
 			# QCA: should yield 0
-				# ATT: a few records 41, 51 and 57 in NSEA?! 
-				#table(cl[Region=="NSEA" &  !target_rows,"Area"])
+				# ATT: a few records 41, 51 and 57 in NSEA [these have not been included in cl_rcg] 
+				table(cl[Region=="NSEA" & !(Area %in% target_areas_nsea | grepl(Area, pat="21.") ),"Area"])
+				table(cl[!Region=="NSEA" & (Area %in% target_areas_nsea | grepl(Area, pat="21.") ),"Area"])
 			# QCA: should yield NSEA
 				# ATT: a few records (21 - NAFO) not NSEA?!			
-				#table(cl_rcg$Region)
-				#table(cl_rcg[!Region=="NSEA",Area])
+				table(cl_rcg$Region)
+				table(cl_rcg[!Region=="NSEA",Area])
 					# corrects				
-					cl_rcg[!Region=="NSEA",FishingGround:=NA,]	
-					cl_rcg[!Region=="NSEA",Region:="NSEA",]
+					cl_rcg[!Region=="NSEA" & (Area %in% target_areas_nsea | grepl(Area, pat="21.") ),Region:="NSEA",]
+					table(cl_rcg$Region)
 			
 		ce_rcg <- ce[ (Area %in% target_areas_nsea | grepl(Area, pat="21.") ) & Year>=year_start & Year<=year_end,]
 			# QCA: should yield 0
-				# ATT: a few records 41, 51 and 57 in NSEA?! 
-				#table(ce[Region=="NSEA" &  !target_rows,"Area"])		
+				# ATT: a few records 41, 51 and 57 in NSEA [these have not been included in ce_rcg] 
+				table(ce[Region=="NSEA" & !(Area %in% target_areas_nsea | grepl(Area, pat="21.") ),"Area"])	
+				table(ce[!Region=="NSEA" & (Area %in% target_areas_nsea | grepl(Area, pat="21.") ),"Area"])	
 			# QCA: should yield NSEA
 				# ATT: a few records (21 - NAFO) not NSEA?!			
-				#table(ce_rcg$Region)
-				#table(ce_rcg[!Region=="NSEA",Area])		
+				table(ce_rcg$Region)
+				table(ce_rcg[!Region=="NSEA",Area])		
 					# corrects	
-					ce_rcg[!Region=="NSEA",FishingGround:=NA,]	
-					ce_rcg[!Region=="NSEA",Region:="NSEA",]
-			
+					ce_rcg[!Region=="NSEA" & grepl(Area, pat="21."),Region:="NSEA",]
+					table(ce_rcg$Region)
+					
 		}	
 		
 # RCM NA: the North Atlantic (ICES areas V-X, excluding Va and VIId)
@@ -144,15 +169,15 @@ year_end <- 2017
 											grepl (Area, pat="27.10") ) &  
 												!grepl (Area, pat="27.5.a") &  !grepl (Area, pat="27.7.d") & Year>=year_start & Year<=year_end,]
 			# QCA: should yield 0
-				# ATT: a few records 21 in NA?! 
-				 #table(cl[Region=="NA" &  !target_rows,"Area"])		
+				# ATT: a few records 21 in NA [these have not been included in cl_rcg]  
+				table(cl[Region=="NA", "Area"])		
 			# QCA: should yield NA
 				 #table(cl_rcg$Region)
-				#table(cl_rcg[!Region=="NA",Area])
+				table(cl_rcg[!Region=="NA",Area])
 				# corrects
 				
-				cl_rcg[!Region=="NA",FishingGround:=NA,]				
-				cl_rcg[!Region=="NA",Region:="NA",]
+				#cl_rcg[!Region=="NA",FishingGround:=NA,]				
+				#cl_rcg[!Region=="NA",Region:="NA",]
 
 	
 		# ce			
@@ -164,15 +189,15 @@ year_end <- 2017
 											grepl (Area, pat="27.10") ) &  
 												!grepl (Area, pat="27.5.a") &  !grepl (Area, pat="27.7.d") & Year>=year_start & Year<=year_end,]
 			# QCA: should yield 0
-				# ATT: a few records 21 in NA?! 
-				#table(ce[Region=="NA" &  !target_rows,"Area"])		
+				# ATT: a few records 21 in NA [these have not been included in cl_rcg]   
+				table(ce[Region=="NA","Area"])		
 			# QCA: should yield NSEA
 				# ATT: a few records 27.7 in NA?!			
 				#table(ce_rcg$Region)
-				#table(ce_rcg[!Region=="NA",Area])
+				table(ce_rcg[!Region=="NA",Area])
 					# corrects					
-					ce_rcg[!Region=="NA",FishingGround:=NA,]		
-					ce_rcg[!Region=="NA",Region:="NA",]
+					#ce_rcg[!Region=="NA",FishingGround:=NA,]		
+					#ce_rcg[!Region=="NA",Region:="NA",]
 					
 					
 				
@@ -336,10 +361,13 @@ year_end <- 2017
 # saves data
 # ========================	
 
+	file_info_cl<-file.info(file_cl)
+	file_info_ce<-file.info(file_ce)
+
 	time_tag<-format(Sys.time(), "%Y%m%d%H%M")
 
-	save(cl_rcg, file = paste(paste("RDB",target_region,"CL", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
-	save(ce_rcg, file = paste(paste("RDB",target_region,"CE", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
+	save(cl_rcg, file_info_cl, file = paste(paste("RDB",target_region,"CL", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
+	save(ce_rcg, file_info_ce, file = paste(paste("RDB",target_region,"CE", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
 		
 	
 	# develop!
