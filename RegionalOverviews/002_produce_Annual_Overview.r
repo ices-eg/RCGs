@@ -279,8 +279,143 @@
 		
 		
 	# maps
-		# add here
+		library(tidyverse)
+		
+		# Load shapefiles and Harbour Lists
+		########################################################################################################################################################################
+		# Prepare the dataset with coordinates <-----------------------  WORK on this part
+		Harbours_Codes = read_csv('C:/Users/msuska/Desktop/RCG/2018/Data/Harbours_Codes.csv') # file from -> RCG sharepoint->Data _> Data group scripts and data -> data files
+		
+		Harbours_Codes %>% 
+		  mutate(Harbour = Hcode) %>% 
+		  select(Harbour, lat, lon)-> Harbours
+		
+		# load shapefile
+		shp  = sf::st_read(
+		  'D:/WG/RCG/IntersessionalWork/Subgroup on Regional Overviews/TestData/shp/FAO_AREAS_NOCOASTLINE.shp' # shp uploaded on sharepoint by Hans
+		)
+		shp %>%
+		  filter((!is.na(F_DIVISION) &
+		            is.na(F_SUBDIVIS)) |
+		           (F_SUBDIVIS == '27.5.b.1' &
+		              is.na(F_SUBUNIT)) |
+		           (F_SUBDIVIS == '27.9.b.2' & is.na(F_SUBUNIT)) # to avoid duplicates, another solution?
+		  ) %>%
+		  mutate(Area = F_CODE) -> shp
+		# add centroids - to put areas labels there, and to put piecharts there, creates new columns to the dataset named X, Y
+		FAOshp = cbind(shp,  sf::st_coordinates(sf::st_centroid(shp$geometry))) %>% mutate(lon = X, lat = Y)
+		
+		StatRectshp  = sf::st_read(
+		  'D:/maps/shapefile/ICES_Statistical_Rectangles_Eco/ICES_Statistical_Rectangles_Eco.shp' 
+		)
+		StatRectshp %>% mutate(StatisticalRectangle = ICESNAME)-> StatRectshp
+		StatRectshp = cbind(StatRectshp,  sf::st_coordinates(sf::st_centroid(StatRectshp$geometry))) %>% mutate(lon = X, lat = Y)
+		
+		
+		options(scipen=10000) # to remove scientific notation from the legend
+		########################################################################################################################################################################
+		
+		#pointsMaps
+		source("funs/pointsMap_func.R")
 
+		graph_det_all <- read.table("RCG_NA_CE_Graphical_details3.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+
+		for(group in unique(graph_det_all$Catch_group))
+		{
+
+		  print(group)
+
+		  # subsets group
+		  graph_det<-graph_det_all[graph_det_all$Catch_group==group,]
+		  if(group!="NULL") ce_rcg_group<-ce_rcg[Catch_group==group] else ce_rcg_group<-ce_rcg
+
+		  # runs graphs
+		  for (i in 1:nrow(graph_det))
+		  {
+		    print(i)
+		    if(graph_det$Graph_type[i]==3)
+		    {
+		      res = pointsMap_func(ce_rcg_group, var = as.symbol(graph_det$var[i]),  groupBy=str_split(graph_det$groupBy[i], '_')[[1]],
+		                           func = as.symbol(graph_det$func[i]), type_of_threshold = graph_det$type_of_threshold[i], value_of_threshold =  graph_det$value_of_threshold[i],
+		                           points_coord = Harbours, plot_labels = as.symbol(graph_det$plot_labels[i]), time = as.symbol(graph_det$time[i]), saveResults = FALSE,
+		                           Catch_group = graph_det$Catch_group[i])
+		      res[[2]]
+		      ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], ".tiff", sep = ""), sep="/"), units="in", width=15, height=10, dpi=300, compression = 'lzw')
+		      write.table(res[[1]], file =  paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),".txt", sep=""), sep = '\t', dec = '.')
+
+		    }
+		  }
+
+		}
+		
+		# choroplethMap
+		source("funs/choroplethMap_func.R")
+		
+		graph_det_all <- read.table("RCG_NA_CE_Graphical_details4.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+		
+		for(group in unique(graph_det_all$Catch_group))
+		{
+		  
+		  print(group)	
+		  
+		  # subsets group		
+		  graph_det<-graph_det_all[graph_det_all$Catch_group==group,]
+		  if(group!="NULL") ce_rcg_group<-ce_rcg[Catch_group==group] else ce_rcg_group<-ce_rcg
+		  
+		  # runs graphs		
+		  for (i in 1:nrow(graph_det))
+		  {
+		    print(i)
+		    if(graph_det$Graph_type[i]==4)
+		    {
+		      res = choroplethMap_func(ce_rcg_group, var = as.symbol(graph_det$var[i]),  groupBy=str_split(graph_det$groupBy[i], '_')[[1]],
+		                               func = as.symbol(graph_det$func[i]), type_of_threshold = graph_det$type_of_threshold[i], value_of_threshold =  graph_det$value_of_threshold[i],
+		                               points_coord = eval(parse(text = graph_det$points_coord[i])),
+		                               plot_labels = as.symbol(graph_det$plot_labels[i]), time = as.symbol(graph_det$time[i]), saveResults = FALSE,
+		                               Catch_group = graph_det$Catch_group[i])
+		      res[[2]]
+		      ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], ".tiff", sep = ""), sep="/"), units="in", width=15, height=10, dpi=300, compression = 'lzw')
+		      write.table(res[[1]], file =  paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),".txt", sep=""), sep = '\t', dec = '.')
+		      
+		    }
+		  }
+		  
+		}
+		
+		#scatterPieMap_func
+		source("funs/scatterpieMap_func.R")
+
+		graph_det_all <- read.table("RCG_NA_CE_Graphical_details5.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+
+		for(group in unique(graph_det_all$Catch_group))
+		{
+
+		  print(group)
+
+		  # subsets group
+		  graph_det<-graph_det_all[graph_det_all$Catch_group==group,]
+		  if(group!="NULL") ce_rcg_group<-ce_rcg[Catch_group==group] else ce_rcg_group<-ce_rcg
+
+		  # runs graphs
+		  for (i in 1:nrow(graph_det))
+		  {
+		    print(i)
+		    if(graph_det$Graph_type[i]==5)
+		    {
+		      res = scatterpieMap_func(ce_rcg_group, var = as.symbol(graph_det$var[i]),  groupBy=str_split(graph_det$groupBy[i], '_')[[1]], plotBy = graph_det$plotBy[i],
+		                               func = as.symbol(graph_det$func[i]), type_of_threshold = graph_det$type_of_threshold[i], value_of_threshold =  graph_det$value_of_threshold[i],
+		                               points_coord =eval(parse(text = graph_det$points_coord[i])),# FAOshp,
+		                               plot_labels = as.symbol(graph_det$plot_labels[i]), time = as.symbol(graph_det$time[i]), saveResults = FALSE,
+		                               Catch_group = graph_det$Catch_group[i])
+		      res[[2]]
+		      ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], ".tiff", sep = ""), sep="/"), units="in", width=15, height=10, dpi=300, compression = 'lzw')
+		      write.table(res[[1]], file =  paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),".txt", sep=""), sep = '\t', dec = '.')
+
+		    }
+		  }
+
+		}
+		 
 	# river flow	
 		# add here			
 		
