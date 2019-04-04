@@ -1,2 +1,6 @@
 Catch_group	Section	Subsection	Subsubsection	Graph_type	Graph_variant	var	groupBy	func	type_of_threshold	value_of_threshold	points_coord	plot_labels	time	png_dir	png_name	txt_dir	txt_name
 NULL	2	2.1	2.1.5	4		OfficialLandingCatchWeight	Area_Year	sum	percent	100	FAOshp	TRUE	Year	002_Outputs\figures	2.1.5_4	002_Outputs\tables	2.1.5_4
+NULL	2	2.1	2.1.10	4		OfficialLandingCatchWeight	StatisticalRectangle_Year	sum	percent	100	StatRectshp	FALSE	Year	002_Outputs\figures	2.1.10_4	002_Outputs\tables	2.1.10_4
+small pelagic	2	2.2	2.2.9	4		OfficialLandingCatchWeight	StatisticalRectangle_Year	sum	percent	100	StatRectshp	FALSE	Year	002_Outputs\figures	2.2.9_4	002_Outputs\tables	2.2.9_4
+demersal	2	2.3	2.3.10	4		OfficialLandingCatchWeight	StatisticalRectangle_Year	sum	percent	100	StatRectshp	FALSE	Year	002_Outputs\figures	2.3.10_4	002_Outputs\tables	2.3.10_4
+flatfish	2	2.4	2.4.9	4		OfficialLandingCatchWeight	StatisticalRectangle_Year	sum	percent	100	StatRectshp	FALSE	Year	002_Outputs\figures	2.4.9_4	002_Outputs\tables	2.4.9_4
