@@ -143,13 +143,13 @@ pointsMap_func = function(df,
     title = paste(func_name,
                   ' of ',
                   var_name,
-                  ' per ',
+                  ' by ',
                   groupBy_name,
                   ', ',
                   time,
                   sep = '')
   } else{
-    title = paste(func_name, ' ', var_name, ' per ',  groupBy_name, ', ', time, sep = '')
+    title = paste(func_name, ' ', var_name, ' by ',  groupBy_name, ', ', time, sep = '')
   }
   
   # If Catch_group is known

@@ -175,7 +175,7 @@ scatterpieMap_func = function(df,
                   time,
                   sep = '')
   } else{
-    title = paste(func_name, ' ', var_name, ' per ',  groupBy_name, ', ', time, sep = '')
+    title = paste(func_name, ' ', var_name, ' by ',  groupBy_name, ', ', time, sep = '')
   }
   
   # If Catch_group is known
@@ -227,7 +227,7 @@ scatterpieMap_func = function(df,
   unique_bys = mdf2  %>%  distinct(!!eval_tidy(quo(UQ(plotBy)))[[1]]) %>% nrow()
 
   radius =0.3
-  radiusMultiply = ifelse(groupBy_name %in% c('Area'), 5, ifelse(groupBy_name %in% c('Harbour'), 3, 1.5 ))
+  radiusMultiply = ifelse(groupBy_name %in% c('Area'), 4, ifelse(groupBy_name %in% c('Harbour'), 3, 1.5 ))
   pie.list <- mdf2%>%
     select(lon, lat, !!eval_tidy(quo(UQ(groupBy)))[[1]], !!eval_tidy(quo(UQ(plotBy)))[[1]], !!eval_tidy(quo(UQ(groupBy)))[[2]], !!var) %>%  
     spread(!!eval_tidy(quo(UQ(plotBy)))[[1]], !!var, fill =0) %>%
