@@ -21,7 +21,6 @@
 		# read data
 		rm(list=ls())
 		
-		load("D:/WG/RCG/IntersessionalWork/Subgroup on Regional Overviews/TestData/RDB_RCG_NA_CL_2009_2017_prepared_201904020909.Rdata")
 		
 		load("RDB_RCG_NA_CL_2009_2017_prepared_201904020909.Rdata")
 		load("RDB_RCG_NA_CE_2009_2017_prepared_201904020909.Rdata")
