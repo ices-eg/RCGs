@@ -1,0 +1,3 @@
+Catch_group	Section	Subsection	Subsubsection	Graph_type	Graph_variant	var	groupBy	plotBy	func	type_of_threshold	value_of_threshold	points_coord	plot_labels	time	png_dir	png_name	txt_dir	txt_name
+NULL	2	2.1	2.1.5	5		OfficialLandingCatchWeight	Area_Year	FlagCountry	sum	percent	100	FAOshp	TRUE	Year	002_Outputs\figures	2.1.5_5	002_Outputs\tables	2.1.5_5
+NULL	2	2.1	2.1.8	5		OfficialLandingCatchWeight	Harbour_Year	FlagCountry	sum	percent	95	Harbours	FALSE	Year	002_Outputs\figures	2.1.8_5	002_Outputs\tables	2.1.8_5
