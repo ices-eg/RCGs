@@ -13,6 +13,11 @@
 				# all its data will be in rcg_all from BA and NSEA
 				# only the data from hauls in BA will be in rcg (BA), only the data from hauls in NA will be in rcg (NA). If you merge the two you get the full trip present in rcg_all.
 
+				
+	# 2019-04-04: CE: added var LandingCountry (2 first letters of Harbour)
+	# 2019-04-04: CE: effort variables passed to numeric (some sum exceeded integer limits)
+	
+				
 # ========================
 # downloads data from sharepoint
 # ======================== 
@@ -398,6 +403,11 @@ year_end <- 2017
 		cl_rcg[,OfficialLandingCatchWeight_ton := OfficialLandingCatchWeight/1000]
 		cl_rcg[,OfficialLandingCatchWeight_1000ton := OfficialLandingCatchWeight/1000000]
 	
+	# CE 
+		# can be improved
+		ce_rcg[,LandingCountry:=substr(Harbour, start=1, stop=2)]
+
+	
 	# CS
 
 		tr_rcg_all[!is.na(VesselLength) & VesselLength<10,VesselLengthCategory:="<10"]
@@ -664,7 +674,10 @@ year_end <- 2017
 	ce_rcg[,FishingActivityCategoryEuropeanLvl6:=factor(FishingActivityCategoryEuropeanLvl6, levels=sort(unique(FishingActivityCategoryEuropeanLvl6))),]
 	ce_rcg[,Harbour:=factor(Harbour, levels=sort(unique(Harbour))),]
 	ce_rcg[,VesselLengthCategory:=factor(VesselLengthCategory, levels=c("<10","10-<12","12-<18","18-<24","24-<40",">40"))]
-
+	ce_rcg[,DaysAtSea:=as.numeric(DaysAtSea)]
+	ce_rcg[,KWDays:=as.numeric(KWDays)]
+	ce_rcg[,GTDays:=as.numeric(GTDays)]
+		
 	tr_rcg_all[,FlagCountry:=factor(FlagCountry, levels=sort(unique(FlagCountry))),]
 	tr_rcg_all[,Harbour:=factor(Harbour, levels=sort(unique(Harbour))),]
 	tr_rcg_all[,VesselLengthCategory:=factor(VesselLengthCategory, levels=c("<10","10-<12","12-<18","18-<24","24-<40",">40"))]
