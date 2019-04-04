@@ -259,20 +259,34 @@ choroplethMap_func = function(df,
   
 }
 
-
-choroplethMap_func(
-  cl_rcg,
-  var = as.symbol('OfficialLandingCatchWeight'),
-  groupBy = c('Area', 'Year'),
-  func = as.symbol('sum'),
-  type_of_threshold = 'percent',
-  value_of_threshold = 100,
-  points_coord = FAOshp,
-  plot_labels = FALSE,
-  time = as.symbol('Year'),
-  saveResults = FALSE,
-  outputPath = 'D:/WG/RCG/IntersessionalWork/Github/RCGs/RegionalOverviews'
-)
-
-
+# 
+# choroplethMap_func(
+#   cl_rcg,
+#   var = as.symbol('OfficialLandingCatchWeight'),
+#   groupBy = c('Area', 'Year'),
+#   func = as.symbol('sum'),
+#   type_of_threshold = 'percent',
+#   value_of_threshold = 100,
+#   points_coord = FAOshp,
+#   plot_labels = FALSE,
+#   time = as.symbol('Year'),
+#   saveResults = FALSE,
+#   outputPath = 'D:/WG/RCG/IntersessionalWork/Github/RCGs/RegionalOverviews'
+# )
+# 
+# choroplethMap_func(
+#   cl_rcg,
+#   var = as.symbol('OfficialLandingCatchWeight'),
+#   groupBy = c('StatisticalRectangle', 'Year'),
+#   func = as.symbol('sum'),
+#   type_of_threshold = 'percent',
+#   value_of_threshold = 100,
+#   points_coord = StatRectshp,
+#   plot_labels = FALSE,
+#   time = as.symbol('Year'),
+#   saveResults = FALSE,
+#   outputPath = 'D:/WG/RCG/IntersessionalWork/Github/RCGs/RegionalOverviews'
+# )
+# 
+# 
 
