@@ -118,7 +118,7 @@ group_func = function(df,
                                               analysis_type = func_name) -> gdf
   
   # save info about missing groupBy entries
-    gdf %>% ungroup() %>% mutate(pr = !!var/sum(!!var, na.rm = TRUE)) %>% filter(is.na(!!groupBy[[1]]))->missing_entries
+    gdf %>% ungroup() %>% mutate(pr = !!var/sum(!!var, na.rm = TRUE)*100) %>% filter(is.na(!!groupBy[[1]]))->missing_entries
 
 
   # apply the threshold
