@@ -179,9 +179,7 @@ scatterpieMap_func = function(df,
   }
   
   # If Catch_group is known
-  if (!is.na(Catch_group)) {
-    title = paste(title, ' (', Catch_group, ')', sep = '')
-  }
+  if(!is.na(Catch_group) & Catch_group!='NULL'){ title = paste(title, ' (',Catch_group, ')', sep ='')}
   
   
   # subtitle - as the information about used thresholds
@@ -229,6 +227,7 @@ scatterpieMap_func = function(df,
   unique_bys = mdf2  %>%  distinct(!!eval_tidy(quo(UQ(plotBy)))[[1]]) %>% nrow()
 
   radius =0.3
+  radiusMultiply = ifelse(groupBy_name %in% c('Area'), 5, ifelse(groupBy_name %in% c('Harbour'), 3, 1.5 ))
   pie.list <- mdf2%>%
     select(lon, lat, !!eval_tidy(quo(UQ(groupBy)))[[1]], !!eval_tidy(quo(UQ(plotBy)))[[1]], !!eval_tidy(quo(UQ(groupBy)))[[2]], !!var) %>%  
     spread(!!eval_tidy(quo(UQ(plotBy)))[[1]], !!var, fill =0) %>%
@@ -245,7 +244,7 @@ scatterpieMap_func = function(df,
                                                           theme_void()))) %>%
     # convert each grob to an annotation_custom layer. I've also adjusted the radius
     # value to a reasonable size (based on my screen resolutions).
-    mutate(radius = Total/max(Total, na.rm = TRUE)*5) %>%
+    mutate(radius = Total/max(Total, na.rm = TRUE)*radiusMultiply) %>%
     rowwise() %>%
     #mutate(radius = radius*4) %>%
     mutate(subgrob = list(annotation_custom(grob = pie.grob,
@@ -336,7 +335,7 @@ if(groupBy_name=='Area'){
       value_of_threshold,
       sep = ''
     )
-    if (!is.na(Catch_group)) {
+    if (!is.na(Catch_group) & Catch_group!='NULL') {
       fileName = paste(fileName, Catch_group, sep = "")
     }
     write.table(
