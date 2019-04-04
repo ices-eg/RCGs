@@ -78,21 +78,24 @@ choroplethMap_func = function(df,
   points_coord %>%  full_join(tdf) %>%  filter(!is.na(!!var)) -> mdf
   
   # add info about records without coordinates <------------------ TO DO
-  if (sum(is.na(mdf$geometry)) > 0) {
-    message("Not all records from the dataset have corresponding entry in the shapefile")
-    missing_caption = 'Not all records from the dataset have corresponding entry in the shapefile'
+  if (nrow(mdf %>% filter(is.na(ID))) > 0) {
+    mdf %>% filter(is.na(ID) & !is.na(!!eval_tidy(quo(UQ(groupBy)[[1]])))) %>% select(pr)-> missing_value
+    message(paste("Not all records from the dataset have corresponding entry in the shapefile, ",round(unlist(missing_value)), '% ', sep = '' ))
+    missing_caption = paste("\n Not all records from the dataset have corresponding entry in the shapefile, ",round(unlist(missing_value)), '% ', sep = '' )
   } else{
     missing_caption = ''
   }
   
-  # set the limits
-  limits <- st_buffer(mdf, dist = 1) %>% st_bbox()
+
   
   # load world map
   m <- ne_countries(scale = "medium", returnclass = "sf")
   
   # Take only areas with geometry
-  mdf %>% filter(!is.na(geometry)) -> mdf2
+  mdf %>% filter(!is.na(ID)) -> mdf2
+  
+  # set the limits
+  limits <- st_buffer(mdf2, dist = 1) %>% st_bbox()
   
   time = tdf %>% distinct(!!time)
   
@@ -251,25 +254,25 @@ choroplethMap_func = function(df,
     )
   }
   
-  return(list(mdf, plot))
+  return(list(mdf, plot)) #should we return all data (with missing parts) or only the data that were  plotted?
   
   
 }
 
 
-# choroplethMap_func(
-#   cl_rcg,
-#   var = as.symbol('OfficialLandingCatchWeight'),
-#   groupBy = c('Area', 'Year'),
-#   func = as.symbol('sum'),
-#   type_of_threshold = 'percent',
-#   value_of_threshold = 100,
-#   points_coord = FAOshp,
-#   plot_labels = FALSE,
-#   time = as.symbol('Year'),
-#   saveResults = FALSE,
-#   outputPath = 'D:/WG/RCG/IntersessionalWork/Github/RCGs/RegionalOverviews'
-# )
+choroplethMap_func(
+  cl_rcg,
+  var = as.symbol('OfficialLandingCatchWeight'),
+  groupBy = c('Area', 'Year'),
+  func = as.symbol('sum'),
+  type_of_threshold = 'percent',
+  value_of_threshold = 100,
+  points_coord = FAOshp,
+  plot_labels = FALSE,
+  time = as.symbol('Year'),
+  saveResults = FALSE,
+  outputPath = 'D:/WG/RCG/IntersessionalWork/Github/RCGs/RegionalOverviews'
+)
 
 
 
