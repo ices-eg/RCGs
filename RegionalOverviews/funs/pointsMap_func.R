@@ -300,3 +300,4 @@ pointsMap_func = function(df,
 # dopisac sciezke do shapefile
 # if saveResults = TRUE -> outputPath musst be known - add check
 # xlim and ylim= adjusted to the data, or whole rcg region??
+# CHECK OF COORDINATES -  OUTSIDE THE POSSIBLE LIMITS
