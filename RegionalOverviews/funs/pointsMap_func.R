@@ -153,7 +153,7 @@ pointsMap_func = function(df,
   }
   
   # If Catch_group is known
-  if(!is.na(Catch_group)){ title = paste(title, ' (',Catch_group, ')', sep ='')}
+  if(!is.na(Catch_group) & Catch_group!='NULL'){ title = paste(title, ' (',Catch_group, ')', sep ='')}
   
   
   # subtitle - as the information about used thresholds
@@ -261,7 +261,7 @@ pointsMap_func = function(df,
   
   if(saveResults==TRUE){
   fileName =   paste(outputPath, "/pointsMap_", func_name,'_', var_name, '_', groupBy_name,'_', time, '_',type_of_threshold, '_',value_of_threshold, sep = '')
-  if(!is.na(Catch_group)){
+  if(!is.na(Catch_group) & Catch_group!='NULL'){
     fileName = paste(fileName, Catch_group, sep = "")
   }
   write.table(mdf, file = paste(fileName, ".txt", sep = ""), sep = '\t', dec = '.')

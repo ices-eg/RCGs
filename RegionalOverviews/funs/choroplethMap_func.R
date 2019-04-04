@@ -116,9 +116,8 @@ choroplethMap_func = function(df,
   }
   
   # If Catch_group is known
-  if (!is.na(Catch_group)) {
-    title = paste(title, ' (', Catch_group, ')', sep = '')
-  }
+  if(!is.na(Catch_group) & Catch_group!='NULL'){ title = paste(title, ' (',Catch_group, ')', sep ='')}
+  
   
   
   # subtitle - as the information about used thresholds
@@ -235,7 +234,7 @@ choroplethMap_func = function(df,
       value_of_threshold,
       sep = ''
     )
-    if (!is.na(Catch_group)) {
+    if (!is.na(Catch_group) & Catch_group!='NULL') {
       fileName = paste(fileName, Catch_group, sep = "")
     }
     write.table(
