@@ -1,0 +1,2 @@
+Catch_group	Section	Subsection	Subsubsection	Graph_type	Graph_variant	var	groupBy	func	type_of_threshold	value_of_threshold	plot_labels	time	png_dir	png_name	txt_dir	txt_name
+NULL	3	3.6	3.6.1	3		TripsNumber	Harbour_Year	sum	top_n	20	TRUE	Year	002_Outputs\figures	3.6.1_3	002_Outputs\tables	3.6.1_3
