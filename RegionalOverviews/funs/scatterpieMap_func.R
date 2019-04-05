@@ -227,7 +227,7 @@ scatterpieMap_func = function(df,
   unique_bys = mdf2  %>%  distinct(!!eval_tidy(quo(UQ(plotBy)))[[1]]) %>% nrow()
 
   radius =0.3
-  radiusMultiply = ifelse(groupBy_name %in% c('Area'), 4, ifelse(groupBy_name %in% c('Harbour'), 3, 1.5 ))
+  radiusMultiply = ifelse(groupBy_name %in% c('Area'), 4, ifelse(groupBy_name %in% c('Harbour', 'LandingCountry', 'FlagCountry'), 3, 1.5 ))
   pie.list <- mdf2%>%
     select(lon, lat, !!eval_tidy(quo(UQ(groupBy)))[[1]], !!eval_tidy(quo(UQ(plotBy)))[[1]], !!eval_tidy(quo(UQ(groupBy)))[[2]], !!var) %>%  
     spread(!!eval_tidy(quo(UQ(plotBy)))[[1]], !!var, fill =0) %>%
@@ -238,6 +238,10 @@ scatterpieMap_func = function(df,
     mutate(pie.grob = purrr::map(data,
                                  function(d) ggplotGrob(ggplot(d,
                                                                aes(x = 1, y = !!var, fill = !!eval_tidy(quo(UQ(plotBy)))[[1]])) +
+                                                          # scale_fill_manual(values = c("BEL" = "#A6CEE3", "CHA"="#1F78B4","DEU" =  "#B2DF8A","DNK" =  "#33A02C","ENG" =  "#FB9A99","ESP" =  "#4000FF", 
+                                                          #                                "EST"="#FDBF6F","FIN" =  "#FF7F00","FRA" =  "#CAB2D6","FRO" =  "#6A3D9A","GBR" =  "#E5C494","IRL" =  "#B15928", 
+                                                          #                                "ISL" =  "#FDDAEC","LTU" =  "#E7298A","LVA" =  "#FFFFCC","MAR" =  "#FFED6F","NIR" =  "#F2F2F2","NLD" =  "#AAAAAA", 
+                                                          #                                "NOR" = "#666666", "POL" = "#FF0000", "PRT" = "#FFFF00", "SCT" = "#00FFFF", "SWE" = "#8000FF", "WLS" = "#00FF40"))+
                                                           geom_col(color = "black",
                                                                    show.legend = FALSE) +
                                                           coord_polar(theta = "y") +
@@ -260,10 +264,15 @@ if(groupBy_name=='Area'){
   
     p+
       geom_sf(data = m,  fill = "antiquewhite")+
+      #geom_sf(data = st_as_sf(mdf), aes(fill = !!eval_tidy(quo(UQ(groupBy)))[[1]]) , na.rm = TRUE)+
     coord_sf( crs = "+init=epsg:4326",
               xlim =xlim,
               ylim = ylim,
               expand = FALSE)+
+      # scale_fill_manual(values = c("BEL" = "#A6CEE3", "CHA"="#1F78B4","DEU" =  "#B2DF8A","DNK" =  "#33A02C","ENG" =  "#FB9A99","ESP" =  "#4000FF", 
+      #                                "EST"="#FDBF6F","FIN" =  "#FF7F00","FRA" =  "#CAB2D6","FRO" =  "#6A3D9A","GBR" =  "#E5C494","IRL" =  "#B15928", 
+      #                                "ISL" =  "#FDDAEC","LTU" =  "#E7298A","LVA" =  "#FFFFCC","MAR" =  "#FFED6F","NIR" =  "#F2F2F2","NLD" =  "#AAAAAA", 
+      #                                "NOR" = "#666666", "POL" = "#FF0000", "PRT" = "#FFFF00", "SCT" = "#00FFFF", "SWE" = "#8000FF", "WLS" = "#00FF40"), name = "")+
     labs(
       title = title,
       x = 'Longitude',
