@@ -16,6 +16,7 @@
 				
 	# 2019-04-04: CE: added var LandingCountry (2 first letters of Harbour)
 	# 2019-04-04: CE: effort variables passed to numeric (some sum exceeded integer limits)
+	# 2019-04-06: CE: added data correction: TripsNumber==999
 	
 				
 # ========================
@@ -699,6 +700,13 @@ year_end <- 2017
 		ca_rcg_all[,FishingGround:=factor(FishingGround, levels=c("5b","6","7a","7bcjk","7e","7fgh","8abde","8c+9","10")),]
 		ca_rcg_all[,Area:=factor(Area, levels=c('27.5.b','27.5.b.1','27.5.b.2','27.6','27.6.a','27.6.a.n','27.6.a.s','27.6.b','27.7','27.7.a','27.7.b','27.7.c','27.7.e','27.7.f','27.7.g','27.7.h','27.7.j','27.7.k','27.8.a','27.8.b','27.8.c','27.8.d','27.8.e','27.9.a','27.9.b','27.9.b.1','27.9.b.2','27.10','27.10.a','27.10.b')),]
 		}	
+	
+# ================	
+# data update: IRL	
+# ================	
+	
+	# update: TripsNumber == 999 are TripsNumber = 0
+	ce_rcg[TripsNumber==999 & FlagCountry=="IRL",TripsNumber:=0,]
 	
 #=========================
 # creates CS objects to hauls and samples restricted in RCG region
