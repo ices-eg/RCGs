@@ -1,38 +1,35 @@
 scatterpieMap_func = function(df,
                               var,
                               groupBy,
-                              plotBy,
+                              groupBy2,
+                              facet,
                               func,
                               type_of_threshold = 'none',
                               value_of_threshold = NA,
                               points_coord,
                               plot_labels = TRUE,
-                              time,
                               saveResults = FALSE,
                               outputPath,
                               Catch_group = NA) {
   # df - a data frame
-  # var -  a column to be summmarised e.g. var = as.symbol('OfficialLandingCatchWeight')
-  # groupBy - names of columns, by which the grouping should be carried out. IMPORTANT to write it as groupBy = c(...) e.g. groupBy = c('Harbours', 'HarboursDesc')
-  #         - IMPORTANT - on the first place put sth you will be plotting by, eg Harbour
-  # plotBy - name of column by which a pie should be divided. e. g. FlagCountry
-  # func - function summarising the data: sum, n_distinct, e.g. func = as.symbol('sum')
+  # var -  a column to be summmarised e.g. var = 'OfficialLandingCatchWeight'
+  # groupBy - name of column, by which the grouping should be carried out. e.g. groupBy = 'Area'
+  # groupBy2 - name of column by which a pie should be divided. e. g. 'FlagCountry'
+  # facet - will be used for facet_wrap, e.g. facet = 'Year'
+  # func - function summarising the data: sum,  n_distinct,  e.g. func = 'sum'
   # type_of_threshold - default set to 'none', other options: 'top_n', 'percent'
   # value_of_threshold - set it, if you defined any type_of_threshold
-  # points_coord - shapefile, must have the same column name as in the df, e.g. Area if grooupBy = c('Area',...)
-  # plot_labels  - TRUE/FALSE - should the labels of e.g. Harbours be displayed on a map?
-  # time = name of column describing time, must be also included into the groupBy parameter, as.symbol('Year')
-  #saveResults - TRUE/FALSE - do you want to save the results?
-  # outputPath - path for saving plots and tables
   # Catch_group - if NA then all species will be included, other options: demersal/flatfish/smallpelagic/largepelagic
+  # points_coord - dataset with coordinates of a variable that was listed first in groupBy parameter, eg Harbour. Must have at least columns called lat, lon and column named the same as the appropriate column in the df
+  # plot_labels  - TRUE/FALSE - should the labels of e.g. Harbours be displayed on a map?
+  # saveResults - TRUE/FALSE - do you want to save the results?
+  # outputPath - path for saving plots and tables
   
   # Marta Suska
   # NMFRI
   # msuska@mir.gdynia.pl
-  ################################################################################
   
   ################################################################################
-  
   require(rlang)
   require(ggplot2)
   require(sf)
@@ -40,59 +37,40 @@ scatterpieMap_func = function(df,
   
   source('funs/group_func.R')
   
-  # parameters
+  # rename the columns
+  var_name = var
+  var <- as.symbol(var_name)
+  groupBy_name = groupBy
+  groupBy <- as.symbol(groupBy_name)
+  groupBy2_name = groupBy2
+  groupBy2 <- as.symbol(groupBy2_name)
   
-  #var = enquo(var) # this one if the var is set like var = OfficialLandingCatchWeight
-  var = quo(UQ(var)) # this one to make it work with RCG_NA_CL_Graphical_details, this one if var is with quotations
+  if(!is.na(facet)){
+    facet_name <- facet
+    facet = as.symbol(facet)  
+  }else{
+    facet_name = NA
+    facet = NA
+  }
   
-  #func = enquo(func)  # this one if the var is set like func = sum
-  func = quo(UQ(func)) # to make it work with RCG_NA_CL_Graphical_details, this one if func is with quotations
+  func_name = func
+  func = eval_tidy(as.symbol(func))
   
-  groupplotBy = parse_quos(c(groupBy, plotBy), env = caller_env())
-  groupplotBy = enquo(groupplotBy)
-  
-  plotBy =parse_quos(plotBy, env = caller_env())
-  
-  groupBy = parse_quos(groupBy, env = caller_env()) # to make it work with RCG_NA_CL_Graphical_details, this one if groupBy is with quotations
-  groupBy = enquo(groupBy)
-  groupBy_name = quo_name(eval_tidy(quo(UQ(groupBy)))[[1]])
-
-  var_name =  quo_text(var)
-  func_name = quo_text(func)
-  
-  
-  #time = enquo(time) # this one if time is set like time = Year
-  time = quo(UQ(time)) # to make it work with RCG_NA_CL_Graphical_details, this one if time is with quotations, time = 'Year'
   
   # creating the groupped df
-  grouping_result =  eval_tidy(quo(
-    UQ(group_func)(
-      df = df,
-      var = !!var,
-      groupBy = !!groupBy,
-      func = !!func,
-      type_of_threshold = type_of_threshold,
-      value_of_threshold = value_of_threshold,
-      Catch_group = Catch_group
-    )
-  ))
+  grouping_result = group_func(df, var_name, groupBy_name,groupBy2 = NA, facet_name, func_name, type_of_threshold = type_of_threshold, 
+                               value_of_threshold =  value_of_threshold, Catch_group = Catch_group)  
   tdf = grouping_result[[1]]
   if (is.null(tdf)) {
     stop('The chosen data set is empty')
   }
   missing_entries = grouping_result[[2]]
   
-  # adding info about plotBy
-  plotby_result =  eval_tidy(quo(
-    UQ(group_func)(
-      df = df,
-      var = !!var,
-      groupBy = !!groupplotBy,
-      func = !!func,
-      type_of_threshold = 'none',
-      Catch_group = Catch_group
-    )
-  ))
+  tdf %>% left_join(points_coord)  -> mdf
+  
+  # adding info about second variable
+  plotby_result = group_func(df, var_name, groupBy_name,groupBy2 = groupBy2_name, facet_name, func_name, type_of_threshold = 'none', 
+                              Catch_group = Catch_group)  
   
   tdf2 = plotby_result[[1]]
   if (is.null(tdf2)) {
@@ -100,14 +78,21 @@ scatterpieMap_func = function(df,
   }
   missing_entries2 = plotby_result[[2]]
 
-  tdf %>% select(-!!var) %>% left_join(tdf2) %>%   left_join(points_coord)->mdf
- 
-  # add info about records without coordinates
+  mdf%>% select(-!!var) -> mdf
+  mdf %>% left_join(tdf2) ->mdf
+  mdf%>% mutate(var = !!var,
+                groupBy = !!groupBy,
+                groupBy2 = !!groupBy2,
+                facet = !!facet)  %>% select(-!!var) -> mdf
+  
+  
+    # add info about records without coordinates
   if (sum(is.na(mdf$lat)) != 0 | sum(is.na(mdf$lon)) != 0) {
     mdf %>% filter(is.na(lat) | is.na(lon)) -> missing
-    missing %>% summarise(!!var := sum(!!var)) -> missing_value
-    mdf %>% summarise(!!var := sum(!!var)) -> value
-    missing %>% select(!!eval_tidy(quo(UQ(groupBy)))[[1]]) %>% distinct() %>% unlist() -> missing_names
+    missing %>% summarise(var = sum(var)) -> missing_value
+    mdf %>% summarise(var = sum(var)) -> value
+    missing %>% select(groupBy) %>% distinct() %>% unlist() -> missing_names
+    
     
     missing_caption = paste(
       '\n',
@@ -156,8 +141,7 @@ scatterpieMap_func = function(df,
   
   # Take only rows with coordinates
   mdf %>%  filter(!is.na(lat) & !is.na(lon)) %>% filter(lon>=-180 & lon <= 180 & lat >= -90 & lat <= 90)-> mdf2
-  time = mdf2 %>% distinct(!!time)  
-  
+
   # load world map
   m <- ne_countries(scale = "medium", returnclass = "sf")
   
@@ -171,11 +155,11 @@ scatterpieMap_func = function(df,
                   var_name,
                   ' by ',
                   groupBy_name,
-                  ', ',
-                  time,
+                  # ifelse(is.na(facet_name),'', paste(', ', paste0(unique(mdf2$facet), collapse = ","), sep= '')),
                   sep = '')
   } else{
-    title = paste(func_name, ' ', var_name, ' by ',  groupBy_name, ', ', time, sep = '')
+    title = paste(func_name, ' ', var_name, ' by ', # groupBy_name,  ifelse(is.na(facet_name),'', paste(', ', paste0(unique(mdf2$facet), collapse = ","), sep= '')),
+                  sep = '')
   }
   
   # If Catch_group is known
@@ -222,22 +206,21 @@ scatterpieMap_func = function(df,
   # How to avoid pies distortions?
   #https://stackoverflow.com/questions/51398344/r-pie-charts-distorted-when-adding-to-projected-map-using-ggplot
   
-  
-  
-  unique_bys = mdf2  %>%  distinct(!!eval_tidy(quo(UQ(plotBy)))[[1]]) %>% nrow()
+
+  unique_bys = mdf2  %>%  distinct(groupBy2) %>% nrow()
 
   radius =0.3
   radiusMultiply = ifelse(groupBy_name %in% c('Area'), 4, ifelse(groupBy_name %in% c('Harbour', 'LandingCountry', 'FlagCountry'), 3, 1.5 ))
   pie.list <- mdf2%>%
-    select(lon, lat, !!eval_tidy(quo(UQ(groupBy)))[[1]], !!eval_tidy(quo(UQ(plotBy)))[[1]], !!eval_tidy(quo(UQ(groupBy)))[[2]], !!var) %>%  
-    spread(!!eval_tidy(quo(UQ(plotBy)))[[1]], !!var, fill =0) %>%
-  mutate(Total = rowSums(.[(ncol(.)-unique_bys+1):ncol(.)]))  %>%
-  gather(!!eval_tidy(quo(UQ(plotBy)))[[1]], !!var, -lon, -lat, -!!eval_tidy(quo(UQ(groupBy)))[[1]],-!!eval_tidy(quo(UQ(groupBy)))[[2]],  -Total) %>%
-    tidyr::nest(!!eval_tidy(quo(UQ(plotBy)))[[1]], !!var) %>%
+    select(lon, lat, groupBy, groupBy2, facet, var) %>%  
+    spread(groupBy2, var, fill =0) %>%
+  mutate(Total = rowSums(.[(ncol(.)-unique_bys+1):ncol(.)]))  %>% 
+  gather(groupBy2, var, -lon, -lat, -groupBy,-facet,  -Total) %>%
+    tidyr::nest(groupBy2, var) %>%  
     # make a pie chart from each row, & convert to grob
     mutate(pie.grob = purrr::map(data,
                                  function(d) ggplotGrob(ggplot(d,
-                                                               aes(x = 1, y = !!var, fill = !!eval_tidy(quo(UQ(plotBy)))[[1]])) +
+                                                               aes(x = 1, y = var, fill = groupBy2))+
                                                           # scale_fill_manual(values = c("BEL" = "#A6CEE3", "CHA"="#1F78B4","DEU" =  "#B2DF8A","DNK" =  "#33A02C","ENG" =  "#FB9A99","ESP" =  "#4000FF", 
                                                           #                                "EST"="#FDBF6F","FIN" =  "#FF7F00","FRA" =  "#CAB2D6","FRO" =  "#6A3D9A","GBR" =  "#E5C494","IRL" =  "#B15928", 
                                                           #                                "ISL" =  "#FDDAEC","LTU" =  "#E7298A","LVA" =  "#FFFFCC","MAR" =  "#FFED6F","NIR" =  "#F2F2F2","NLD" =  "#AAAAAA", 
@@ -245,16 +228,16 @@ scatterpieMap_func = function(df,
                                                           geom_col(color = "black",
                                                                    show.legend = FALSE) +
                                                           coord_polar(theta = "y") +
-                                                          theme_void()))) %>%
+                                                          theme_void() ))) %>% 
     # convert each grob to an annotation_custom layer. I've also adjusted the radius
     # value to a reasonable size (based on my screen resolutions).
-    mutate(radius = Total/max(Total, na.rm = TRUE)*radiusMultiply) %>%
+    mutate(radius = Total/max(Total, na.rm = TRUE)*radiusMultiply) %>% 
     rowwise() %>%
     #mutate(radius = radius*4) %>%
     mutate(subgrob = list(annotation_custom(grob = pie.grob,
                                             xmin = lon - radius, xmax = lon + radius,
                                             ymin = lat - radius, ymax = lat + radius))) 
-  
+
 if(groupBy_name=='Area'){
   ggplot()+
      geom_sf(data = points_coord, fill = NA , na.rm = TRUE)->p
@@ -297,29 +280,29 @@ if(groupBy_name=='Area'){
         size = 0.5
       )
     )->p
-
-
-  p +
+    
+    p +
     #Optional. this hides some tiles of the corresponding color scale BEHIND the
     #pie charts, in order to create a legend for them
-    geom_tile(data = mdf2%>%
-                select(lon, lat, !!eval_tidy(quo(UQ(groupBy)))[[1]], !!eval_tidy(quo(UQ(plotBy)))[[1]], !!var) %>%
-                spread(!!eval_tidy(quo(UQ(plotBy)))[[1]], !!var, fill =0) %>%
-                gather(!!eval_tidy(quo(UQ(plotBy)))[[1]], !!var, -lon, -lat, -!!eval_tidy(quo(UQ(groupBy)))[[1]]),
-              aes(x = lon,  y = lat, fill = !!eval_tidy(quo(UQ(plotBy)))[[1]]),
+    geom_tile(data =  mdf2%>%
+                select(lon, lat, groupBy, groupBy2, facet, var) %>%  
+                spread(groupBy2, var, fill =0) %>%
+                gather(groupBy2, var, -lon, -lat, -groupBy,-facet),
+                aes(x = lon,  y = lat, fill = groupBy2),
               color = "black", width = 0.01, height = 0.01,
-              inherit.aes = FALSE) +
-
-    pie.list$subgrob -> plot
-
+              inherit.aes = FALSE)+
+    pie.list$subgrob+
+      facet_wrap(~facet)+
+      guides(fill=guide_legend(title=groupBy2_name))-> plot
+    
+      # facet_wrap(~facet) # <----------------------------------------------------- GDZIE TO WSTAWIC, ZEBY DOBRZE DZIALALY FACETS
+  
   if (plot_labels == TRUE) {
     #display labels on the plot
     plot +
       geom_text(
         data = mdf2, # zdecydowac co tu wstawic, jak mdf2 tomusi byc unique, jak points_coord - to dla portow nie bedzie dzialalo
-        aes(x = lon, y = lat, label := !!eval_tidy(quo(UQ(
-          groupBy
-        )[[1]]))),
+        aes(x = lon, y = lat, label  = groupBy),
         color = 'grey22',
         size = 3,
         fontface = "italic",
@@ -330,14 +313,13 @@ if(groupBy_name=='Area'){
   if (saveResults == TRUE) {
     fileName =   paste(
       outputPath,
-      "/choroplethMap_",
+      "/scatterpieMap_",
       func_name,
       '_',
       var_name,
       '_',
       groupBy_name,
-      '_',
-      time,
+      ifelse(is.na(facet_name),'', paste(', ', paste0(unique(mdf2$facet), collapse = ","), sep= '')),
       '_',
       type_of_threshold,
       '_',
@@ -362,36 +344,36 @@ if(groupBy_name=='Area'){
       compression = 'lzw'
     )
   }
-
-  return(list(mdf2, plot))
+  mdf %>%  select(-var, - groupBy, -groupBy2, -facet)-> mdf
+  return(list(mdf, plot))
 }
 
 # scatterpieMap_func(
-#   cl_rcg,
-#   var = as.symbol('OfficialLandingCatchWeight'),
-#   groupBy = c('Harbour', 'Year'),
-#   plotBy = c('FlagCountry'),
-#   func = as.symbol('sum'),
+#   cl_rcg %>% filter(Year == 2017),
+#   var = 'OfficialLandingCatchWeight',
+#   groupBy = 'Harbour',
+#   groupBy2 = 'FlagCountry',
+#   facet = 'Year',
+#   func = 'sum',
 #   type_of_threshold = 'percent',
 #   value_of_threshold = 90,
 #   points_coord = Harbours,
 #   plot_labels = FALSE,
-#   time = as.symbol('Year'),
 #   saveResults = FALSE,
 #   outputPath = 'D:/WG/RCG/IntersessionalWork/Github/RCGs/RegionalOverviews'
 # )
-
+# 
 # scatterpieMap_func(
-#   cl_rcg,
-#   var = as.symbol('OfficialLandingCatchWeight'),
-#   groupBy = c('Area', 'Year'),
-#   plotBy = c('FlagCountry'),
-#   func = as.symbol('sum'),
+#   cl_rcg %>% filter(Year == 2017),
+#   var = 'OfficialLandingCatchWeight',
+#   groupBy = 'Area',
+#   groupBy2 = 'FlagCountry',
+#   facet = 'Year',
+#   func = 'sum',
 #   type_of_threshold = 'percent',
 #   value_of_threshold = 90,
 #   points_coord = FAOshp,
 #   plot_labels = FALSE,
-#   time = as.symbol('Year'),
 #   saveResults = FALSE,
 #   outputPath = 'D:/WG/RCG/IntersessionalWork/Github/RCGs/RegionalOverviews'
 # )

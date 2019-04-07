@@ -38,8 +38,16 @@ group_func = function(df,
     facet = NA
     facet_name = NA
   }
+  if(!is.na(groupBy2)){
+    groupBy2_name <- groupBy2
+    groupBy2 = as.symbol(groupBy2_name)  
+  }else{
+    groupBy2 = NA
+    groupBy2_name = NA
+  }
   
-  func_name = func#quo_name(enquo(func))
+  
+  func_name = func
   func = eval_tidy(as.symbol(func))
   # # CHECK the data
   # Check if the given groupBy variabl is present in the dataset
@@ -83,6 +91,7 @@ group_func = function(df,
   
   df %>% mutate(var = !!var,
                 groupBy = !!groupBy,
+                groupBy2 = !!groupBy2,
                 facet = !!facet) -> df
   
   ################################################################################
@@ -138,7 +147,7 @@ group_func = function(df,
     }
   }
   
-  df  %>% group_by(groupBy, facet) %>%  summarise(var = func(var, na.rm = TRUE),
+  df  %>% group_by(groupBy, groupBy2, facet) %>%  summarise(var = func(var, na.rm = TRUE),
                                                   analysis_type = func_name) -> gdf
   
   
@@ -178,6 +187,12 @@ group_func = function(df,
     tdf %>% rename(!!var_name :=var, !!groupBy_name :=groupBy, !!facet_name := facet) %>% ungroup()-> tdf  
   }
   
+  if(is.na(groupBy2)){
+    tdf %>% select(-groupBy2)-> tdf
+  }else{
+    tdf %>% rename(!!groupBy2_name := groupBy2)-> tdf
+  }
+  
   return(list(tdf = tdf, percent_missing =  missing_entries))
   
   }
@@ -186,6 +201,7 @@ group_func = function(df,
 # group_func(cl_rcg %>% filter(Year %in% c(2016, 2017)),
 #            'OfficialLandingCatchWeight',
 #            'Area',
+#            groupBy2 = NA,
 #            facet = 'Year',
 #            func = 'sum',
 #            type_of_threshold = 'top_n',
