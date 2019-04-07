@@ -17,6 +17,13 @@
 	# 2019-04-04: CE: added var LandingCountry (2 first letters of Harbour)
 	# 2019-04-04: CE: effort variables passed to numeric (some sum exceeded integer limits)
 	# 2019-04-06: CE: added data correction: TripsNumber==999
+	# 2019-04-07: fixed bug sl_rcg was being assigned to hl_rcg
+	# 2019-04-07: added preparation of stock: CL
+	# 2019-04-07: added preparation of stock: CE
+	# 2019-04-07: added preparation of stock: CS
+	
+
+# note: once script is stabilize it might be worth to split into cl+ce; cs, stock_specific	
 	
 				
 # ========================
@@ -31,6 +38,9 @@ source("funs/func_download_data_from_sharepoint.r")
 	#download_data_from_sharepoint (sharepoint_address, filename_vector = c("CL Landing 2009-2018.zip","CE Effort 2009-2018.zip"), dir_download_browser = "ADD_HERE_download_folder_adress", dir_download_target = getwd(), unzip=TRUE)
 
 
+# ===========================
+# TIP TIP TIP: to prepare individual stocks you can jump all way to the end	
+# ===========================	
 
 # ========================
 # reads in data
@@ -65,13 +75,15 @@ source("funs/func_download_data_from_sharepoint.r")
 # clean duplicates(should be moved to extraction)
 # ======================== 		
 
+	dim(cl); cl<-unique(cl); dim(cl)
+	dim(ce); ce<-unique(ce); dim(ce)
 	dim(tr); tr<-unique(tr); dim(tr)
 	dim(hh); hh<-unique(hh); dim(hh)
 	dim(sl); sl<-unique(sl); dim(sl)
 	dim(hl); hl<-unique(hl); dim(hl)
 	dim(ca); ca<-unique(ca); dim(ca)
  
- # ========================
+# ========================
 # check and correct on reverse dependencies (should be moved to extraction)
 # ======================== 		
 	
@@ -380,18 +392,21 @@ year_end <- 2017
 # ======================== 
  
 	# formats CL 
+	cl[,HarbourDesc:=iconv(HarbourDesc, from="UTF-8", to="")]
+	cl[,HarbourDesc:=toupper(HarbourDesc)]
+	cl[,OfficialLandingCatchWeight:=as.numeric(OfficialLandingCatchWeight)]
 	cl_rcg[,HarbourDesc:=iconv(HarbourDesc, from="UTF-8", to="")]
 	cl_rcg[,HarbourDesc:=toupper(HarbourDesc)]
 	cl_rcg[,OfficialLandingCatchWeight:=as.numeric(OfficialLandingCatchWeight)]
 	
 	# formats CE 
-	ce_rcg[,HarbourDesc:=iconv(HarbourDesc, from="UTF-8", to="")]
-	ce_rcg[,HarbourDesc:=toupper(HarbourDesc)]
+	ce[,HarbourDesc:=iconv(HarbourDesc, from="UTF-8", to="")]
+	ce[,HarbourDesc:=toupper(HarbourDesc)]
 	ce_rcg[,HarbourDesc:=iconv(HarbourDesc, from="UTF-8", to="")]
 	ce_rcg[,HarbourDesc:=toupper(HarbourDesc)]
 
 	# formats CS	
-	tr_rcg_all[,HarbourDesc:=iconv(HarbourDesc, from="UTF-8", to="")]
+	tr[,HarbourDesc:=iconv(HarbourDesc, from="UTF-8", to="")]
 	tr_rcg_all[,HarbourDesc:=iconv(HarbourDesc, from="UTF-8", to="")]
 
 		
@@ -401,16 +416,25 @@ year_end <- 2017
 
 	# CL
 
+		cl[,OfficialLandingCatchWeight_ton := OfficialLandingCatchWeight/1000]
+		cl[,OfficialLandingCatchWeight_1000ton := OfficialLandingCatchWeight/1000000]
 		cl_rcg[,OfficialLandingCatchWeight_ton := OfficialLandingCatchWeight/1000]
 		cl_rcg[,OfficialLandingCatchWeight_1000ton := OfficialLandingCatchWeight/1000000]
 	
 	# CE 
 		# can be improved
+		ce[,LandingCountry:=substr(Harbour, start=1, stop=2)]
 		ce_rcg[,LandingCountry:=substr(Harbour, start=1, stop=2)]
 
 	
 	# CS
-
+		# tr
+		tr[!is.na(VesselLength) & VesselLength<10,VesselLengthCategory:="<10"]
+		tr[!is.na(VesselLength) & VesselLength>=10 & VesselLength<12,VesselLengthCategory:="10-<12"]
+		tr[!is.na(VesselLength) & VesselLength>=12 & VesselLength<18,VesselLengthCategory:="12-<18"]
+		tr[!is.na(VesselLength) & VesselLength>=18 & VesselLength<24,VesselLengthCategory:="18-<24"]
+		tr[!is.na(VesselLength) & VesselLength>=24 & VesselLength<40,VesselLengthCategory:="24-<40"]
+		tr[!is.na(VesselLength) & VesselLength>=40 ,VesselLengthCategory:=">40"]
 		tr_rcg_all[!is.na(VesselLength) & VesselLength<10,VesselLengthCategory:="<10"]
 		tr_rcg_all[!is.na(VesselLength) & VesselLength>=10 & VesselLength<12,VesselLengthCategory:="10-<12"]
 		tr_rcg_all[!is.na(VesselLength) & VesselLength>=12 & VesselLength<18,VesselLengthCategory:="12-<18"]
@@ -418,15 +442,27 @@ year_end <- 2017
 		tr_rcg_all[!is.na(VesselLength) & VesselLength>=24 & VesselLength<40,VesselLengthCategory:="24-<40"]
 		tr_rcg_all[!is.na(VesselLength) & VesselLength>=40 ,VesselLengthCategory:=">40"]
 	
+		# sl
+		sl[, Weight_kg := Weight/1000]
+		sl[, Weight_ton := Weight/1000000]
+		sl[, SubSampleWeight_kg := SubSampleWeight/1000]
+		sl[, SubSampleWeight_ton := SubSampleWeight/1000000]
 		sl_rcg_all[, Weight_kg := Weight/1000]
 		sl_rcg_all[, Weight_ton := Weight/1000000]
 		sl_rcg_all[, SubSampleWeight_kg := SubSampleWeight/1000]
 		sl_rcg_all[, SubSampleWeight_ton := SubSampleWeight/1000000]
-		
+
+		# hl
+		hl[, LengthClass_cm := LengthClass/10]
+		hl[, NoAtLengthInSample_ThousandIndiv := NoAtLengthInSample/1000]
+		hl[, NoAtLengthInSample_MillionIndiv := NoAtLengthInSample/1000000]
 		hl_rcg_all[, LengthClass_cm := LengthClass/10]
 		hl_rcg_all[, NoAtLengthInSample_ThousandIndiv := NoAtLengthInSample/1000]
 		hl_rcg_all[, NoAtLengthInSample_MillionIndiv := NoAtLengthInSample/1000000]
 		
+		# ca
+		ca[,Weight_kg := Weight/1000]
+		ca[,LengthClass_cm := LengthClass/10]
 		ca_rcg_all[,Weight_kg := Weight/1000]
 		ca_rcg_all[,LengthClass_cm := LengthClass/10]
 
@@ -448,7 +484,7 @@ year_end <- 2017
 
 
 		# =====================
-		# CL
+		# CL [note: at the moment this is only being run on cl_rcg, not on the larger cl]
 		# =====================		
 				
 		cl_rcg[,ISSCAAP:=ASFIS_WoRMS_updt$ISSCAAP[match(cl_rcg$SpeciesAphiaID, ASFIS_WoRMS_updt$AphiaID_accepted)]]
@@ -534,7 +570,7 @@ year_end <- 2017
 				head(cl_rcg[Catch_group == "other",list(Kg=sum(OfficialLandingCatchWeight)),list(Species)] [order(-Kg),],20)
 
 		# =====================
-		# SL
+		# SL [note: at the moment this is only being run on sl_rcg_all, not on the larger sl]
 		# =====================	
 	
 			sl_rcg_all[,ISSCAAP:=ASFIS_WoRMS_updt$ISSCAAP[match(sl_rcg_all$SpeciesAphiaID, ASFIS_WoRMS_updt$AphiaID_accepted)]]
@@ -662,6 +698,14 @@ year_end <- 2017
 # factorization [establishes the order in unsorted bar graphs]
 # ========================
 	
+	cl[,FlagCountry:=factor(FlagCountry, levels=sort(unique(FlagCountry))),]
+	cl[,LandingCountry:=factor(LandingCountry, levels=sort(unique(LandingCountry))),]
+	cl[,FishingActivityCategoryEuropeanLvl5:=factor(FishingActivityCategoryEuropeanLvl5, levels=sort(unique(FishingActivityCategoryEuropeanLvl5))),]
+	cl[,FishingActivityCategoryEuropeanLvl6:=factor(FishingActivityCategoryEuropeanLvl6, levels=sort(unique(FishingActivityCategoryEuropeanLvl6))),]
+	cl[,Harbour:=factor(Harbour, levels=sort(unique(Harbour))),]
+	cl[,Species:=factor(Species, levels=sort(unique(Species))),]
+	cl[,VesselLengthCategory:=factor(VesselLengthCategory, levels=c("<10","10-<12","12-<18","18-<24","24-<40",">40"))]
+	
 	cl_rcg[,FlagCountry:=factor(FlagCountry, levels=sort(unique(FlagCountry))),]
 	cl_rcg[,LandingCountry:=factor(LandingCountry, levels=sort(unique(LandingCountry))),]
 	cl_rcg[,FishingActivityCategoryEuropeanLvl5:=factor(FishingActivityCategoryEuropeanLvl5, levels=sort(unique(FishingActivityCategoryEuropeanLvl5))),]
@@ -670,6 +714,15 @@ year_end <- 2017
 	cl_rcg[,Species:=factor(Species, levels=sort(unique(Species))),]
 	cl_rcg[,VesselLengthCategory:=factor(VesselLengthCategory, levels=c("<10","10-<12","12-<18","18-<24","24-<40",">40"))]
 
+	ce[,FlagCountry:=factor(FlagCountry, levels=sort(unique(FlagCountry))),]
+	ce[,FishingActivityCategoryEuropeanLvl5:=factor(FishingActivityCategoryEuropeanLvl5, levels=sort(unique(FishingActivityCategoryEuropeanLvl5))),]
+	ce[,FishingActivityCategoryEuropeanLvl6:=factor(FishingActivityCategoryEuropeanLvl6, levels=sort(unique(FishingActivityCategoryEuropeanLvl6))),]
+	ce[,Harbour:=factor(Harbour, levels=sort(unique(Harbour))),]
+	ce[,VesselLengthCategory:=factor(VesselLengthCategory, levels=c("<10","10-<12","12-<18","18-<24","24-<40",">40"))]
+	ce[,DaysAtSea:=as.numeric(DaysAtSea)]
+	ce[,KWDays:=as.numeric(KWDays)]
+	ce[,GTDays:=as.numeric(GTDays)]
+	
 	ce_rcg[,FlagCountry:=factor(FlagCountry, levels=sort(unique(FlagCountry))),]
 	ce_rcg[,FishingActivityCategoryEuropeanLvl5:=factor(FishingActivityCategoryEuropeanLvl5, levels=sort(unique(FishingActivityCategoryEuropeanLvl5))),]
 	ce_rcg[,FishingActivityCategoryEuropeanLvl6:=factor(FishingActivityCategoryEuropeanLvl6, levels=sort(unique(FishingActivityCategoryEuropeanLvl6))),]
@@ -678,11 +731,18 @@ year_end <- 2017
 	ce_rcg[,DaysAtSea:=as.numeric(DaysAtSea)]
 	ce_rcg[,KWDays:=as.numeric(KWDays)]
 	ce_rcg[,GTDays:=as.numeric(GTDays)]
-		
+
+
+	tr[,FlagCountry:=factor(FlagCountry, levels=sort(unique(FlagCountry))),]
+	tr[,Harbour:=factor(Harbour, levels=sort(unique(Harbour))),]
+	tr[,VesselLengthCategory:=factor(VesselLengthCategory, levels=c("<10","10-<12","12-<18","18-<24","24-<40",">40"))]
+	
 	tr_rcg_all[,FlagCountry:=factor(FlagCountry, levels=sort(unique(FlagCountry))),]
 	tr_rcg_all[,Harbour:=factor(Harbour, levels=sort(unique(Harbour))),]
 	tr_rcg_all[,VesselLengthCategory:=factor(VesselLengthCategory, levels=c("<10","10-<12","12-<18","18-<24","24-<40",">40"))]
 
+	hh[,FishingActivityCategoryEuropeanLvl5:=factor(FishingActivityCategoryEuropeanLvl5, levels=sort(unique(FishingActivityCategoryEuropeanLvl5))),]
+	hh[,FishingActivityCategoryEuropeanLvl6:=factor(FishingActivityCategoryEuropeanLvl6, levels=sort(unique(FishingActivityCategoryEuropeanLvl6))),]
 	hh_rcg_all[,FishingActivityCategoryEuropeanLvl5:=factor(FishingActivityCategoryEuropeanLvl5, levels=sort(unique(FishingActivityCategoryEuropeanLvl5))),]
 	hh_rcg_all[,FishingActivityCategoryEuropeanLvl6:=factor(FishingActivityCategoryEuropeanLvl6, levels=sort(unique(FishingActivityCategoryEuropeanLvl6))),]
 	
@@ -706,6 +766,7 @@ year_end <- 2017
 # ================	
 	
 	# update: TripsNumber == 999 are TripsNumber = 0
+	ce[TripsNumber==999 & FlagCountry=="IRL",TripsNumber:=0,]
 	ce_rcg[TripsNumber==999 & FlagCountry=="IRL",TripsNumber:=0,]
 	
 #=========================
@@ -719,7 +780,7 @@ year_end <- 2017
 	if(target_region=="RCG_NSEA"){hh_rcg<-hh_rcg_all[Region=="NSEA",]}
 	
 	sl_rcg<-sl_rcg_all[CS_StationId %in% hh_rcg$CS_StationId,]
-	hl_rcg<-sl_rcg_all[CS_SpeciesListId %in% sl_rcg$CS_SpeciesListId,]
+	hl_rcg<-hl_rcg_all[CS_SpeciesListId %in% sl_rcg$CS_SpeciesListId,]
 	
 	if(target_region=="RCG_NA"){ca_rcg<-ca_rcg_all[Region=="NA",]}
 	if(target_region=="RCG_BA"){ca_rcg<-ca_rcg_all[Region=="BA",]}
@@ -739,21 +800,33 @@ year_end <- 2017
 	save(cl_rcg, file_info_cl, file = paste(paste("RDB",target_region,"CL", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
 	save(ce_rcg, file_info_ce, file = paste(paste("RDB",target_region,"CE", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
 	
-	
+	save(cl, file_info_cl, file = paste(paste("RDB","All_Regions","CL", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
+	save(ce, file_info_ce, file = paste(paste("RDB","All_Regions","CE", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
+
 	
 	save(tr_rcg_all, hh_rcg_all, sl_rcg_all, hl_rcg_all ,ca_rcg_all, file_info_cs, file = paste(paste("RDB",target_region,"CSall", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
 	save(tr_rcg, hh_rcg, sl_rcg, hl_rcg ,ca_rcg, file_info_cs, file = paste(paste("RDB",target_region,"CSrcg", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
+	
+	save(tr, hh, sl, hl ,ca, file_info_cs, file = paste(paste("RDB","All_Regions","CS", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
 		
 	
-	# develop!
-	# PAN_Regional Stocks
-	
-		# subset
-		
-		# region specific
-		
-		# save	
-	
+	# Stock
+	 	rm(list=ls())
+		library(data.table)
+		system.time(load("RDB_All_Regions_CS_2009_2017_prepared_201904071840.Rdata"))
+		system.time(load("RDB_All_Regions_CL_2009_2017_prepared_201904071903.Rdata"))
+		system.time(load("RDB_All_Regions_CE_2009_2017_prepared_201904071903.Rdata"))
 
+		# mac.27.nea: Mackerel (Scomber scombrus) in subareas 1-8 and 14 and division 9.a (the Northeast Atlantic and adjacent waters)
+			cl_stock<-cl[Species == "Scomber scombrus",]	
+			ce_stock<-ce
+			
+			sl_stock<-sl[Species == "Scomber scombrus",]
+			hl_stock<-hl[CS_SpeciesListId %in% sl_stock$CS_SpeciesListId,]
+			hh_stock<-hh[CS_StationId %in% unique(sl_stock$CS_StationId),]
+			tr_stock<-tr[CS_TripId %in% unique(hh_stock$CS_TripId),]
+			ca_stock<-ca[Species == "Scomber scombrus",]
 
+		stock_code <- "mac.nea"		
+		save(cl_stock, ce_stock, tr_stock, hh_stock, sl_stock, hl_stock ,ca_stock, file_info_cs, file = paste(paste("RDB","All_Regions","CLCECS", stock_code, year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
 
