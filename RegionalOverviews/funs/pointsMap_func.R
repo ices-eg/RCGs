@@ -1,29 +1,28 @@
 pointsMap_func = function(df,
                           var,
                           groupBy,
+                          facet,
                           func,
                           type_of_threshold = 'none',
                           value_of_threshold = NA,
                           points_coord,
                           plot_labels = TRUE,
-                          time,
                           saveResults = FALSE,
                           outputPath,
                           Catch_group = NA) {
   # df - a data frame
-  # var -  a column to be summmarised e.g. var = as.symbol('OfficialLandingCatchWeight')
-  # groupBy - names of columns, by which the grouping should be carried out. IMPORTANT to write it as groupBy = c(...) e.g. groupBy = c('Harbours', 'HarboursDesc')
-  #         - IMPORTANT - on the first place put sth you will be plotting by, eg Harbour
-  # func - function summarising the data: sum, n_distinct, e.g. func = as.symbol('sum')
+  # var -  a column to be summmarised e.g. var = 'OfficialLandingCatchWeight'
+  # groupBy - name of column, by which the grouping should be carried out. e.g. groupBy = 'Area'
+  # facet - will be used for facet_wrap, e.g. facet = 'Year'
+  # func - function summarising the data: sum,  n_distinct,  e.g. func = 'sum'
   # type_of_threshold - default set to 'none', other options: 'top_n', 'percent'
   # value_of_threshold - set it, if you defined any type_of_threshold
+  # Catch_group - if NA then all species will be included, other options: demersal/flatfish/smallpelagic/largepelagic
   # points_coord - dataset with coordinates of a variable that was listed first in groupBy parameter, eg Harbour. Must have at least columns called lat, lon and column named the same as the appropriate column in the df
   # plot_labels  - TRUE/FALSE - should the labels of e.g. Harbours be displayed on a map?
-  # time = name of column describing time, must be also included into the groupBy parameter, as.symbol('Year')
-  #saveResults - TRUE/FALSE - do you want to save the results?
+  # saveResults - TRUE/FALSE - do you want to save the results?
   # outputPath - path for saving plots and tables
-  # Catch_group - if NA then all species will be included, other options: demersal/flatfish/smallpelagic/largepelagic
-  
+
   # Marta Suska
   # NMFRI
   # msuska@mir.gdynia.pl
@@ -36,53 +35,52 @@ pointsMap_func = function(df,
 
   source('funs/group_func.R')
 
-  # parameters
   
-  #var = enquo(var) # this one if the var is set like var = OfficialLandingCatchWeight
-  var = quo(UQ(var)) # this one to make it work with RCG_NA_CL_Graphical_details, this one if var is with quotations
+  # rename the columns
+  var_name = var
+  var <- as.symbol(var_name)
+  groupBy_name = groupBy
+  groupBy <- as.symbol(groupBy_name)
+  if(!is.na(facet)){
+    facet_name <- facet
+    facet = as.symbol(facet)  
+  }else{
+    facet_name = NA
+    facet = NA
+  }
   
-  #func = enquo(func)  # this one if the var is set like func = sum
-  func = quo(UQ(func)) # to make it work with RCG_NA_CL_Graphical_details, this one if func is with quotations
-  
-  groupBy = parse_quos(groupBy, env = caller_env()) # to make it work with RCG_NA_CL_Graphical_details, this one if groupBy is with quotations
-  groupBy = enquo(groupBy)
-  groupBy_name = quo_name(eval_tidy(quo(UQ(groupBy)))[[1]])
-  
-  var_name =  quo_text(var)
-  func_name = quo_text(func)
-  
-  #time = enquo(time) # this one if time is set like time = Year
-  time = quo(UQ(time)) # to make it work with RCG_NA_CL_Graphical_details, this one if time is with quotations, time = 'Year'
+  func_name = func
+  func = eval_tidy(as.symbol(func))
   
   # creating the groupped df
-  grouping_result =  eval_tidy(quo(
-    UQ(group_func)(
-      df = df,
-      var = !!var,
-      groupBy = !!groupBy,
-      func = !!func,
-      type_of_threshold = type_of_threshold,
-      value_of_threshold = value_of_threshold,
-      Catch_group = Catch_group
-    )
-  ))
+  
+  grouping_result = group_func(df, var_name, groupBy_name, groupBy2 = NA, facet_name, func_name, type_of_threshold = type_of_threshold, 
+                               value_of_threshold =  value_of_threshold, Catch_group = Catch_group)
+  
   tdf = grouping_result[[1]]
   if (is.null(tdf)) {
     stop('The chosen data set is empty')
   }
   missing_entries = grouping_result[[2]]
-  
+
+  ################################################################################
+
   # add coordinates info
   tdf %>%
     left_join(points_coord) -> mdf
+
+  
+  mdf %>% mutate(var = !!var,
+                 groupBy = !!groupBy,
+                 facet = !!facet) -> mdf
   
   # add info about records without coordinates
   if (sum(is.na(mdf$lat)) != 0 | sum(is.na(mdf$lon)) != 0) {
     mdf %>% filter(is.na(lat) | is.na(lon)) -> missing
-    missing %>% summarise(!!var := sum(!!var)) -> missing_value
-    mdf %>% summarise(!!var := sum(!!var)) -> value
-    missing %>% select(!!eval_tidy(quo(UQ(groupBy)))[[1]]) %>% distinct() %>% unlist() -> missing_names
-    
+    missing %>% summarise(var = sum(var)) -> missing_value
+    mdf %>% summarise(var = sum(var)) -> value
+    missing %>% select(groupBy) %>% distinct() %>% unlist() -> missing_names
+
     missing_caption = paste(
       '\n',
       length(missing_names),
@@ -100,7 +98,7 @@ pointsMap_func = function(df,
       sep = ''
     )
     message(missing_caption)
-    
+
     if (length(missing_names) > 10) {
       missing_caption = paste(
         '\n',
@@ -117,27 +115,26 @@ pointsMap_func = function(df,
         sep = ''
       )
     }
-    
+
   } else{
     missing_caption = ''
   }
-  
+
   # set the limits
   xlim = range(mdf[!is.na(mdf$lat) &
                      !is.na(mdf$lon),]$lon)+ c(-1, 1)
   ylim = range(mdf[!is.na(mdf$lat) & !is.na(mdf$lon),]$lat) + c(-0.5,+0.5)
-  
+
   # load world map
   require("rnaturalearth")
   m <- ne_countries(scale = "medium", returnclass = "sf")
-  
+
   # Take only rows with coordinates
   mdf %>% filter(!is.na(lon) & !is.na(lat)) -> mdf2
-  
-  time = mdf2 %>% distinct(!!time)
-  
+
+
   # Set the plot parameters
-  
+
   # title
   if (func_name %in% c('sum')) {
     title = paste(func_name,
@@ -145,17 +142,17 @@ pointsMap_func = function(df,
                   var_name,
                   ' by ',
                   groupBy_name,
-                  ', ',
-                  time,
+                 # ifelse(is.na(facet_name),'', paste(', ', paste0(unique(mdf2$facet), collapse = ","), sep= '')),
                   sep = '')
   } else{
-    title = paste(func_name, ' ', var_name, ' by ',  groupBy_name, ', ', time, sep = '')
+    title = paste(func_name, ' ', var_name, ' by ', # groupBy_name,  ifelse(is.na(facet_name),'', paste(', ', paste0(unique(mdf2$facet), collapse = ","), sep= '')),
+                  sep = '')
   }
-  
+
   # If Catch_group is known
   if(!is.na(Catch_group) & Catch_group!='NULL'){ title = paste(title, ' (',Catch_group, ')', sep ='')}
-  
-  
+
+
   # subtitle - as the information about used thresholds
   if ((type_of_threshold == 'percent' &
        value_of_threshold == 100) | type_of_threshold == 'none') {
@@ -178,7 +175,7 @@ pointsMap_func = function(df,
                      's',
                      sep = "")
   }
-  
+
   # caption - as the inromation about any missingnes
   caption = paste(
     ifelse(nrow(missing_entries)>0, round(missing_entries$pr, 2),0),
@@ -189,23 +186,20 @@ pointsMap_func = function(df,
     missing_caption,
     sep = ''
   )
-  
-  
-  
-  
+
+
+
+
   # make a map
   mdf2 %>%
-    arrange(!!var) %>%
-    mutate(name = factor(!!eval_tidy(quo(UQ(
-      groupBy
-    )[[1]])), unique(!!eval_tidy(quo(
-      UQ(groupBy)[[1]]
-    ))))) %>%
+    ungroup() %>% 
+    arrange(var) %>%
+    #mutate(name = groupBy) %>%
     ggplot() +
     geom_sf(data = m, fill = "antiquewhite") +
     coord_sf( crs = "+init=epsg:4326", xlim =xlim, ylim = ylim)+
     geom_point(
-      aes(lon, lat, fill := !!var, size := !!var),
+      aes(lon, lat, fill = var, size = var),
       stroke = FALSE,
       colour = 'black',
       #size = 4,
@@ -228,6 +222,7 @@ pointsMap_func = function(df,
       subtitle = subtitle,
       caption = caption
     ) +
+    facet_wrap(~facet)+
     theme_classic() +
     theme(
       text = element_text(color = "#22211d"),
@@ -241,15 +236,13 @@ pointsMap_func = function(df,
       ),
      panel.grid.major = element_line(color = gray(.5), linetype ='dashed', size = 0.5)
     ) -> plot
-  
+
   if (plot_labels == TRUE) {
     #display labels on the plot
     plot +
       ggrepel::geom_text_repel(
         data = mdf2,
-        aes(lon, lat, label := !!eval_tidy(quo(UQ(
-          groupBy
-        )[[1]]))),
+        aes(lon, lat, label = groupBy),
         box.padding = unit(0.2, "lines"),
         point.padding = unit(0.2, "lines"),
         color = 'black',
@@ -259,32 +252,36 @@ pointsMap_func = function(df,
       ) -> plot
   }
   
+      mdf %>%  select(-var, - groupBy, -facet)-> mdf
+
+
   if(saveResults==TRUE){
-  fileName =   paste(outputPath, "/pointsMap_", func_name,'_', var_name, '_', groupBy_name,'_', time, '_',type_of_threshold, '_',value_of_threshold, sep = '')
+  fileName =   paste(outputPath, "/pointsMap_", func_name,'_', var_name, '_', groupBy_name,'_',  
+                     ifelse(is.na(facet_name),'', paste(', ', paste0(unique(mdf2$facet), collapse = ","), sep= '')),
+                     '_',type_of_threshold, '_',value_of_threshold, sep = '')
   if(!is.na(Catch_group) & Catch_group!='NULL'){
     fileName = paste(fileName, Catch_group, sep = "")
   }
   write.table(mdf, file = paste(fileName, ".txt", sep = ""), sep = '\t', dec = '.')
   ggsave(paste(fileName, ".tiff", sep = ""), units="in", width=15, height=10, dpi=300, compression = 'lzw')
   }
-  
+
   return(list(mdf, plot))
 }
 
+# pointsMap_func(cl_rcg %>% filter(Year %in% c(2017)),
+#                'OfficialLandingCatchWeight',
+#                'Harbour',
+#                facet = 'Year',
+#                func = 'sum',
+#                type_of_threshold = 'top_n',
+#                value_of_threshold = 20,
+#                Catch_group = NA,
+#                points_coord = Harbours,
+#                plot_labels = FALSE,
+#                saveResults = FALSE,
+#                outputPath = 'D:/WG/RCG/IntersessionalWork/Github/RCGs/RegionalOverviews')
 
-# pointsMap_func(
-#   cl_rcg,
-#   var = as.symbol('OfficialLandingCatchWeight'),
-#   groupBy = c('Harbour', 'Year'),
-#   func = as.symbol('sum'),
-#   type_of_threshold ='percent',
-#   value_of_threshold = 100,
-#   points_coord = Harbours,
-#   plot_labels = FALSE,
-#   time = as.symbol('Year'),
-#   saveResults = FALSE,
-#   outputPath = 'D:/WG/RCG/IntersessionalWork/Github/RCGs/RegionalOverviews'
-# )
 
 # TO DO:
 # points_coords - should it be a dataset, or a path to a dataset?
