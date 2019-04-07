@@ -21,9 +21,10 @@
 		# read data
 		rm(list=ls())
 		
-		
-		load("RDB_RCG_NA_CL_2009_2017_prepared_201904020909.Rdata")
-		load("RDB_RCG_NA_CE_2009_2017_prepared_201904020909.Rdata")
+
+		load("RDB_RCG_NA_CL_2009_2017_prepared_201904062158.Rdata")
+		load("RDB_RCG_NA_CE_2009_2017_prepared_201904032312.Rdata")
+
 		
 		head(cl_rcg)
 		
@@ -73,8 +74,6 @@
 		source("funs/func_barplot_var_by_two_var_stacked.r")			
 		graph_det_all <- read.table("RCG_NA_CL_Graphical_details2.txt", sep="\t", stringsAsFactors=FALSE, header=T)
 	
-		group="small pelagic"
-		i=4
 	
 		for(group in unique(graph_det_all$Catch_group))
 		{
@@ -266,7 +265,7 @@
 		graph_det<-graph_det1[graph_det1$Graph_group==Graph_group,]
 		
 		# detects group
-		if(nrow(graph_det)>1) {windows(10,10); par(oma = eval(parse(text=graph_det$graph_par[i]))$oma, mfrow=eval(parse(text=graph_det$graph_par[i]))$mfrow)}
+		if(nrow(graph_det)>1) {windows(10,10); par(oma = eval(parse(text=graph_det$graph_par))$oma, mfrow=eval(parse(text=graph_det$graph_par))$mfrow)}
 		if(nrow(graph_det)==1) {windows(10,5)} # oma parameter is set inside the barplot function
 
 		
