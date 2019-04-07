@@ -40,7 +40,7 @@
 		source("funs/func_barplot_var_by_one_var.r")			
 		
 		# read_graph_details
-		graph_det_all <- read.table("RCG_NA_CL_Graphical_details1.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+		graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CL_Graphical_details1.txt", sep="\t", stringsAsFactors=FALSE, header=T)
 		
 		for(group in unique(graph_det_all$Catch_group))
 		{
@@ -70,7 +70,7 @@
 
 
 		source("funs/func_barplot_var_by_two_var_stacked.r")			
-		graph_det_all <- read.table("RCG_NA_CL_Graphical_details2.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+		graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CL_Graphical_details2.txt", sep="\t", stringsAsFactors=FALSE, header=T)
 	
 	
 		for(group in unique(graph_det_all$Catch_group))
@@ -115,7 +115,7 @@
 		
 		########################################################################################################################################################################
 		
-		graph_det_all <- read.table("RCG_NA_CL_Graphical_details3.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+		graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CL_Graphical_details3.txt", sep="\t", stringsAsFactors=FALSE, header=T)
 		
 		for(group in unique(graph_det_all$Catch_group))
 		{
@@ -151,7 +151,7 @@
 	#CE graphs generic
 
 		# read_graph_details
-		graph_det_all <- read.table("RCG_NA_CE_Graphical_details1.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+		graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CE_Graphical_details1.txt", sep="\t", stringsAsFactors=FALSE, header=T)
 		source("funs/func_barplot_var_by_one_var.r")			
 		source("funs/func_barplot_var_by_two_var_stacked.r")		
 		
@@ -209,9 +209,9 @@
 		source("funs/func_barplot_var_by_two_var_stacked.r")		
 		
 		# activate the option you need
-		graph_det_all <- read.table("RCG_NA_CE_Graphical_details_u10.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+		graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CE_Graphical_details_u10.txt", sep="\t", stringsAsFactors=FALSE, header=T)
 		ce_rcg2<-ce_rcg[VesselLengthCategory=="<10",]
-		graph_det_all <- read.table("RCG_NA_CE_Graphical_details_10o.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+		graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CE_Graphical_details_10o.txt", sep="\t", stringsAsFactors=FALSE, header=T)
 		ce_rcg2<-ce_rcg[!VesselLengthCategory=="<10",]		
 		
 		for(Catch_group in unique(graph_det_all$Catch_group))
