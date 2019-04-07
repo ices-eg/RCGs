@@ -1,15 +1,15 @@
-pointsMap_func = function(df,
-                          var,
-                          groupBy,
-                          func,
-                          type_of_threshold = 'none',
-                          value_of_threshold = NA,
-                          points_coord,
-                          plot_labels = TRUE,
-                          time,
-                          saveResults = FALSE,
-                          outputPath,
-                          Catch_group = NA) {
+choroplethMap_func = function(df,
+                              var,
+                              groupBy,
+                              func,
+                              type_of_threshold = 'none',
+                              value_of_threshold = NA,
+                              points_coord,
+                              plot_labels = TRUE,
+                              time,
+                              saveResults = FALSE,
+                              outputPath,
+                              Catch_group = NA) {
   # df - a data frame
   # var -  a column to be summmarised e.g. var = as.symbol('OfficialLandingCatchWeight')
   # groupBy - names of columns, by which the grouping should be carried out. IMPORTANT to write it as groupBy = c(...) e.g. groupBy = c('Harbours', 'HarboursDesc')
@@ -17,7 +17,7 @@ pointsMap_func = function(df,
   # func - function summarising the data: sum, n_distinct, e.g. func = as.symbol('sum')
   # type_of_threshold - default set to 'none', other options: 'top_n', 'percent'
   # value_of_threshold - set it, if you defined any type_of_threshold
-  # points_coord - dataset with coordinates of a variable that was listed first in groupBy parameter, eg Harbour. Must have at least columns called lat, lon and column named the same as the appropriate column in the df
+  # points_coord - shapefile, must have the same column name as in the df, e.g. Area if grooupBy = c('Area',...)
   # plot_labels  - TRUE/FALSE - should the labels of e.g. Harbours be displayed on a map?
   # time = name of column describing time, must be also included into the groupBy parameter, as.symbol('Year')
   #saveResults - TRUE/FALSE - do you want to save the results?
@@ -27,15 +27,15 @@ pointsMap_func = function(df,
   # Marta Suska
   # NMFRI
   # msuska@mir.gdynia.pl
-
   ################################################################################
   
   require(rlang)
   require(ggplot2)
   require(sf)
-
+  require(rnaturalearth)
+  
   source('funs/group_func.R')
-
+  
   # parameters
   
   #var = enquo(var) # this one if the var is set like var = OfficialLandingCatchWeight
@@ -53,6 +53,8 @@ pointsMap_func = function(df,
   
   #time = enquo(time) # this one if time is set like time = Year
   time = quo(UQ(time)) # to make it work with RCG_NA_CL_Graphical_details, this one if time is with quotations, time = 'Year'
+  
+  
   
   # creating the groupped df
   grouping_result =  eval_tidy(quo(
@@ -72,69 +74,30 @@ pointsMap_func = function(df,
   }
   missing_entries = grouping_result[[2]]
   
-  # add coordinates info
-  tdf %>%
-    left_join(points_coord) -> mdf
+  # combine dataset with shp
+  points_coord %>%  full_join(tdf) %>%  filter(!is.na(!!var)) -> mdf
   
-  # add info about records without coordinates
-  if (sum(is.na(mdf$lat)) != 0 | sum(is.na(mdf$lon)) != 0) {
-    mdf %>% filter(is.na(lat) | is.na(lon)) -> missing
-    missing %>% summarise(!!var := sum(!!var)) -> missing_value
-    mdf %>% summarise(!!var := sum(!!var)) -> value
-    missing %>% select(!!eval_tidy(quo(UQ(groupBy)))[[1]]) %>% distinct() %>% unlist() -> missing_names
-    
-    missing_caption = paste(
-      '\n',
-      length(missing_names),
-      ' top ',
-      groupBy_name,
-     # 's (',
-    #  paste0(missing_names, collapse = ' , ') ,
-      ' with missing coordinates were not presented on the map. This accounted for ',
-      round(missing_value / value * 100),
-      '% of ',
-      var_name,
-      ' of top ',
-      groupBy_name ,
-      's',
-      sep = ''
-    )
-    message(missing_caption)
-    
-    if (length(missing_names) > 10) {
-      missing_caption = paste(
-        '\n',
-        length(missing_names),
-        ' top ',
-        groupBy_name,
-        's with missing coordinates were not presented on the map. This accounted for ',
-        round(missing_value / value * 100),
-        '% of ',
-        var_name,
-        ' of top ',
-        groupBy_name ,
-        's',
-        sep = ''
-      )
-    }
-    
+  # add info about records without coordinates <------------------ TO DO
+  if (nrow(mdf %>% filter(is.na(ID))) > 0) {
+    mdf %>% filter(is.na(ID) & !is.na(!!eval_tidy(quo(UQ(groupBy)[[1]])))) %>% select(pr)-> missing_value
+    message(paste("Not all records from the dataset have corresponding entry in the shapefile, ",round(unlist(missing_value)), '% ', sep = '' ))
+    missing_caption = paste("\n Not all records from the dataset have corresponding entry in the shapefile, ",round(unlist(missing_value)), '% ', sep = '' )
   } else{
     missing_caption = ''
   }
   
-  # set the limits
-  xlim = range(mdf[!is.na(mdf$lat) &
-                     !is.na(mdf$lon),]$lon)+ c(-1, 1)
-  ylim = range(mdf[!is.na(mdf$lat) & !is.na(mdf$lon),]$lat) + c(-0.5,+0.5)
+
   
   # load world map
-  require("rnaturalearth")
   m <- ne_countries(scale = "medium", returnclass = "sf")
   
-  # Take only rows with coordinates
-  mdf %>% filter(!is.na(lon) & !is.na(lat)) -> mdf2
+  # Take only areas with geometry
+  mdf %>% filter(!is.na(ID)) -> mdf2
   
-  time = mdf2 %>% distinct(!!time)
+  # set the limits
+  limits <- st_buffer(mdf2, dist = 1) %>% st_bbox()
+  
+  time = tdf %>% distinct(!!time)
   
   # Set the plot parameters
   
@@ -154,6 +117,7 @@ pointsMap_func = function(df,
   
   # If Catch_group is known
   if(!is.na(Catch_group) & Catch_group!='NULL'){ title = paste(title, ' (',Catch_group, ')', sep ='')}
+  
   
   
   # subtitle - as the information about used thresholds
@@ -181,7 +145,7 @@ pointsMap_func = function(df,
   
   # caption - as the inromation about any missingnes
   caption = paste(
-    ifelse(nrow(missing_entries)>0, round(missing_entries$pr, 2),0),
+    ifelse(nrow(missing_entries) > 0, round(missing_entries$pr, 2), 0),
     '% of ',
     var_name,
     ' were reported for missing ',
@@ -193,34 +157,26 @@ pointsMap_func = function(df,
   
   
   
-  # make a map
-  mdf2 %>%
-    arrange(!!var) %>%
-    mutate(name = factor(!!eval_tidy(quo(UQ(
-      groupBy
-    )[[1]])), unique(!!eval_tidy(quo(
-      UQ(groupBy)[[1]]
-    ))))) %>%
-    ggplot() +
-    geom_sf(data = m, fill = "antiquewhite") +
-    coord_sf( crs = "+init=epsg:4326", xlim =xlim, ylim = ylim)+
-    geom_point(
-      aes(lon, lat, fill := !!var, size := !!var),
-      stroke = FALSE,
-      colour = 'black',
-      #size = 4,
-      shape = 21,
-      alpha = 0.8
-    ) +
-    scale_size(range = c(0, 10), guide = FALSE) +
-    viridis::scale_fill_viridis(
+  # Make a map
+  ggplot() +
+    geom_sf(data = mdf2, aes(fill = !!var) , na.rm = TRUE) +
+    geom_sf(data = points_coord,
+            fill = NA ,
+            na.rm = TRUE) +
+    scale_fill_viridis_c(
       option = "viridis",
-      # trans = "log",
+      trans = "sqrt",
+      na.value = "aliceblue",
       begin = 1,
-      end = 0,
-      name = var_name
-    )+
-    #guides(colour = guide_legend())+
+      end = 0
+    ) +
+    geom_sf(data = m,  fill = "antiquewhite") +
+    coord_sf(
+      crs = "+init=epsg:4326",
+      xlim = c(limits["xmin"], limits["xmax"]),
+      ylim = c(limits["ymin"], limits["ymax"]),
+      expand = FALSE
+    ) +
     labs(
       title = title,
       x = 'Longitude',
@@ -239,65 +195,97 @@ pointsMap_func = function(df,
         fill = NA,
         size = 1.5
       ),
-     panel.grid.major = element_line(color = gray(.5), linetype ='dashed', size = 0.5)
+      panel.grid.major = element_line(
+        color = gray(.8),
+        linetype = 'dashed',
+        size = 0.5
+      )
     ) -> plot
   
   if (plot_labels == TRUE) {
     #display labels on the plot
     plot +
-      ggrepel::geom_text_repel(
-        data = mdf2,
-        aes(lon, lat, label := !!eval_tidy(quo(UQ(
+      geom_text(
+        data = points_coord,
+        aes(x = X, y = Y, label := !!eval_tidy(quo(UQ(
           groupBy
         )[[1]]))),
-        box.padding = unit(0.2, "lines"),
-        point.padding = unit(0.2, "lines"),
-        color = 'black',
-        size = 2,
-        fontface = 'bold'
-
+        color = 'grey22',
+        size = 3,
+        fontface = "italic",
+        check_overlap = TRUE
       ) -> plot
   }
   
-  if(saveResults==TRUE){
-  fileName =   paste(outputPath, "/pointsMap_", func_name,'_', var_name, '_', groupBy_name,'_', time, '_',type_of_threshold, '_',value_of_threshold, sep = '')
-  if(!is.na(Catch_group) & Catch_group!='NULL'){
-    fileName = paste(fileName, Catch_group, sep = "")
-  }
-  write.table(mdf, file = paste(fileName, ".txt", sep = ""), sep = '\t', dec = '.')
-  ggsave(paste(fileName, ".tiff", sep = ""), units="in", width=15, height=10, dpi=300, compression = 'lzw')
+  if (saveResults == TRUE) {
+    fileName =   paste(
+      outputPath,
+      "/choroplethMap_",
+      func_name,
+      '_',
+      var_name,
+      '_',
+      groupBy_name,
+      '_',
+      time,
+      '_',
+      type_of_threshold,
+      '_',
+      value_of_threshold,
+      sep = ''
+    )
+    if (!is.na(Catch_group) & Catch_group!='NULL') {
+      fileName = paste(fileName, Catch_group, sep = "")
+    }
+    write.table(
+      mdf,
+      file = paste(fileName, ".txt", sep = ""),
+      sep = '\t',
+      dec = '.'
+    )
+    ggsave(
+      paste(fileName, ".tiff", sep = ""),
+      units = "in",
+      width = 15,
+      height = 10,
+      dpi = 300,
+      compression = 'lzw'
+    )
   }
   
-  return(list(mdf, plot))
+  return(list(mdf, plot)) #should we return all data (with missing parts) or only the data that were  plotted?
+  
+  
 }
 
-
-# pointsMap_func(
+# 
+# choroplethMap_func(
 #   cl_rcg,
 #   var = as.symbol('OfficialLandingCatchWeight'),
-#   groupBy = c('Harbour', 'Year'),
+#   groupBy = c('Area', 'Year'),
 #   func = as.symbol('sum'),
-#   type_of_threshold ='percent',
+#   type_of_threshold = 'percent',
 #   value_of_threshold = 100,
-#   points_coord = Harbours,
+#   points_coord = FAOshp,
 #   plot_labels = FALSE,
 #   time = as.symbol('Year'),
 #   saveResults = FALSE,
 #   outputPath = 'D:/WG/RCG/IntersessionalWork/Github/RCGs/RegionalOverviews'
 # )
+# 
+# choroplethMap_func(
+#   cl_rcg,
+#   var = as.symbol('OfficialLandingCatchWeight'),
+#   groupBy = c('StatisticalRectangle', 'Year'),
+#   func = as.symbol('sum'),
+#   type_of_threshold = 'percent',
+#   value_of_threshold = 100,
+#   points_coord = StatRectshp,
+#   plot_labels = FALSE,
+#   time = as.symbol('Year'),
+#   saveResults = FALSE,
+#   outputPath = 'D:/WG/RCG/IntersessionalWork/Github/RCGs/RegionalOverviews'
+# )
+# 
+# 
 
-# TO DO:
-# points_coords - should it be a dataset, or a path to a dataset?
-# add warning in case of enormous number of points to plot
-# df - should it be prepared inside the function, or before running the func?
-# add type of plot (by harbour, by (what else could be?))
-# assumption that the first parameter in groupBy will be plotted
-# add facets (yearly)
-# zoom options
-# add check for joining df with points_coord - check if in both dataset there is a column with the same name
-# where to get Harbours coordinates from?
-# ... as the parameter to ggplot
-# dopisac sciezke do shapefile
-# if saveResults = TRUE -> outputPath musst be known - add check
-# xlim and ylim= adjusted to the data, or whole rcg region??
-# CHECK OF COORDINATES -  OUTSIDE THE POSSIBLE LIMITS

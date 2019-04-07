@@ -100,25 +100,25 @@ group_func = function(df,
   # SUMMARISE
   
   # If catch group is defined
-  # if(!is.na(Catch_group)){
-  #   if(Catch_group %in% c('demersal', 'smallpelagic', 'flatfish', 'largepelagic')){
-  #     df = df %>% filter(Catch_group==Catch_group)
-  #   }else{
-  #     stop('Not defined catch group')
-  #   }
-  # }
+  if(!is.na(Catch_group) & Catch_group!='NULL'){
+    if(Catch_group %in% c('demersal', 'small pelagic', 'flatfish', 'largepelagic')){
+      df = df %>% filter(Catch_group==Catch_group)
+    }else{
+      stop('Not defined catch group')
+    }
+  }
   
   # TEMPORARY SOLUTION AS I DON"T HAVE SPECIES GROUPS FUNCTION FROM FISH PI
-  if(!is.na(Catch_group)){
-      df = df %>% filter(Species==Catch_group)
-  }
+  # if(!is.na(Catch_group)){
+  #     df = df %>% filter(Species==Catch_group)
+  # }
   
   
   df  %>% group_by(!!!groupBy) %>%  summarise(!!var := func(!!var, na.rm = TRUE),
                                               analysis_type = func_name) -> gdf
   
   # save info about missing groupBy entries
-    gdf %>% ungroup() %>% mutate(pr = !!var/sum(!!var, na.rm = TRUE)) %>% filter(is.na(!!groupBy[[1]]))->missing_entries
+    gdf %>% ungroup() %>% mutate(pr = !!var/sum(!!var, na.rm = TRUE)*100) %>% filter(is.na(!!groupBy[[1]]))->missing_entries
 
 
   # apply the threshold

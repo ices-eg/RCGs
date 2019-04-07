@@ -1,0 +1,5 @@
+Catch_group	Section	Subsection	Subsubsection	Graph_type	Graph_variant	var	groupBy	plotBy	func	type_of_threshold	value_of_threshold	points_coord	plot_labels	time	png_dir	png_name	txt_dir	txt_name
+NULL	3	3.3	3.3.1	5	1	TripsNumber	Area_Year	FlagCountry	sum	percent	100	FAOshp	TRUE	Year	002_Outputs\figures	3.3.1_5_1	002_Outputs\tables	3.3.1_5_1
+NULL	3	3.3	3.3.1	5	2	DaysAtSea	Area_Year	FlagCountry	sum	percent	100	FAOshp	TRUE	Year	002_Outputs\figures	3.3.1_5_2	002_Outputs\tables	3.3.1_5_2
+NULL	3	3.6	3.6.1	5		TripsNumber	Harbour_Year	FlagCountry	sum	top_n	20	Harbours	FALSE	Year	002_Outputs\figures	3.6.1_5	002_Outputs\tables	3.6.1_5
+NULL	3	3.8	3.8.1	5		TripsNumber	StatisticalRectangle_Year	FlagCountry	sum	percent	95	StatRectshp	FALSE	Year	002_Outputs\figures	3.8.1_5	002_Outputs\tables	3.8.1_5
