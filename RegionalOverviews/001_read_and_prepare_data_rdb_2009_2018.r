@@ -108,7 +108,7 @@ source("funs/func_download_data_from_sharepoint.r")
 	# check on ca
 	ca[!CS_TripId %in% tr$CS_TripId,] 
 
- 
+
 # ========================
 # rename column (should be moved to extraction)
 # ======================== 	
@@ -180,7 +180,7 @@ source("funs/func_download_data_from_sharepoint.r")
 	# deletes auxID
 		ca[,auxID:=NULL]
 
-		
+	
 # ====================== 
 # Set Prep Options 
 # ======================  
@@ -234,7 +234,7 @@ year_end <- 2017
 					ca<-ca[!(Area=="27.7" & Region=="BS"),]
 		# should yield 0
 		ca[!CS_TripId %in% tr$CS_TripId,]
-		
+
 # ========================
 # subsets data and RCG specific preparations
 # ========================	
@@ -383,10 +383,19 @@ year_end <- 2017
 		hh_rcg_all <- hh[CS_TripId %in% target_trips,]
 		sl_rcg_all <- sl[CS_TripId %in% target_trips,]
 		hl_rcg_all <- hl[CS_TripId %in% target_trips,]
+		
+		target_trips<-ca[(grepl(Area, pat="27.5") | 
+							grepl (Area, pat="27.6") | 
+								grepl (Area, pat="27.7") | 
+									grepl (Area, pat="27.8") | 
+										grepl (Area, pat="27.9")	 | 
+											grepl (Area, pat="27.10") ) &  
+												!grepl (Area, pat="27.5.a") &  !grepl (Area, pat="27.7.d") & Year>=year_start & Year<=year_end,unique(CS_TripId)]		
+		
 		ca_rcg_all <- ca[CS_TripId %in% target_trips,]		
 				
 	}	
-	
+
 # ========================
 # formats variables
 # ======================== 
@@ -813,7 +822,7 @@ year_end <- 2017
 	# Stock
 	 	rm(list=ls())
 		library(data.table)
-		system.time(load("RDB_All_Regions_CS_2009_2017_prepared_201904071840.Rdata"))
+		system.time(load("RDB_All_Regions_CS_2009_2017_prepared_201904071934.Rdata"))
 		system.time(load("RDB_All_Regions_CL_2009_2017_prepared_201904071903.Rdata"))
 		system.time(load("RDB_All_Regions_CE_2009_2017_prepared_201904071903.Rdata"))
 
