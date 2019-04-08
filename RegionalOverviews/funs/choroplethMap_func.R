@@ -200,7 +200,7 @@ choroplethMap_func = function(df,
     #display labels on the plot
     plot +
       geom_text(
-        data = points_coord,
+        data = mdf2,
         aes(x = X, y = Y, label =groupBy),
         color = 'grey22',
         size = 3,
@@ -251,14 +251,14 @@ choroplethMap_func = function(df,
   
 }
 
-choroplethMap_func(cl_rcg %>% filter(Year %in% c(2016, 2017)),
-                   'OfficialLandingCatchWeight',
-                   'Area',
-                   facet = 'Year',
-                   func = 'sum',
-                   type_of_threshold = 'none',
-                   value_of_threshold = NA,
-                   Catch_group = NA,
-                   points_coord = FAOshp,
-                   plot_labels = FALSE)
+# choroplethMap_func(cl_rcg %>% filter(Year %in% c(2016, 2017)),
+#                    'OfficialLandingCatchWeight',
+#                    'Area',
+#                    facet = 'Year',
+#                    func = 'sum',
+#                    type_of_threshold = 'none',
+#                    value_of_threshold = NA,
+#                    Catch_group = NA,
+#                    points_coord = FAOshp,
+#                    plot_labels = TRUE)
 
