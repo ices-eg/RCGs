@@ -1,7 +1,0 @@
-Catch_group	Section	Subsection	Subsubsection	Graph_type	Graph_variant	var	groupBy	func	type_of_threshold	value_of_threshold	plot_labels	time	png_dir	png_name	txt_dir	txt_name
-NULL	2	2.1	2.1.8	3		OfficialLandingCatchWeight	Harbour_Year	sum	top_n	20	TRUE	Year	002_Outputs\figures	2.1.8_3_1	002_Outputs\tables	2.1.8_3_1
-NULL	2	2.1	2.1.8	3		OfficialLandingCatchWeight	Harbour_Year	sum	percent	95	TRUE	Year	002_Outputs\figures	2.1.8_3_2	002_Outputs\tables	2.1.8_3_2
-NULL	2	2.1	2.1.8	3		OfficialLandingCatchWeight	Harbour_Year	sum	percent	100	FALSE	Year	002_Outputs\figures	2.1.8_3_3	002_Outputs\tables	2.1.8_3_3
-small pelagic	2	2.2	2.2.7	3		OfficialLandingCatchWeight	Harbour_Year	sum	top_n	20	TRUE	Year	002_Outputs\figures	2.2.7_3	002_Outputs\tables	2.2.7_3
-demersal	2	2.3	2.3.7	3		OfficialLandingCatchWeight	Harbour_Year	sum	top_n	20	TRUE	Year	002_Outputs\figures	2.3.7_3	002_Outputs\tables	2.3.7_3
-flatfish	2	2.4	2.4.7	3		OfficialLandingCatchWeight	Harbour_Year	sum	top_n	20	TRUE	Year	002_Outputs\figures	2.4.7_3	002_Outputs\tables	2.4.7_3
