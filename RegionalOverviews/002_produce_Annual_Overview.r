@@ -115,7 +115,7 @@
 		
 		# load shapefile
 		shp  = sf::st_read(
-		  'D:/WG/RCG/IntersessionalWork/Subgroup on Regional Overviews/TestData/shp/FAO_AREAS_NOCOASTLINE.shp' # shp uploaded on sharepoint by Hans
+		  "shapefiles/FAO_areas/FAO_AREAS_NOCOASTLINE.shp"
 		)
 		shp %>%
 		  filter((!is.na(F_DIVISION) &
@@ -129,7 +129,7 @@
 		FAOshp = cbind(shp,  sf::st_coordinates(sf::st_centroid(shp$geometry))) %>% mutate(lon = X, lat = Y)
 		
 		StatRectshp  = sf::st_read(
-		  'D:/maps/shapefile/ICES_Statistical_Rectangles_Eco/ICES_Statistical_Rectangles_Eco.shp' 
+		  "shapefiles/ICES_spatial_facility/ICES_rectangles/ICES_Statistical_Rectangles_Eco.shp" 
 		)
 		StatRectshp %>% mutate(StatisticalRectangle = ICESNAME)-> StatRectshp
 		StatRectshp = cbind(StatRectshp,  sf::st_coordinates(sf::st_centroid(StatRectshp$geometry))) %>% mutate(lon = X, lat = Y)
@@ -365,7 +365,7 @@
 		
 		# load shapefile
 		shp  = sf::st_read(
-		  'D:/WG/RCG/IntersessionalWork/Subgroup on Regional Overviews/TestData/shp/FAO_AREAS_NOCOASTLINE.shp' # shp uploaded on sharepoint by Hans
+		  "shapefiles/FAO_areas/FAO_AREAS_NOCOASTLINE.shp"
 		)
 		shp %>%
 		  filter((!is.na(F_DIVISION) &
@@ -379,7 +379,7 @@
 		FAOshp = cbind(shp,  sf::st_coordinates(sf::st_centroid(shp$geometry))) %>% mutate(lon = X, lat = Y)
 		
 		StatRectshp  = sf::st_read(
-		  'D:/maps/shapefile/ICES_Statistical_Rectangles_Eco/ICES_Statistical_Rectangles_Eco.shp' 
+		  "shapefiles/ICES_spatial_facility/ICES_rectangles/ICES_Statistical_Rectangles_Eco.shp" 
 		)
 		StatRectshp %>% mutate(StatisticalRectangle = ICESNAME)-> StatRectshp
 		StatRectshp = cbind(StatRectshp,  sf::st_coordinates(sf::st_centroid(StatRectshp$geometry))) %>% mutate(lon = X, lat = Y)
