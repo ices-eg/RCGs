@@ -9,7 +9,8 @@ choroplethMap_func = function(df,
                               plot_labels = TRUE,
                               saveResults = FALSE,
                               outputPath,
-                              Catch_group = NA) {
+                              Catch_group = NA,
+                              displayInR = TRUE) {
   # df - a data frame
   # var -  a column to be summmarised e.g. var = 'OfficialLandingCatchWeight'
   # groupBy - name of column, by which the grouping should be carried out. e.g. groupBy = 'Area'
@@ -22,6 +23,8 @@ choroplethMap_func = function(df,
   # plot_labels  - TRUE/FALSE - should the labels of e.g. Harbours be displayed on a map?
   # saveResults - TRUE/FALSE - do you want to save the results?
   # outputPath - path for saving plots and tables
+  # displayInR - TRUE/FALSE - should the results be displayed in R (warning: in case of big plots, it takes a longer time to display sth in R, rather than save it into a diretcory)
+  #           - so if yout saveResults = TRUE, then it's recommended to set displayInR = FALSE
   
   # Marta Suska
   # NMFRI
@@ -151,10 +154,14 @@ choroplethMap_func = function(df,
   
   # Make a map
   ggplot() +
-    geom_sf(data = mdf2, aes(fill = var) , na.rm = TRUE) +
+    geom_sf(data = mdf2, aes(fill = var) , na.rm = TRUE,
+            size = 0.05, color =gray(.8) 
+            ) +
     geom_sf(data = points_coord,
             fill = NA ,
-            na.rm = TRUE) +
+            na.rm = TRUE,
+            size = 0.05, color =gray(.8)
+            ) +
     scale_fill_viridis_c(
       option = "viridis",
       trans = "sqrt",
@@ -246,8 +253,9 @@ choroplethMap_func = function(df,
   
   mdf %>%  select(-var, - groupBy, -facet)-> mdf
   
+  if(displayInR==TRUE){
   return(list(mdf, plot)) #should we return all data (with missing parts) or only the data that were  plotted?
-  
+  }
   
 }
 
