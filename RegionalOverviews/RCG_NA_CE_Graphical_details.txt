@@ -1,5 +1,0 @@
-Catch_group	Section	Subsection	Subsubsection	Graph_type	Graph_variant	type_of_threshold	value_of_threshold	Var	var1	var2	tapply_type	proportion	sorted	graph_par	legend_par	png_dir	png_name	txt_dir	txt_name
-NULL	3	3.1	3.1.1	1	a	NULL	NULL	DaysAtSea	FlagCountry	NULL	sum	FALSE	TRUE	list(oma = c(6,1,1,1), mai = c(1,1,.5,.5), ylab_line=4, col=NA)	NULL	002_Outputs\figures	3.1.1_1a	002_Outputs\tables	3.1.1_1a
-NULL	3	3.1	3.1.1	1	b	NULL	NULL	DaysAtSea	VesselLengthCategory	NULL	sum	FALSE	TRUE	list(oma = c(6,1,1,1), mai = c(1,1,.5,.5), ylab_line=4, col=NA)	NULL	002_Outputs\figures	3.1.1_1b	002_Outputs\tables	3.1.1_1b
-NULL	3	3.1	3.1.1	1	c	NULL	NULL	KWDays	FlagCountry	NULL	sum	FALSE	TRUE	list(oma = c(6,1,1,1), mai = c(1,1,.5,.5), ylab_line=4, col=NA)	NULL	002_Outputs\figures	3.1.1_1c	002_Outputs\tables	3.1.1_1c
-NULL	3	3.1	3.1.1	1	d	NULL	NULL	KWDays	VesselLengthCategory	NULL	sum	FALSE	TRUE	list(oma = c(6,1,1,1), mai = c(1,1,.5,.5), ylab_line=4, col=NA)	NULL	002_Outputs\figures	3.1.1_1d	002_Outputs\tables	3.1.1_1d

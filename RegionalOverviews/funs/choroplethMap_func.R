@@ -1,32 +1,32 @@
 choroplethMap_func = function(df,
                               var,
                               groupBy,
+                              facet,
                               func,
                               type_of_threshold = 'none',
                               value_of_threshold = NA,
                               points_coord,
                               plot_labels = TRUE,
-                              time,
                               saveResults = FALSE,
                               outputPath,
                               Catch_group = NA) {
   # df - a data frame
-  # var -  a column to be summmarised e.g. var = as.symbol('OfficialLandingCatchWeight')
-  # groupBy - names of columns, by which the grouping should be carried out. IMPORTANT to write it as groupBy = c(...) e.g. groupBy = c('Harbours', 'HarboursDesc')
-  #         - IMPORTANT - on the first place put sth you will be plotting by, eg Harbour
-  # func - function summarising the data: sum, n_distinct, e.g. func = as.symbol('sum')
+  # var -  a column to be summmarised e.g. var = 'OfficialLandingCatchWeight'
+  # groupBy - name of column, by which the grouping should be carried out. e.g. groupBy = 'Area'
+  # facet - will be used for facet_wrap, e.g. facet = 'Year'
+  # func - function summarising the data: sum,  n_distinct,  e.g. func = 'sum'
   # type_of_threshold - default set to 'none', other options: 'top_n', 'percent'
   # value_of_threshold - set it, if you defined any type_of_threshold
-  # points_coord - shapefile, must have the same column name as in the df, e.g. Area if grooupBy = c('Area',...)
-  # plot_labels  - TRUE/FALSE - should the labels of e.g. Harbours be displayed on a map?
-  # time = name of column describing time, must be also included into the groupBy parameter, as.symbol('Year')
-  #saveResults - TRUE/FALSE - do you want to save the results?
-  # outputPath - path for saving plots and tables
   # Catch_group - if NA then all species will be included, other options: demersal/flatfish/smallpelagic/largepelagic
+  # points_coord - dataset with coordinates of a variable that was listed first in groupBy parameter, eg Harbour. Must have at least columns called lat, lon and column named the same as the appropriate column in the df
+  # plot_labels  - TRUE/FALSE - should the labels of e.g. Harbours be displayed on a map?
+  # saveResults - TRUE/FALSE - do you want to save the results?
+  # outputPath - path for saving plots and tables
   
   # Marta Suska
   # NMFRI
   # msuska@mir.gdynia.pl
+  
   ################################################################################
   
   require(rlang)
@@ -36,50 +36,46 @@ choroplethMap_func = function(df,
   
   source('funs/group_func.R')
   
-  # parameters
+  # rename the columns
+  var_name = var
+  var <- as.symbol(var_name)
+  groupBy_name = groupBy
+  groupBy <- as.symbol(groupBy_name)
+  if(!is.na(facet)){
+    facet_name <- facet
+    facet = as.symbol(facet)  
+  }else{
+    facet_name = NA
+    facet = NA
+  }
   
-  #var = enquo(var) # this one if the var is set like var = OfficialLandingCatchWeight
-  var = quo(UQ(var)) # this one to make it work with RCG_NA_CL_Graphical_details, this one if var is with quotations
-  
-  #func = enquo(func)  # this one if the var is set like func = sum
-  func = quo(UQ(func)) # to make it work with RCG_NA_CL_Graphical_details, this one if func is with quotations
-  
-  groupBy = parse_quos(groupBy, env = caller_env()) # to make it work with RCG_NA_CL_Graphical_details, this one if groupBy is with quotations
-  groupBy = enquo(groupBy)
-  groupBy_name = quo_name(eval_tidy(quo(UQ(groupBy)))[[1]])
-  
-  var_name =  quo_text(var)
-  func_name = quo_text(func)
-  
-  #time = enquo(time) # this one if time is set like time = Year
-  time = quo(UQ(time)) # to make it work with RCG_NA_CL_Graphical_details, this one if time is with quotations, time = 'Year'
-  
-  
+  func_name = func
+  func = eval_tidy(as.symbol(func))
   
   # creating the groupped df
-  grouping_result =  eval_tidy(quo(
-    UQ(group_func)(
-      df = df,
-      var = !!var,
-      groupBy = !!groupBy,
-      func = !!func,
-      type_of_threshold = type_of_threshold,
-      value_of_threshold = value_of_threshold,
-      Catch_group = Catch_group
-    )
-  ))
+  
+  grouping_result = group_func(df, var_name, groupBy_name,groupBy2 = NA, facet_name, func_name, type_of_threshold = type_of_threshold, 
+                               value_of_threshold =  value_of_threshold, Catch_group = Catch_group)  
   tdf = grouping_result[[1]]
   if (is.null(tdf)) {
     stop('The chosen data set is empty')
   }
   missing_entries = grouping_result[[2]]
+  ############################################################################
   
   # combine dataset with shp
-  points_coord %>%  full_join(tdf) %>%  filter(!is.na(!!var)) -> mdf
+  points_coord %>%  full_join(tdf) -> mdf
+  
+  mdf %>% mutate(var = !!var,
+                 groupBy = !!groupBy,
+                 facet = !!facet) %>% 
+    filter(!is.na(var))-> mdf
+  
+  
   
   # add info about records without coordinates <------------------ TO DO
   if (nrow(mdf %>% filter(is.na(ID))) > 0) {
-    mdf %>% filter(is.na(ID) & !is.na(!!eval_tidy(quo(UQ(groupBy)[[1]])))) %>% select(pr)-> missing_value
+    mdf %>% filter(is.na(ID) & !is.na(groupBy)) %>% select(pr)-> missing_value
     message(paste("Not all records from the dataset have corresponding entry in the shapefile, ",round(unlist(missing_value)), '% ', sep = '' ))
     missing_caption = paste("\n Not all records from the dataset have corresponding entry in the shapefile, ",round(unlist(missing_value)), '% ', sep = '' )
   } else{
@@ -97,8 +93,6 @@ choroplethMap_func = function(df,
   # set the limits
   limits <- st_buffer(mdf2, dist = 1) %>% st_bbox()
   
-  time = tdf %>% distinct(!!time)
-  
   # Set the plot parameters
   
   # title
@@ -108,11 +102,9 @@ choroplethMap_func = function(df,
                   var_name,
                   ' by ',
                   groupBy_name,
-                  ', ',
-                  time,
                   sep = '')
   } else{
-    title = paste(func_name, ' ', var_name, ' by ',  groupBy_name, ', ', time, sep = '')
+    title = paste(func_name, ' ', var_name, ' by ',  groupBy_name, sep = '')
   }
   
   # If Catch_group is known
@@ -159,7 +151,7 @@ choroplethMap_func = function(df,
   
   # Make a map
   ggplot() +
-    geom_sf(data = mdf2, aes(fill = !!var) , na.rm = TRUE) +
+    geom_sf(data = mdf2, aes(fill = var) , na.rm = TRUE) +
     geom_sf(data = points_coord,
             fill = NA ,
             na.rm = TRUE) +
@@ -168,7 +160,8 @@ choroplethMap_func = function(df,
       trans = "sqrt",
       na.value = "aliceblue",
       begin = 1,
-      end = 0
+      end = 0,
+      name = var_name
     ) +
     geom_sf(data = m,  fill = "antiquewhite") +
     coord_sf(
@@ -184,6 +177,7 @@ choroplethMap_func = function(df,
       subtitle = subtitle,
       caption = caption
     ) +
+    facet_wrap(~facet)+
     theme_classic() +
     theme(
       text = element_text(color = "#22211d"),
@@ -206,10 +200,8 @@ choroplethMap_func = function(df,
     #display labels on the plot
     plot +
       geom_text(
-        data = points_coord,
-        aes(x = X, y = Y, label := !!eval_tidy(quo(UQ(
-          groupBy
-        )[[1]]))),
+        data = mdf2,
+        aes(x = X, y = Y, label =groupBy),
         color = 'grey22',
         size = 3,
         fontface = "italic",
@@ -226,8 +218,7 @@ choroplethMap_func = function(df,
       var_name,
       '_',
       groupBy_name,
-      '_',
-      time,
+      ifelse(is.na(facet_name),'', paste(', ', paste0(unique(mdf2$facet), collapse = ","), sep= '')),
       '_',
       type_of_threshold,
       '_',
@@ -253,39 +244,21 @@ choroplethMap_func = function(df,
     )
   }
   
+  mdf %>%  select(-var, - groupBy, -facet)-> mdf
+  
   return(list(mdf, plot)) #should we return all data (with missing parts) or only the data that were  plotted?
   
   
 }
 
-# 
-# choroplethMap_func(
-#   cl_rcg,
-#   var = as.symbol('OfficialLandingCatchWeight'),
-#   groupBy = c('Area', 'Year'),
-#   func = as.symbol('sum'),
-#   type_of_threshold = 'percent',
-#   value_of_threshold = 100,
-#   points_coord = FAOshp,
-#   plot_labels = FALSE,
-#   time = as.symbol('Year'),
-#   saveResults = FALSE,
-#   outputPath = 'D:/WG/RCG/IntersessionalWork/Github/RCGs/RegionalOverviews'
-# )
-# 
-# choroplethMap_func(
-#   cl_rcg,
-#   var = as.symbol('OfficialLandingCatchWeight'),
-#   groupBy = c('StatisticalRectangle', 'Year'),
-#   func = as.symbol('sum'),
-#   type_of_threshold = 'percent',
-#   value_of_threshold = 100,
-#   points_coord = StatRectshp,
-#   plot_labels = FALSE,
-#   time = as.symbol('Year'),
-#   saveResults = FALSE,
-#   outputPath = 'D:/WG/RCG/IntersessionalWork/Github/RCGs/RegionalOverviews'
-# )
-# 
-# 
+# choroplethMap_func(cl_rcg %>% filter(Year %in% c(2016, 2017)),
+#                    'OfficialLandingCatchWeight',
+#                    'Area',
+#                    facet = 'Year',
+#                    func = 'sum',
+#                    type_of_threshold = 'none',
+#                    value_of_threshold = NA,
+#                    Catch_group = NA,
+#                    points_coord = FAOshp,
+#                    plot_labels = TRUE)
 
