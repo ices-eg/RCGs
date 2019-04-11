@@ -1,0 +1,181 @@
+---
+title: "Metier description report"
+author: "Josefine Egekvist, DTU Aqua"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: word_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r ReadData, echo=FALSE, message=FALSE}
+library(dplyr)
+library(knitr)
+library(tidyr)
+library(ggplot2)
+years <- "2015,2016,2017"
+region <- "NA"
+region2 <- "North Atlantic"
+metier <- "TBB_DEF_70-99_0_0"
+
+
+CL <- read.csv("C:\\joeg\\Metier work\\RCG_intersessional_work_2019\\Data\\CL Landing 2009-2018.csv",header=T,sep = ";",stringsAsFactors = FALSE)
+CE <- read.csv("C:\\joeg\\Metier work\\RCG_intersessional_work_2019\\Data\\CE Effort 2009-2018.csv",header=T,sep = ";",stringsAsFactors = FALSE)
+CE_DF <- as.data.frame(CE)
+CL_DF <- as.data.frame(CL)
+
+CE_DF$MetierLvl6 <- CE_DF$FishingActivityCategoryEuropeanLvl6
+CL_DF$MetierLvl6 <- CL_DF$FishingActivityCategoryEuropeanLvl6
+
+CE_DF$Region[is.na(CE_DF$Region)] <- "NA"
+CL_DF$Region[is.na(CL_DF$Region)] <- "NA"
+
+CL_DF$ton <- CL_DF$OfficialLandingCatchWeight/1000
+
+CL_metier_years <- CL_DF[CL_DF$MetierLvl6==metier & (CL_DF$Year %in% c(2015,2016,2017)) & CL_DF$Region==region,]
+CE_metier_years <- CE_DF[CE_DF$MetierLvl6==metier & (CE_DF$Year %in% c(2015,2016,2017)) & CE_DF$Region==region,]
+CE_metier_years$Year <- as.character(CE_metier_years$Year)
+CL_metier_years$Year <- as.character(CL_metier_years$Year)
+
+#Clean data
+CL_metier_years<- CL_metier_years[!is.na(CL_metier_years$Year),]
+CE_metier_years<- CE_metier_years[!is.na(CE_metier_years$Year),]
+
+
+countries <- unique(CL_metier_years$FlagCountry)
+```
+
+## Region: `r region2`
+## Metier: `r metier` , years: `r years`
+
+Data source: RDB CE and CL data
+
+**Number of trips by flag countries: `r countries`**
+
+
+```{r echo=FALSE, message=FALSE, warning = FALSE, fig.height=2}
+country_years <- CE_metier_years %>%
+  group_by(Year, FlagCountry) %>%
+  summarise(numberTrips = sum(TripsNumber)) 
+
+g <- ggplot(country_years, aes(x=FlagCountry, numberTrips))+
+  geom_col(aes(fill=Year))
+g + theme(axis.text.x = element_text(angle=90, hjust=1))
+
+```
+ 
+**Top 10 species landed by metier. The rest are summarised in "Other species". Average yearly landings during the period `r years`**
+```{r echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.5}
+species_years <- CL_metier_years %>%
+  group_by(Species) %>%
+  summarise(ton = sum(ton)) %>%
+  arrange(desc(ton))
+
+species_years$row <- as.numeric(rownames(species_years))
+species_years$Species[species_years$row > 10] <- 'Other species'
+
+species_years1 <- species_years %>%
+  group_by(Species) %>%
+  summarise(ton = sum(ton)) %>%
+  arrange(desc(ton))
+
+sp <- ggplot(species_years1, aes(x=Species, y=ton))+
+  geom_bar(stat="identity") + xlab("Species") + ylab("Landings (ton)") 
+sp + theme(axis.text.x = element_text(angle=35, hjust=1))
+```
+
+--------------------------------------
+
+**Number of vessels by vessel length group: **
+
+```{r echo=FALSE, message=FALSE, warning = FALSE, fig.height=2}
+vessel_length_years <- CE_metier_years %>%
+  group_by(Year, VesselLengthCategory) %>%
+  summarise(numberTrips = sum(TripsNumber)) 
+
+vessel_length_years$VesselLengthCategory <- factor(vessel_length_years$VesselLengthCategory,levels = c("<8","8-10","<10", "10-<12", "12-<18", "18-<24", "24-<40",">40"))
+
+g <- ggplot(vessel_length_years, aes(x=VesselLengthCategory, numberTrips))+
+  geom_col(aes(fill=Year))
+g + theme(axis.text.x = element_text(angle=90, hjust=1))
+
+```
+
+
+**Seasonal pattern of fishing activity: Number of trips by quarter **
+
+```{r echo=FALSE, message=FALSE, warning = FALSE, fig.height=2}
+
+seasons_years <- CE_metier_years %>%
+  group_by(Year, Quarter) %>%
+  summarise(numberTrips = sum(TripsNumber)) %>%
+  arrange(Quarter)
+
+seasons_years$Quarter <- factor(seasons_years$Quarter,levels = c("1", "2", "3", "4")) 
+ 
+ggplot(seasons_years, aes(x=Quarter, numberTrips))+
+  geom_col(aes(fill=Year))
+
+```
+
+**Days at Sea by ICES rectangle, yearly average 2015-2017**
+```{r echo=FALSE, message=FALSE, warning = FALSE, fig.height=3}
+#Plot ICES rectangles
+library(sf)
+library(ggplot2)
+icesRect <- st_read("C:\\joeg\\Metier work\\RCG_intersessional_work_2019\\Data\\Geodata\\ices_squares.shp", quiet=TRUE)
+coast <- st_read("C:\\joeg\\Metier work\\RCG_intersessional_work_2019\\Data\\Geodata\\Kystlinie.shp", quiet=TRUE)
+coast_geo <- st_geometry(coast)
+crs_coast <- st_crs(coast_geo, asText=TRUE)
+icesRect_crs <- st_transform(icesRect, crs=crs_coast) 
+
+#Clean data
+CE_metier_years$DAS <- as.numeric(CE_metier_years$DaysAtSea)
+CE_metier_years<- CE_metier_years[!is.na(CE_metier_years$DAS),]
+
+icesRect_years <- CE_metier_years %>%
+  group_by(Year, StatisticalRectangle) %>%
+  summarise(DAS = sum(DAS))
+
+icesRect_years1 <- icesRect_years %>%
+  group_by(StatisticalRectangle) %>%
+  summarise(DAS_mean = mean(DAS))
+
+icesRect_years1$DAS_mean_int <- as.integer(icesRect_years1$DAS_mean)
+
+icesRect_join <- inner_join(icesRect_crs, icesRect_years1, by=c("ICESNAME" = "StatisticalRectangle"))
+coast_geo_simple <- st_simplify(coast_geo, preserveTopology = TRUE, dTolerance = 100)
+
+sp_cent <- st_centroid(icesRect_join)
+sp_cent$x <- st_coordinates(sp_cent)[,1]
+sp_cent$y <- st_coordinates(sp_cent)[,2]
+
+
+#Setting lim
+ylim_min <- min(sp_cent$y, na.rm = T)
+ylim_max <- max(sp_cent$y, na.rm = T)
+
+xlim_min <- min(sp_cent$x, na.rm = T)
+xlim_max <- max(sp_cent$x, na.rm = T)
+
+xlim <- c(xlim_min - 2, xlim_max + 2)
+ylim <- c(ylim_min - 1, ylim_max + 1)
+
+
+#plot map
+ggplot(data=icesRect_join) +
+  geom_sf(aes(fill=DAS_mean_int)) +
+  scale_fill_gradient(low="lightblue", high="red") +
+  coord_sf(xlim= xlim, ylim=ylim, clip="on") +
+  geom_sf(data=coast_geo_simple, colour="grey") +
+  coord_sf(xlim= xlim, ylim=ylim, clip="on")
+
+```
+
+
+**Comments: **
+
