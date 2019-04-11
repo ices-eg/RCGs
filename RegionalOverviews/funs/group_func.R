@@ -6,7 +6,7 @@ group_func = function(df,
                       func,
                       type_of_threshold = 'none',
                       value_of_threshold = NA,
-                      Catch_group = NA) {
+                      Catch_group_name = NA) {
   # df - a data frame
   # var -  a column to be summmarised e.g. var = 'OfficialLandingCatchWeight'
   # groupBy - name of column, by which the grouping should be carried out. e.g. groupBy = 'Area'
@@ -15,7 +15,7 @@ group_func = function(df,
   # func - function summarising the data: sum,  n_distinct,  e.g. func = 'sum'
   # type_of_threshold - default set to 'none', other options: 'top_n', 'percent'
   # value_of_threshold - set it, if you defined any type_of_threshold
-  # Catch_group - if NA then all species will be included, other options: demersal/flatfish/smallpelagic/largepelagic
+  # Catch_group_name - if NA then all species will be included, other options: demersal/flatfish/smallpelagic/largepelagic
   
   # Marta Suska
   # NMFRI
@@ -139,14 +139,13 @@ group_func = function(df,
   # SUMMARISE
   
   # If catch group is defined
-  if(!is.na(Catch_group) & Catch_group!='NULL'){
-    if(Catch_group %in% c('demersal', 'small pelagic', 'flatfish', 'largepelagic')){
-      df = df %>% filter(Catch_group==Catch_group)
+  if(!is.na(Catch_group_name) & Catch_group_name!='NULL'){
+    if(Catch_group_name %in% c('demersal', 'small pelagic', 'flatfish', 'largepelagic')){
+      df = df %>% filter(Catch_group==Catch_group_name)
     }else{
       stop('Not defined catch group')
     }
   }
-  
   df  %>% group_by(groupBy, groupBy2, facet) %>%  summarise(var = func(var, na.rm = TRUE),
                                                   analysis_type = func_name) -> gdf
   
@@ -177,8 +176,8 @@ group_func = function(df,
     tdf = NULL
   }
   
-  if(!is.na(Catch_group)){
-    tdf = tdf %>% mutate(Catch_group = Catch_group)
+  if(!is.na(Catch_group_name)){
+    tdf = tdf %>% mutate(Catch_group = Catch_group_name)
   }
   
   if(is.na(facet)){
@@ -206,6 +205,6 @@ group_func = function(df,
 #            func = 'sum',
 #            type_of_threshold = 'top_n',
 #            value_of_threshold = 20,
-#            Catch_group = NA)
+#            Catch_group_name = NA)
 
 
