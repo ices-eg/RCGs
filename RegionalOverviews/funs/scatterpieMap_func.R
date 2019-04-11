@@ -158,7 +158,7 @@ scatterpieMap_func = function(df,
                   # ifelse(is.na(facet_name),'', paste(', ', paste0(unique(mdf2$facet), collapse = ","), sep= '')),
                   sep = '')
   } else{
-    title = paste(func_name, ' ', var_name, ' by ', # groupBy_name,  ifelse(is.na(facet_name),'', paste(', ', paste0(unique(mdf2$facet), collapse = ","), sep= '')),
+    title = paste(func_name, ' ', var_name, ' by ', groupBy_name,#  ifelse(is.na(facet_name),'', paste(', ', paste0(unique(mdf2$facet), collapse = ","), sep= '')),
                   sep = '')
   }
   
@@ -210,7 +210,7 @@ scatterpieMap_func = function(df,
   unique_bys = mdf2  %>%  distinct(groupBy2) %>% nrow()
 
   radius =0.3
-  radiusMultiply = ifelse(groupBy_name %in% c('Area'), 4, ifelse(groupBy_name %in% c('Harbour', 'LandingCountry', 'FlagCountry'), 3, 1.5 ))
+  radiusMultiply = ifelse(groupBy_name %in% c('Area'), 3, ifelse(groupBy_name %in% c('Harbour', 'LandingCountry', 'FlagCountry'), 2, 1 ))
   pie.list <- mdf2%>%
     select(lon, lat, groupBy, groupBy2, facet, var) %>%  
     spread(groupBy2, var, fill =0) %>%
@@ -319,6 +319,7 @@ if(groupBy_name=='Area'){
       var_name,
       '_',
       groupBy_name,
+      groupBy2_name,
       ifelse(is.na(facet_name),'', paste(', ', paste0(unique(mdf2$facet), collapse = ","), sep= '')),
       '_',
       type_of_threshold,
@@ -344,7 +345,9 @@ if(groupBy_name=='Area'){
       compression = 'lzw'
     )
   }
-  mdf %>%  select(-var, - groupBy, -groupBy2, -facet)-> mdf
+  
+  mdf %>% rename(!!var_name := var)-> mdf
+  mdf %>%  select( - groupBy, -groupBy2, -facet)-> mdf
   return(list(mdf, plot))
 }
 
