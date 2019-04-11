@@ -9,7 +9,7 @@ choroplethMap_func = function(df,
                               plot_labels = TRUE,
                               saveResults = FALSE,
                               outputPath,
-                              Catch_group = NA,
+                              Catch_group_name = NA,
                               displayInR = TRUE) {
   # df - a data frame
   # var -  a column to be summmarised e.g. var = 'OfficialLandingCatchWeight'
@@ -18,7 +18,7 @@ choroplethMap_func = function(df,
   # func - function summarising the data: sum,  n_distinct,  e.g. func = 'sum'
   # type_of_threshold - default set to 'none', other options: 'top_n', 'percent'
   # value_of_threshold - set it, if you defined any type_of_threshold
-  # Catch_group - if NA then all species will be included, other options: demersal/flatfish/smallpelagic/largepelagic
+  # Catch_group_name - if NA then all species will be included, other options: demersal/flatfish/smallpelagic/largepelagic
   # points_coord - dataset with coordinates of a variable that was listed first in groupBy parameter, eg Harbour. Must have at least columns called lat, lon and column named the same as the appropriate column in the df
   # plot_labels  - TRUE/FALSE - should the labels of e.g. Harbours be displayed on a map?
   # saveResults - TRUE/FALSE - do you want to save the results?
@@ -58,7 +58,8 @@ choroplethMap_func = function(df,
   # creating the groupped df
   
   grouping_result = group_func(df, var_name, groupBy_name,groupBy2 = NA, facet_name, func_name, type_of_threshold = type_of_threshold, 
-                               value_of_threshold =  value_of_threshold, Catch_group = Catch_group)  
+                               value_of_threshold =  value_of_threshold, Catch_group_name = Catch_group_name)  
+  
   tdf = grouping_result[[1]]
   if (is.null(tdf)) {
     stop('The chosen data set is empty')
@@ -110,8 +111,8 @@ choroplethMap_func = function(df,
     title = paste(func_name, ' ', var_name, ' by ',  groupBy_name, sep = '')
   }
   
-  # If Catch_group is known
-  if(!is.na(Catch_group) & Catch_group!='NULL'){ title = paste(title, ' (',Catch_group, ')', sep ='')}
+  # If Catch_group_name is known
+  if(!is.na(Catch_group_name) & Catch_group_name!='NULL'){ title = paste(title, ' (',Catch_group_name, ')', sep ='')}
   
   
   
@@ -160,7 +161,7 @@ choroplethMap_func = function(df,
     geom_sf(data = points_coord,
             fill = NA ,
             na.rm = TRUE,
-            size = 0.05, color =gray(.8)
+            size = 0.05, color =gray(.6)
             ) +
     scale_fill_viridis_c(
       option = "viridis",
@@ -232,8 +233,8 @@ choroplethMap_func = function(df,
       value_of_threshold,
       sep = ''
     )
-    if (!is.na(Catch_group) & Catch_group!='NULL') {
-      fileName = paste(fileName, Catch_group, sep = "")
+    if (!is.na(Catch_group_name) & Catch_group_name!='NULL') {
+      fileName = paste(fileName, Catch_group_name, sep = "")
     }
     write.table(
       mdf,
@@ -266,7 +267,7 @@ choroplethMap_func = function(df,
 #                    func = 'sum',
 #                    type_of_threshold = 'none',
 #                    value_of_threshold = NA,
-#                    Catch_group = NA,
+#                    Catch_group_name = NA,
 #                    points_coord = FAOshp,
 #                    plot_labels = TRUE)
 

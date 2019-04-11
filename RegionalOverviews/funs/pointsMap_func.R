@@ -9,7 +9,7 @@ pointsMap_func = function(df,
                           plot_labels = TRUE,
                           saveResults = FALSE,
                           outputPath,
-                          Catch_group = NA) {
+                          Catch_group_name = NA) {
   # df - a data frame
   # var -  a column to be summmarised e.g. var = 'OfficialLandingCatchWeight'
   # groupBy - name of column, by which the grouping should be carried out. e.g. groupBy = 'Area'
@@ -17,7 +17,7 @@ pointsMap_func = function(df,
   # func - function summarising the data: sum,  n_distinct,  e.g. func = 'sum'
   # type_of_threshold - default set to 'none', other options: 'top_n', 'percent'
   # value_of_threshold - set it, if you defined any type_of_threshold
-  # Catch_group - if NA then all species will be included, other options: demersal/flatfish/smallpelagic/largepelagic
+  # Catch_group_name - if NA then all species will be included, other options: demersal/flatfish/smallpelagic/largepelagic
   # points_coord - dataset with coordinates of a variable that was listed first in groupBy parameter, eg Harbour. Must have at least columns called lat, lon and column named the same as the appropriate column in the df
   # plot_labels  - TRUE/FALSE - should the labels of e.g. Harbours be displayed on a map?
   # saveResults - TRUE/FALSE - do you want to save the results?
@@ -55,7 +55,7 @@ pointsMap_func = function(df,
   # creating the groupped df
   
   grouping_result = group_func(df, var_name, groupBy_name, groupBy2 = NA, facet_name, func_name, type_of_threshold = type_of_threshold, 
-                               value_of_threshold =  value_of_threshold, Catch_group = Catch_group)
+                               value_of_threshold =  value_of_threshold, Catch_group_name = Catch_group_name)
   
   tdf = grouping_result[[1]]
   if (is.null(tdf)) {
@@ -149,8 +149,8 @@ pointsMap_func = function(df,
                   sep = '')
   }
 
-  # If Catch_group is known
-  if(!is.na(Catch_group) & Catch_group!='NULL'){ title = paste(title, ' (',Catch_group, ')', sep ='')}
+  # If Catch_group_name is known
+  if(!is.na(Catch_group_name) & Catch_group_name!='NULL'){ title = paste(title, ' (',Catch_group_name, ')', sep ='')}
 
 
   # subtitle - as the information about used thresholds
@@ -259,8 +259,8 @@ pointsMap_func = function(df,
   fileName =   paste(outputPath, "/pointsMap_", func_name,'_', var_name, '_', groupBy_name,'_',  
                      ifelse(is.na(facet_name),'', paste(', ', paste0(unique(mdf2$facet), collapse = ","), sep= '')),
                      '_',type_of_threshold, '_',value_of_threshold, sep = '')
-  if(!is.na(Catch_group) & Catch_group!='NULL'){
-    fileName = paste(fileName, Catch_group, sep = "")
+  if(!is.na(Catch_group_name) & Catch_group_name!='NULL'){
+    fileName = paste(fileName, Catch_group_name, sep = "")
   }
   write.table(mdf, file = paste(fileName, ".txt", sep = ""), sep = '\t', dec = '.')
   ggsave(paste(fileName, ".tiff", sep = ""), units="in", width=15, height=10, dpi=300, compression = 'lzw')
@@ -276,7 +276,7 @@ pointsMap_func = function(df,
 #                func = 'sum',
 #                type_of_threshold = 'top_n',
 #                value_of_threshold = 20,
-#                Catch_group = NA,
+#                Catch_group_name = NA,
 #                points_coord = Harbours,
 #                plot_labels = FALSE,
 #                saveResults = FALSE,
