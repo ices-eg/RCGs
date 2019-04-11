@@ -210,7 +210,7 @@ scatterpieMap_func = function(df,
   unique_bys = mdf2  %>%  distinct(groupBy2) %>% nrow()
 
   radius =0.3
-  radiusMultiply = ifelse(groupBy_name %in% c('Area'), 3, ifelse(groupBy_name %in% c('Harbour', 'LandingCountry', 'FlagCountry'), 2, 1 ))
+  radiusMultiply = ifelse(groupBy_name %in% c('Area', 'FishingGround'), 3, ifelse(groupBy_name %in% c('Harbour', 'LandingCountry', 'FlagCountry'), 2, 1 ))
   pie.list <- mdf2%>%
     select(lon, lat, groupBy, groupBy2, facet, var) %>%  
     spread(groupBy2, var, fill =0) %>%
