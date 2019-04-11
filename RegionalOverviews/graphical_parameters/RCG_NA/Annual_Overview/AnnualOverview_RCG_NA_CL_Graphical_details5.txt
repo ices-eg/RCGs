@@ -5,3 +5,4 @@ NULL	2	2.1	2.1.10	5		OfficialLandingCatchWeight	StatisticalRectangle	FlagCountry
 small pelagic	2	2.2	2.2.9	5		OfficialLandingCatchWeight	StatisticalRectangle	FlagCountry	Year	sum	percent	95	StatRectshp	FALSE	002_Outputs\figures	2.2.9_5	002_Outputs\tables	2.2.9_5
 demersal	2	2.3	2.3.10	5		OfficialLandingCatchWeight	StatisticalRectangle	FlagCountry	Year	sum	percent	95	StatRectshp	FALSE	002_Outputs\figures	2.3.10_5	002_Outputs\tables	2.3.10_5
 flatfish	2	2.4	2.4.9	5		OfficialLandingCatchWeight	StatisticalRectangle	FlagCountry	Year	sum	percent	95	StatRectshp	FALSE	002_Outputs\figures	2.4.9_5	002_Outputs\tables	2.4.9_5
+NULL	2	2.1	2.1.6	5		OfficialLandingCatchWeight	FishingGround	FlagCountry	Year	sum	percent	100	FAOshpFG	TRUE	002_Outputs\figures	2.1.6_5	002_Outputs\tables	2.1.6_5

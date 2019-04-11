@@ -125,6 +125,12 @@
 		           (F_SUBDIVIS == '27.9.b.2' & is.na(F_SUBUNIT)) # to avoid duplicates, another solution?
 		  ) %>%
 		  mutate(Area = F_CODE) -> shp
+		# For plotting FishingGrounds
+		cl_rcg %>% group_by(FishingGround) %>% distinct( Area)->FishingGround
+		shp %>% left_join(FishingGround) %>% group_by(FishingGround) %>% summarise(ID = mean(ID))-> FAOshpFG
+		FAOshpFG = cbind(FAOshpFG,  sf::st_coordinates(sf::st_centroid(FAOshpFG$geometry))) %>% mutate(lon = X, lat = Y)
+		
+		# For plotting Areas
 		# add centroids - to put areas labels there, and to put piecharts there, creates new columns to the dataset named X, Y
 		FAOshp = cbind(shp,  sf::st_coordinates(sf::st_centroid(shp$geometry))) %>% mutate(lon = X, lat = Y)
 		
@@ -352,42 +358,7 @@
 		
 		
 	# maps
-		library(tidyverse)
-		
-		# Load shapefiles and Harbour Lists
-		########################################################################################################################################################################
-		# Prepare the dataset with coordinates <-----------------------  WORK on this part
-		Harbours_Codes = read_csv('C:/Users/msuska/Desktop/RCG/2018/Data/Harbours_Codes.csv') # file from -> RCG sharepoint->Data _> Data group scripts and data -> data files
-		
-		Harbours_Codes %>% 
-		  mutate(Harbour = Hcode) %>% 
-		  select(Harbour, lat, lon)-> Harbours
-		
-		# load shapefile
-		shp  = sf::st_read(
-		  "shapefiles/FAO_areas/FAO_AREAS_NOCOASTLINE.shp"
-		)
-		shp %>%
-		  filter((!is.na(F_DIVISION) &
-		            is.na(F_SUBDIVIS)) |
-		           (F_SUBDIVIS == '27.5.b.1' &
-		              is.na(F_SUBUNIT)) |
-		           (F_SUBDIVIS == '27.9.b.2' & is.na(F_SUBUNIT)) # to avoid duplicates, another solution?
-		  ) %>%
-		  mutate(Area = F_CODE) -> shp
-		# add centroids - to put areas labels there, and to put piecharts there, creates new columns to the dataset named X, Y
-		FAOshp = cbind(shp,  sf::st_coordinates(sf::st_centroid(shp$geometry))) %>% mutate(lon = X, lat = Y)
-		
-		StatRectshp  = sf::st_read(
-		  "shapefiles/ICES_spatial_facility/ICES_rectangles/ICES_Statistical_Rectangles_Eco.shp" 
-		)
-		StatRectshp %>% mutate(StatisticalRectangle = ICESNAME)-> StatRectshp
-		StatRectshp = cbind(StatRectshp,  sf::st_coordinates(sf::st_centroid(StatRectshp$geometry))) %>% mutate(lon = X, lat = Y)
-		
-		
-		options(scipen=10000) # to remove scientific notation from the legend
-		########################################################################################################################################################################
-		
+
 		#pointsMaps
 		source("funs/pointsMap_func.R")
 
