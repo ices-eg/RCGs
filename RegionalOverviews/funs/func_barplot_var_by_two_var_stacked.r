@@ -1,4 +1,4 @@
-barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, proportion, type_of_threshold, value_of_threshold, sorted = FALSE, graph_par=list(oma = c(1,1,1,1), mai = c(1,1,.5,.5), ylab_line = 4, cex.x = 1, col=NA), legend_par, grouped=FALSE)
+barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, proportion, type_of_threshold, value_of_threshold, sorted = FALSE, graph_par=list(oma = c(1,1,1,1), mai = c(1,1,.5,.5), ylab_line = 4, cex.x = 1, col=NA), legend_par, grouped=FALSE, title_root="")
 	{
 	# Prepares a barplot of Var per var1 (with var 2 stacked)
 	# Nuno Prista, SLU, Sweden
@@ -17,7 +17,10 @@ barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, pro
 		# 2019-04-04: bug corrected: when NA existed, sum was NA (added na.rm)
 		# 2019-04-04: added argument grouped [for mfrow and mfcol type graphs]
 		# 2019-04-04: improved title
-			
+		# 2019-04-11: added tapply_type length_unique
+		# 2019-04-11: added title_root
+		
+	
 		percent_Var <- round(sum(!is.na(x[,Var]))/dim(x)[1]*100,2)
 		percent_var1 <- round(sum(!is.na(x[,var1]))/dim(x)[1]*100,2)
 		percent_var2 <- round(sum(!is.na(x[,var2]))/dim(x)[1]*100,2)
@@ -57,6 +60,7 @@ barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, pro
 			
 	#windows(10,5);
 	if(grouped==TRUE) par(cex=0.8, mai = graph_par$mai) else  par(cex=0.8, oma = graph_par$oma, mai = graph_par$mai)	
+	if (tapply_type == "length_unique") { t1<-tapply(x[,Var], list(x[,var2],x[,var1]), function(y){length(unique(y))}); y_title = paste("Unique of", Var) }
 	if (tapply_type == "length") { t1<-tapply(x[,Var], list(x[,var2],x[,var1]), length); y_title = paste("count of", Var) }
 	if (tapply_type == "sum") { t1<-tapply(x[,Var], list(x[,var2],x[,var1]), sum, na.rm=T);  y_title = paste("sum of", Var) }
 	t1[is.na(t1)]<-0
@@ -80,7 +84,7 @@ barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, pro
 	legend_pars<-eval(parse(text=legend_par)) # required for legend
 	#if(proportion==TRUE){legend_pars$y=1} # required for legend
 	barplot(t1, las=2, legend.text=rownames(t1), col=rainbow(n = nrow(t1)), ylab = "", main = NULL, cex.names = graph_par$cex.x, args.legend = legend_pars)
-	title(main = paste(Var,"by", var1, "and", var2), line = 1.8)
+	if(title_root!="") title(main = paste(title_root,":",Var,"by", var1, "and", var2), line = 1.8) else title(main = paste(Var,"by", var1, "and", var2), line = 1.8)
 	title(ylab=y_title, line = graph_par$ylab_line)
 	if(!type_of_threshold == "NULL")
 		{
