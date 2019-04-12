@@ -151,15 +151,16 @@ group_func = function(df,
   
   
   #save info about missing groupBy entries
-  gdf %>% ungroup() %>% group_by(facet) %>% mutate(pr = var/sum(var, na.rm = TRUE)*100) %>% filter(is.na(groupBy))->missing_entries
+  gdf %>% ungroup() %>%
+    group_by(facet) %>% 
+    arrange(desc(var)) %>%
+    mutate(pr := var / sum(var, na.rm = TRUE) * 100)-> gdf
   
+  gdf  %>% filter(is.na(groupBy))->missing_entries
   
   # apply the threshold
   if (type_of_threshold == 'percent') {
-    tdf = gdf %>% ungroup() %>%
-      group_by(facet) %>% 
-      arrange(desc(var)) %>%
-      mutate(pr := var / sum(var) * 100) %>%
+   tdf = gdf %>% 
       mutate(cum_pr = cumsum(pr)) %>%
       filter(cum_pr <= value_of_threshold) %>%
       mutate(type_of_threshold = type_of_threshold,
@@ -196,10 +197,10 @@ group_func = function(df,
   
   }
 
-# # example
+# # # example
 # group_func(cl_rcg %>% filter(Year %in% c(2016, 2017)),
 #            'OfficialLandingCatchWeight',
-#            'Area',
+#            'Harbour',
 #            groupBy2 = NA,
 #            facet = 'Year',
 #            func = 'sum',

@@ -10,7 +10,11 @@ choroplethMap_func = function(df,
                               saveResults = FALSE,
                               outputPath,
                               Catch_group_name = NA,
-                              displayInR = TRUE) {
+                              displayInR = TRUE,
+                              addExtraShp = FALSE,
+                              extraShp = NA,
+                              newVarName = NA,
+                              addToTitle = NA) {
   # df - a data frame
   # var -  a column to be summmarised e.g. var = 'OfficialLandingCatchWeight'
   # groupBy - name of column, by which the grouping should be carried out. e.g. groupBy = 'Area'
@@ -25,7 +29,10 @@ choroplethMap_func = function(df,
   # outputPath - path for saving plots and tables
   # displayInR - TRUE/FALSE - should the results be displayed in R (warning: in case of big plots, it takes a longer time to display sth in R, rather than save it into a diretcory)
   #           - so if yout saveResults = TRUE, then it's recommended to set displayInR = FALSE
-  
+  # addExtraShp - TRUE/FALSE, TRUE - if you want to use extra layer for your map, e.g. display FAOares on a map of StatisticalRectangles
+  # extraShp - set it if you want to use extra layer for your map, e.g. display FAOares on a map of StatisticalRectangles
+  # newVarName - set it if you want to rename the var e.g. OfficialLandingCatchWeight -> Landings
+  # addToTitle - additional information to the title (e.g. for effort information about filtering vessels <10 or >10)
   # Marta Suska
   # NMFRI
   # msuska@mir.gdynia.pl
@@ -77,15 +84,29 @@ choroplethMap_func = function(df,
   
   
   
-  # add info about records without coordinates <------------------ TO DO
+  # add info about records without coordinates 
+  
   if (nrow(mdf %>% filter(is.na(ID))) > 0) {
-    mdf %>% filter(is.na(ID) & !is.na(groupBy)) %>% select(pr)-> missing_value
-    message(paste("Not all records from the dataset have corresponding entry in the shapefile, ",round(unlist(missing_value)), '% ', sep = '' ))
-    missing_caption = paste("\n Not all records from the dataset have corresponding entry in the shapefile, ",round(unlist(missing_value)), '% ', sep = '' )
+    mdf %>% filter(is.na(ID) & !is.na(groupBy)) %>% summarise(pr = round(sum(pr), 2), n = n_distinct(groupBy)) %>% 
+      as.data.frame() %>% select(pr, n)-> missing_value
+     missing_caption = paste(
+       '\n',
+       missing_value$n,
+       ' ',
+       groupBy_name,
+       # 's (',
+       #  paste0(missing_names, collapse = ' , ') , # add names of units without coordinates
+       ' with missing coordinates (', 
+       missing_value$pr,
+       '% of ',
+       ifelse(is.na(newVarName), var_name, newVarName),
+       ') - not presented on the map.',
+       sep = ''
+     )
+     message(missing_caption)
   } else{
     missing_caption = ''
   }
-  
 
   
   # load world map
@@ -95,26 +116,36 @@ choroplethMap_func = function(df,
   mdf %>% filter(!is.na(ID)) -> mdf2
   
   # set the limits
+  # x/y =  3/2
   limits <- st_buffer(mdf2, dist = 1) %>% st_bbox()
-  
+  if(abs(limits["xmax"]-limits["xmin"])>(3/2)*abs(limits["ymax"]-limits["ymin"])){
+    diff = (2/3*abs(limits["xmax"]-limits["xmin"])-abs(limits["ymax"]-limits["ymin"]))/2
+    limits["ymin"]=limits["ymin"]-diff
+    limits["ymax"]=limits["ymax"]+diff
+  }else if((2/3)*abs(limits["xmax"]-limits["xmin"])<abs(limits["ymax"]-limits["ymin"])){
+    diff = (3/2*abs(limits["ymax"]-limits["ymin"])-abs(limits["xmax"]-limits["xmin"]))/2
+    limits["xmin"]=limits["xmin"]-diff
+    limits["xmax"]=limits["xmax"]+diff 
+    }
+
   # Set the plot parameters
   
   # title
   if (func_name %in% c('sum')) {
     title = paste(func_name,
                   ' of ',
-                  var_name,
+                  ifelse(is.na(newVarName), var_name, newVarName),
                   ' by ',
                   groupBy_name,
                   sep = '')
   } else{
-    title = paste(func_name, ' ', var_name, ' by ',  groupBy_name, sep = '')
+    title = paste(func_name, ' ', ifelse(is.na(newVarName), var_name, newVarName), ' by ',  groupBy_name, sep = '')
   }
   
   # If Catch_group_name is known
   if(!is.na(Catch_group_name) & Catch_group_name!='NULL'){ title = paste(title, ' (',Catch_group_name, ')', sep ='')}
-  
-  
+  # If there is any additional information to the title
+  if(!is.na(addToTitle)){ title = paste(title, ' (',addToTitle, ')', sep ='')}
   
   # subtitle - as the information about used thresholds
   if ((type_of_threshold == 'percent' &
@@ -127,7 +158,7 @@ choroplethMap_func = function(df,
       's accounting for ',
       value_of_threshold,
       '% of ',
-      var_name,
+      ifelse(is.na(newVarName), var_name, newVarName),
       sep = ""
     )
   } else{
@@ -143,9 +174,9 @@ choroplethMap_func = function(df,
   caption = paste(
     ifelse(nrow(missing_entries) > 0, round(missing_entries$pr, 2), 0),
     '% of ',
-    var_name,
-    ' were reported for missing ',
-    groupBy_name,
+    ifelse(is.na(newVarName), var_name, newVarName),
+    ' - reported for missing ',
+    groupBy_name, '.',
     missing_caption,
     sep = ''
   )
@@ -161,7 +192,8 @@ choroplethMap_func = function(df,
     geom_sf(data = points_coord,
             fill = NA ,
             na.rm = TRUE,
-            size = 0.05, color =gray(.6)
+            size = ifelse(groupBy_name %in% c('Area', 'FishingGround'),  0.5,  0.02), 
+            color =ifelse(groupBy_name %in% c('Area', 'FishingGround'), gray(.3), gray(.6))
             ) +
     scale_fill_viridis_c(
       option = "viridis",
@@ -169,13 +201,31 @@ choroplethMap_func = function(df,
       na.value = "aliceblue",
       begin = 1,
       end = 0,
-      name = var_name
-    ) +
+      name = ifelse(is.na(newVarName), var_name, newVarName)
+    ) -> plot
+  
+  if(addExtraShp==TRUE){
+    plot+
+      geom_sf(data = extraShp,
+              fill = NA, 
+              na.rm = TRUE,
+              size = 0.5,
+              color = gray(.3)
+      #         )+
+      # geom_sf_text(data = extraShp, aes(label = F_CODE),
+      #              color = 'grey22',
+      #              size = 3,
+      #              fontface = "italic",
+      #              check_overlap = TRUE
+                   )-> plot
+  }
+    
+    plot +
     geom_sf(data = m,  fill = "antiquewhite") +
     coord_sf(
       crs = "+init=epsg:4326",
-      xlim = c(limits["xmin"], limits["xmax"]),
-      ylim = c(limits["ymin"], limits["ymax"]),
+      xlim = c(unlist(limits["xmin"]), unlist(limits["xmax"])),
+      ylim = c(unlist(limits["ymin"]), unlist(limits["ymax"])),
       expand = FALSE
     ) +
     labs(
@@ -207,9 +257,7 @@ choroplethMap_func = function(df,
   if (plot_labels == TRUE) {
     #display labels on the plot
     plot +
-      geom_text(
-        data = mdf2,
-        aes(x = X, y = Y, label =groupBy),
+      geom_sf_text(data = mdf2, aes(label = groupBy), 
         color = 'grey22',
         size = 3,
         fontface = "italic",
@@ -245,7 +293,7 @@ choroplethMap_func = function(df,
     ggsave(
       paste(fileName, ".tiff", sep = ""),
       units = "in",
-      width = 15,
+      width = 10,
       height = 10,
       dpi = 300,
       compression = 'lzw'
@@ -255,19 +303,21 @@ choroplethMap_func = function(df,
   mdf %>%  select(-var, - groupBy, -facet)-> mdf
   
   if(displayInR==TRUE){
-  return(list(mdf, plot)) #should we return all data (with missing parts) or only the data that were  plotted?
+  return(list(mdf, plot)) #should we return all data - mdf (with missing parts) or only the data that were  plotted - mdf2?
   }
   
 }
 
 # choroplethMap_func(cl_rcg %>% filter(Year %in% c(2016, 2017)),
 #                    'OfficialLandingCatchWeight',
-#                    'Area',
+#                    'StatisticalRectangle',
 #                    facet = 'Year',
 #                    func = 'sum',
-#                    type_of_threshold = 'none',
-#                    value_of_threshold = NA,
+#                    type_of_threshold = 'percent',
+#                    value_of_threshold = 100,
 #                    Catch_group_name = NA,
-#                    points_coord = FAOshp,
-#                    plot_labels = TRUE)
-
+#                    points_coord = StatRectshp,
+#                    plot_labels = FALSE,
+#                    newVarName = 'Landings',
+#                    addExtraShp = FALSE,
+#                    extraShp = FAOshp)

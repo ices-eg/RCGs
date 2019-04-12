@@ -9,7 +9,11 @@ pointsMap_func = function(df,
                           plot_labels = TRUE,
                           saveResults = FALSE,
                           outputPath,
-                          Catch_group_name = NA) {
+                          Catch_group_name = NA,
+                          addExtraShp = FALSE,
+                          extraShp = NA,
+                          newVarName = NA,
+                          addToTitle = NA) {
   # df - a data frame
   # var -  a column to be summmarised e.g. var = 'OfficialLandingCatchWeight'
   # groupBy - name of column, by which the grouping should be carried out. e.g. groupBy = 'Area'
@@ -22,7 +26,11 @@ pointsMap_func = function(df,
   # plot_labels  - TRUE/FALSE - should the labels of e.g. Harbours be displayed on a map?
   # saveResults - TRUE/FALSE - do you want to save the results?
   # outputPath - path for saving plots and tables
-
+  # addExtraShp - TRUE/FALSE, TRUE - if you want to use extra layer for your map, e.g. display FAOares on a map of StatisticalRectangles
+  # extraShp - set it if you want to use extra layer for your map, e.g. display FAOares on a map of StatisticalRectangles
+  # newVarName - set it if you want to rename the var e.g. OfficialLandingCatchWeight -> Landings
+  # addToTitle - additional information to the title (e.g. for effort information about filtering vessels <10 or >10)
+  
   # Marta Suska
   # NMFRI
   # msuska@mir.gdynia.pl
@@ -76,46 +84,24 @@ pointsMap_func = function(df,
   
   # add info about records without coordinates
   if (sum(is.na(mdf$lat)) != 0 | sum(is.na(mdf$lon)) != 0) {
-    mdf %>% filter(is.na(lat) | is.na(lon)) -> missing
-    missing %>% summarise(var = sum(var)) -> missing_value
-    mdf %>% summarise(var = sum(var)) -> value
-    missing %>% select(groupBy) %>% distinct() %>% unlist() -> missing_names
-
+    mdf %>% filter((is.na(lat) | is.na(lon)) & !is.na(groupBy)) %>% summarise(pr = round(sum(pr), 2), n = n_distinct(groupBy)) %>% 
+      as.data.frame() %>% select(pr, n)-> missing_value
+    
     missing_caption = paste(
       '\n',
-      length(missing_names),
-      ' top ',
+      missing_value$n,
+      ' ',
       groupBy_name,
-     # 's (',
-    #  paste0(missing_names, collapse = ' , ') ,
-      ' with missing coordinates were not presented on the map. This accounted for ',
-      round(missing_value / value * 100),
+      # 's (',
+      #  paste0(missing_names, collapse = ' , ') , # add names of units without coordinates
+      ' with missing coordinates (', 
+      missing_value$pr,
       '% of ',
-      var_name,
-      ' of top ',
-      groupBy_name ,
-      's',
+      ifelse(is.na(newVarName), var_name, newVarName),
+      ') - not presented on the map.',
       sep = ''
     )
     message(missing_caption)
-
-    if (length(missing_names) > 10) {
-      missing_caption = paste(
-        '\n',
-        length(missing_names),
-        ' top ',
-        groupBy_name,
-        's with missing coordinates were not presented on the map. This accounted for ',
-        round(missing_value / value * 100),
-        '% of ',
-        var_name,
-        ' of top ',
-        groupBy_name ,
-        's',
-        sep = ''
-      )
-    }
-
   } else{
     missing_caption = ''
   }
@@ -124,34 +110,44 @@ pointsMap_func = function(df,
   xlim = range(mdf[!is.na(mdf$lat) &
                      !is.na(mdf$lon),]$lon)+ c(-1, 1)
   ylim = range(mdf[!is.na(mdf$lat) & !is.na(mdf$lon),]$lat) + c(-0.5,+0.5)
-
+  
+  # x/y =  3/2
+  if(abs(xlim[2]-xlim[1])>(3/2)*abs(ylim[2]-ylim[1])){
+    diff = (2/3*abs(xlim[2]-xlim[1])-abs(ylim[2]-ylim[1]))/2
+    ylim[1]=ylim[1]-diff
+    ylim[2]=ylim[2]+diff
+  }else if((2/3)*abs(xlim[2]-xlim[1])<abs(ylim[2]-ylim[1])){
+    diff = (3/2*abs(ylim[2]-ylim[1])-abs(xlim[2]-xlim[1]))/2
+    xlim[1]=xlim[1]-diff
+    xlim[2]=xlim[2]+diff 
+  }
+  
   # load world map
-  require("rnaturalearth")
   m <- ne_countries(scale = "medium", returnclass = "sf")
-
+  
   # Take only rows with coordinates
   mdf %>% filter(!is.na(lon) & !is.na(lat)) -> mdf2
-
-
+  
+  
   # Set the plot parameters
-
   # title
   if (func_name %in% c('sum')) {
     title = paste(func_name,
                   ' of ',
-                  var_name,
+                  ifelse(is.na(newVarName), var_name, newVarName),
                   ' by ',
                   groupBy_name,
                  # ifelse(is.na(facet_name),'', paste(', ', paste0(unique(mdf2$facet), collapse = ","), sep= '')),
                   sep = '')
   } else{
-    title = paste(func_name, ' ', var_name, ' by ', # groupBy_name,  ifelse(is.na(facet_name),'', paste(', ', paste0(unique(mdf2$facet), collapse = ","), sep= '')),
+    title = paste(func_name, ' ', ifelse(is.na(newVarName), var_name, newVarName), ' by ', # groupBy_name,  ifelse(is.na(facet_name),'', paste(', ', paste0(unique(mdf2$facet), collapse = ","), sep= '')),
                   sep = '')
   }
 
   # If Catch_group_name is known
   if(!is.na(Catch_group_name) & Catch_group_name!='NULL'){ title = paste(title, ' (',Catch_group_name, ')', sep ='')}
-
+  # If there is any additional information to the title
+  if(!is.na(addToTitle)){ title = paste(title, ' (',addToTitle, ')', sep ='')}
 
   # subtitle - as the information about used thresholds
   if ((type_of_threshold == 'percent' &
@@ -164,7 +160,7 @@ pointsMap_func = function(df,
       's accounting for ',
       value_of_threshold,
       '% of ',
-      var_name,
+      ifelse(is.na(newVarName), var_name, newVarName),
       sep = ""
     )
   } else{
@@ -180,8 +176,8 @@ pointsMap_func = function(df,
   caption = paste(
     ifelse(nrow(missing_entries)>0, round(missing_entries$pr, 2),0),
     '% of ',
-    var_name,
-    ' were reported for missing ',
+    ifelse(is.na(newVarName), var_name, newVarName),
+    ' - reported for missing ',
     groupBy_name,
     missing_caption,
     sep = ''
@@ -195,8 +191,26 @@ pointsMap_func = function(df,
     ungroup() %>% 
     arrange(var) %>%
     #mutate(name = groupBy) %>%
-    ggplot() +
-    geom_sf(data = m, fill = "antiquewhite") +
+    ggplot() -> plot
+  
+  if(addExtraShp==TRUE){
+    plot+
+      geom_sf(data = extraShp,
+              fill = NA, 
+              na.rm = TRUE,
+              size = 0.5,
+              color = gray(.3)
+                      )+
+              geom_sf_text(data = extraShp, aes(label = F_CODE),
+                           color = 'grey22',
+                           size = 2,
+                           fontface = "italic",
+                           check_overlap = TRUE
+      )-> plot
+  }
+  
+    plot +
+      geom_sf(data = m, fill = "antiquewhite") +
     coord_sf( crs = "+init=epsg:4326", xlim =xlim, ylim = ylim)+
     geom_point(
       aes(lon, lat, fill = var, size = var),
@@ -206,13 +220,13 @@ pointsMap_func = function(df,
       shape = 21,
       alpha = 0.8
     ) +
-    scale_size(range = c(0, 10), guide = FALSE) +
+    scale_size(range = c(0, 20), guide = FALSE) +
     viridis::scale_fill_viridis(
       option = "viridis",
       # trans = "log",
       begin = 1,
       end = 0,
-      name = var_name
+      name = ifelse(is.na(newVarName), var_name, newVarName)
     )+
     #guides(colour = guide_legend())+
     labs(
@@ -234,21 +248,22 @@ pointsMap_func = function(df,
         fill = NA,
         size = 1.5
       ),
-     panel.grid.major = element_line(color = gray(.5), linetype ='dashed', size = 0.5)
+     panel.grid.major = element_line(color = gray(.8), linetype ='dashed', size = 0.5)
     ) -> plot
 
   if (plot_labels == TRUE) {
     #display labels on the plot
     plot +
-      ggrepel::geom_text_repel(
+      ggrepel::geom_label_repel(
         data = mdf2,
         aes(lon, lat, label = groupBy),
         box.padding = unit(0.2, "lines"),
         point.padding = unit(0.2, "lines"),
         color = 'black',
+        segment.color = gray(0.3),
         size = 2,
-        fontface = 'bold'
-
+        fontface = 'bold',
+        arrow = arrow(length = unit(0.02, "npc"))
       ) -> plot
   }
   
@@ -263,7 +278,7 @@ pointsMap_func = function(df,
     fileName = paste(fileName, Catch_group_name, sep = "")
   }
   write.table(mdf, file = paste(fileName, ".txt", sep = ""), sep = '\t', dec = '.')
-  ggsave(paste(fileName, ".tiff", sep = ""), units="in", width=15, height=10, dpi=300, compression = 'lzw')
+  ggsave(paste(fileName, ".tiff", sep = ""), units="in", width=10, height=10, dpi=300, compression = 'lzw')
   }
 
   return(list(mdf, plot))
@@ -278,10 +293,14 @@ pointsMap_func = function(df,
 #                value_of_threshold = 20,
 #                Catch_group_name = NA,
 #                points_coord = Harbours,
-#                plot_labels = FALSE,
+#                plot_labels = TRUE,
 #                saveResults = FALSE,
-#                outputPath = 'D:/WG/RCG/IntersessionalWork/Github/RCGs/RegionalOverviews')
-
+#                outputPath = 'D:/WG/RCG/IntersessionalWork/Github/RCGs/RegionalOverviews',
+#                  newVarName = 'Landings',
+#                  addExtraShp = TRUE,
+#                  extraShp = FAOshp
+#                )
+# 
 
 # TO DO:
 # points_coords - should it be a dataset, or a path to a dataset?
@@ -294,5 +313,4 @@ pointsMap_func = function(df,
 # ... as the parameter to ggplot
 # dopisac sciezke do shapefile
 # if saveResults = TRUE -> outputPath musst be known - add check
-# xlim and ylim= adjusted to the data, or whole rcg region??
 # CHECK OF COORDINATES -  OUTSIDE THE POSSIBLE LIMITS
