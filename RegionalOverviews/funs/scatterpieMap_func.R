@@ -10,7 +10,10 @@ scatterpieMap_func = function(df,
                               plot_labels = TRUE,
                               saveResults = FALSE,
                               outputPath,
-                              Catch_group_name = NA) {
+                              Catch_group_name = NA,
+                              addExtraShp = FALSE,
+                              extraShp = NA,
+                              newVarName = NA) {
   # df - a data frame
   # var -  a column to be summmarised e.g. var = 'OfficialLandingCatchWeight'
   # groupBy - name of column, by which the grouping should be carried out. e.g. groupBy = 'Area'
@@ -24,6 +27,9 @@ scatterpieMap_func = function(df,
   # plot_labels  - TRUE/FALSE - should the labels of e.g. Harbours be displayed on a map?
   # saveResults - TRUE/FALSE - do you want to save the results?
   # outputPath - path for saving plots and tables
+  # addExtraShp - TRUE/FALSE, TRUE - if you want to use extra layer for your map, e.g. display FAOares on a map of StatisticalRectangles
+  # extraShp - set it if you want to use extra layer for your map, e.g. display FAOares on a map of StatisticalRectangles
+  # newVarName - set it if you want to rename the var e.g. OfficialLandingCatchWeight -> Landings
   
   # Marta Suska
   # NMFRI
@@ -72,7 +78,7 @@ scatterpieMap_func = function(df,
   plotby_result = group_func(df, var_name, groupBy_name,groupBy2 = groupBy2_name, facet_name, func_name, type_of_threshold = 'none', 
                               Catch_group_name = Catch_group_name)  
   
-  tdf2 = plotby_result[[1]]
+  tdf2 = plotby_result[[1]] %>% select(-pr)
   if (is.null(tdf2)) {
     stop('The chosen data set is empty')
   }
@@ -85,59 +91,48 @@ scatterpieMap_func = function(df,
                 groupBy2 = !!groupBy2,
                 facet = !!facet)  %>% select(-!!var) -> mdf
   
-  
-    # add info about records without coordinates
+  # add info about records without coordinates
   if (sum(is.na(mdf$lat)) != 0 | sum(is.na(mdf$lon)) != 0) {
-    mdf %>% filter(is.na(lat) | is.na(lon)) -> missing
-    missing %>% summarise(var = sum(var)) -> missing_value
-    mdf %>% summarise(var = sum(var)) -> value
-    missing %>% select(groupBy) %>% distinct() %>% unlist() -> missing_names
-    
+    mdf %>% filter((is.na(lat) | is.na(lon)) & !is.na(groupBy)) %>% summarise(pr = round(sum(pr), 2), n = n_distinct(groupBy)) %>% 
+      as.data.frame() %>% select(pr, n)-> missing_value
     
     missing_caption = paste(
       '\n',
-      length(missing_names),
-      ' top ',
+      missing_value$n,
+      ' ',
       groupBy_name,
       # 's (',
-      #  paste0(missing_names, collapse = ' , ') ,
-      ' with missing coordinates were not presented on the map. This accounted for ',
-      round(missing_value / value * 100),
+      #  paste0(missing_names, collapse = ' , ') , # add names of units without coordinates
+      ' with missing coordinates (', 
+      missing_value$pr,
       '% of ',
-      var_name,
-      ' of top ',
-      groupBy_name ,
-      's',
+      ifelse(is.na(newVarName), var_name, newVarName),
+      ') - not presented on the map.',
       sep = ''
     )
     message(missing_caption)
-    
-    if (length(missing_names) > 10) {
-      missing_caption = paste(
-        '\n',
-        length(missing_names),
-        ' top ',
-        groupBy_name,
-        's with missing coordinates were not presented on the map. This accounted for ',
-        round(missing_value / value * 100),
-        '% of ',
-        var_name,
-        ' of top ',
-        groupBy_name ,
-        's',
-        sep = ''
-      )
-    }
-    
   } else{
     missing_caption = ''
   }
+  
   
   
   # set the limits
   xlim = range(mdf[!is.na(mdf$lat) &
                      !is.na(mdf$lon),]$lon)+ c(-5, 5)
   ylim = range(mdf[!is.na(mdf$lat) & !is.na(mdf$lon),]$lat) + c(-4,+4)
+  
+  # x/y =  3/2
+  if(abs(xlim[2]-xlim[1])>(3/2)*abs(ylim[2]-ylim[1])){
+    diff = (2/3*abs(xlim[2]-xlim[1])-abs(ylim[2]-ylim[1]))/2
+    ylim[1]=ylim[1]-diff
+    ylim[2]=ylim[2]+diff
+  }else if((2/3)*abs(xlim[2]-xlim[1])<abs(ylim[2]-ylim[1])){
+    diff = (3/2*abs(ylim[2]-ylim[1])-abs(xlim[2]-xlim[1]))/2
+    xlim[1]=xlim[1]-diff
+    xlim[2]=xlim[2]+diff 
+  }
+  
   
   # Take only rows with coordinates
   mdf %>%  filter(!is.na(lat) & !is.na(lon)) %>% filter(lon>=-180 & lon <= 180 & lat >= -90 & lat <= 90)-> mdf2
@@ -152,13 +147,13 @@ scatterpieMap_func = function(df,
   if (func_name %in% c('sum')) {
     title = paste(func_name,
                   ' of ',
-                  var_name,
+                  ifelse(is.na(newVarName), var_name, newVarName),
                   ' by ',
                   groupBy_name,
                   # ifelse(is.na(facet_name),'', paste(', ', paste0(unique(mdf2$facet), collapse = ","), sep= '')),
                   sep = '')
   } else{
-    title = paste(func_name, ' ', var_name, ' by ', groupBy_name,#  ifelse(is.na(facet_name),'', paste(', ', paste0(unique(mdf2$facet), collapse = ","), sep= '')),
+    title = paste(func_name, ' ',   ifelse(is.na(newVarName), var_name, newVarName), ' by ', groupBy_name,#  ifelse(is.na(facet_name),'', paste(', ', paste0(unique(mdf2$facet), collapse = ","), sep= '')),
                   sep = '')
   }
   
@@ -177,7 +172,7 @@ scatterpieMap_func = function(df,
       's accounting for ',
       value_of_threshold,
       '% of ',
-      var_name,
+      ifelse(is.na(newVarName), var_name, newVarName),
       sep = ""
     )
   } else{
@@ -193,9 +188,9 @@ scatterpieMap_func = function(df,
   caption = paste(
     ifelse(nrow(missing_entries) > 0, round(missing_entries$pr, 2), 0),
     '% of ',
-    var_name,
-    ' were reported for missing ',
-    groupBy_name,
+    ifelse(is.na(newVarName), var_name, newVarName),
+    ' - reported for missing ',
+    groupBy_name, '.',
     missing_caption,
     sep = ''
   )
@@ -210,7 +205,7 @@ scatterpieMap_func = function(df,
   unique_bys = mdf2  %>%  distinct(groupBy2) %>% nrow()
 
   radius =0.3
-  radiusMultiply = ifelse(groupBy_name %in% c('Area', 'FishingGround'), 3, ifelse(groupBy_name %in% c('Harbour', 'LandingCountry', 'FlagCountry'), 2, 1 ))
+  radiusMultiply = ifelse(groupBy_name %in% c('Area', 'FishingGround'), 4, ifelse(groupBy_name %in% c('Harbour', 'LandingCountry', 'FlagCountry'), 3, 1 ))
   pie.list <- mdf2%>%
     select(lon, lat, groupBy, groupBy2, facet, var) %>%  
     spread(groupBy2, var, fill =0) %>%
@@ -238,12 +233,28 @@ scatterpieMap_func = function(df,
                                             xmin = lon - radius, xmax = lon + radius,
                                             ymin = lat - radius, ymax = lat + radius))) 
 
-if(groupBy_name=='Area'){
+if(groupBy_name %in% c('Area', 'FishingGround')){
   ggplot()+
-     geom_sf(data = points_coord, fill = NA , na.rm = TRUE)->p
+     geom_sf(data = points_coord, fill = NA , na.rm = TRUE, size = 0.5, color = gray(.3))->p
 }else{
   ggplot()->p
 }
+  
+  if(addExtraShp==TRUE){
+    p+
+      geom_sf(data = extraShp,
+              fill = NA, 
+              na.rm = TRUE,
+              size = 0.5,
+              color = gray(.3)
+              #         )+
+              # geom_sf_text(data = extraShp, aes(label = F_CODE),
+              #              color = 'grey22',
+              #              size = 3,
+              #              fontface = "italic",
+              #              check_overlap = TRUE
+      )-> p
+  }
   
     p+
       geom_sf(data = m,  fill = "antiquewhite")+
@@ -297,18 +308,17 @@ if(groupBy_name=='Area'){
     
       # facet_wrap(~facet) # <----------------------------------------------------- GDZIE TO WSTAWIC, ZEBY DOBRZE DZIALALY FACETS
   
-  if (plot_labels == TRUE) {
-    #display labels on the plot
-    plot +
-      geom_text(
-        data = mdf2, # zdecydowac co tu wstawic, jak mdf2 tomusi byc unique, jak points_coord - to dla portow nie bedzie dzialalo
-        aes(x = lon, y = lat, label  = groupBy),
-        color = 'grey22',
-        size = 3,
-        fontface = "italic",
-        check_overlap = TRUE
-      ) -> plot
-  }
+    
+    if (plot_labels == TRUE) {
+      #display labels on the plot
+      plot +
+        geom_sf_text(data = mdf2, aes(label = groupBy), 
+                     color = 'grey22',
+                     size = 3,
+                     fontface = "italic",
+                     check_overlap = TRUE
+        ) -> plot
+    }
 
   if (saveResults == TRUE) {
     fileName =   paste(
@@ -339,7 +349,7 @@ if(groupBy_name=='Area'){
     ggsave(
       paste(fileName, ".tiff", sep = ""),
       units = "in",
-      width = 15,
+      width = 10,
       height = 10,
       dpi = 300,
       compression = 'lzw'
@@ -350,22 +360,27 @@ if(groupBy_name=='Area'){
   mdf %>%  select( - groupBy, -groupBy2, -facet)-> mdf
   return(list(mdf, plot))
 }
-
+# 
 # scatterpieMap_func(
 #   cl_rcg %>% filter(Year == 2017),
 #   var = 'OfficialLandingCatchWeight',
-#   groupBy = 'Harbour',
+#   groupBy = 'Area',
 #   groupBy2 = 'FlagCountry',
 #   facet = 'Year',
 #   func = 'sum',
 #   type_of_threshold = 'percent',
-#   value_of_threshold = 90,
-#   points_coord = Harbours,
-#   plot_labels = FALSE,
+#   value_of_threshold = 100,
+#   points_coord = FAOshp,
+#   plot_labels = TRUE,
 #   saveResults = FALSE,
-#   outputPath = 'D:/WG/RCG/IntersessionalWork/Github/RCGs/RegionalOverviews'
+#   outputPath = 'D:/WG/RCG/IntersessionalWork/Github/RCGs/RegionalOverviews',
+#   newVarName = 'Landings',
+#   addExtraShp = FALSE,
+#   extraShp = FAOshp
 # )
-# 
+
+
+ 
 # scatterpieMap_func(
 #   cl_rcg %>% filter(Year == 2017),
 #   var = 'OfficialLandingCatchWeight',
