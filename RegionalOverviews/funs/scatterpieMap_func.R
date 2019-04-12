@@ -13,7 +13,8 @@ scatterpieMap_func = function(df,
                               Catch_group_name = NA,
                               addExtraShp = FALSE,
                               extraShp = NA,
-                              newVarName = NA) {
+                              newVarName = NA,
+                              addToTitle = NA) {
   # df - a data frame
   # var -  a column to be summmarised e.g. var = 'OfficialLandingCatchWeight'
   # groupBy - name of column, by which the grouping should be carried out. e.g. groupBy = 'Area'
@@ -30,6 +31,7 @@ scatterpieMap_func = function(df,
   # addExtraShp - TRUE/FALSE, TRUE - if you want to use extra layer for your map, e.g. display FAOares on a map of StatisticalRectangles
   # extraShp - set it if you want to use extra layer for your map, e.g. display FAOares on a map of StatisticalRectangles
   # newVarName - set it if you want to rename the var e.g. OfficialLandingCatchWeight -> Landings
+  # addToTitle - additional information to the title (e.g. for effort information about filtering vessels <10 or >10)
   
   # Marta Suska
   # NMFRI
@@ -159,7 +161,8 @@ scatterpieMap_func = function(df,
   
   # If Catch_group_name is known
   if(!is.na(Catch_group_name) & Catch_group_name!='NULL'){ title = paste(title, ' (',Catch_group_name, ')', sep ='')}
-  
+  # If there is any additional information to the title
+  if(!is.na(addToTitle)){ title = paste(title, ' (',addToTitle, ')', sep ='')}
   
   # subtitle - as the information about used thresholds
   if ((type_of_threshold == 'percent' &

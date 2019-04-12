@@ -197,15 +197,15 @@ group_func = function(df,
   
   }
 
-# # example
-group_func(cl_rcg %>% filter(Year %in% c(2016, 2017)),
-           'OfficialLandingCatchWeight',
-           'Harbour',
-           groupBy2 = NA,
-           facet = 'Year',
-           func = 'sum',
-           type_of_threshold = 'top_n',
-           value_of_threshold = 20,
-           Catch_group_name = NA)
+# # # example
+# group_func(cl_rcg %>% filter(Year %in% c(2016, 2017)),
+#            'OfficialLandingCatchWeight',
+#            'Harbour',
+#            groupBy2 = NA,
+#            facet = 'Year',
+#            func = 'sum',
+#            type_of_threshold = 'top_n',
+#            value_of_threshold = 20,
+#            Catch_group_name = NA)
 
 
