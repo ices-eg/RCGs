@@ -206,7 +206,7 @@
 		                               addExtraShp = graph_det$addExtraShp[i],
 		                               extraShp = eval(parse(text = graph_det$extraShp[i])))
 		      res[[2]]
-		      ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], ".tiff", sep = ""), sep="/"), units="in", width=15, height=10, dpi=300, compression = 'lzw')
+		      ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], ".tiff", sep = ""), sep="/"), units="in", width=10, height=10, dpi=300, compression = 'lzw')
 		      write.table(res[[1]], file =  paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),".txt", sep=""), sep = '\t', dec = '.')
 		      
 		    }

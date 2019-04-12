@@ -291,7 +291,7 @@ choroplethMap_func = function(df,
     ggsave(
       paste(fileName, ".tiff", sep = ""),
       units = "in",
-      width = 15,
+      width = 10,
       height = 10,
       dpi = 300,
       compression = 'lzw'
