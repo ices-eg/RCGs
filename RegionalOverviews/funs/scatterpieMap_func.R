@@ -14,7 +14,8 @@ scatterpieMap_func = function(df,
                               addExtraShp = FALSE,
                               extraShp = NA,
                               newVarName = NA,
-                              addToTitle = NA) {
+                              addToTitle = NA,
+                              color_palette = NA) {
   # df - a data frame
   # var -  a column to be summmarised e.g. var = 'OfficialLandingCatchWeight'
   # groupBy - name of column, by which the grouping should be carried out. e.g. groupBy = 'Area'
@@ -32,6 +33,7 @@ scatterpieMap_func = function(df,
   # extraShp - set it if you want to use extra layer for your map, e.g. display FAOares on a map of StatisticalRectangles
   # newVarName - set it if you want to rename the var e.g. OfficialLandingCatchWeight -> Landings
   # addToTitle - additional information to the title (e.g. for effort information about filtering vessels <10 or >10)
+  # color_palette - set it, if you want to use the same color for groupBy2. it should have a form of a named vector. 
   
   # Marta Suska
   # NMFRI
@@ -206,6 +208,10 @@ scatterpieMap_func = function(df,
   
 
   unique_bys = mdf2  %>%  distinct(groupBy2) %>% nrow()
+  
+  if(is.na(color_palette)){ # if there is no color_palette given, use the random one
+    color_palette = scales::hue_pal()(unique_bys)
+  }
 
   radius =0.3
   radiusMultiply = ifelse(groupBy_name %in% c('Area', 'FishingGround'), 4, ifelse(groupBy_name %in% c('Harbour', 'LandingCountry', 'FlagCountry'), 3, 1 ))
@@ -219,11 +225,8 @@ scatterpieMap_func = function(df,
     mutate(pie.grob = purrr::map(data,
                                  function(d) ggplotGrob(ggplot(d,
                                                                aes(x = 1, y = var, fill = groupBy2))+
-                                                          # scale_fill_manual(values = c("BEL" = "#A6CEE3", "CHA"="#1F78B4","DEU" =  "#B2DF8A","DNK" =  "#33A02C","ENG" =  "#FB9A99","ESP" =  "#4000FF", 
-                                                          #                                "EST"="#FDBF6F","FIN" =  "#FF7F00","FRA" =  "#CAB2D6","FRO" =  "#6A3D9A","GBR" =  "#E5C494","IRL" =  "#B15928", 
-                                                          #                                "ISL" =  "#FDDAEC","LTU" =  "#E7298A","LVA" =  "#FFFFCC","MAR" =  "#FFED6F","NIR" =  "#F2F2F2","NLD" =  "#AAAAAA", 
-                                                          #                                "NOR" = "#666666", "POL" = "#FF0000", "PRT" = "#FFFF00", "SCT" = "#00FFFF", "SWE" = "#8000FF", "WLS" = "#00FF40"))+
-                                                          geom_col(color = "black",
+                                                          scale_fill_manual(values = color_palette)+
+                                                        geom_col(color = "black",
                                                                    show.legend = FALSE) +
                                                           coord_polar(theta = "y") +
                                                           theme_void() ))) %>% 
@@ -305,6 +308,7 @@ if(groupBy_name %in% c('Area', 'FishingGround')){
                 aes(x = lon,  y = lat, fill = groupBy2),
               color = "black", width = 0.01, height = 0.01,
               inherit.aes = FALSE)+
+      scale_fill_manual(values = color_palette)+
     pie.list$subgrob+
       facet_wrap(~facet)+
       guides(fill=guide_legend(title=groupBy2_name))-> plot
@@ -363,7 +367,7 @@ if(groupBy_name %in% c('Area', 'FishingGround')){
   mdf %>%  select( - groupBy, -groupBy2, -facet)-> mdf
   return(list(mdf, plot))
 }
-# 
+
 # scatterpieMap_func(
 #   cl_rcg %>% filter(Year == 2017),
 #   var = 'OfficialLandingCatchWeight',
@@ -379,7 +383,8 @@ if(groupBy_name %in% c('Area', 'FishingGround')){
 #   outputPath = 'D:/WG/RCG/IntersessionalWork/Github/RCGs/RegionalOverviews',
 #   newVarName = 'Landings',
 #   addExtraShp = FALSE,
-#   extraShp = FAOshp
+#   extraShp = FAOshp,
+#   color_palette = NA
 # )
 
 
