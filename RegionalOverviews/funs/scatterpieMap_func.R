@@ -94,10 +94,10 @@ scatterpieMap_func = function(df,
                 groupBy = !!groupBy,
                 groupBy2 = !!groupBy2,
                 facet = !!facet)  %>% select(-!!var) -> mdf
-  
+
   # add info about records without coordinates
   if (sum(is.na(mdf$lat)) != 0 | sum(is.na(mdf$lon)) != 0) {
-    mdf %>% filter((is.na(lat) | is.na(lon)) & !is.na(groupBy)) %>% summarise(pr = round(sum(pr), 2), n = n_distinct(groupBy)) %>% 
+    mdf %>% filter((is.na(lat) | is.na(lon)) & !is.na(groupBy)) %>% distinct(groupBy, pr) %>%  summarise(pr = round(sum(pr), 2), n = n_distinct(groupBy)) %>% 
       as.data.frame() %>% select(pr, n)-> missing_value
     
     missing_caption = paste(
