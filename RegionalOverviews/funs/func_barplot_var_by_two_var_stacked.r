@@ -19,7 +19,7 @@ barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, pro
 		# 2019-04-04: improved title
 		# 2019-04-11: added tapply_type length_unique
 		# 2019-04-11: added title_root
-		
+		# 2019-04-14: improve colour specification		
 	
 		percent_Var <- round(sum(!is.na(x[,Var]))/dim(x)[1]*100,2)
 		percent_var1 <- round(sum(!is.na(x[,var1]))/dim(x)[1]*100,2)
@@ -67,23 +67,37 @@ barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, pro
 	if(sorted==TRUE) {v1<-names(sort(apply(t1,2,sum), decreasing=T)); t1<-t1[,v1]}
 	if(proportion==TRUE) {t1 <- prop.table(t1,2); y_title = paste("prop of", Var); t1[is.na(t1)]<-0}
 	
-		# colour
-		if(is.na(graph_par$col)) 
+		# # colour
+		# if(is.na(graph_par$col)) 
+			# {
+			# colour_scale <- rainbow(n = nrow(t1))
+			# } else {
+					# colour_table<-read.table("aux_colours.txt", header=T)
+					# if(graph_par$col=="colour1") colour_scale<-colour_table$colour1[match(names(t1),a$Country)]
+					# if(graph_par$col=="colour2") colour_scale<-colour_table$colour2[match(names(t1),a$Country)]
+					# }
+
+	# colour
+		if(is.na(graph_par$col) | nrow(t1)>24 | (!is.na(graph_par$col) & nrow(t1) > length(unique(colour_table[[graph_par$col]])))) # 24 is the number of distinct colours in KBH palette 
 			{
 			colour_scale <- rainbow(n = nrow(t1))
 			} else {
-					colour_table<-read.table("aux_colours.txt", header=T)
-					if(graph_par$col=="colour1") colour_scale<-colour_table$colour1[match(names(t1),a$Country)]
-					if(graph_par$col=="colour2") colour_scale<-colour_table$colour2[match(names(t1),a$Country)]
-					}
-	
+					if(var2 %in% c("LandingCountry", "FlagCountry"))
+						{
+						colour_scale<-colour_table[[graph_par$col]][match(rownames(t1),colour_table$Country)]
+						} else {
+								colour_scale<-unique(colour_table[[graph_par$col]])
+								}
+					}			
+		if(nrow(t1)>length(colour_scale)) stop ("check colours")	
+					
 	#barplot(t1, las=2, legend.text=rownames(t1), col=rainbow(n = nrow(t1)), ylab = "", main = paste(Var,"by", var1, "and", var2), cex.names = graph_par$cex.x)
 	#windows(10,5); par(cex=0.8, oma = graph_par$oma, mai = graph_par$mai)
 
 	bar.coords<-barplot(t1, plot=F) # required for legend
 	legend_pars<-eval(parse(text=legend_par)) # required for legend
 	#if(proportion==TRUE){legend_pars$y=1} # required for legend
-	barplot(t1, las=2, legend.text=rownames(t1), col=rainbow(n = nrow(t1)), ylab = "", main = NULL, cex.names = graph_par$cex.x, args.legend = legend_pars)
+	barplot(t1, las=2, legend.text=rownames(t1), col=colour_scale, ylab = "", main = NULL, cex.names = graph_par$cex.x, args.legend = legend_pars)
 	if(title_root!="") title(main = paste(title_root,":",Var,"by", var1, "and", var2), line = 1.8) else title(main = paste(Var,"by", var1, "and", var2), line = 1.8)
 	title(ylab=y_title, line = graph_par$ylab_line)
 	if(!type_of_threshold == "NULL")
