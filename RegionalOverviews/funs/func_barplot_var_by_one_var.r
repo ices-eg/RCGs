@@ -25,6 +25,7 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 		# 2019-04-11: added tapply_type length_unique
 		# 2019-04-11: improved title
 		# 2019-04-11: added argument title_root
+		# 2019-04-14: improve colour specification
 		
 		percent_Var <- round(sum(!is.na(x[,Var]))/dim(x)[1]*100,2)
 		percent_var1 <- round(sum(!is.na(x[,var1]))/dim(x)[1]*100,2)
@@ -68,16 +69,20 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 	if (tapply_type == "sum") { t1<-tapply(x[,Var], list(x[,var1]), sum, na.rm=T); y_title = paste("sum of", Var) }
 	t1[is.na(t1)]<-0
 	if (sorted==TRUE) {t1<-sort(t1, decreasing=T)}
-	
+
 	# colour
-		if(is.na(graph_par$col)) 
+		if(is.na(graph_par$col) | nrow(t1)>24 | (!is.na(graph_par$col) & nrow(t1) > length(unique(colour_table[[graph_par$col]])))) # 24 is the number of distinct colours in KBH palette 
 			{
 			colour_scale <- rainbow(n = nrow(t1))
 			} else {
-					colour_table<-read.table("aux_colours.txt", header=T)
-					if(graph_par$col=="colour1") colour_scale<-colour_table$colour1[match(names(t1),a$Country)]
-					if(graph_par$col=="colour2") colour_scale<-colour_table$colour2[match(names(t1),a$Country)]
-					}
+					if(var1 %in% c("LandingCountry", "FlagCountry"))
+						{
+						colour_scale<-colour_table[[graph_par$col]][match(names(t1),colour_table$Country)]
+						} else {
+								colour_scale<-unique(colour_table[[graph_par$col]])
+								}
+					}			
+		if(nrow(t1)>length(colour_scale)) stop ("check colours")			
 
 	barplot(t1, las=2, col=colour_scale, ylab = "", main = "", cex.names = graph_par$cex.x)
 	if(title_root!="") title(main = paste(title_root,":",Var,"by", var1), line = 1.8) else title(main = paste(Var,"by", var1), line = 1.8)
