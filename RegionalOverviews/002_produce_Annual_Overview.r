@@ -31,7 +31,9 @@
 		#Adds IDs [move to preparation]
 		cl_rcg[,FlagCountry_Loa:=paste(FlagCountry, VesselLengthCategory, sep="_")]
 		ce_rcg[,FlagCountry_Loa:=paste(FlagCountry, VesselLengthCategory, sep="_")]
-
+		
+		# Add to preparation [and convert 2-letter code to 3-letter code]
+		colnames(ce_rcg)[colnames(ce_rcg)=="LandingCountry"]<-"LandingCountry2"
 	
 	#CL
 		
@@ -247,7 +249,7 @@
 	#CE graphs generic
 
 		# read_graph_details
-		graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CE_Graphical_details1.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+		graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CE_Graphical_details.txt", sep="\t", stringsAsFactors=FALSE, header=T)
 		source("funs/func_barplot_var_by_one_var.r")			
 		source("funs/func_barplot_var_by_two_var_stacked.r")		
 		
