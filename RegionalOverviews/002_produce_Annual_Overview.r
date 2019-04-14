@@ -31,7 +31,9 @@
 		#Adds IDs [move to preparation]
 		cl_rcg[,FlagCountry_Loa:=paste(FlagCountry, VesselLengthCategory, sep="_")]
 		ce_rcg[,FlagCountry_Loa:=paste(FlagCountry, VesselLengthCategory, sep="_")]
-
+		
+		# Add to preparation [and convert 2-letter code to 3-letter code]
+		colnames(ce_rcg)[colnames(ce_rcg)=="LandingCountry"]<-"LandingCountry2"
 	
 	#CL
 		
