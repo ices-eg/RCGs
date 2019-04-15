@@ -264,7 +264,7 @@ if(groupBy_name %in% c('Area', 'FishingGround')){
   
     p+
       geom_sf(data = m,  fill = "antiquewhite")+
-      #geom_sf(data = st_as_sf(mdf), aes(fill = !!eval_tidy(quo(UQ(groupBy)))[[1]]) , na.rm = TRUE)+
+      #geom_sf(data = st_as_sf(mdf), aes(fill = groupBy) , na.rm = TRUE)+
     coord_sf( crs = "+init=epsg:4326",
               xlim =xlim,
               ylim = ylim,

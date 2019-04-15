@@ -141,6 +141,11 @@
 		StatRectshp = cbind(StatRectshp,  sf::st_coordinates(sf::st_centroid(StatRectshp$geometry))) %>% mutate(lon = X, lat = Y)
 		
 		
+		# read in the color palette
+		colors =read.table("aux_colours.txt", header=T, sep="\t", colClasses="character", na.strings="", comment.char="")
+		aux_colours_ggplot = c(colors$colour4)
+		names(aux_colours_ggplot) = c(colors$Country)
+		
 		options(scipen=10000) # to remove scientific notation from the legend
 		########################################################################################################################################################################
 		
@@ -243,7 +248,7 @@
 		                               Catch_group = graph_det$Catch_group[i], 
 		                               newVarName = graph_det$newVarName[i],
 		                               addExtraShp = graph_det$addExtraShp[i],
-		                               extraShp = eval(parse(text = graph_det$extraShp[i])))
+		                               extraShp = eval(parse(text = graph_det$extraShp[i])), color_palette = aux_colours_ggplot)
 		      res[[2]]
 		      ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], ".tiff", sep = ""), sep="/"), units="in", width=10, height=10, dpi=300, compression = 'lzw')
 		      write.table(res[[1]], file =  paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),".txt", sep=""), sep = '\t', dec = '.')
@@ -367,11 +372,11 @@
 		
 		
 	# maps
-		ce_rcg_vl<-ce_rcg[VesselLengthCategory=="<10",]
-		 titleAdd ='under 10m'
+		# ce_rcg_vl<-ce_rcg[VesselLengthCategory=="<10",]
+		#  titleAdd ='under 10m'
 		
-	# ce_rcg_vl<-ce_rcg[!VesselLengthCategory=="<10" & !is.na(VesselLengthCategory),]
-	# titleAdd ='10m and over'
+	ce_rcg_vl<-ce_rcg[!VesselLengthCategory=="<10" & !is.na(VesselLengthCategory),]
+	titleAdd ='10m and over'
 
 		#pointsMaps
 		source("funs/pointsMap_func.R")
@@ -473,7 +478,7 @@
 		                               newVarName = graph_det$newVarName[i],
 		                               addExtraShp = graph_det$addExtraShp[i],
 		                               extraShp = eval(parse(text = graph_det$extraShp[i])),
-		                               addToTitle = titleAdd)
+		                               addToTitle = titleAdd, color_palette = aux_colours_ggplot)
 		      res[[2]]
 		      ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], '_', titleAdd, ".tiff", sep = ""), sep="/"), units="in", width=10, height=10, dpi=300, compression = 'lzw')
 		      write.table(res[[1]], file =  paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),'_', titleAdd, ".txt", sep=""), sep = '\t', dec = '.')
