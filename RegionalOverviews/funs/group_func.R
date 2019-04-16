@@ -60,7 +60,7 @@ group_func = function(df,
     ))
   }
   
-  if(!is.na(facet) & !facet_name %in% colnames(df)) {
+  if(!is.na(facet_name) & !facet_name %in% colnames(df)) {
     stop(paste(
       'The given column --->',
       facet_name,
@@ -181,13 +181,13 @@ group_func = function(df,
     tdf = tdf %>% mutate(Catch_group = Catch_group_name)
   }
   
-  if(is.na(facet)){
+  if(is.na(facet_name)){
     tdf %>% select(-facet) %>% rename(!!var_name :=var, !!groupBy_name :=groupBy) %>% ungroup()-> tdf  
   }else{
     tdf %>% rename(!!var_name :=var, !!groupBy_name :=groupBy, !!facet_name := facet) %>% ungroup()-> tdf  
   }
   
-  if(is.na(groupBy2)){
+  if(is.na(groupBy2_name)){
     tdf %>% select(-groupBy2)-> tdf
   }else{
     tdf %>% rename(!!groupBy2_name := groupBy2)-> tdf

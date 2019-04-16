@@ -40,7 +40,8 @@ pointsMap_func = function(df,
   require(rlang)
   require(ggplot2)
   require(sf)
-
+  require(rnaturalearth)
+  
   source('funs/group_func.R')
 
   
