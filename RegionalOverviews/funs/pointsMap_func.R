@@ -40,7 +40,8 @@ pointsMap_func = function(df,
   require(rlang)
   require(ggplot2)
   require(sf)
-
+  require(rnaturalearth)
+  
   source('funs/group_func.R')
 
   
@@ -62,7 +63,7 @@ pointsMap_func = function(df,
   
   # creating the groupped df
   
-  grouping_result = group_func(df, var_name, groupBy_name, groupBy2 = NA, facet_name, func_name, type_of_threshold = type_of_threshold, 
+  grouping_result = group_func(df, var_name, groupBy_name, groupBy2 = NA, facet = facet_name, func = func_name, type_of_threshold = type_of_threshold, 
                                value_of_threshold =  value_of_threshold, Catch_group_name = Catch_group_name)
   
   tdf = grouping_result[[1]]

@@ -64,7 +64,7 @@ choroplethMap_func = function(df,
   
   # creating the groupped df
   
-  grouping_result = group_func(df, var_name, groupBy_name,groupBy2 = NA, facet_name, func_name, type_of_threshold = type_of_threshold, 
+  grouping_result = group_func(df, var_name, groupBy_name,groupBy2 = NA, facet = facet_name, func = func_name, type_of_threshold = type_of_threshold, 
                                value_of_threshold =  value_of_threshold, Catch_group_name = Catch_group_name)  
   
   tdf = grouping_result[[1]]
@@ -308,16 +308,16 @@ choroplethMap_func = function(df,
   
 }
 
-# choroplethMap_func(cl_rcg %>% filter(Year %in% c(2016, 2017)),
+# choroplethMap_func(cl_rcg %>% filter(Year %in% c(2017)),
 #                    'OfficialLandingCatchWeight',
-#                    'StatisticalRectangle',
+#                    'Area',
 #                    facet = 'Year',
 #                    func = 'sum',
 #                    type_of_threshold = 'percent',
 #                    value_of_threshold = 100,
 #                    Catch_group_name = NA,
-#                    points_coord = StatRectshp,
-#                    plot_labels = FALSE,
+#                    points_coord = FAOshp,
+#                    plot_labels = TRUE,
 #                    newVarName = 'Landings',
 #                    addExtraShp = FALSE,
 #                    extraShp = FAOshp)

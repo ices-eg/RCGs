@@ -68,8 +68,8 @@ scatterpieMap_func = function(df,
   
   
   # creating the groupped df
-  grouping_result = group_func(df, var_name, groupBy_name,groupBy2 = NA, facet_name, func_name, type_of_threshold = type_of_threshold, 
-                               value_of_threshold =  value_of_threshold, Catch_group_name = Catch_group_name)  
+  grouping_result = group_func(df, var_name, groupBy_name,groupBy2 = groupBy2_name, facet_name, func_name, type_of_threshold = type_of_threshold, 
+                               value_of_threshold =  value_of_threshold, Catch_group_name = Catch_group_name, groupBy2spread = TRUE)  
   tdf = grouping_result[[1]]
   if (is.null(tdf)) {
     stop('The chosen data set is empty')
@@ -79,22 +79,22 @@ scatterpieMap_func = function(df,
   tdf %>% left_join(points_coord)  -> mdf
   
   # adding info about second variable
-  plotby_result = group_func(df, var_name, groupBy_name,groupBy2 = groupBy2_name, facet_name, func_name, type_of_threshold = 'none', 
-                              Catch_group_name = Catch_group_name)  
+  #plotby_result = group_func(df, var_name, groupBy_name,groupBy2 = groupBy2_name, facet_name, func_name, type_of_threshold = 'none', 
+  #                            Catch_group_name = Catch_group_name)  
   
-  tdf2 = plotby_result[[1]] %>% select(-pr)
-  if (is.null(tdf2)) {
-    stop('The chosen data set is empty')
-  }
-  missing_entries2 = plotby_result[[2]]
+  #tdf2 = plotby_result[[1]] %>% select(-pr)
+  #if (is.null(tdf2)) {
+  #  stop('The chosen data set is empty')
+  #}
+  #missing_entries2 = plotby_result[[2]]
 
-  mdf%>% select(-!!var) -> mdf
-  mdf %>% left_join(tdf2) ->mdf
+  #mdf%>% select(-!!var) -> mdf
+  #mdf %>% left_join(tdf2) ->mdf
   mdf%>% mutate(var = !!var,
                 groupBy = !!groupBy,
                 groupBy2 = !!groupBy2,
-                facet = !!facet)  %>% select(-!!var) -> mdf
-
+                facet = !!facet)  -> mdf
+  
   # add info about records without coordinates
   if (sum(is.na(mdf$lat)) != 0 | sum(is.na(mdf$lon)) != 0) {
     mdf %>% filter((is.na(lat) | is.na(lon)) & !is.na(groupBy)) %>% distinct(groupBy, pr) %>%  summarise(pr = round(sum(pr), 2), n = n_distinct(groupBy)) %>% 
@@ -208,7 +208,6 @@ scatterpieMap_func = function(df,
   
 
   unique_bys = mdf2  %>%  distinct(groupBy2) %>% nrow()
-  
   if(is.na(color_palette)){ # if there is no color_palette given, use the random one
     color_palette = scales::hue_pal()(unique_bys)
   }
@@ -363,8 +362,7 @@ if(groupBy_name %in% c('Area', 'FishingGround')){
     )
   }
   
-  mdf %>% rename(!!var_name := var)-> mdf
-  mdf %>%  select( - groupBy, -groupBy2, -facet)-> mdf
+ mdf %>%  select( -var, - groupBy, -groupBy2, -facet)-> mdf
   return(list(mdf, plot))
 }
 
