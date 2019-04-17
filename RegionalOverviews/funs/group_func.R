@@ -2,6 +2,7 @@ group_func = function(df,
                       var,
                       groupBy,
                       groupBy2 = NA,
+                      groupBy2spread = FALSE,
                       facet = NA,
                       func,
                       type_of_threshold = 'none',
@@ -16,6 +17,11 @@ group_func = function(df,
   # type_of_threshold - default set to 'none', other options: 'top_n', 'percent'
   # value_of_threshold - set it, if you defined any type_of_threshold
   # Catch_group_name - if NA then all species will be included, other options: demersal/flatfish/smallpelagic/largepelagic
+  # groupBy2spread - TRUE/FALSE - use this if you want to have two grouping variables, but during calculation of threshold take into account only first variable. Needed for scatterpies
+  #                - e.g. If you want to present top 20 harbours, with information about flag country included
+  #                - set: groupBy = 'Harbour', groupby2 = 'FlagCountry', groupBy2spread = TRUE
+  #                - you wil get top 20 harbous and all countries that landed in these harbours
+  #                - otherwise, if you set it to FALSE, you will get top 20 combinations of Harbour x FlagCountry
   
   # Marta Suska
   # NMFRI
@@ -150,62 +156,90 @@ group_func = function(df,
                                                   analysis_type = func_name) -> gdf
   
   
-  #save info about missing groupBy entries
-  gdf %>% ungroup() %>%
-    group_by(facet) %>% 
-    arrange(desc(var)) %>%
-    mutate(pr := var / sum(var, na.rm = TRUE) * 100)-> gdf
-  
-  gdf  %>% filter(is.na(groupBy))->missing_entries
   
   # apply the threshold
-  if (type_of_threshold == 'percent') {
-   tdf = gdf %>% 
+  if(groupBy2spread){
+    
+    nc = length(unique(gdf$groupBy2))
+    
+    gdf %>% ungroup() %>% 
+      spread(groupBy2, var, fill = 0) %>% 
+      mutate(var = rowSums(.[,4:(nc+3)])) %>% 
+      group_by(facet) %>% 
+      arrange(desc(var)) %>% 
+      mutate(pr= var/sum(var, na.rm = TRUE)*100)-> gdf
+    
+    gdf  %>% filter(is.na(groupBy)) %>% select(groupBy, facet, var, analysis_type, pr)->missing_entries
+    
+  }else{
+    
+    #save info about missing groupBy entries
+    gdf %>% ungroup() %>%
+      group_by(facet) %>% 
+      arrange(desc(var)) %>%
+      mutate(pr := var / sum(var, na.rm = TRUE) * 100)-> gdf
+    
+    gdf  %>% filter(is.na(groupBy))->missing_entries 
+  }
+
+    if (type_of_threshold == 'percent') {
+   tdf = gdf %>%
       mutate(cum_pr = cumsum(pr)) %>%
       filter(cum_pr <= value_of_threshold) %>%
       mutate(type_of_threshold = type_of_threshold,
-             value_of_threshold = value_of_threshold)
-    
+             value_of_threshold = value_of_threshold) %>% 
+     select(-cum_pr)
+
   } else if (type_of_threshold == 'top_n') {
     tdf = gdf %>% ungroup() %>%group_by(facet) %>%  arrange(desc(var)) %>% top_n(value_of_threshold,var)%>%
       mutate(type_of_threshold = type_of_threshold,
-             value_of_threshold = value_of_threshold)
+             value_of_threshold = value_of_threshold) 
   } else if (type_of_threshold == 'none') {
-    tdf = gdf %>%  ungroup()%>% group_by(facet) %>% arrange(desc(var))
+    tdf = gdf %>%  ungroup()%>% group_by(facet) %>% arrange(desc(var))%>%
+      mutate(type_of_threshold = type_of_threshold,
+             value_of_threshold = NA) 
   } else{
     message(paste('No method  defined for threshold type = ', type_of_threshold))
     tdf = NULL
   }
-  
+
+  if(groupBy2spread){
+    tdf %>% 
+      select(-var) %>% 
+      gather('groupBy2', 'var', - groupBy, -facet, - analysis_type, -pr, -type_of_threshold, - value_of_threshold) %>% 
+      filter(var!=0)-> tdf
+  }
+    
   if(!is.na(Catch_group_name)){
     tdf = tdf %>% mutate(Catch_group = Catch_group_name)
   }
-  
+
   if(is.na(facet_name)){
-    tdf %>% select(-facet) %>% rename(!!var_name :=var, !!groupBy_name :=groupBy) %>% ungroup()-> tdf  
+    tdf %>% select(-facet) %>% rename(!!var_name :=var, !!groupBy_name :=groupBy) %>% ungroup()-> tdf
   }else{
-    tdf %>% rename(!!var_name :=var, !!groupBy_name :=groupBy, !!facet_name := facet) %>% ungroup()-> tdf  
+    tdf %>% rename(!!var_name :=var, !!groupBy_name :=groupBy, !!facet_name := facet) %>% ungroup()-> tdf
   }
-  
+
   if(is.na(groupBy2_name)){
     tdf %>% select(-groupBy2)-> tdf
   }else{
     tdf %>% rename(!!groupBy2_name := groupBy2)-> tdf
   }
-  
+
   return(list(tdf = tdf, percent_missing =  missing_entries))
   
   }
 
-# # # example
+# # example
 # group_func(cl_rcg %>% filter(Year %in% c(2016, 2017)),
 #            'OfficialLandingCatchWeight',
 #            'Harbour',
-#            groupBy2 = NA,
+#            groupBy2= 'FlagCountry',
 #            facet = 'Year',
 #            func = 'sum',
-#            type_of_threshold = 'top_n',
+#            type_of_threshold = 'none',
 #            value_of_threshold = 20,
-#            Catch_group_name = NA)
+#            Catch_group_name = NA,
+#            groupBy2spread = TRUE)
 
 
