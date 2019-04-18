@@ -1,5 +1,0 @@
-Catch_group	Section	Subsection	Subsubsection	Graph_type	Graph_variant	var	groupBy	facet	func	type_of_threshold	value_of_threshold	points_coord	plot_labels	png_dir	png_name	txt_dir	txt_name	newVarName	addExtraShp	extraShp
-NULL	3	3.3	3.3.1	4	1	TripsNumber	Area	Year	sum	percent	100	FAOshp	TRUE	002_Outputs\figures	3.3.1_4_1	002_Outputs\tables	3.3.1_4_1		FALSE	
-NULL	3	3.3	3.3.1	4	2	DaysAtSea	Area	Year	sum	percent	100	FAOshp	TRUE	002_Outputs\figures	3.3.1_4_2	002_Outputs\tables	3.3.1_4_2		FALSE	
-NULL	3	3.8	3.8.1	4	1	TripsNumber	StatisticalRectangle	Year	sum	percent	100	StatRectshp	FALSE	002_Outputs\figures	3.8.1_4_1	002_Outputs\tables	3.8.1_4_1		TRUE	FAOshp
-NULL	3	3.8	3.8.1	4	2	DaysAtSea	StatisticalRectangle	Year	sum	percent	100	StatRectshp	FALSE	002_Outputs\figures	3.8.1_4_2	002_Outputs\tables	3.8.1_4_2		TRUE	FAOshp
