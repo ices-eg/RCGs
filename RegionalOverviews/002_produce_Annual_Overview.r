@@ -130,122 +130,76 @@
 		StatRectshp = cbind(StatRectshp,  sf::st_coordinates(sf::st_centroid(StatRectshp$geometry))) %>% mutate(lon = X, lat = Y)
 		
 		
-		# read in the color palette
-		colors =read.table("aux_colours.txt", header=T, sep="\t", colClasses="character", na.strings="", comment.char="")
-		aux_colours_ggplot = c(colors$colour4)
-		names(aux_colours_ggplot) = c(colors$Country)
+		# adjust color palette to the ggplot maps
+		aux_colours_ggplot = c(colour_table$colour4)
+		names(aux_colours_ggplot) = c(colour_table$Country)
 		
 		options(scipen=10000) # to remove scientific notation from the legend
 		########################################################################################################################################################################
-		
-
-		#pointsMaps
 		source("funs/pointsMap_func.R")
-		
-		graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CL_Graphical_details3.txt", sep="\t", stringsAsFactors=FALSE, header=T)
-		
-		for(group in unique(graph_det_all$Catch_group))
-		{
-		  
-		  print(group)	
-		  
-		  # subsets group		
-		  graph_det<-graph_det_all[graph_det_all$Catch_group==group,]
-		  if(group!="NULL") cl_rcg_group<-cl_rcg[Catch_group==group] else cl_rcg_group<-cl_rcg
-		  
-		  # runs graphs		
-		  for (i in 1:nrow(graph_det))
-		  {
-		    print(i)
-		    if(graph_det$Graph_type[i]==3)
-		    {
-		      res = pointsMap_func(cl_rcg_group, var = graph_det$var[i],  groupBy=graph_det$groupBy[i], facet = graph_det$facet[i],
-		                           func = graph_det$func[i], type_of_threshold = graph_det$type_of_threshold[i], value_of_threshold =  graph_det$value_of_threshold[i],
-		                           points_coord =  eval(parse(text = graph_det$points_coord[i])), plot_labels = graph_det$plot_labels[i], saveResults = FALSE,
-		                           Catch_group = graph_det$Catch_group[i], 
-		                           newVarName = graph_det$newVarName[i],
-		                           addExtraShp = graph_det$addExtraShp[i],
-		                           extraShp = eval(parse(text = graph_det$extraShp[i])))
-		      res[[2]]
-		      ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], ".tiff", sep = ""), sep="/"), units="in", width=10, height=10, dpi=300, compression = 'lzw')
-		      write.table(res[[1]], file =  paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),".txt", sep=""), sep = '\t', dec = '.')
-		      
-		    }
-		  }
-		  
-		}
-		
-		# choroplethMap
 		source("funs/choroplethMap_func.R")
-		
-		graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CL_Graphical_details4.txt", sep="\t", stringsAsFactors=FALSE, header=T)
-		
-		for(group in unique(graph_det_all$Catch_group))
-		{
-		  
-		  print(group)	
-		  
-		  # subsets group		
-		  graph_det<-graph_det_all[graph_det_all$Catch_group==group,]
-		  if(group!="NULL") cl_rcg_group<-cl_rcg[Catch_group==group] else cl_rcg_group<-cl_rcg
-		  
-		  # runs graphs		
-		  for (i in 1:nrow(graph_det))
-		  {
-		    print(i)
-		    if(graph_det$Graph_type[i]==4)
-		    {
-		      res = choroplethMap_func(cl_rcg_group, var = graph_det$var[i],  groupBy=graph_det$groupBy[i], facet = graph_det$facet[i],
-		                               func = graph_det$func[i], type_of_threshold = graph_det$type_of_threshold[i], value_of_threshold =  graph_det$value_of_threshold[i],
-		                               points_coord =  eval(parse(text = graph_det$points_coord[i])), plot_labels = graph_det$plot_labels[i], saveResults = FALSE,
-		                               Catch_group = graph_det$Catch_group[i], 
-		                               newVarName = graph_det$newVarName[i],
-		                               addExtraShp = graph_det$addExtraShp[i],
-		                               extraShp = eval(parse(text = graph_det$extraShp[i])))
-		      res[[2]]
-		      ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], ".tiff", sep = ""), sep="/"), units="in", width=10, height=10, dpi=300, compression = 'lzw')
-		      write.table(res[[1]], file =  paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),".txt", sep=""), sep = '\t', dec = '.')
-		      
-		    }
-		  }
-		  
-		}
-		
-		# scatterPieMap_func
 		source("funs/scatterpieMap_func.R")
 		
-		graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CL_Graphical_details5.txt", sep="\t", stringsAsFactors=FALSE, header=T)
-		
+		# read_graph_details
+		graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CL_Graphical_details_maps.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+
 		for(group in unique(graph_det_all$Catch_group))
 		{
 		  
 		  print(group)	
 		  
-		  # subsets group		
+		  # subsets group
 		  graph_det<-graph_det_all[graph_det_all$Catch_group==group,]
 		  if(group!="NULL") cl_rcg_group<-cl_rcg[Catch_group==group] else cl_rcg_group<-cl_rcg
-		  
-		  # runs graphs		
-		  for (i in 1:nrow(graph_det))
-		  {
-		    print(i)
-		    if(graph_det$Graph_type[i]==5)
+
+		    # runs graphs
+		    for (i in 1:nrow(graph_det))
 		    {
-		      res = scatterpieMap_func(cl_rcg_group, var = graph_det$var[i],  groupBy=graph_det$groupBy[i], groupBy2 = graph_det$groupBy2[i] , facet = graph_det$facet[i],
-		                               func = graph_det$func[i], type_of_threshold = graph_det$type_of_threshold[i], value_of_threshold =  graph_det$value_of_threshold[i],
-		                               points_coord =  eval(parse(text = graph_det$points_coord[i])), plot_labels = graph_det$plot_labels[i], saveResults = FALSE,
-		                               Catch_group = graph_det$Catch_group[i], 
-		                               newVarName = graph_det$newVarName[i],
-		                               addExtraShp = graph_det$addExtraShp[i],
-		                               extraShp = eval(parse(text = graph_det$extraShp[i])), color_palette = aux_colours_ggplot)
-		      res[[2]]
-		      ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], ".tiff", sep = ""), sep="/"), units="in", width=10, height=10, dpi=300, compression = 'lzw')
-		      write.table(res[[1]], file =  paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),".txt", sep=""), sep = '\t', dec = '.')
 		      
+		      print(i)
+		      if(graph_det$Graph_type[i]==3)
+		      {
+		        res = pointsMap_func(cl_rcg_group, var = graph_det$var[i],  groupBy=graph_det$groupBy[i], facet = graph_det$facet[i],
+		                             func = graph_det$func[i], type_of_threshold = graph_det$type_of_threshold[i], value_of_threshold =  graph_det$value_of_threshold[i],
+		                             points_coord =  eval(parse(text = graph_det$points_coord[i])), plot_labels = graph_det$plot_labels[i], saveResults = FALSE,
+		                             Catch_group = graph_det$Catch_group[i], 
+		                             newVarName = graph_det$newVarName[i],
+		                             addExtraShp = graph_det$addExtraShp[i],
+		                             extraShp = eval(parse(text = graph_det$extraShp[i])))
+		        res[[2]]
+		        ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], ".tiff", sep = ""), sep="/"), units="in", width=10, height=10, dpi=300, compression = 'lzw')
+		        write.table(res[[1]], file =  paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),".txt", sep=""), sep = '\t', dec = '.')
+		      }
+		      if(graph_det$Graph_type[i]==4)
+		      {
+		        res = choroplethMap_func(cl_rcg_group, var = graph_det$var[i],  groupBy=graph_det$groupBy[i], facet = graph_det$facet[i],
+		                                 func = graph_det$func[i], type_of_threshold = graph_det$type_of_threshold[i], value_of_threshold =  graph_det$value_of_threshold[i],
+		                                 points_coord =  eval(parse(text = graph_det$points_coord[i])), plot_labels = graph_det$plot_labels[i], saveResults = FALSE,
+		                                 Catch_group = graph_det$Catch_group[i], 
+		                                 newVarName = graph_det$newVarName[i],
+		                                 addExtraShp = graph_det$addExtraShp[i],
+		                                 extraShp = eval(parse(text = graph_det$extraShp[i])))
+		        res[[2]]
+		        ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], ".tiff", sep = ""), sep="/"), units="in", width=10, height=10, dpi=300, compression = 'lzw')
+		        write.table(res[[1]], file =  paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),".txt", sep=""), sep = '\t', dec = '.')
+
+		      }		
+		      if(graph_det$Graph_type[i]==5)
+		      {
+		        res = scatterpieMap_func(cl_rcg_group, var = graph_det$var[i],  groupBy=graph_det$groupBy[i], groupBy2 = graph_det$groupBy2[i] , facet = graph_det$facet[i],
+		                                 func = graph_det$func[i], type_of_threshold = graph_det$type_of_threshold[i], value_of_threshold =  graph_det$value_of_threshold[i],
+		                                 points_coord =  eval(parse(text = graph_det$points_coord[i])), plot_labels = graph_det$plot_labels[i], saveResults = FALSE,
+		                                 Catch_group = graph_det$Catch_group[i], 
+		                                 newVarName = graph_det$newVarName[i],
+		                                 addExtraShp = graph_det$addExtraShp[i],
+		                                 extraShp = eval(parse(text = graph_det$extraShp[i])), color_palette = aux_colours_ggplot)
+		        res[[2]]
+		        ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], ".tiff", sep = ""), sep="/"), units="in", width=10, height=10, dpi=300, compression = 'lzw')
+		        write.table(res[[1]], file =  paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),".txt", sep=""), sep = '\t', dec = '.')
+		        
+		      }	
 		    }
 		  }
-		  
-		}
 		
 	# river flow	
 		# add here	
@@ -359,18 +313,21 @@
 		graphics.off()
 		}		
 		
+		########################################################################################################################################################################
+		# maps
 		
-	# maps
-		# ce_rcg_vl<-ce_rcg[VesselLengthCategory=="<10",]
-		#  titleAdd ='under 10m'
+		source("funs/pointsMap_func.R")
+		source("funs/choroplethMap_func.R")
+		source("funs/scatterpieMap_func.R")
 		
+	# run this part twice, once for <10 and once for >10
+	# ce_rcg_vl<-ce_rcg[VesselLengthCategory=="<10",]
+	#  titleAdd ='under 10m'
 	ce_rcg_vl<-ce_rcg[!VesselLengthCategory=="<10" & !is.na(VesselLengthCategory),]
 	titleAdd ='10m and over'
-
-		#pointsMaps
-		source("funs/pointsMap_func.R")
-		graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CE_Graphical_details3.txt", sep="\t", stringsAsFactors=FALSE, header=T)
-
+	
+	graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CE_Graphical_details_maps.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+	
 		for(group in unique(graph_det_all$Catch_group))
 		{
 
@@ -399,28 +356,6 @@
 		      write.table(res[[1]], file =  paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"), '_', titleAdd,".txt", sep=""), sep = '\t', dec = '.')
 
 		    }
-		  }
-
-		}
-		
-		# choroplethMap
-		source("funs/choroplethMap_func.R")
-		
-		graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CE_Graphical_details4.txt", sep="\t", stringsAsFactors=FALSE, header=T)
-		
-		for(group in unique(graph_det_all$Catch_group))
-		{
-		  
-		  print(group)	
-		  
-		  # subsets group		
-		  graph_det<-graph_det_all[graph_det_all$Catch_group==group,]
-		  if(group!="NULL") ce_rcg_vl_group<-ce_rcg_vl[Catch_group==group] else ce_rcg_vl_group<-ce_rcg_vl
-		  
-		  # runs graphs		
-		  for (i in 1:nrow(graph_det))
-		  {
-		    print(i)
 		    if(graph_det$Graph_type[i]==4)
 		    {
 		      res = choroplethMap_func(ce_rcg_vl_group, var = graph_det$var[i],  groupBy=graph_det$groupBy[i], facet = graph_det$facet[i],
@@ -436,28 +371,6 @@
 		      write.table(res[[1]], file =  paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),'_', titleAdd,".txt", sep=""), sep = '\t', dec = '.')
 		      
 		    }
-		  }
-		  
-		}
-		
-		#scatterPieMap_func
-		source("funs/scatterpieMap_func.R")
-
-		graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CE_Graphical_details5.txt", sep="\t", stringsAsFactors=FALSE, header=T)
-
-		for(group in unique(graph_det_all$Catch_group))
-		{
-
-		  print(group)
-
-		  # subsets group
-		  graph_det<-graph_det_all[graph_det_all$Catch_group==group,]
-		  if(group!="NULL") ce_rcg_vl_group<-ce_rcg_vl[Catch_group==group] else ce_rcg_vl_group<-ce_rcg_vl
-
-		  # runs graphs
-		  for (i in 1:nrow(graph_det))
-		  {
-		    print(i)
 		    if(graph_det$Graph_type[i]==5)
 		    {
 		      res = scatterpieMap_func(ce_rcg_vl_group, var = graph_det$var[i],  groupBy=graph_det$groupBy[i], groupBy2 = graph_det$groupBy2[i] , facet = graph_det$facet[i],
@@ -471,7 +384,7 @@
 		      res[[2]]
 		      ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], '_', titleAdd, ".tiff", sep = ""), sep="/"), units="in", width=10, height=10, dpi=300, compression = 'lzw')
 		      write.table(res[[1]], file =  paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),'_', titleAdd, ".txt", sep=""), sep = '\t', dec = '.')
-
+		      
 		    }
 		  }
 
