@@ -193,7 +193,7 @@ choroplethMap_func = function(df,
             fill = NA ,
             na.rm = TRUE,
             size = ifelse(groupBy_name %in% c('Area', 'FishingGround'),  0.5,  0.02), 
-            color =ifelse(groupBy_name %in% c('Area', 'FishingGround'), gray(.3), gray(.6))
+            color =ifelse(groupBy_name %in% c('Area', 'FishingGround'), gray(.3), gray(.8))
             ) +
     scale_fill_viridis_c(
       option = "viridis",
