@@ -84,7 +84,7 @@ dir.create(paste("data\\002_prepared\\RCG_NSEA", sep=""),recursive=TRUE, showWar
 # Set Prep Options 
 # ======================  
  
-target_region <- "RCG_NSEA" # "RCG_NA", "RCG_BA"
+target_region <- "RCG_NA" # "RCG_NA", "RCG_BA"; RCG_NSEA
 year_start <- 2009
 year_end <- 2018
 dir_output_rcg<-paste("data\\002_prepared\\",target_region,sep="")
@@ -320,7 +320,9 @@ dir_output_all<-"data\\002_prepared"
 			ce_rcg[AreaMap %in% c("27.7"), AreaMap := "NA"]		# div required	(minority of records)	
 			
 			}			
-		
+	# QCA: visual
+		table(cl_rcg$Area, cl_rcg$AreaMap, useNA="al")
+	
 # ========================	
 # Creates and tweaks ISSCAAP codes
 # ========================		
@@ -536,6 +538,8 @@ dir_output_all<-"data\\002_prepared"
 		
 		}	
 
+	# QCA: visual
+		table(cl_rcg$Area, cl_rcg$AreaMap, useNA="al")
 		
 # ================	
 # data update: IRL	
