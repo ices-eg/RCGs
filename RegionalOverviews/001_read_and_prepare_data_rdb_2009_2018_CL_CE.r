@@ -23,6 +23,8 @@
 	# 2019-04-07: added preparation of stock: CS
 	# 2019-04-13: split CE+CL and CS and Stock preparation (avoids memory issues) 
 	# 2019-04-13: adapted structure of data directory to multiple RCGs
+	# 2019-04-27: completed species groups RCG BA and RCG NSEA
+	# 2019-04-27: added column AreaMap to allow more consistent aggregation level in maps
 	
 
 # ========================
@@ -48,13 +50,15 @@ source("funs/func_download_data_from_sharepoint.r")
 
  
  # read file names
- 	file_cl <- "data\\001_original\\CL 2009-2018.csv" # should be CL Landings 2009-2018
+ 	file_cl <- "data\\001_original\\CL Landing 2009-2018.csv"
 	file_ce <- "data\\001_original\\CE Effort 2009-2018.csv" 
 	 
  
 # read data
-	cl<-fread(file_cl, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL", nrows=9346797)
-	ce<-fread(file_ce, stringsAsFactors=FALSE, verbose=FALSE, fill=TRUE, sep=";", na.strings="NULL", nrows = 1066183)
+	cl<-fread(file_cl, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL", nrows=9797287)
+	ce<-fread(file_ce, stringsAsFactors=FALSE, verbose=FALSE, fill=TRUE, sep=";", na.strings="NULL")
+	#cl<-fread(file_cl, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL")
+	#ce<-fread(file_ce, stringsAsFactors=FALSE, verbose=FALSE, fill=TRUE, sep=";", na.strings="NULL", nrows = 1066183)
  
 
 # QCA: duplicates (eliminates if existing)
@@ -80,7 +84,7 @@ dir.create(paste("data\\002_prepared\\RCG_NSEA", sep=""),recursive=TRUE, showWar
 # Set Prep Options 
 # ======================  
  
-target_region <- "RCG_NA" # "RCG_BA", "RCG_NSEA"
+target_region <- "RCG_NSEA" # "RCG_NA", "RCG_BA"
 year_start <- 2009
 year_end <- 2018
 dir_output_rcg<-paste("data\\002_prepared\\",target_region,sep="")
@@ -98,15 +102,16 @@ dir_output_all<-"data\\002_prepared"
 		ce[Area=="27.7",.N,c("FlagCountry","Region","FishingGround","Area")]
 		ce[Area=="27.7",.N,c("FlagCountry","Region","FishingGround","Area","StatisticalRectangle")]
 		# corrects
-		ce[Area=="27.7" & FlagCountry=="IRL","FishingGround"]<-NA
+		#ce[Area=="27.7" & FlagCountry=="IRL","FishingGround"]<-NA
 		ce[Area=="27.7" & FlagCountry=="IRL","StatisticalRectangle"]<-NA
 	#	Area 27.3
 		ce[Area=="27.3",.N,c("FlagCountry","Region","FishingGround","Area")]
 		# records from LTU "OTM_SPF_32-69_0_0" are likely NSEA
 			ce[Area=="27.3" & FlagCountry=="LTU","Region"]<-"NSEA"
-			ce[Area=="27.3" & FlagCountry=="LTU","FishingGround"]<-NA
+			ce[Area=="27.3" & FlagCountry=="LTU","FishingGround"]<-"3a"
 			ce[Area=="27.3" & FlagCountry=="LTU","Area"]<-"27.3.a"
  			ce[Area=="27.3",.N, c("FlagCountry","Year","Region","FishingGround","Area")]
+ 			ce[Area=="27.3.a" & FlagCountry=="LTU",.N, c("FlagCountry","Year","Region","FishingGround","Area")]
 
 
 # ========================
@@ -142,13 +147,6 @@ dir_output_all<-"data\\002_prepared"
 					#ce_rcg[!Region=="BS",FishingGround:=NA,]				
 					#ce_rcg[!Region=="BS",Region:="BS",]	
 		
-		target_trips <- hh[Area %in% target_areas & Year>=year_start & Year<=year_end,unique(CS_TripId),]
-		tr_rcg_all <- tr[CS_TripId %in% target_trips,]
-		hh_rcg_all <- hh[CS_TripId %in% target_trips,]
-		sl_rcg_all <- sl[CS_TripId %in% target_trips,]
-		hh_rcg_all <- hh[CS_TripId %in% target_trips,]
-		ca_rcg_all <- ca[CS_TripId %in% target_trips,]
-		
 		}
 
 # RCM NS&EA: the  North  Sea  (ICES  areas  IIIa,  IV  and  VIId),  the  Eastern  Arctic  (ICES  areas  I  and  II),  the  ICES  divisions Va, XII & XIV and the NAFO areas.
@@ -166,11 +164,11 @@ dir_output_all<-"data\\002_prepared"
 				table(cl[!Region=="NSEA" & (Area %in% target_areas_nsea | grepl(Area, pat="21.") ),"Area"])
 			# QCA: should yield NSEA
 				# ATT: a few records (21 - NAFO) not NSEA?!			
-				table(cl_rcg$Region)
+				table(cl_rcg$Region, useNA="al")
 				table(cl_rcg[!Region=="NSEA",Area])
 					# corrects				
-					cl_rcg[!Region=="NSEA" & (Area %in% target_areas_nsea | grepl(Area, pat="21.") ),Region:="NSEA",]
-					table(cl_rcg$Region)
+					#cl_rcg[!Region=="NSEA" & (Area %in% target_areas_nsea | grepl(Area, pat="21.") ),Region:="NSEA",]
+					#table(cl_rcg$Region)
 			
 		ce_rcg <- ce[ (Area %in% target_areas_nsea | grepl(Area, pat="21.") ) & Year>=year_start & Year<=year_end,]
 			# QCA: should yield 0
@@ -179,23 +177,13 @@ dir_output_all<-"data\\002_prepared"
 				table(ce[!Region=="NSEA" & (Area %in% target_areas_nsea | grepl(Area, pat="21.") ),"Area"])	
 			# QCA: should yield NSEA
 				# ATT: a few records (21 - NAFO) not NSEA?!			
-				table(ce_rcg$Region)
+				table(ce_rcg$Region, useNA="al")
 				table(ce_rcg[!Region=="NSEA",Area])		
 					# corrects	
-					ce_rcg[!Region=="NSEA" & grepl(Area, pat="21."),Region:="NSEA",]
-					table(ce_rcg$Region)
+					#ce_rcg[!Region=="NSEA" & grepl(Area, pat="21."),Region:="NSEA",]
+					#table(ce_rcg$Region)
 	
-		
-		
-		target_trips <- hh[(Area %in% target_areas_nsea | grepl(Area, pat="21.") ) & Year>=year_start & Year<=year_end,unique(CS_TripId),]
-		tr_rcg_all <- tr[CS_TripId %in% target_trips,]
-		hh_rcg_all <- hh[CS_TripId %in% target_trips,]
-		sl_rcg_all <- sl[CS_TripId %in% target_trips,]
-		hh_rcg_all <- hh[CS_TripId %in% target_trips,]
-		ca_rcg_all <- ca[CS_TripId %in% target_trips,]
-					# corrects	
-					hh_rcg_all[!Region=="NSEA" & grepl(Area, pat="21."),Region:="NSEA",]
-					ca_rcg_all[!Region=="NSEA" & grepl(Area, pat="21."),Region:="NSEA",]
+	
 	
 		}	
 		
@@ -271,7 +259,68 @@ dir_output_all<-"data\\002_prepared"
 		# can be improved
 		ce[,LandingCountry:=substr(Harbour, start=1, stop=2)]
 		ce_rcg[,LandingCountry:=substr(Harbour, start=1, stop=2)]
+	
+	# AreaMap
+		cl_rcg$AreaMap<-cl_rcg$Area
+		ce_rcg$AreaMap<-ce_rcg$Area
+		
+		if(target_region=="RCG_BA") 
+			{		
+			cl_rcg[AreaMap %in% c("27.3.d.28.1", "27.3.d.28.2"), AreaMap := "27.3.d.28"]
+			ce_rcg[AreaMap %in% c("27.3.d.28.1", "27.3.d.28.2"), AreaMap := "27.3.d.28"]
+			}
+		if(target_region=="RCG_NSEA") 
+			{		
+			cl_rcg[AreaMap %in% c("21.1"), AreaMap := "NA"] # div required (minority of records)					
+			ce_rcg[AreaMap %in% c("21.1"), AreaMap := "NA"] # div required (minority of records)		
+			
+			cl_rcg[AreaMap %in% c("21.3"), AreaMap := "NA"] # div required (minority of records)				
+			ce_rcg[AreaMap %in% c("21.3"), AreaMap := "NA"] # div required (minority of records)		
+			
+			cl_rcg[AreaMap %in% c("27.2"), AreaMap := "NA"]	 # div required	(minority of records)				
+			ce_rcg[AreaMap %in% c("27.2"), AreaMap := "NA"]	 # div required	(minority of records)	
+			
+			cl_rcg[AreaMap %in% c("27.3.a"), AreaMap := "NA"] # subdiv required	(minority of records)		
+			ce_rcg[AreaMap %in% c("27.3.a"), AreaMap := "NA"] # subdiv required	(minority of records)
 
+			cl_rcg[AreaMap %in% c("27.4"), AreaMap := "NA"]	 # div required	(minority of records)	
+			ce_rcg[AreaMap %in% c("27.4"), AreaMap := "NA"]	 # div required	(minority of records)	
+			
+			cl_rcg[AreaMap %in% c("27.14"), AreaMap := "NA"] # div required	(some records)				
+			ce_rcg[AreaMap %in% c("27.14"), AreaMap := "NA"] # div required	(some records)		
+			
+			cl_rcg[AreaMap %in% c("27.2.a.1", "27.2.a.2"), AreaMap := "27.2.a"]
+			ce_rcg[AreaMap %in% c("27.2.a.1", "27.2.a.2"), AreaMap := "27.2.a"]
+			
+			cl_rcg[AreaMap %in% c("27.2.b.2"), AreaMap := "27.2.b"]			
+			ce_rcg[AreaMap %in% c("27.2.b.2"), AreaMap := "27.2.b"]			
+			
+			cl_rcg[AreaMap %in% c("27.14.b.1", "27.14.b.2"), AreaMap := "27.14.b"]
+			ce_rcg[AreaMap %in% c("27.14.b.1", "27.14.b.2"), AreaMap := "27.14.b"]
+			}
+		
+		if(target_region=="RCG_NA") 
+			{		
+			cl_rcg[AreaMap %in% c("27.5.b.1","27.5.b.2"), AreaMap := "27.5.b"]
+			ce_rcg[AreaMap %in% c("27.5.b.1","27.5.b.2"), AreaMap := "27.5.b"]
+			
+			cl_rcg[AreaMap %in% c("27.9.b.1", "27.9.b.2"), AreaMap := "27.9.b"]
+			ce_rcg[AreaMap %in% c("27.9.b.1", "27.9.b.2"), AreaMap := "27.9.b"]						
+			
+			cl_rcg[AreaMap %in% c('27.6.a.n','27.6.a.s'), AreaMap := "27.6.a"]
+			ce_rcg[AreaMap %in% c('27.6.a.n','27.6.a.s'), AreaMap := "27.6.a"]
+
+			cl_rcg[AreaMap %in% c("27.10"), AreaMap := "NA"]	# div required	(minority of records)			
+			ce_rcg[AreaMap %in% c("27.10"), AreaMap := "NA"]	# div required	(minority of records)	
+
+			cl_rcg[AreaMap %in% c("27.6"), AreaMap := "NA"]		# div required	(minority of records)			
+			ce_rcg[AreaMap %in% c("27.6"), AreaMap := "NA"]		# div required	(minority of records)				
+			
+			cl_rcg[AreaMap %in% c("27.7"), AreaMap := "NA"]		# div required	(minority of records)		
+			ce_rcg[AreaMap %in% c("27.7"), AreaMap := "NA"]		# div required	(minority of records)	
+			
+			}			
+		
 # ========================	
 # Creates and tweaks ISSCAAP codes
 # ========================		
@@ -300,6 +349,8 @@ dir_output_all<-"data\\002_prepared"
 			# QCA should yield zero, if not more tweaks are needed
 			sum(is.na(cl_rcg$ISSCAAP))
 			
+			cl_rcg[Species == "Cottus gobio",ISSCAAP:=13] # Miscellaneous freshwater fishes
+			cl_rcg[Species == "Gasterosteidae",ISSCAAP:=25] # Miscellaneous diadromous fishes
 			cl_rcg[Species == "Gaidropsarus guttatus",ISSCAAP:=32] # Cods, hakes, haddocks
 			cl_rcg[Species == "Mullus barbatus",ISSCAAP:=33] # Miscellaneous coastal fishes
 			cl_rcg[Species == "Auxis rochei",ISSCAAP:=36] # Tunas, bonitos, billfishes
@@ -308,10 +359,12 @@ dir_output_all<-"data\\002_prepared"
 			cl_rcg[Species == "Scomberesox saurus",ISSCAAP:=37] # Miscellaneous pelagic fishes
 			cl_rcg[Species == "Selachii",ISSCAAP:=38] # Sharks, rays, chimaeras
 			cl_rcg[Species == "Squatina",ISSCAAP:=38] # Sharks, rays, chimaeras
+			cl_rcg[Species == "Rajella lintea",ISSCAAP:=38] # Sharks, rays, chimaeras
 			cl_rcg[Species == "Pisces",ISSCAAP:=39] # Marine fishes not identified
 			cl_rcg[Species == "Macropodia",ISSCAAP:=42] # Crabs, sea-spiders
 			cl_rcg[Species == "Dardanus arrosor",ISSCAAP:=44] # King crabs, squat-lobsters
 			cl_rcg[Species == "Pasiphaea",ISSCAAP:=45] # Shrimps, prawns
+			cl_rcg[Species == "Pasiphaeidae",ISSCAAP:=45] # Shrimps, prawns
 			cl_rcg[Species == "Dendrobranchiata",ISSCAAP:=45] # Shrimps, prawns
 			cl_rcg[Species == "Crangon",ISSCAAP:=45] # Shrimps, prawns
 			cl_rcg[Species == "Decapodiformes",ISSCAAP:=47] # Miscellaneous marine crustaceans
@@ -418,8 +471,48 @@ dir_output_all<-"data\\002_prepared"
 
 
 	# region specific	
-	if(target_region=="RCG_BA"){stop("define")}
-	if(target_region=="RCG_NSEA"){stop("define")}
+	if(target_region=="RCG_BA"){
+	target_FishingGround<-c("22-24","25-32")
+		print(cl_rcg[!FishingGround %in% c(NA,target_FishingGround),.N, "FlagCountry"])
+		print(ce_rcg[!FishingGround %in% c(NA,target_FishingGround),.N, "FlagCountry"])	
+		cl_rcg[,FishingGround:=factor(FishingGround, levels=target_FishingGround),]
+		ce_rcg[,FishingGround:=factor(FishingGround, levels=target_FishingGround),]	
+
+		target_Areas<-c('27.3.b.23','27.3.c.22','27.3.d.24','27.3.d.25','27.3.d.26','27.3.d.27','27.3.d.28','27.3.d.28.1','27.3.d.28.2','27.3.d.29','27.3.d.30','27.3.d.31','27.3.d.32')
+		print(cl_rcg[!Area %in% target_Areas,.N, c("FlagCountry","Area")])
+		print(ce_rcg[!Area %in% target_Areas,.N, c("FlagCountry","Area")])
+		cl_rcg[,Area:=factor(Area, levels=target_Areas),]
+		ce_rcg[,Area:=factor(Area, levels=target_Areas),]
+				
+		# AreaMap
+		stop("define")
+		target_AreaMap<-c('27.3.b.23','27.3.c.22','27.3.d.24','27.3.d.25','27.3.d.26','27.3.d.27','27.3.d.28', '27.3.d.29','27.3.d.30','27.3.d.31','27.3.d.32')
+		cl_rcg[,AreaMap:=factor(AreaMap, levels=target_AreaMap),]
+		ce_rcg[,AreaMap:=factor(AreaMap, levels=target_AreaMap),]
+
+	}
+	if(target_region=="RCG_NSEA"){
+		target_FishingGround<-c("1+2", "3a", "4+7d", "5a+12+14", "21.0-6")
+		print(cl_rcg[!FishingGround %in% c(NA,target_FishingGround),.N, "FlagCountry"])
+		print(ce_rcg[!FishingGround %in% c(NA,target_FishingGround),.N, "FlagCountry"])	
+		cl_rcg[,FishingGround:=factor(FishingGround, levels=target_FishingGround),]
+		ce_rcg[,FishingGround:=factor(FishingGround, levels=target_FishingGround),]	
+	
+		# Areas
+		target_Areas<-c('27.1','27.2','27.2.a','27.2.a.1','27.2.a.2','27.2.b','27.2.b.2','27.3.a','27.3.a.20','27.3.a.21','27.4','27.4.a','27.4.b','27.4.c','27.5.a','27.7.d','27.12','27.14','27.14.a','27.14.b','27.14.b.1','27.14.b.2','21.0.A','21.0.B','21.1','21.1.A','21.1.B','21.1.C','21.1.D','21.1.E','21.1.F','21.2.H','21.2.J','21.3','21.3.K','21.3.L','21.3.M','21.3.N','21.3.O','21.6.G')
+		print(cl_rcg[!Area %in% target_Areas,.N, c("FlagCountry","Area")])
+		print(ce_rcg[!Area %in% target_Areas,.N, c("FlagCountry","Area")])
+		cl_rcg[,Area:=factor(Area, levels=target_Areas),]
+		ce_rcg[,Area:=factor(Area, levels=target_Areas),]
+
+		# AreaMap
+		stop("check definition")
+		target_AreaMap<-c('27.1', '27.2.a','27.2.b','27.3.a.20','27.3.a.21','27.4.a','27.4.b','27.4.c','27.5.a','27.7.d','27.12', '27.14.a','27.14.b', '21.0.A','21.0.B','21.1','21.1.A','21.1.B','21.1.C','21.1.D','21.1.E','21.1.F','21.2.H','21.2.J','21.3','21.3.K','21.3.L','21.3.M','21.3.N','21.3.O','21.6.G')
+		cl_rcg[,AreaMap:=factor(AreaMap, levels=target_AreaMap),]
+		ce_rcg[,AreaMap:=factor(AreaMap, levels=target_AreaMap),]		
+		
+	}
+	
 	if(target_region=="RCG_NA"){
 		target_FishingGround<-c("5b","6","7a","7bcjk","7e","7fgh","8abde","8c+9","10")
 		print(cl_rcg[!FishingGround %in% c(NA,target_FishingGround),.N, "FlagCountry"])
@@ -427,13 +520,23 @@ dir_output_all<-"data\\002_prepared"
 		cl_rcg[,FishingGround:=factor(FishingGround, levels=target_FishingGround),]
 		ce_rcg[,FishingGround:=factor(FishingGround, levels=target_FishingGround),]
 		
+		# Areas
 		target_Areas<-c('27.5.b','27.5.b.1','27.5.b.2','27.6','27.6.a','27.6.a.n','27.6.a.s','27.6.b','27.7','27.7.a','27.7.b','27.7.c','27.7.e','27.7.f','27.7.g','27.7.h','27.7.j','27.7.k','27.8.a','27.8.b','27.8.c','27.8.d','27.8.e','27.9.a','27.9.b','27.9.b.1','27.9.b.2','27.10','27.10.a','27.10.b')
 		print(cl_rcg[!Area %in% target_Areas,.N, c("FlagCountry","Area")])
 		print(ce_rcg[!Area %in% target_Areas,.N, c("FlagCountry","Area")])
 		cl_rcg[,Area:=factor(Area, levels=target_Areas),]
 		ce_rcg[,Area:=factor(Area, levels=target_Areas),]
+		
+
+		# AreaMap
+		stop("check definition")
+		target_AreaMap<-c('27.5.b', '27.6.a', '27.6.b', '27.7.a','27.7.b','27.7.c','27.7.e','27.7.f','27.7.g','27.7.h','27.7.j','27.7.k','27.8.a','27.8.b','27.8.c','27.8.d','27.8.e','27.9.a','27.9.b', '27.10.a','27.10.b','27.14.a','27.14.b')
+		cl_rcg[,AreaMap:=factor(AreaMap, levels=target_AreaMap),]
+		ce_rcg[,AreaMap:=factor(AreaMap, levels=target_AreaMap),]				
+		
 		}	
-	
+
+		
 # ================	
 # data update: IRL	
 # ================	
