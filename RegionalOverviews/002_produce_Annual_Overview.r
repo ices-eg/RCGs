@@ -108,7 +108,8 @@
 		#NA
 		shp  = sf::st_read(
 		  "shapefiles/RCG_NA_FAOareas.shp"
-		)
+		) %>% filter(F_LEVEL=='DIVISION') # for NA maps on DIVISIONS level
+		
 		##BA
 		#shp  = sf::st_read(
 		#  "shapefiles/RCG_BA_FAOareas.shp"
@@ -119,13 +120,8 @@
 		#)
 		
 		shp %>%
-		  filter((!is.na(F_DIVISION) &
-		            is.na(F_SUBDIVIS)) |
-		           (F_SUBDIVIS == '27.5.b.1' &
-		              is.na(F_SUBUNIT)) |
-		           (F_SUBDIVIS == '27.9.b.2' & is.na(F_SUBUNIT)) # to avoid duplicates, another solution?
-		  ) %>%
 		  mutate(AreaMap = F_CODE, Area = F_CODE) -> shp
+		
 		# For plotting FishingGrounds
 		cl_rcg %>% group_by(FishingGround) %>% distinct( Area)->FishingGround
 		shp %>% left_join(FishingGround) %>% group_by(FishingGround) %>% summarise(ID = mean(ID))-> FAOshpFG
