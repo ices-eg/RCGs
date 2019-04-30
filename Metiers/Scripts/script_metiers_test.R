@@ -3,7 +3,7 @@ library(data.table)
 library(readxl)
 library(purrr)
 
-data.path <- "C:/Data/"
+data.path <- "C:/GitHub/RCGs/Metiers/Scripts/"
 data.file <- "Metier_data_format_Example_test.csv"
 
 
@@ -16,6 +16,12 @@ getMetier<-function(p.gear, p.target, p.area, p.mesh, p.selection){
                                             (p.selection == sd_mesh | sd_mesh==0),
                                 metier_level_6][1])
   return(metier)
+}
+# Function that returns a measure to be used to determine dominant species/group 
+getMeasure<-function(p.measure){
+  idx<-which(p.measure=="value")
+  if(length(idx)>0) return("value")
+  else return("weight")
 }
 
 # Load the input data
@@ -56,25 +62,40 @@ input.data <- merge(input.data, species.list, all.x = T, by = "FAO_species")
 
 
 
-# Determine the dominant species, its group and percentage in the total catch for each sequence
+# Determine the dominant species (by weight), its group and percentage in the total catch for each sequence
 # (sequence = trip_id+haul_id(if available) +fishing_day+area+ices_rectangle+gear+mesh+selection)
-input.data<-input.data[,":="(seq_dom_species = FAO_species[which.max(KG)],
+# Information on dominant species can be used to identify the mesh size in case it is missing.
+# Function for mesh size determination will be developed. Should the function use national reference lists of mesh sizes corresponding to target species?
+input.data<-input.data[,":="(seq_dom_species_KG = FAO_species[which.max(KG)],
                                seq_dom_species_group = species_group[which.max(KG)],
-                               seq_dom_species_perc = max(KG)/sum(KG)),
+                               seq_dom_species_perc_KG = round(max(KG)/sum(KG)*100,1)),
             by=.(Country,year,vessel_id,vessel_length,trip_id,haul_id,fishing_day,area,
                  ices_rectangle,gear,mesh,selection,registered_target_assemblage)][order(vessel_id,trip_id,fishing_day,area,ices_rectangle,gear,mesh)]
 
+
 # Calculate group totals for each sequence
-input.data[,":="(seq_group_KG = sum(KG, na.rm = T)),
+input.data[,":="(seq_group_KG = sum(KG, na.rm = T),
+                 seq_group_EUR = sum(EUR, na.rm = T)),
             by=.(Country,year,vessel_id,vessel_length,trip_id,haul_id,fishing_day,area,
                  ices_rectangle,gear,mesh,selection,registered_target_assemblage,species_group)]
 
-# Determine the dominant group for each sequence
-input.data<-input.data[,":="(seq_dom_group = species_group[which.max(seq_group_KG)]),
-                         by=.(Country,year,vessel_id,vessel_length,trip_id,haul_id,fishing_day,area,
-                              ices_rectangle,gear,mesh,selection,registered_target_assemblage)][order(vessel_id,trip_id,fishing_day,area,ices_rectangle,gear,mesh)]
+# Select a measure to determine the dominant group at a sequence level. If at least one species in a sequence has "value" in a measure column then 
+# all species in that sequence get the same measure.
+input.data[,":="(seq_measure = getMeasure(measure)),
+           by=.(Country,year,vessel_id,vessel_length,trip_id,haul_id,fishing_day,area,
+                ices_rectangle,gear,mesh,selection,registered_target_assemblage)]
 
-# Identify sequences where the group of the dominant species differs from the dominant group
+
+# Determine the dominant group for each sequence
+input.data[seq_measure == "weight",":="(seq_dom_group = species_group[which.max(seq_group_KG)]),
+                         by=.(Country,year,vessel_id,vessel_length,trip_id,haul_id,fishing_day,area,
+                              ices_rectangle,gear,mesh,selection,registered_target_assemblage)]
+input.data[seq_measure == "value",":="(seq_dom_group = species_group[which.max(seq_group_EUR)]),
+           by=.(Country,year,vessel_id,vessel_length,trip_id,haul_id,fishing_day,area,
+                ices_rectangle,gear,mesh,selection,registered_target_assemblage)]
+
+# Identify sequences where the group of the dominant species differs from the dominant group.
+# The results of this step do not affect further calculations. It highlights the above-mentioned situations, that may indicate an input data error.
 input.data[,group.mismatch:=ifelse(seq_dom_species_group!=seq_dom_group,1,0)]
 
 
@@ -83,9 +104,10 @@ input.data[,metier_level_6:=as.character(pmap(list(gear, seq_dom_group, area, me
                                                function(g,t,a,m,s) getMetier(g,t,a,m,s)))]
 
 # Save results
-input.data<-input.data[,.(Country,year,vessel_id,vessel_length,trip_id,haul_id,fishing_day,area,ices_rectangle,gear,mesh,selection,FAO_species,
-                          registered_target_assemblage,metier_level_6,KG,EUR,species_group,seq_dom_species,seq_dom_species_group,
-                          seq_dom_species_perc,seq_group_KG,seq_dom_group,group.mismatch)]
+input.data<-input.data[order(vessel_id,trip_id,fishing_day,area,ices_rectangle,gear,mesh),
+                       .(Country,year,vessel_id,vessel_length,trip_id,haul_id,fishing_day,area,ices_rectangle,gear,mesh,selection,FAO_species,
+                         registered_target_assemblage,metier_level_6,KG,EUR,species_group,seq_dom_species_KG,seq_dom_species_group,
+                         seq_dom_species_perc_KG,seq_group_KG,seq_group_EUR,seq_dom_group,group.mismatch)]
 write.csv(input.data,paste0(data.path,"metier_results.csv"))
 
 
