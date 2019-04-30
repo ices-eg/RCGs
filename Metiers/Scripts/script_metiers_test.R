@@ -3,8 +3,8 @@ library(data.table)
 library(readxl)
 library(purrr)
 
-data.path <- "C:/GitHub/RCGs/Metiers/Scripts/"
-data.file <- "Metier_data_format_Example_test.csv"
+data.path <- "C:/GitHub/RCGs/Metiers/"
+data.file <- "Scripts/Metier_data_format_Example_test.csv"
 
 
 # Function that finds a metier code based on the given parameters
@@ -29,12 +29,12 @@ input.data <-data.table(read.csv(paste0(data.path,data.file),stringsAsFactors = 
 
 
 # Load species reference list
-species.list <- data.table(read_excel(paste(data.path,"Species SG2 Report.xlsx",sep = ""), sheet = "Species Reference List"))
+species.list <- data.table(read_excel(paste(data.path,"Reference_lists/Metier Subgroup Species 2019 04.xlsx",sep = ""), sheet = "Species Reference List"))
 species.list <- unique(species.list[,.(FAOcode,`Grouping 2`)])
 setnames(species.list, old = c("FAOcode","Grouping 2"), new = c("FAO_species", "species_group"))
 
 #Load metier file from ICES http://ices.dk/marine-data/Documents/RDB/RDB%20Metiers%20in%20allowed%20areas.zip
-metier.list <- data.table(read.csv(paste(data.path,"RDB Metiers in allowed areas.csv",sep = ""), sep = "\t", stringsAsFactors = F))
+metier.list <- data.table(read.csv(paste(data.path,"Reference_lists/RDB Metiers in allowed areas.csv",sep = ""), sep = "\t", stringsAsFactors = F))
 setnames(metier.list, old = "FishingActivityCategoryEuropeanLvl6Code", new = "metier_level_6")
 
 
