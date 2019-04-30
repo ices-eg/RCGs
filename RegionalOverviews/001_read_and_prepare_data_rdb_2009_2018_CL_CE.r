@@ -52,12 +52,11 @@ source("funs/func_download_data_from_sharepoint.r")
  # read file names
  	file_cl <- "data\\001_original\\CL Landing 2009-2018.csv"
 	file_ce <- "data\\001_original\\CE Effort 2009-2018.csv" 
-	 
  
 # read data
-	cl<-fread(file_cl, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL", nrows=9797287)
+	#cl<-fread(file_cl, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL", nrows=9797287)
 	ce<-fread(file_ce, stringsAsFactors=FALSE, verbose=FALSE, fill=TRUE, sep=";", na.strings="NULL")
-	#cl<-fread(file_cl, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL")
+	cl<-fread(file_cl, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL")
 	#ce<-fread(file_ce, stringsAsFactors=FALSE, verbose=FALSE, fill=TRUE, sep=";", na.strings="NULL", nrows = 1066183)
  
 
@@ -84,7 +83,7 @@ dir.create(paste("data\\002_prepared\\RCG_NSEA", sep=""),recursive=TRUE, showWar
 # Set Prep Options 
 # ======================  
  
-target_region <- "RCG_NA" # "RCG_NA", "RCG_BA"; RCG_NSEA
+target_region <- "RCG_NSEA" # "RCG_NA", "RCG_BA"; RCG_NSEA
 year_start <- 2009
 year_end <- 2018
 dir_output_rcg<-paste("data\\002_prepared\\",target_region,sep="")
@@ -487,7 +486,6 @@ dir_output_all<-"data\\002_prepared"
 		ce_rcg[,Area:=factor(Area, levels=target_Areas),]
 				
 		# AreaMap
-		stop("define")
 		target_AreaMap<-c('27.3.b.23','27.3.c.22','27.3.d.24','27.3.d.25','27.3.d.26','27.3.d.27','27.3.d.28', '27.3.d.29','27.3.d.30','27.3.d.31','27.3.d.32')
 		cl_rcg[,AreaMap:=factor(AreaMap, levels=target_AreaMap),]
 		ce_rcg[,AreaMap:=factor(AreaMap, levels=target_AreaMap),]
@@ -508,7 +506,6 @@ dir_output_all<-"data\\002_prepared"
 		ce_rcg[,Area:=factor(Area, levels=target_Areas),]
 
 		# AreaMap
-		stop("check definition")
 		target_AreaMap<-c('27.1', '27.2.a','27.2.b','27.3.a.20','27.3.a.21','27.4.a','27.4.b','27.4.c','27.5.a','27.7.d','27.12', '27.14.a','27.14.b', '21.0.A','21.0.B','21.1','21.1.A','21.1.B','21.1.C','21.1.D','21.1.E','21.1.F','21.2.H','21.2.J','21.3','21.3.K','21.3.L','21.3.M','21.3.N','21.3.O','21.6.G')
 		cl_rcg[,AreaMap:=factor(AreaMap, levels=target_AreaMap),]
 		ce_rcg[,AreaMap:=factor(AreaMap, levels=target_AreaMap),]		
@@ -531,7 +528,6 @@ dir_output_all<-"data\\002_prepared"
 		
 
 		# AreaMap
-		stop("check definition")
 		target_AreaMap<-c('27.5.b', '27.6.a', '27.6.b', '27.7.a','27.7.b','27.7.c','27.7.e','27.7.f','27.7.g','27.7.h','27.7.j','27.7.k','27.8.a','27.8.b','27.8.c','27.8.d','27.8.e','27.9.a','27.9.b', '27.10.a','27.10.b','27.14.a','27.14.b')
 		cl_rcg[,AreaMap:=factor(AreaMap, levels=target_AreaMap),]
 		ce_rcg[,AreaMap:=factor(AreaMap, levels=target_AreaMap),]				
@@ -549,6 +545,22 @@ dir_output_all<-"data\\002_prepared"
 	ce[TripsNumber==999 & FlagCountry=="IRL",TripsNumber:=0,]
 	ce_rcg[TripsNumber==999 & FlagCountry=="IRL",TripsNumber:=0,]
 
+# ================
+# quick and dirty check
+# ================	
+	# country level
+	
+	test_ctry<-"SWE"
+		
+		cl_rcg[FlagCountry==test_ctry,sum(OfficialLandingCatchWeight),list(Year)]
+		cl[FlagCountry==test_ctry,sum(OfficialLandingCatchWeight),list(Year)]
+
+		ce_rcg[FlagCountry==test_ctry,sum(TripsNumber),list(Year)]
+		ce[FlagCountry==test_ctry,sum(TripsNumber),list(Year)]
+	
+	# all countries: 2017 and 2018 
+		cl[Year %in% c(2017,2018),sum(OfficialLandingCatchWeight),list(FlagCountry, Year)] [order(FlagCountry, Year)]
+		ce[Year %in% c(2017,2018),sum(TripsNumber),list(FlagCountry, Year)] [order(FlagCountry, Year)]
 	
 # ========================
 # saves data
@@ -565,5 +577,5 @@ dir_output_all<-"data\\002_prepared"
 	save(cl, file_info_cl, file = paste(dir_output_all, paste("\\RDB","All_Regions","CL", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
 	save(ce, file_info_ce, file = paste(dir_output_all, paste("\\RDB","All_Regions","CE", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
 
-	
 
+	
