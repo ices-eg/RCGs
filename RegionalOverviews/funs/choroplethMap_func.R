@@ -72,6 +72,7 @@ choroplethMap_func = function(df,
     stop('The chosen data set is empty')
   }
   missing_entries = grouping_result[[2]]
+  missing_entries2 = missing_entries %>% select(facet, prMissing =pr)
   ############################################################################
   
   # combine dataset with shp
@@ -85,27 +86,12 @@ choroplethMap_func = function(df,
   
   
   # add info about records without coordinates 
-  
-  if (nrow(mdf %>% filter(is.na(ID))) > 0) {
-    mdf %>% filter(is.na(ID) & !is.na(groupBy)) %>% summarise(pr = round(sum(pr), 2), n = n_distinct(groupBy)) %>% 
-      as.data.frame() %>% select(pr, n)-> missing_value
-     missing_caption = paste(
-       '\n',
-       missing_value$n,
-       ' ',
-       groupBy_name,
-       # 's (',
-       #  paste0(missing_names, collapse = ' , ') , # add names of units without coordinates
-       ' with missing coordinates (', 
-       missing_value$pr,
-       '% of ',
-       ifelse(is.na(newVarName), var_name, newVarName),
-       ') - not presented on the map.',
-       sep = ''
-     )
-     message(missing_caption)
+  mdf %>% filter(is.na(ID) & !is.na(groupBy)) %>%group_by(facet) %>%  summarise(pr = round(sum(pr), 2), n = n_distinct(groupBy)) %>% 
+    as.data.frame() %>% select(facet, pr, n)-> missing_value
+  if (nrow(missing_value) > 0) {
+    missing_value2 = missing_value %>% select(facet, prMissingValue = pr, nMissingValue = n)
   } else{
-    missing_caption = ''
+    missing_value2 = ''
   }
 
   
@@ -169,21 +155,81 @@ choroplethMap_func = function(df,
                      's',
                      sep = "")
   }
-  
+
   # caption - as the inromation about any missingnes
-  caption = paste(
-    ifelse(nrow(missing_entries) > 0, round(missing_entries$pr, 2), 0),
-    '% of ',
-    ifelse(is.na(newVarName), var_name, newVarName),
-    ' - reported for missing ',
-    groupBy_name, '.',
-    missing_caption,
-    sep = ''
-  )
+  if(length(unique(mdf2$facet))==1){ # if only one plot ->  caption under the plot, if more than one -> seperate caption added to the title of each facet
   
-  
-  
-  
+    if(nrow(missing_value)>0){
+      missing_caption = paste(
+        '\n',
+        missing_value$n,
+        ' ',
+        groupBy_name,
+        # 's (',
+        #  paste0(missing_names, collapse = ' , ') , # add names of units without coordinates
+        ' with missing coordinates (', 
+        missing_value$pr,
+        '% of ',
+        ifelse(is.na(newVarName), var_name, newVarName),
+        ') - not presented on the map.',
+        sep = ''
+      )
+      message(missing_caption)
+    }else{
+      missing_caption = ''
+    }
+    
+   
+      caption = paste(
+      ifelse(nrow(missing_entries) > 0, round(missing_entries$pr, 2), 0),
+      '% of ',
+      ifelse(is.na(newVarName), var_name, newVarName),
+      ' - reported for missing ',
+      groupBy_name, '.',
+      missing_caption,
+      sep = ''
+    )
+    
+  }else{
+    caption = ''
+
+    mdf2 %>% 
+      left_join(missing_entries2) %>% 
+      left_join(missing_value2) %>% 
+      mutate(facet =  paste(facet, 
+                            '\n',
+                            paste(
+                              str_wrap(
+                                paste(ifelse(!is.na(prMissing), round(prMissing, 2),0),
+                                      '% of ',
+                                      ifelse(is.na(newVarName), var_name, newVarName),
+                                      ' - missing ',
+                                      groupBy_name, '.',
+                                      sep = ''
+                                      ),
+                                width = 55),
+                              sep = '\n'),
+                            '\n',
+                            ifelse(!is.na(prMissingValue), 
+                            paste(
+                              str_wrap( 
+                                paste( missing_value2$nMissingValue,
+                                       ' ',
+                                       groupBy_name,
+                                       '(', 
+                                       missing_value2$prMissingValue,
+                                       '% of ',
+                                       ifelse(is.na(newVarName), var_name, newVarName),
+                                       ') - missing coordinates',
+                                      sep = ''
+                                ), 
+                                width = 55),
+                              sep = '\n'),
+                            ''),
+                            sep = ' ')
+                         ) -> mdf2
+  }
+
   # Make a map
   ggplot() +
     geom_sf(data = mdf2, aes(fill = var) , na.rm = TRUE,
@@ -192,8 +238,8 @@ choroplethMap_func = function(df,
     geom_sf(data = points_coord,
             fill = NA ,
             na.rm = TRUE,
-            size = ifelse(groupBy_name %in% c('Area', 'FishingGround'),  0.5,  0.02), 
-            color =ifelse(groupBy_name %in% c('Area', 'FishingGround'), gray(.3), gray(.8))
+            size = ifelse(groupBy_name %in% c('Area','AreaMap', 'FishingGround'),  0.5,  0.02), 
+            color =ifelse(groupBy_name %in% c('Area','AreaMap', 'FishingGround'), gray(.3), gray(.8))
             ) +
     scale_fill_viridis_c(
       option = "viridis",
@@ -251,14 +297,15 @@ choroplethMap_func = function(df,
         color = gray(.8),
         linetype = 'dashed',
         size = 0.5
-      )
+      ),
+      strip.text = element_text(size = ifelse(length(unique(mdf2$facet))==1,10,7))
     ) -> plot
   
   if (plot_labels == TRUE) {
     #display labels on the plot
     plot +
       geom_sf_text(data = mdf2, aes(label = groupBy), 
-        color = 'grey22',
+        color = 'red1',
         size = 3,
         fontface = "italic",
         check_overlap = TRUE
@@ -308,9 +355,9 @@ choroplethMap_func = function(df,
   
 }
 
-# choroplethMap_func(cl_rcg %>% filter(Year %in% c(2017)),
+# choroplethMap_func(cl_rcg %>% filter(Year %in% c(2018)),
 #                    'OfficialLandingCatchWeight',
-#                    'Area',
+#                    'AreaMap',
 #                    facet = 'Year',
 #                    func = 'sum',
 #                    type_of_threshold = 'percent',

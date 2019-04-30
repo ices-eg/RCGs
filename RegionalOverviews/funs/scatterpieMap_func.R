@@ -96,10 +96,10 @@ scatterpieMap_func = function(df,
                 facet = !!facet)  -> mdf
   
   # add info about records without coordinates
-  if (sum(is.na(mdf$lat)) != 0 | sum(is.na(mdf$lon)) != 0) {
-    mdf %>% filter((is.na(lat) | is.na(lon)) & !is.na(groupBy)) %>% distinct(groupBy, pr) %>%  summarise(pr = round(sum(pr), 2), n = n_distinct(groupBy)) %>% 
-      as.data.frame() %>% select(pr, n)-> missing_value
-    
+  mdf %>% filter((is.na(lat) | is.na(lon)) & !is.na(groupBy)) %>% summarise(pr = round(sum(pr), 2), n = n_distinct(groupBy)) %>% 
+    as.data.frame() %>% select(pr, n)-> missing_value
+  
+  if (nrow(missing_value)>0 & (missing_value$pr!=0 & missing_value$n !=0 )) {
     missing_caption = paste(
       '\n',
       missing_value$n,
@@ -213,7 +213,7 @@ scatterpieMap_func = function(df,
   }
 
   radius =0.3
-  radiusMultiply = ifelse(groupBy_name %in% c('Area', 'FishingGround'), 4, ifelse(groupBy_name %in% c('Harbour', 'LandingCountry', 'FlagCountry'), 3, 1 ))
+  radiusMultiply = ifelse(groupBy_name %in% c('Area', 'AreaMap','FishingGround'), 4, ifelse(groupBy_name %in% c('Harbour', 'LandingCountry', 'FlagCountry'), 3, 1 ))
   pie.list <- mdf2%>%
     select(lon, lat, groupBy, groupBy2, facet, var) %>%  
     spread(groupBy2, var, fill =0) %>%
@@ -238,7 +238,7 @@ scatterpieMap_func = function(df,
                                             xmin = lon - radius, xmax = lon + radius,
                                             ymin = lat - radius, ymax = lat + radius))) 
 
-if(groupBy_name %in% c('Area', 'FishingGround')){
+if(groupBy_name %in% c('Area','AreaMap', 'FishingGround')){
   ggplot()+
      geom_sf(data = points_coord, fill = NA , na.rm = TRUE, size = 0.5, color = gray(.3))->p
 }else{
@@ -263,7 +263,7 @@ if(groupBy_name %in% c('Area', 'FishingGround')){
   
     p+
       geom_sf(data = m,  fill = "antiquewhite")+
-      #geom_sf(data = st_as_sf(mdf), aes(fill = groupBy) , na.rm = TRUE)+
+     # geom_sf(data = st_as_sf(mdf), aes(fill = groupBy) , na.rm = TRUE)+ # for foreign part
     coord_sf( crs = "+init=epsg:4326",
               xlim =xlim,
               ylim = ylim,

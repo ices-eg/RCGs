@@ -25,8 +25,8 @@
 		
 		head(cl_rcg)
 		
-		cl_rcg<-droplevels(cl_rcg[Year==2017,])
-		ce_rcg<-droplevels(ce_rcg[Year==2017,])
+		cl_rcg<-droplevels(cl_rcg[Year==2018,])
+		ce_rcg<-droplevels(ce_rcg[Year==2018,])
 				
 		#Adds IDs [move to preparation]
 		cl_rcg[,FlagCountry_Loa:=paste(FlagCountry, VesselLengthCategory, sep="_")]
@@ -96,24 +96,32 @@
 		# Load shapefiles and Harbour Lists
 		########################################################################################################################################################################
 		# Prepare the dataset with coordinates <-----------------------  WORK on this part
-		Harbours_Codes = read_csv('C:/Users/msuska/Desktop/RCG/2018/Data/Harbours_Codes.csv') # file from -> RCG sharepoint->Data _> Data group scripts and data -> data files
-		
-		Harbours_Codes %>% 
-		  mutate(Harbour = Hcode) %>% 
+		# Harbour list
+		library(RCMfunctions)
+		data(UNLOCODE)
+		UNLOCODE %>% 
+		  mutate(Harbour = loCode) %>% 
+		  filter(!is.na(Harbour)) %>% 
 		  select(Harbour, lat, lon)-> Harbours
 		
 		# load shapefile
+		#NA
 		shp  = sf::st_read(
-		  "shapefiles/FAO_areas/FAO_AREAS_NOCOASTLINE.shp"
-		)
+		  "shapefiles/RCG_NA_FAOareas.shp"
+		) %>% filter(F_LEVEL=='DIVISION') # for NA maps on DIVISIONS level
+		
+		##BA
+		#shp  = sf::st_read(
+		#  "shapefiles/RCG_BA_FAOareas.shp"
+		#)
+		##NSEA
+		#shp  = sf::st_read(
+		#  "shapefiles/RCG_NSEA_FAOareas.shp"
+		#)
+		
 		shp %>%
-		  filter((!is.na(F_DIVISION) &
-		            is.na(F_SUBDIVIS)) |
-		           (F_SUBDIVIS == '27.5.b.1' &
-		              is.na(F_SUBUNIT)) |
-		           (F_SUBDIVIS == '27.9.b.2' & is.na(F_SUBUNIT)) # to avoid duplicates, another solution?
-		  ) %>%
-		  mutate(Area = F_CODE) -> shp
+		  mutate(AreaMap = F_CODE, Area = F_CODE) -> shp
+		
 		# For plotting FishingGrounds
 		cl_rcg %>% group_by(FishingGround) %>% distinct( Area)->FishingGround
 		shp %>% left_join(FishingGround) %>% group_by(FishingGround) %>% summarise(ID = mean(ID))-> FAOshpFG
