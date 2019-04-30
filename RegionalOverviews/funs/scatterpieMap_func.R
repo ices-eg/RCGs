@@ -213,7 +213,7 @@ scatterpieMap_func = function(df,
   }
 
   radius =0.3
-  radiusMultiply = ifelse(groupBy_name %in% c('Area', 'FishingGround'), 4, ifelse(groupBy_name %in% c('Harbour', 'LandingCountry', 'FlagCountry'), 3, 1 ))
+  radiusMultiply = ifelse(groupBy_name %in% c('Area', 'AreaMap','FishingGround'), 4, ifelse(groupBy_name %in% c('Harbour', 'LandingCountry', 'FlagCountry'), 3, 1 ))
   pie.list <- mdf2%>%
     select(lon, lat, groupBy, groupBy2, facet, var) %>%  
     spread(groupBy2, var, fill =0) %>%
@@ -238,7 +238,7 @@ scatterpieMap_func = function(df,
                                             xmin = lon - radius, xmax = lon + radius,
                                             ymin = lat - radius, ymax = lat + radius))) 
 
-if(groupBy_name %in% c('Area', 'FishingGround')){
+if(groupBy_name %in% c('Area','AreaMap', 'FishingGround')){
   ggplot()+
      geom_sf(data = points_coord, fill = NA , na.rm = TRUE, size = 0.5, color = gray(.3))->p
 }else{
