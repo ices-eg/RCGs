@@ -125,9 +125,9 @@
 		              is.na(F_SUBUNIT)) |
 		           (F_SUBDIVIS == '27.9.b.2' & is.na(F_SUBUNIT)) # to avoid duplicates, another solution?
 		  ) %>%
-		  mutate(AreaMap = F_CODE) -> shp
+		  mutate(AreaMap = F_CODE, Area = F_CODE) -> shp
 		# For plotting FishingGrounds
-		cl_rcg %>% group_by(FishingGround) %>% distinct( AreaMap)->FishingGround
+		cl_rcg %>% group_by(FishingGround) %>% distinct( Area)->FishingGround
 		shp %>% left_join(FishingGround) %>% group_by(FishingGround) %>% summarise(ID = mean(ID))-> FAOshpFG
 		FAOshpFG = cbind(FAOshpFG,  sf::st_coordinates(sf::st_centroid(FAOshpFG$geometry))) %>% mutate(lon = X, lat = Y)
 		
