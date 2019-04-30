@@ -1,5 +1,5 @@
 ---
-title: "Metier description report"
+title: "Métier description report"
 author: "Josefine Egekvist, DTU Aqua"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: word_document
@@ -18,8 +18,8 @@ library(knitr)
 library(tidyr)
 library(ggplot2)
 years <- "2015,2016,2017"
-region <- "NA"
-region2 <- "North Atlantic"
+region <- "NSEA"
+region2 <- "North Sea and Eastern Arctic"
 metier <- "TBB_DEF_70-99_0_0"
 
 
@@ -50,7 +50,7 @@ countries <- unique(CL_metier_years$FlagCountry)
 ```
 
 ## Region: `r region2`
-## Metier: `r metier` , years: `r years`
+## Métier: `r metier` , years: `r years`
 
 Data source: RDB CE and CL data
 
@@ -68,7 +68,7 @@ g + theme(axis.text.x = element_text(angle=90, hjust=1))
 
 ```
  
-**Top 10 species landed by metier. The rest are summarised in "Other species". Average yearly landings during the period `r years`**
+**Top 10 species landed by métier. The rest are summarised in "Other species". Average yearly landings during the period `r years`**
 ```{r echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.5}
 species_years <- CL_metier_years %>%
   group_by(Species) %>%
@@ -90,7 +90,7 @@ sp + theme(axis.text.x = element_text(angle=35, hjust=1))
 
 --------------------------------------
 
-**Number of vessels by vessel length group: **
+**Number of trips by vessel length group: **
 
 ```{r echo=FALSE, message=FALSE, warning = FALSE, fig.height=2}
 vessel_length_years <- CE_metier_years %>%
@@ -106,7 +106,7 @@ g + theme(axis.text.x = element_text(angle=90, hjust=1))
 ```
 
 
-**Seasonal pattern of fishing activity: Number of trips by quarter **
+**Seasonal pattern of fishing activity: number of trips by quarter **
 
 ```{r echo=FALSE, message=FALSE, warning = FALSE, fig.height=2}
 
