@@ -96,7 +96,7 @@
 		# Load shapefiles and Harbour Lists
 		########################################################################################################################################################################
 		# Prepare the dataset with coordinates <-----------------------  WORK on this part
-		Harbours_Codes = read_csv('C:/Users/msuska/Desktop/RCG/2018/Data/Harbours_Codes.csv') # file from -> RCG sharepoint->Data _> Data group scripts and data -> data files
+		Harbours_Codes = read_csv('D:/WG/RCG/IntersessionalWork/Subgroup on Regional Overviews/TestData/HarbourCodes.csv') # file from -> RCG sharepoint->Data _> Data group scripts and data -> data files
 		
 		Harbours_Codes %>% 
 		  mutate(Harbour = Hcode) %>% 
