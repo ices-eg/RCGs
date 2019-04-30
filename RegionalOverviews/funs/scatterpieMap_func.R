@@ -263,7 +263,7 @@ if(groupBy_name %in% c('Area','AreaMap', 'FishingGround')){
   
     p+
       geom_sf(data = m,  fill = "antiquewhite")+
-      #geom_sf(data = st_as_sf(mdf), aes(fill = groupBy) , na.rm = TRUE)+
+     # geom_sf(data = st_as_sf(mdf), aes(fill = groupBy) , na.rm = TRUE)+ # for foreign part
     coord_sf( crs = "+init=epsg:4326",
               xlim =xlim,
               ylim = ylim,

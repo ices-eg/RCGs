@@ -197,19 +197,20 @@ choroplethMap_func = function(df,
       left_join(missing_entries2) %>% 
       left_join(missing_value2) %>% 
       mutate(facet =  paste(facet, 
-                            # '\n',
-                            # paste(
-                            #   str_wrap( 
-                            #     paste(ifelse(!is.na(prMissing), round(prMissing, 2),0),
-                            #           '% of ',
-                            #           ifelse(is.na(newVarName), var_name, newVarName),
-                            #           ' - missing ',
-                            #           groupBy_name, '.',
-                            #           sep = ''
-                            #           ), 
-                            #     width = 55),
-                            #   sep = '\n'),
                             '\n',
+                            paste(
+                              str_wrap(
+                                paste(ifelse(!is.na(prMissing), round(prMissing, 2),0),
+                                      '% of ',
+                                      ifelse(is.na(newVarName), var_name, newVarName),
+                                      ' - missing ',
+                                      groupBy_name, '.',
+                                      sep = ''
+                                      ),
+                                width = 55),
+                              sep = '\n'),
+                            '\n',
+                            ifelse(!is.na(prMissingValue), 
                             paste(
                               str_wrap( 
                                 paste( missing_value2$nMissingValue,
@@ -224,6 +225,7 @@ choroplethMap_func = function(df,
                                 ), 
                                 width = 55),
                               sep = '\n'),
+                            ''),
                             sep = ' ')
                          ) -> mdf2
   }
