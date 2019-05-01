@@ -62,9 +62,9 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 			}
 			
 	#windows(5,5); 
-	print(par("new"))
+	#print(par("new"))
 	if(grouped==TRUE) par(cex=0.8, mai = graph_par$mai) else  par(cex=0.8, oma = graph_par$oma, mai = graph_par$mai)
-	print(par("new"))
+	#print(par("new"))
 	if (tapply_type == "length_unique") { t1<-tapply(x[,Var], list(x[,var1]), function(y){length(unique(y))}); y_title = paste("Unique of", Var) }
 	if (tapply_type == "length") { t1<-tapply(x[,Var], list(x[,var1]), length); y_title = paste("count of", Var) }
 	if (tapply_type == "sum") { t1<-tapply(x[,Var], list(x[,var1]), sum, na.rm=T); y_title = paste("sum of", Var) }
