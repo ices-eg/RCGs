@@ -14,6 +14,13 @@ header-includes:
 
 ```
 
+```{r todo, include = F}
+
+Include filter - make it generic, so possible to filter on whatever e.g loa and catch group
+
+```
+
+
 ```{r setup_param, include = F}
 
 RDB_download_date <- "xx/04/2019"
@@ -25,6 +32,9 @@ year <- 2017
 
 ```{r setup_dir, include = F}
 
+#If running outside knitr, then set wd
+#setwd("RegionalOverviews")
+
 data_dir <- "Q:/dfad/users/kibi/data/RCG/from_share_point/"
 
 ```
@@ -33,16 +43,33 @@ data_dir <- "Q:/dfad/users/kibi/data/RCG/from_share_point/"
 
 library(dplyr)
 library(data.table)
+library(knitr)
 
 ```
 
 
 ```{r setup_markdown, include = F}
 
+#If you want plots stored in a folder, then use ....
+
+# knitr::opts_chunk$set(
+#   fig.width = 8,
+#   fig.height = 5,
+#   fig.path = "outputs/",
+#   dpi = 300,
+#   dev = 'png',
+#   echo = F,
+#   warning = F,
+#   message = F,
+#   error = F,
+#   comment = F
+# )
+
+#If you don't want plots stored, then use ....
+
 knitr::opts_chunk$set(
   fig.width = 8,
   fig.height = 5,
-  fig.path = "output/",
   dpi = 300,
   dev = 'png',
   echo = F,
@@ -137,6 +164,8 @@ TODO - Kirsten, I think I promised to script that
 
 ```{r, results = "asis"}
 
+tab <- list()
+
 
 for (a in unique(param$Section)) {
   param_sec <- filter(param, Section == a)
@@ -161,7 +190,7 @@ for (a in unique(param$Section)) {
       {
         if (graph_det$Graph_type[i] == 1)
         {
-          res <- barplot_var_by_one_var(
+          tab[[paste(c, i, sep = "_")]] <- barplot_var_by_one_var(
             x = as.data.frame(cl_rcg),
             Var = graph_det$Var[i] ,
             var1 = graph_det$var1[i],
@@ -173,11 +202,11 @@ for (a in unique(param$Section)) {
           )
         }
         
-                  cat('  \n ')
+        cat('  \n ')
         
         if (graph_det$Graph_type[i] == 2)
         {
-          res <-
+          tab[[paste(c, i, sep = "_")]] <-
             barplot_var_by_two_var_stacked(
               x = as.data.frame(cl_rcg),
               Var = graph_det$Var[i] ,
@@ -192,7 +221,8 @@ for (a in unique(param$Section)) {
               legend_par = graph_det$legend_par
             )
         }
-                  cat('  \n ')
+        
+        cat('  \n ')
       }
     }
   }
