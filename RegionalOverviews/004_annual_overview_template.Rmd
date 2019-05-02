@@ -164,8 +164,6 @@ TODO - Kirsten, I think I promised to script that
 
 ```{r, results = "asis"}
 
-tab <- list()
-
 
 for (a in unique(param$Section)) {
   param_sec <- filter(param, Section == a)
@@ -190,7 +188,7 @@ for (a in unique(param$Section)) {
       {
         if (graph_det$Graph_type[i] == 1)
         {
-          tab[[paste(c, i, sep = "_")]] <- barplot_var_by_one_var(
+          barplot_var_by_one_var(
             x = as.data.frame(cl_rcg),
             Var = graph_det$Var[i] ,
             var1 = graph_det$var1[i],
@@ -206,20 +204,19 @@ for (a in unique(param$Section)) {
         
         if (graph_det$Graph_type[i] == 2)
         {
-          tab[[paste(c, i, sep = "_")]] <-
-            barplot_var_by_two_var_stacked(
-              x = as.data.frame(cl_rcg),
-              Var = graph_det$Var[i] ,
-              var1 = graph_det$var1[i],
-              var2 = graph_det$var2[i],
-              tapply_type = graph_det$tapply_type[i],
-              proportion = graph_det$proportion[i],
-              type_of_threshold = graph_det$type_of_threshold[i],
-              value_of_threshold = graph_det$value_of_threshold[i],
-              sorted = graph_det$sorted[i],
-              graph_par = eval(parse(text = graph_det$graph_par[i])),
-              legend_par = graph_det$legend_par
-            )
+          barplot_var_by_two_var_stacked(
+            x = as.data.frame(cl_rcg),
+            Var = graph_det$Var[i] ,
+            var1 = graph_det$var1[i],
+            var2 = graph_det$var2[i],
+            tapply_type = graph_det$tapply_type[i],
+            proportion = graph_det$proportion[i],
+            type_of_threshold = graph_det$type_of_threshold[i],
+            value_of_threshold = graph_det$value_of_threshold[i],
+            sorted = graph_det$sorted[i],
+            graph_par = eval(parse(text = graph_det$graph_par[i])),
+            legend_par = graph_det$legend_par
+          )
         }
         
         cat('  \n ')
