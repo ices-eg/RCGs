@@ -104,6 +104,7 @@ choroplethMap_func = function(df,
   # set the limits
   # x/y =  3/2
   limits <- st_buffer(mdf2, dist = 1) %>% st_bbox()
+  if(unique(df$Region)!='NSEA'){
   if(abs(limits["xmax"]-limits["xmin"])>(3/2)*abs(limits["ymax"]-limits["ymin"])){
     diff = (2/3*abs(limits["xmax"]-limits["xmin"])-abs(limits["ymax"]-limits["ymin"]))/2
     limits["ymin"]=limits["ymin"]-diff
@@ -113,7 +114,17 @@ choroplethMap_func = function(df,
     limits["xmin"]=limits["xmin"]-diff
     limits["xmax"]=limits["xmax"]+diff 
     }
-
+  }else{
+    if(abs(limits["xmax"]-limits["xmin"])>(5/2)*abs(limits["ymax"]-limits["ymin"])){
+      diff = (2/5*abs(limits["xmax"]-limits["xmin"])-abs(limits["ymax"]-limits["ymin"]))/2
+      limits["ymin"]=limits["ymin"]-diff
+      limits["ymax"]=limits["ymax"]+diff
+    }else if((2/5)*abs(limits["xmax"]-limits["xmin"])<abs(limits["ymax"]-limits["ymin"])){
+      diff = (5/2*abs(limits["ymax"]-limits["ymin"])-abs(limits["xmax"]-limits["xmin"]))/2
+      limits["xmin"]=limits["xmin"]-diff
+      limits["xmax"]=limits["xmax"]+diff 
+    }
+  }
   # Set the plot parameters
   
   # title

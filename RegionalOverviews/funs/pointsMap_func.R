@@ -112,15 +112,26 @@ pointsMap_func = function(df,
                      !is.na(mdf$lon),]$lon)+ c(-1, 1)
   ylim = range(mdf[!is.na(mdf$lat) & !is.na(mdf$lon),]$lat) + c(-0.5,+0.5)
   
-  # x/y =  3/2
-  if(abs(xlim[2]-xlim[1])>(3/2)*abs(ylim[2]-ylim[1])){
-    diff = (2/3*abs(xlim[2]-xlim[1])-abs(ylim[2]-ylim[1]))/2
-    ylim[1]=ylim[1]-diff
-    ylim[2]=ylim[2]+diff
-  }else if((2/3)*abs(xlim[2]-xlim[1])<abs(ylim[2]-ylim[1])){
-    diff = (3/2*abs(ylim[2]-ylim[1])-abs(xlim[2]-xlim[1]))/2
-    xlim[1]=xlim[1]-diff
-    xlim[2]=xlim[2]+diff 
+  if(unique(df$Region)!='NSEA'){
+    if(abs(xlim[2]-xlim[1])>(3/2)*abs(ylim[2]-ylim[1])){
+      diff = (2/3*abs(xlim[2]-xlim[1])-abs(ylim[2]-ylim[1]))/2
+      ylim[1]=ylim[1]-diff
+      ylim[2]=ylim[2]+diff
+    }else if((2/3)*abs(xlim[2]-xlim[1])<abs(ylim[2]-ylim[1])){
+      diff = (3/2*abs(ylim[2]-ylim[1])-abs(xlim[2]-xlim[1]))/2
+      xlim[1]=xlim[1]-diff
+      xlim[2]=xlim[2]+diff 
+    }
+  }else{
+    if(abs(xlim[2]-xlim[1])>(5/2)*abs(ylim[2]-ylim[1])){
+      diff = (2/5*abs(xlim[2]-xlim[1])-abs(ylim[2]-ylim[1]))/2
+      ylim[1]=ylim[1]-diff
+      ylim[2]=ylim[2]+diff
+    }else if((2/5)*abs(xlim[2]-xlim[1])<abs(ylim[2]-ylim[1])){
+      diff = (5/2*abs(ylim[2]-ylim[1])-abs(xlim[2]-xlim[1]))/2
+      xlim[1]=xlim[1]-diff
+      xlim[2]=xlim[2]+diff 
+    } 
   }
   
   # load world map

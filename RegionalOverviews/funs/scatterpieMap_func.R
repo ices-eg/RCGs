@@ -127,6 +127,7 @@ scatterpieMap_func = function(df,
   ylim = range(mdf[!is.na(mdf$lat) & !is.na(mdf$lon),]$lat) + c(-4,+4)
   
   # x/y =  3/2
+  if(unique(df$Region)!='NSEA'){
   if(abs(xlim[2]-xlim[1])>(3/2)*abs(ylim[2]-ylim[1])){
     diff = (2/3*abs(xlim[2]-xlim[1])-abs(ylim[2]-ylim[1]))/2
     ylim[1]=ylim[1]-diff
@@ -136,7 +137,17 @@ scatterpieMap_func = function(df,
     xlim[1]=xlim[1]-diff
     xlim[2]=xlim[2]+diff 
   }
-  
+  }else{
+    if(abs(xlim[2]-xlim[1])>(5/2)*abs(ylim[2]-ylim[1])){
+      diff = (2/5*abs(xlim[2]-xlim[1])-abs(ylim[2]-ylim[1]))/2
+      ylim[1]=ylim[1]-diff
+      ylim[2]=ylim[2]+diff
+    }else if((2/5)*abs(xlim[2]-xlim[1])<abs(ylim[2]-ylim[1])){
+      diff = (5/2*abs(ylim[2]-ylim[1])-abs(xlim[2]-xlim[1]))/2
+      xlim[1]=xlim[1]-diff
+      xlim[2]=xlim[2]+diff 
+    } 
+  }
   
   # Take only rows with coordinates
   mdf %>%  filter(!is.na(lat) & !is.na(lon)) %>% filter(lon>=-180 & lon <= 180 & lat >= -90 & lat <= 90)-> mdf2
