@@ -225,6 +225,7 @@ scatterpieMap_func = function(df,
 
   radius =0.3
   radiusMultiply = ifelse(groupBy_name %in% c('Area', 'AreaMap','FishingGround'), 4, ifelse(groupBy_name %in% c('Harbour', 'LandingCountry', 'FlagCountry'), 3, 1 ))
+  if(unique(df$Region)=='BS'){radiusMultiply =radiusMultiply*2/3}
   pie.list <- mdf2%>%
     select(lon, lat, groupBy, groupBy2, facet, var) %>%  
     spread(groupBy2, var, fill =0) %>%
