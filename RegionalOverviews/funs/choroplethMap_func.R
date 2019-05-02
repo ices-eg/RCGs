@@ -88,11 +88,8 @@ choroplethMap_func = function(df,
   # add info about records without coordinates 
   mdf %>% filter(is.na(ID) & !is.na(groupBy)) %>%group_by(facet) %>%  summarise(pr = sum(pr), n = n_distinct(groupBy)) %>% 
     as.data.frame() %>% select(facet, pr, n)-> missing_value
-  if (nrow(missing_value) > 0) {
     missing_value2 = missing_value %>% select(facet, prMissingValue = pr, nMissingValue = n)
-  } else{
-    missing_value2 = ''
-  }
+
 
   
   # load world map
