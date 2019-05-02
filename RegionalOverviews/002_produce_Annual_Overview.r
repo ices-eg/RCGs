@@ -106,10 +106,10 @@
 		
 		# load shapefile
 		#NA
-		# shp  = sf::st_read(
-		#   "shapefiles/RCG_NA_FAOareas.shp"
-		# ) %>% filter(F_LEVEL=='DIVISION') # for NA maps on DIVISIONS level
-		# 
+		shp  = sf::st_read(
+		  "shapefiles/RCG_NA_FAOareas.shp"
+		) %>% filter(F_LEVEL=='DIVISION') # for NA maps on DIVISIONS level
+
 		#BA
 		# shp  = sf::st_read(
 		# "shapefiles/RCG_BA_FAOareas.shp"
@@ -131,9 +131,18 @@
 		# add centroids - to put areas labels there, and to put piecharts there, creates new columns to the dataset named X, Y
 		FAOshp = cbind(shp,  sf::st_coordinates(sf::st_centroid(shp$geometry))) %>% mutate(lon = X, lat = Y)
 		
+		#NA
 		StatRectshp  = sf::st_read(
-		  "shapefiles/ICES_spatial_facility/ICES_rectangles/ICES_Statistical_Rectangles_Eco.shp" 
+		  "shapefiles/RCG_NA_ICESrect.shp" 
 		)
+		# #BA
+		# StatRectshp  = sf::st_read(
+		#   "shapefiles/RCG_BA_ICESrect.shp" 
+		# )
+		# #NSEA
+		# StatRectshp  = sf::st_read(
+		#   "shapefiles/RCG_NSEA_ICESrect.shp" 
+		# )
 		StatRectshp %>% mutate(StatisticalRectangle = ICESNAME)-> StatRectshp
 		StatRectshp = cbind(StatRectshp,  sf::st_coordinates(sf::st_centroid(StatRectshp$geometry))) %>% mutate(lon = X, lat = Y)
 		
@@ -151,8 +160,8 @@
 		source("funs/scatterpieMap_func.R")
 		
 		# read_graph_details
-		#graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CL_Graphical_details_maps.txt", sep="\t", stringsAsFactors=FALSE, header=T)
-		#width = 10
+		# graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CL_Graphical_details_maps.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+		# width = 10
 		graph_det_all <- read.table("graphical_parameters/RCG_BA/Annual_Overview/AnnualOverview_RCG_BA_CL_Graphical_details_maps.txt", sep="\t", stringsAsFactors=FALSE, header=T)
 		width = 10
 		#graph_det_all <- read.table("graphical_parameters/RCG_NSEA/Annual_Overview/AnnualOverview_RCG_NSEA_CL_Graphical_details_maps.txt", sep="\t", stringsAsFactors=FALSE, header=T)
