@@ -86,13 +86,10 @@ choroplethMap_func = function(df,
   
   
   # add info about records without coordinates 
-  mdf %>% filter(is.na(ID) & !is.na(groupBy)) %>%group_by(facet) %>%  summarise(pr = round(sum(pr), 2), n = n_distinct(groupBy)) %>% 
+  mdf %>% filter(is.na(ID) & !is.na(groupBy)) %>%group_by(facet) %>%  summarise(pr = sum(pr), n = n_distinct(groupBy)) %>% 
     as.data.frame() %>% select(facet, pr, n)-> missing_value
-  if (nrow(missing_value) > 0) {
     missing_value2 = missing_value %>% select(facet, prMissingValue = pr, nMissingValue = n)
-  } else{
-    missing_value2 = ''
-  }
+
 
   
   # load world map
@@ -104,6 +101,7 @@ choroplethMap_func = function(df,
   # set the limits
   # x/y =  3/2
   limits <- st_buffer(mdf2, dist = 1) %>% st_bbox()
+  if(unique(df$Region)!='NSEA'){
   if(abs(limits["xmax"]-limits["xmin"])>(3/2)*abs(limits["ymax"]-limits["ymin"])){
     diff = (2/3*abs(limits["xmax"]-limits["xmin"])-abs(limits["ymax"]-limits["ymin"]))/2
     limits["ymin"]=limits["ymin"]-diff
@@ -113,7 +111,17 @@ choroplethMap_func = function(df,
     limits["xmin"]=limits["xmin"]-diff
     limits["xmax"]=limits["xmax"]+diff 
     }
-
+  }else{
+    if(abs(limits["xmax"]-limits["xmin"])>(5/2)*abs(limits["ymax"]-limits["ymin"])){
+      diff = (2/5*abs(limits["xmax"]-limits["xmin"])-abs(limits["ymax"]-limits["ymin"]))/2
+      limits["ymin"]=limits["ymin"]-diff
+      limits["ymax"]=limits["ymax"]+diff
+    }else if((2/5)*abs(limits["xmax"]-limits["xmin"])<abs(limits["ymax"]-limits["ymin"])){
+      diff = (5/2*abs(limits["ymax"]-limits["ymin"])-abs(limits["xmax"]-limits["xmin"]))/2
+      limits["xmin"]=limits["xmin"]-diff
+      limits["xmax"]=limits["xmax"]+diff 
+    }
+  }
   # Set the plot parameters
   
   # title
@@ -168,7 +176,7 @@ choroplethMap_func = function(df,
         # 's (',
         #  paste0(missing_names, collapse = ' , ') , # add names of units without coordinates
         ' with missing coordinates (', 
-        missing_value$pr,
+        ifelse(missing_value$pr<=0.005 & missing_value$pr >0, '~0',round(missing_value$pr, 2)),
         '% of ',
         ifelse(is.na(newVarName), var_name, newVarName),
         ') - not presented on the map.',
@@ -181,7 +189,7 @@ choroplethMap_func = function(df,
     
    
       caption = paste(
-      ifelse(nrow(missing_entries) > 0, round(missing_entries$pr, 2), 0),
+      ifelse(nrow(missing_entries)>0, ifelse(missing_entries$pr<=0.005 &missing_entries$pr>0,'~0',round(missing_entries$pr, 2)),0),
       '% of ',
       ifelse(is.na(newVarName), var_name, newVarName),
       ' - reported for missing ',
@@ -200,7 +208,7 @@ choroplethMap_func = function(df,
                             '\n',
                             paste(
                               str_wrap(
-                                paste(ifelse(!is.na(prMissing), round(prMissing, 2),0),
+                                paste(ifelse(!is.na(prMissing), ifelse(prMissing<=0.005 & prMissing>0, '~0', round(prMissing, 2)),0),
                                       '% of ',
                                       ifelse(is.na(newVarName), var_name, newVarName),
                                       ' - missing ',
@@ -213,11 +221,11 @@ choroplethMap_func = function(df,
                             ifelse(!is.na(prMissingValue), 
                             paste(
                               str_wrap( 
-                                paste( missing_value2$nMissingValue,
+                                paste(nMissingValue,
                                        ' ',
                                        groupBy_name,
                                        '(', 
-                                       missing_value2$prMissingValue,
+                                      ifelse(prMissingValue<=0.005 & prMissingValue>0,'~0',round(prMissingValue, 2)),
                                        '% of ',
                                        ifelse(is.na(newVarName), var_name, newVarName),
                                        ') - missing coordinates',
