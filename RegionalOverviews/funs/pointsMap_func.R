@@ -84,7 +84,7 @@ pointsMap_func = function(df,
                  facet = !!facet) -> mdf
   
   # add info about records without coordinates
-  mdf %>% filter((is.na(lat) | is.na(lon)) & !is.na(groupBy)) %>% summarise(pr = round(sum(pr), 2), n = n_distinct(groupBy)) %>% 
+  mdf %>% filter((is.na(lat) | is.na(lon)) & !is.na(groupBy)) %>% summarise(pr = sum(pr), n = n_distinct(groupBy)) %>% 
   as.data.frame() %>% select(pr, n)-> missing_value
   
   if (nrow(missing_value)>0 & (missing_value$pr!=0 & missing_value$n !=0 )) {
@@ -96,7 +96,7 @@ pointsMap_func = function(df,
       # 's (',
       #  paste0(missing_names, collapse = ' , ') , # add names of units without coordinates
       ' with missing coordinates (', 
-      missing_value$pr,
+      ifelse(missing_value$pr<=0.005 & missing_value$pr >0, '~0',round(missing_value$pr, 2)),
       '% of ',
       ifelse(is.na(newVarName), var_name, newVarName),
       ') - not presented on the map.',
@@ -112,15 +112,26 @@ pointsMap_func = function(df,
                      !is.na(mdf$lon),]$lon)+ c(-1, 1)
   ylim = range(mdf[!is.na(mdf$lat) & !is.na(mdf$lon),]$lat) + c(-0.5,+0.5)
   
-  # x/y =  3/2
-  if(abs(xlim[2]-xlim[1])>(3/2)*abs(ylim[2]-ylim[1])){
-    diff = (2/3*abs(xlim[2]-xlim[1])-abs(ylim[2]-ylim[1]))/2
-    ylim[1]=ylim[1]-diff
-    ylim[2]=ylim[2]+diff
-  }else if((2/3)*abs(xlim[2]-xlim[1])<abs(ylim[2]-ylim[1])){
-    diff = (3/2*abs(ylim[2]-ylim[1])-abs(xlim[2]-xlim[1]))/2
-    xlim[1]=xlim[1]-diff
-    xlim[2]=xlim[2]+diff 
+  if(unique(df$Region)!='NSEA'){
+    if(abs(xlim[2]-xlim[1])>(3/2)*abs(ylim[2]-ylim[1])){
+      diff = (2/3*abs(xlim[2]-xlim[1])-abs(ylim[2]-ylim[1]))/2
+      ylim[1]=ylim[1]-diff
+      ylim[2]=ylim[2]+diff
+    }else if((2/3)*abs(xlim[2]-xlim[1])<abs(ylim[2]-ylim[1])){
+      diff = (3/2*abs(ylim[2]-ylim[1])-abs(xlim[2]-xlim[1]))/2
+      xlim[1]=xlim[1]-diff
+      xlim[2]=xlim[2]+diff 
+    }
+  }else{
+    if(abs(xlim[2]-xlim[1])>(5/2)*abs(ylim[2]-ylim[1])){
+      diff = (2/5*abs(xlim[2]-xlim[1])-abs(ylim[2]-ylim[1]))/2
+      ylim[1]=ylim[1]-diff
+      ylim[2]=ylim[2]+diff
+    }else if((2/5)*abs(xlim[2]-xlim[1])<abs(ylim[2]-ylim[1])){
+      diff = (5/2*abs(ylim[2]-ylim[1])-abs(xlim[2]-xlim[1]))/2
+      xlim[1]=xlim[1]-diff
+      xlim[2]=xlim[2]+diff 
+    } 
   }
   
   # load world map
@@ -175,7 +186,7 @@ pointsMap_func = function(df,
 
   # caption - as the inromation about any missingnes
   caption = paste(
-    ifelse(nrow(missing_entries)>0, round(missing_entries$pr, 2),0),
+    ifelse(nrow(missing_entries)>0, ifelse(missing_entries$pr<=0.005 & missing_entries$pr>0,'~0',round(missing_entries$pr, 2)),0),
     '% of ',
     ifelse(is.na(newVarName), var_name, newVarName),
     ' - reported for missing ',

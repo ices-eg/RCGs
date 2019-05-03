@@ -109,15 +109,15 @@
 		shp  = sf::st_read(
 		  "shapefiles/RCG_NA_FAOareas.shp"
 		) %>% filter(F_LEVEL=='DIVISION') # for NA maps on DIVISIONS level
-		
-		##BA
-		#shp  = sf::st_read(
-		#  "shapefiles/RCG_BA_FAOareas.shp"
-		#)
-		##NSEA
-		#shp  = sf::st_read(
-		#  "shapefiles/RCG_NSEA_FAOareas.shp"
-		#)
+
+		#BA
+		# shp  = sf::st_read(
+		# "shapefiles/RCG_BA_FAOareas.shp"
+		# ) %>% filter(F_LEVEL=='SUBDIVISION') # for BA maps on DIVISIONS level -> WATCH OUT ...28.1/...28.2
+		#NSEA
+		# shp  = sf::st_read(
+		#   "shapefiles/RCG_NSEA_FAOareas.shp"
+		# ) %>%  filter(F_LEVEL=='DIVISION' | F_LEVEL=='SUBAREA' | F_CODE == '27.3.a.20' | F_CODE == '27.3.a.21')
 		
 		shp %>%
 		  mutate(AreaMap = F_CODE, Area = F_CODE) -> shp
@@ -131,9 +131,18 @@
 		# add centroids - to put areas labels there, and to put piecharts there, creates new columns to the dataset named X, Y
 		FAOshp = cbind(shp,  sf::st_coordinates(sf::st_centroid(shp$geometry))) %>% mutate(lon = X, lat = Y)
 		
+		#NA
 		StatRectshp  = sf::st_read(
-		  "shapefiles/ICES_spatial_facility/ICES_rectangles/ICES_Statistical_Rectangles_Eco.shp" 
+		  "shapefiles/RCG_NA_ICESrect.shp" 
 		)
+		# #BA
+		# StatRectshp  = sf::st_read(
+		#   "shapefiles/RCG_BA_ICESrect.shp" 
+		# )
+		# #NSEA
+		# StatRectshp  = sf::st_read(
+		#   "shapefiles/RCG_NSEA_ICESrect.shp" 
+		# )
 		StatRectshp %>% mutate(StatisticalRectangle = ICESNAME)-> StatRectshp
 		StatRectshp = cbind(StatRectshp,  sf::st_coordinates(sf::st_centroid(StatRectshp$geometry))) %>% mutate(lon = X, lat = Y)
 		
@@ -143,14 +152,21 @@
 		names(aux_colours_ggplot) = c(colour_table$Country)
 		
 		options(scipen=10000) # to remove scientific notation from the legend
+		
+		# for NA and BA set 10x10 in ggsave, for NSEA set 15x10
 		########################################################################################################################################################################
 		source("funs/pointsMap_func.R")
 		source("funs/choroplethMap_func.R")
 		source("funs/scatterpieMap_func.R")
 		
 		# read_graph_details
-		graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CL_Graphical_details_maps.txt", sep="\t", stringsAsFactors=FALSE, header=T)
-
+		# graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CL_Graphical_details_maps.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+		# width = 10
+		graph_det_all <- read.table("graphical_parameters/RCG_BA/Annual_Overview/AnnualOverview_RCG_BA_CL_Graphical_details_maps.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+		width = 10
+		#graph_det_all <- read.table("graphical_parameters/RCG_NSEA/Annual_Overview/AnnualOverview_RCG_NSEA_CL_Graphical_details_maps.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+		# width = 15
+	
 		for(group in unique(graph_det_all$Catch_group))
 		{
 		  
@@ -175,7 +191,7 @@
 		                             addExtraShp = graph_det$addExtraShp[i],
 		                             extraShp = eval(parse(text = graph_det$extraShp[i])))
 		        res[[2]]
-		        ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], ".tiff", sep = ""), sep="/"), units="in", width=10, height=10, dpi=300, compression = 'lzw')
+		        ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], ".tiff", sep = ""), sep="/"), units="in", width=width, height=10, dpi=300, compression = 'lzw')
 		        write.table(res[[1]], file =  paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),".txt", sep=""), sep = '\t', dec = '.')
 		      }
 		      if(graph_det$Graph_type[i]==4)
@@ -188,7 +204,7 @@
 		                                 addExtraShp = graph_det$addExtraShp[i],
 		                                 extraShp = eval(parse(text = graph_det$extraShp[i])))
 		        res[[2]]
-		        ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], ".tiff", sep = ""), sep="/"), units="in", width=10, height=10, dpi=300, compression = 'lzw')
+		        ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], ".tiff", sep = ""), sep="/"), units="in", width=width, height=10, dpi=300, compression = 'lzw')
 		        write.table(res[[1]], file =  paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),".txt", sep=""), sep = '\t', dec = '.')
 
 		      }		
@@ -202,7 +218,7 @@
 		                                 addExtraShp = graph_det$addExtraShp[i],
 		                                 extraShp = eval(parse(text = graph_det$extraShp[i])), color_palette = aux_colours_ggplot)
 		        res[[2]]
-		        ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], ".tiff", sep = ""), sep="/"), units="in", width=10, height=10, dpi=300, compression = 'lzw')
+		        ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], ".tiff", sep = ""), sep="/"), units="in", width=width, height=10, dpi=300, compression = 'lzw')
 		        write.table(res[[1]], file =  paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),".txt", sep=""), sep = '\t', dec = '.')
 		        
 		      }	
@@ -329,13 +345,15 @@
 		source("funs/scatterpieMap_func.R")
 		
 	# run this part twice, once for <10 and once for >10
-	# ce_rcg_vl<-ce_rcg[VesselLengthCategory=="<10",]
-	#  titleAdd ='under 10m'
-	ce_rcg_vl<-ce_rcg[!VesselLengthCategory=="<10" & !is.na(VesselLengthCategory),]
-	titleAdd ='10m and over'
+	ce_rcg_vl<-ce_rcg[VesselLengthCategory=="<10",]
+	 titleAdd ='under 10m'
+	# ce_rcg_vl<-ce_rcg[!VesselLengthCategory=="<10" & !is.na(VesselLengthCategory),]
+	# titleAdd ='10m and over'
 	
-	graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CE_Graphical_details_maps.txt", sep="\t", stringsAsFactors=FALSE, header=T)
-	
+	 #graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CE_Graphical_details_maps.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+	 #graph_det_all <- read.table("graphical_parameters/RCG_BA/Annual_Overview/AnnualOverview_RCG_BA_CE_Graphical_details_maps.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+	 graph_det_all <- read.table("graphical_parameters/RCG_NSEA/Annual_Overview/AnnualOverview_RCG_NSEA_CE_Graphical_details_maps.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+	 
 		for(group in unique(graph_det_all$Catch_group))
 		{
 
@@ -360,7 +378,7 @@
 		                           extraShp = eval(parse(text = graph_det$extraShp[i])),
 		                           addToTitle = titleAdd)
 		      res[[2]]
-		      ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], '_', titleAdd, ".tiff", sep = ""), sep="/"), units="in", width=10, height=10, dpi=300, compression = 'lzw')
+		      ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], '_', titleAdd, ".tiff", sep = ""), sep="/"), units="in", width=width, height=10, dpi=300, compression = 'lzw')
 		      write.table(res[[1]], file =  paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"), '_', titleAdd,".txt", sep=""), sep = '\t', dec = '.')
 
 		    }
@@ -375,7 +393,7 @@
 		                               extraShp = eval(parse(text = graph_det$extraShp[i])),
 		                               addToTitle = titleAdd)
 		      res[[2]]
-		      ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], '_', titleAdd, ".tiff", sep = ""), sep="/"), units="in", width=10, height=10, dpi=300, compression = 'lzw')
+		      ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], '_', titleAdd, ".tiff", sep = ""), sep="/"), units="in", width=width, height=10, dpi=300, compression = 'lzw')
 		      write.table(res[[1]], file =  paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),'_', titleAdd,".txt", sep=""), sep = '\t', dec = '.')
 		      
 		    }
@@ -390,7 +408,7 @@
 		                               extraShp = eval(parse(text = graph_det$extraShp[i])),
 		                               addToTitle = titleAdd, color_palette = aux_colours_ggplot)
 		      res[[2]]
-		      ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], '_', titleAdd, ".tiff", sep = ""), sep="/"), units="in", width=10, height=10, dpi=300, compression = 'lzw')
+		      ggsave(paste(graph_det$png_dir[i], paste(graph_det$png_name[i], '_', titleAdd, ".tiff", sep = ""), sep="/"), units="in", width=width, height=10, dpi=300, compression = 'lzw')
 		      write.table(res[[1]], file =  paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),'_', titleAdd, ".txt", sep=""), sep = '\t', dec = '.')
 		      
 		    }

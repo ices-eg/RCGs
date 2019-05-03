@@ -1,0 +1,6 @@
+Catch_group	Section	Subsection	Subsubsection	Graph_type	Graph_variant	var	groupBy	groupBy2	facet	func	type_of_threshold	value_of_threshold	points_coord	plot_labels	png_dir	png_name	txt_dir	txt_name	newVarName	addExtraShp	extraShp
+NULL	3	3.6	3.6.1	3		TripsNumber	Harbour		Year	sum	top_n	20	Harbours	TRUE	outputs\RCG_NSEA\Annual_Overview\figures	3.6.1_3	outputs\RCG_NSEA\Annual_Overview\tables	3.6.1_3		TRUE	FAOshp
+NULL	3	3.3	3.3.1	4	1	TripsNumber	AreaMap		Year	sum	percent	100	FAOshp	TRUE	outputs\RCG_NSEA\Annual_Overview\figures	3.3.1_4_1	outputs\RCG_NSEA\Annual_Overview\tables	3.3.1_4_1		FALSE	
+NULL	3	3.8	3.8.1	4	1	TripsNumber	StatisticalRectangle		Year	sum	percent	100	StatRectshp	FALSE	outputs\RCG_NSEA\Annual_Overview\figures	3.8.1_4_1	outputs\RCG_NSEA\Annual_Overview\tables	3.8.1_4_1		TRUE	FAOshp
+NULL	3	3.3	3.3.1	5	1	TripsNumber	AreaMap	FlagCountry	Year	sum	percent	100	FAOshp	TRUE	outputs\RCG_NSEA\Annual_Overview\figures	3.3.1_5_1	outputs\RCG_NSEA\Annual_Overview\tables	3.3.1_5_1		FALSE	
+NULL	3	3.8	3.8.1	5		TripsNumber	StatisticalRectangle	FlagCountry	Year	sum	percent	95	StatRectshp	FALSE	outputs\RCG_NSEA\Annual_Overview\figures	3.8.1_5	outputs\RCG_NSEA\Annual_Overview\tables	3.8.1_5		TRUE	FAOshp
