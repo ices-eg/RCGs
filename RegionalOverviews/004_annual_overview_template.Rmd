@@ -2,6 +2,7 @@
 output:
   word_document:
     toc: true
+    toc_depth: 5
     reference_docx: word_template.docx
 header-includes:
  \usepackage{float}
@@ -11,12 +12,22 @@ header-includes:
 
 ```{r guide, include = F}
 
+#This script is controlled by the param.csv and the chunks before Title is declared. 
+
+#Title is declared a bit down, so it will fit the filter
+
+#Be aware of all the /n - these controls linebraks and are needed for proper headings
+
 
 ```
 
 ```{r todo, include = F}
 
-Include filter - make it generic, so possible to filter on whatever e.g loa and catch group
+#Work on the filter - make it generic, so possible to filter on whatever e.g loa and catch group
+#Include param for CE and set up something for selecting df - maybe just split the 
+#Include 'Appendix' in heading 4
+#Filter input on period
+#include period
 
 ```
 
@@ -26,7 +37,9 @@ Include filter - make it generic, so possible to filter on whatever e.g loa and 
 RDB_download_date <- "xx/04/2019"
 
 region <- "NA"
-year <- 2017
+years <- c(2017)
+
+period <- "2017"
 
 ```
 
@@ -107,10 +120,30 @@ colour_table <-
 
 ```
 
+```{r funs, include = F}
+
+filter_df <- function(df = df, filter_var = filter_var, filter = filter) {
+        
+        filter_var <- enquo(filter_var)
+        
+        if (filter != "") {
+
+          df <- filter(df, Catch_group == filter)
+
+      } else {
+
+        df <- df
+
+      }
+      }
+
+```
+
+
 ```{r title, include = F}
 
 if (region == "NA") {
-  front_title <- paste("Annual overview North Atlantic, ",  year, "  \n ","![](logo.png)", sep = "")
+  front_title <- paste("Annual overview North Atlantic, ",  period, "  \n ","![](logo.png)", sep = "")
 }
 
 ```
@@ -120,34 +153,36 @@ title: `r front_title`
 date: `r Sys.Date()`
 ---
 
-# Data
-## Regional database (RDB)
-
-Downloaded `r RDB_download_date`
 
 ```{r data, include = F}
 
 #This needs to be more generic - for easy loading the naming needs to be more generic
 
-load("Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NA_CL_2009_2018_prepared_201904300921.Rdata")
-load("Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NA_CE_2009_2018_prepared_201904300921.Rdata")
+load(
+  "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NA_CL_2009_2018_prepared_201904300921.Rdata"
+)
+load(
+  "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NA_CE_2009_2018_prepared_201904300921.Rdata"
+)
 
+#Adds IDs [move to preparation]
+cl_rcg[, FlagCountry_Loa := paste(FlagCountry, VesselLengthCategory, sep =
+                                    "_")]
+ce_rcg[, FlagCountry_Loa := paste(FlagCountry, VesselLengthCategory, sep =
+                                    "_")]
 
-		#Adds IDs [move to preparation]
-		cl_rcg[,FlagCountry_Loa := paste(FlagCountry, VesselLengthCategory, sep="_")]
-		ce_rcg[,FlagCountry_Loa:=paste(FlagCountry, VesselLengthCategory, sep="_")]
-		
-		# Add to preparation [and convert 2-letter code to 3-letter code]
-		colnames(ce_rcg)[colnames(ce_rcg)=="LandingCountry"]<-"LandingCountry2"
+# Add to preparation [and convert 2-letter code to 3-letter code]
+colnames(ce_rcg)[colnames(ce_rcg) == "LandingCountry"] <-
+  "LandingCountry2"
+
+#Filter
+
+cl <- filter(cl_rcg, Year %in% years)
+ce <- filter(ce_rcg, Year %in% years)
+
 
 ```
 
-## Fleet registre
-
-# Reading the graphs
-## Barplots
-
-## Maps
 
 
 # Overall fleet evolution
@@ -162,11 +197,12 @@ TODO - Kirsten, I think I promised to script that
 
 ###### Page break
 
-```{r, results = "asis"}
+```{r cl, results = "asis"}
 
+  param_cl <- filter(param, Data == "CL")
 
-for (a in unique(param$Section)) {
-  param_sec <- filter(param, Section == a)
+for (a in unique(param_cl$Section)) {
+  param_sec <- filter(param_cl, Section == a)
   
   cat('  \n')
   cat(paste0("# ", unique(param_sec$Section_name), '  \n'))
@@ -183,46 +219,148 @@ for (a in unique(param$Section)) {
       cat('  \n')
       cat(paste0("### ", unique(graph_det$Subsubsection_name), '  \n'))
       
-      # bar plots
-      for (i in 1:nrow(graph_det))
-      {
-        if (graph_det$Graph_type[i] == 1)
-        {
-          barplot_var_by_one_var(
-            x = as.data.frame(cl_rcg),
-            Var = graph_det$Var[i] ,
-            var1 = graph_det$var1[i],
-            tapply_type = graph_det$tapply_type[i],
-            type_of_threshold = graph_det$type_of_threshold[i],
-            value_of_threshold = graph_det$value_of_threshold[i],
-            sorted = graph_det$sorted[i],
-            graph_par = eval(parse(text = graph_det$graph_par[i]))
-          )
-        }
-        
-        cat('  \n ')
-        
-        if (graph_det$Graph_type[i] == 2)
-        {
-          barplot_var_by_two_var_stacked(
-            x = as.data.frame(cl_rcg),
-            Var = graph_det$Var[i] ,
-            var1 = graph_det$var1[i],
-            var2 = graph_det$var2[i],
-            tapply_type = graph_det$tapply_type[i],
-            proportion = graph_det$proportion[i],
-            type_of_threshold = graph_det$type_of_threshold[i],
-            value_of_threshold = graph_det$value_of_threshold[i],
-            sorted = graph_det$sorted[i],
-            graph_par = eval(parse(text = graph_det$graph_par[i])),
-            legend_par = graph_det$legend_par
-          )
-        }
-        
-        cat('  \n ')
-      }
+      #Filter input
+      filter_input <- distinct(graph_det, Filter, Filter_var)
+      df <- filter_df(df = cl, filter_var = filter_input$Filter_var, filter = filter_input$Filter)
+      
+       # bar plots
+       for (i in 1:nrow(graph_det))
+       {
+         if (graph_det$Graph_type[i] == 1)
+         {
+           barplot_var_by_one_var(
+             x = as.data.frame(df),
+             Var = graph_det$Var[i] ,
+             var1 = graph_det$var1[i],
+             tapply_type = graph_det$tapply_type[i],
+             type_of_threshold = graph_det$type_of_threshold[i],
+             value_of_threshold = graph_det$value_of_threshold[i],
+             sorted = graph_det$sorted[i],
+             graph_par = eval(parse(text = graph_det$graph_par[i]))
+           )
+         }
+         
+         cat('  \n ')
+         
+         if (graph_det$Graph_type[i] == 2)
+         {
+           barplot_var_by_two_var_stacked(
+             x = as.data.frame(df),
+             Var = graph_det$Var[i] ,
+             var1 = graph_det$var1[i],
+             var2 = graph_det$var2[i],
+             tapply_type = graph_det$tapply_type[i],
+             proportion = graph_det$proportion[i],
+             type_of_threshold = graph_det$type_of_threshold[i],
+             value_of_threshold = graph_det$value_of_threshold[i],
+             sorted = graph_det$sorted[i],
+             graph_par = eval(parse(text = graph_det$graph_par[i])),
+             legend_par = graph_det$legend_par
+           )
+         }
+         
+         cat('  \n ')
+       }
+    }
+  }
+}
+
+
+```
+
+
+```{r ce, results = "asis"}
+
+  param_ce <- filter(param, Data == "CE")
+
+for (a in unique(param_ce$Section)) {
+  param_sec <- filter(param_ce, Section == a)
+  
+  cat('  \n')
+  cat(paste0("# ", unique(param_sec$Section_name), '  \n'))
+  
+  for (b in unique(param_sec$Subsection)) {
+    param_subsection <- filter(param_sec, Subsection == b)
+    
+    cat('  \n')
+    cat(paste0("## ", unique(param_subsection$Subsection_name), '  \n'))
+    
+    for (c in unique(param_subsection$Subsubsection)) {
+      graph_det <- filter(param_subsection, Subsubsection == c)
+      
+      cat('  \n')
+      cat(paste0("### ", unique(graph_det$Subsubsection_name), '  \n'))
+      
+      #Filter input
+      filter_input <- distinct(graph_det, Filter, Filter_var)
+      df <- filter_df(df = ce, filter_var = filter_input$Filter_var, filter = filter_input$Filter)
+      
+       # bar plots
+       for (i in 1:nrow(graph_det))
+       {
+         if (graph_det$Graph_type[i] == 1)
+         {
+           barplot_var_by_one_var(
+             x = as.data.frame(df),
+             Var = graph_det$Var[i] ,
+             var1 = graph_det$var1[i],
+             tapply_type = graph_det$tapply_type[i],
+             type_of_threshold = graph_det$type_of_threshold[i],
+             value_of_threshold = graph_det$value_of_threshold[i],
+             sorted = graph_det$sorted[i],
+             graph_par = eval(parse(text = graph_det$graph_par[i]))
+           )
+         }
+         
+         cat('  \n ')
+         
+         if (graph_det$Graph_type[i] == 2)
+         {
+           barplot_var_by_two_var_stacked(
+             x = as.data.frame(df),
+             Var = graph_det$Var[i] ,
+             var1 = graph_det$var1[i],
+             var2 = graph_det$var2[i],
+             tapply_type = graph_det$tapply_type[i],
+             proportion = graph_det$proportion[i],
+             type_of_threshold = graph_det$type_of_threshold[i],
+             value_of_threshold = graph_det$value_of_threshold[i],
+             sorted = graph_det$sorted[i],
+             graph_par = eval(parse(text = graph_det$graph_par[i])),
+             legend_par = graph_det$legend_par
+           )
+         }
+         
+         cat('  \n ')
+       }
     }
   }
 }
 
 ```
+
+
+###### Page break
+#### Data
+##### Regional database (RDB)
+
+Downloaded `r RDB_download_date`
+
+##### Fleet registre
+
+#### Reading the graphs
+##### Barplots
+
+##### Maps
+
+#### Catch groups
+
+```{r, results = 'asis'}
+
+kable(arrange(summarise(
+  group_by(cl_rcg, Region, Species, Catch_group),
+  tons = round(sum(OfficialLandingCatchWeight_ton), digits = 0)
+), Catch_group))
+
+```
+
