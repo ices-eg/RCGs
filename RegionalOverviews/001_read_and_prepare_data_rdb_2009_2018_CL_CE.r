@@ -58,7 +58,9 @@ source("funs/func_download_data_from_sharepoint.r")
 	ce<-fread(file_ce, stringsAsFactors=FALSE, verbose=FALSE, fill=TRUE, sep=";", na.strings="NULL")
 	cl<-fread(file_cl, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL")
 	#ce<-fread(file_ce, stringsAsFactors=FALSE, verbose=FALSE, fill=TRUE, sep=";", na.strings="NULL", nrows = 1066183)
- 
+
+# reads aux_countries dataset
+	aux_countries<-read.table("aux_countries.txt", sep=",", header=T, colClasses="character")
 
 # QCA: duplicates (eliminates if existing)
 	dim(cl); cl<-unique(cl); dim(cl)
@@ -72,18 +74,12 @@ dir.create(paste("data\\002_prepared\\RCG_NA", sep=""),recursive=TRUE, showWarni
 dir.create(paste("data\\002_prepared\\RCG_BA", sep=""),recursive=TRUE, showWarnings=FALSE)
 dir.create(paste("data\\002_prepared\\RCG_NSEA", sep=""),recursive=TRUE, showWarnings=FALSE)
  
-# ========================
-# rename column (should be moved to extraction)
-# ======================== 	
-	
-	colnames(cl)[colnames(cl)=="vesselLengthCategory"]<-"VesselLengthCategory"
-
 	
 # ====================== 
 # Set Prep Options 
 # ======================  
  
-target_region <- "RCG_NSEA" # "RCG_NA", "RCG_BA"; RCG_NSEA
+target_region <- "RCG_BA" # "RCG_NA", "RCG_BA"; RCG_NSEA
 year_start <- 2009
 year_end <- 2018
 dir_output_rcg<-paste("data\\002_prepared\\",target_region,sep="")
@@ -112,7 +108,15 @@ dir_output_all<-"data\\002_prepared"
  			ce[Area=="27.3",.N, c("FlagCountry","Year","Region","FishingGround","Area")]
  			ce[Area=="27.3.a" & FlagCountry=="LTU",.N, c("FlagCountry","Year","Region","FishingGround","Area")]
 
-
+	# issue in Harbour
+		# fixes - ask MS to correction
+		cl[Harbour=="POL-1303",Harbour:="RUPNY"]
+		ce[Harbour=="POL-1303",Harbour:="RUPNY"]
+			# also may be worth noting/correcting this
+			cl[Harbour=="*HS-*HS",]
+			ce[Harbour=="*HS-*HS",]			
+			
+			
 # ========================
 # subsets data and RCG specific preparations
 # ========================	
@@ -249,16 +253,37 @@ dir_output_all<-"data\\002_prepared"
 
 	# CL
 
-		cl[,OfficialLandingCatchWeight_ton := OfficialLandingCatchWeight/1000]
-		cl[,OfficialLandingCatchWeight_1000ton := OfficialLandingCatchWeight/1000000]
-		cl_rcg[,OfficialLandingCatchWeight_ton := OfficialLandingCatchWeight/1000]
-		cl_rcg[,OfficialLandingCatchWeight_1000ton := OfficialLandingCatchWeight/1000000]
+		# OfficialLandingCatchWeight_1000ton
+			cl[,OfficialLandingCatchWeight_ton := OfficialLandingCatchWeight/1000]
+			cl[,OfficialLandingCatchWeight_1000ton := OfficialLandingCatchWeight/1000000]
+			cl_rcg[,OfficialLandingCatchWeight_ton := OfficialLandingCatchWeight/1000]
+			cl_rcg[,OfficialLandingCatchWeight_1000ton := OfficialLandingCatchWeight/1000000]
+		# fleet segment (FlagCountry_Loa)
+			cl[,FlagCountry_Loa:=paste(FlagCountry, VesselLengthCategory, sep="_")]
+			cl_rcg[,FlagCountry_Loa:=paste(FlagCountry, VesselLengthCategory, sep="_")]
+		# HarbourCountry (ISO3) and HarbourCountry2 (ISO2)
+			cl[,HarbourCountry2:=substring(Harbour,1,2)]
+			cl_rcg[,HarbourCountry2:=substring(Harbour,1,2)]
+			cl[,HarbourCountry:=aux_countries$ISO3Code[match(HarbourCountry2, aux_countries$ISO2Code)]]
+			cl_rcg[,HarbourCountry:=aux_countries$ISO3Code[match(HarbourCountry2, aux_countries$ISO2Code)]]
+				# QCA: should yield TRUE otherwise debug on cl and cl_rcg
+				nrow(cl[is.na(HarbourCountry) & !is.na(HarbourCountry2),]) == 0
 	
+		
 	# CE 
-		# can be improved
-		ce[,LandingCountry:=substr(Harbour, start=1, stop=2)]
-		ce_rcg[,LandingCountry:=substr(Harbour, start=1, stop=2)]
-	
+		
+		# fleet segment (FlagCountry_Loa)	
+			ce[,FlagCountry_Loa:=paste(FlagCountry, VesselLengthCategory, sep="_")]
+			ce_rcg[,FlagCountry_Loa:=paste(FlagCountry, VesselLengthCategory, sep="_")]
+		# HarbourCountry (ISO3) and HarbourCountry2 (ISO2)			
+			ce[,HarbourCountry2:=substring(Harbour,1,2)]
+			ce_rcg[,HarbourCountry2:=substring(Harbour,1,2)]
+			ce[,HarbourCountry:=aux_countries$ISO3Code[match(HarbourCountry2, aux_countries$ISO2Code)]]
+			ce_rcg[,HarbourCountry:=aux_countries$ISO3Code[match(HarbourCountry2, aux_countries$ISO2Code)]]
+				# QCA: should yield TRUE otherwise debug on ce and ce_rcg
+				nrow(ce[is.na(HarbourCountry) & !is.na(HarbourCountry2),]) == 0
+
+		
 	# AreaMap
 		cl_rcg$AreaMap<-cl_rcg$Area
 		ce_rcg$AreaMap<-ce_rcg$Area
@@ -320,7 +345,8 @@ dir_output_all<-"data\\002_prepared"
 			
 			}			
 	# QCA: visual
-		table(cl_rcg$Area, cl_rcg$AreaMap, useNA="al")
+		cl_rcg[,.N,list(AreaMap,Area)][order(AreaMap)]
+		ce_rcg[,.N,list(AreaMap,Area)][order(AreaMap)]
 	
 # ========================	
 # Creates and tweaks ISSCAAP codes
@@ -535,7 +561,8 @@ dir_output_all<-"data\\002_prepared"
 		}	
 
 	# QCA: visual
-		table(cl_rcg$Area, cl_rcg$AreaMap, useNA="al")
+		cl_rcg[,.N,list(AreaMap,Area)][order(AreaMap)]
+		ce_rcg[,.N,list(AreaMap,Area)][order(AreaMap)]
 		
 # ================	
 # data update: IRL	
@@ -550,7 +577,7 @@ dir_output_all<-"data\\002_prepared"
 # ================	
 	# country level
 	
-	test_ctry<-"SWE"
+	test_ctry<-"ESP"
 		
 		cl_rcg[FlagCountry==test_ctry,sum(OfficialLandingCatchWeight),list(Year)]
 		cl[FlagCountry==test_ctry,sum(OfficialLandingCatchWeight),list(Year)]
@@ -561,6 +588,30 @@ dir_output_all<-"data\\002_prepared"
 	# all countries: 2017 and 2018 
 		cl[Year %in% c(2017,2018),sum(OfficialLandingCatchWeight),list(FlagCountry, Year)] [order(FlagCountry, Year)]
 		ce[Year %in% c(2017,2018),sum(TripsNumber),list(FlagCountry, Year)] [order(FlagCountry, Year)]
+	
+# ================
+# creates a few additional variables with shorter names (convenient for titles of barplot and maps sake)
+# ================		
+	# note: duplication to be avoided in the future after group discussion
+	 
+	 cl[, LandingWeight_ton:=OfficialLandingCatchWeight_ton]    
+	 cl_rcg[, LandingWeight_ton:=OfficialLandingCatchWeight_ton]    
+	 
+	 cl[, LandingWeight_1000ton:=OfficialLandingCatchWeight_1000ton]    
+	 cl_rcg[, LandingWeight_1000ton:=OfficialLandingCatchWeight_1000ton]    
+	 
+	 cl[, FishingActivityLvl5:=FishingActivityCategoryEuropeanLvl5]    
+	 cl_rcg[, FishingActivityLvl5:=FishingActivityCategoryEuropeanLvl5]    
+	 
+	 cl[, FishingActivityLvl6:=FishingActivityCategoryEuropeanLvl6]    
+	 cl_rcg[, FishingActivityLvl6:=FishingActivityCategoryEuropeanLvl6]    
+	 
+	 ce[, FishingActivityLvl5:=FishingActivityCategoryEuropeanLvl5]    
+	 ce_rcg[, FishingActivityLvl5:=FishingActivityCategoryEuropeanLvl5]    
+	 
+	 ce[, FishingActivityLvl6:=FishingActivityCategoryEuropeanLvl6]    
+	 ce_rcg[, FishingActivityLvl6:=FishingActivityCategoryEuropeanLvl6]    
+
 	
 # ========================
 # saves data
