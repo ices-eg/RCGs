@@ -11,11 +11,14 @@
 	# section General
 	# =======================
 			
+		library(data.table)
+		library(xlsx)
+		
 		# read data
 		rm(list=ls())
 		
-		load("data\\002_prepared\\RCG_NA\\RDB_RCG_NA_CL_2009_2018_prepared_201904131853.Rdata")
-		load("data\\002_prepared\\RCG_NA\\RDB_RCG_NA_CE_2009_2018_prepared_201904131853.Rdata")
+		load("data\\002_prepared\\RCG_NA\\RDB_RCG_NA_CL_2009_2018_prepared_201905051115.Rdata")
+		load("data\\002_prepared\\RCG_NA\\RDB_RCG_NA_CE_2009_2018_prepared_201905051115.Rdata")
 		
 		# read functions
 		source("funs/func_barplot_var_by_one_var.r")	
@@ -28,12 +31,7 @@
 		cl_rcg<-droplevels(cl_rcg[Year==2018,])
 		ce_rcg<-droplevels(ce_rcg[Year==2018,])
 				
-		#Adds IDs [move to preparation]
-		cl_rcg[,FlagCountry_Loa:=paste(FlagCountry, VesselLengthCategory, sep="_")]
-		ce_rcg[,FlagCountry_Loa:=paste(FlagCountry, VesselLengthCategory, sep="_")]
-		
-		# Add to preparation [and convert 2-letter code to 3-letter code]
-		colnames(ce_rcg)[colnames(ce_rcg)=="LandingCountry"]<-"LandingCountry2"
+
 	
 	#CL
 		
