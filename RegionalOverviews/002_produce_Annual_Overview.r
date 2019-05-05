@@ -54,7 +54,9 @@
 		source("funs/func_barplot_var_by_two_var_stacked.r")
 		
 		# read_graph_details
-		graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CL_Graphical_details.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+		if (target_region == "RCG_NA"){graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CL_Graphical_details.txt", sep="\t", stringsAsFactors=FALSE, header=T)}
+		if (target_region == "RCG_BA"){graph_det_all <- read.table("graphical_parameters/RCG_BA/Annual_Overview/AnnualOverview_RCG_BA_CL_Graphical_details.txt", sep="\t", stringsAsFactors=FALSE, header=T)}
+		if (target_region == "RCG_NSEA"){graph_det_all <- read.table("graphical_parameters/RCG_NSEA/Annual_Overview/AnnualOverview_RCG_NSEA_CL_Graphical_details.txt", sep="\t", stringsAsFactors=FALSE, header=T)}
 		colour_table<-read.table("aux_colours.txt", header=T, sep="\t", colClasses="character", na.strings="", comment.char="")
 				
 		#graph_det_all<-graph_det_all[1:20,]
@@ -247,7 +249,9 @@
 	#CE graphs generic
 
 		# read_graph_details
-		graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CE_Graphical_details.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+		if (target_region == "RCG_NA"){graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CE_Graphical_details.txt", sep="\t", stringsAsFactors=FALSE, header=T)}
+		if (target_region == "RCG_NSEA"){graph_det_all <- read.table("graphical_parameters/RCG_NSEA/Annual_Overview/AnnualOverview_RCG_NSEA_CE_Graphical_details.txt", sep="\t", stringsAsFactors=FALSE, header=T)}
+		if (target_region == "RCG_BA"){graph_det_all <- read.table("graphical_parameters/RCG_BA/Annual_Overview/AnnualOverview_RCG_BA_CE_Graphical_details.txt", sep="\t", stringsAsFactors=FALSE, header=T)}
 		source("funs/func_barplot_var_by_one_var.r")			
 		source("funs/func_barplot_var_by_two_var_stacked.r")		
 		
@@ -304,12 +308,89 @@
 		source("funs/func_barplot_var_by_one_var.r")			
 		source("funs/func_barplot_var_by_two_var_stacked.r")		
 		
-		# activate the option you need
-		graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CE_Graphical_details_u10.txt", sep="\t", stringsAsFactors=FALSE, header=T)
-		ce_rcg2<-ce_rcg[VesselLengthCategory=="<10",]
-		graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CE_Graphical_details_10o.txt", sep="\t", stringsAsFactors=FALSE, header=T)
-		ce_rcg2<-ce_rcg[!VesselLengthCategory=="<10",]		
+	# Under 10m		
 		
+		# RCG NSEA
+		if (target_region == "RCG_NSEA"){
+			graph_det_all <- read.table("graphical_parameters/RCG_NSEA/Annual_Overview/AnnualOverview_RCG_NSEA_CE_Graphical_details_u10.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+			ce_rcg2<-ce_rcg[VesselLengthCategory=="<10",]
+			}
+		# RCG BA
+		if (target_region == "RCG_BA"){
+			graph_det_all <- read.table("graphical_parameters/RCG_BA/Annual_Overview/AnnualOverview_RCG_BA_CE_Graphical_details_u10.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+			ce_rcg2<-ce_rcg[VesselLengthCategory=="<10",]
+			}		
+		# RCG NA
+		if (target_region == "RCG_NA"){
+			graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CE_Graphical_details_u10.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+			ce_rcg2<-ce_rcg[VesselLengthCategory=="<10",]
+			}		
+		
+		for(Catch_group in unique(graph_det_all$Catch_group))
+		{
+		
+		print(paste("Catch group:",Catch_group))	
+		# subsets Catch_group
+			graph_det1<-graph_det_all[graph_det_all$Catch_group==Catch_group,]
+			if(Catch_group!="NULL") ce_rcg_group<-ce_rcg2[Catch_group==Catch_group] else ce_rcg_group<-ce_rcg2
+		
+		for (Graph_group in unique(graph_det1$Graph_group))
+		{
+		print(paste("Graph group:",Graph_group))		
+		graph_det<-graph_det1[graph_det1$Graph_group==Graph_group,]
+		
+		# detects group
+		if(nrow(graph_det)>1) {windows(7,10); par(oma = eval(parse(text=graph_det$graph_par))$oma, mfrow=eval(parse(text=graph_det$graph_par))$mfrow)}
+		if(nrow(graph_det)==1) {windows(10,5)} # oma parameter is set inside the barplot function
+
+		# runs graphs
+		for (i in 1:nrow(graph_det))
+		{
+		print(i)
+		if(graph_det$Graph_type[i]==1)
+			{
+			res<-barplot_var_by_one_var(x = as.data.frame(ce_rcg_group), Var = graph_det$Var[i] , var1 = graph_det$var1[i], tapply_type = graph_det$tapply_type[i], type_of_threshold = graph_det$type_of_threshold[i], value_of_threshold = graph_det$value_of_threshold[i], sorted=graph_det$sorted[i], graph_par = eval(parse(text=graph_det$graph_par[i])), grouped = graph_det$Grouped[i])
+			savePlot(filename = paste(graph_det$png_dir[i], paste(graph_det$png_name[i],".png", sep=""), sep="/"), type="png")
+			write.table(res, file = paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),".txt", sep=""), sep="\t", dec=".", row.names = TRUE)
+			write.xlsx(res, file = paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),".xlsx", sep=""), sheetName="Sheet1", col.names=TRUE, row.names=TRUE, append=FALSE)
+			#dev.off()
+			}
+		if(graph_det$Graph_type[i]==2)
+			{
+			res<-barplot_var_by_two_var_stacked(x = as.data.frame(ce_rcg_group), Var = graph_det$Var[i] , var1 = graph_det$var1[i], var2 = graph_det$var2[i], tapply_type = graph_det$tapply_type[i], proportion = graph_det$proportion[i], type_of_threshold = graph_det$type_of_threshold[i], value_of_threshold = graph_det$value_of_threshold[i], sorted=graph_det$sorted[i], graph_par = eval(parse(text=graph_det$graph_par[i])), legend_par = graph_det$legend_par, grouped = graph_det$Grouped[i])
+			savePlot(filename = paste(graph_det$png_dir[i], paste(graph_det$png_name[i],".png", sep=""), sep="/"), type="png")
+			write.table(res, file = paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),".txt", sep=""), sep="\t", dec=".", row.names = TRUE)
+			write.xlsx(res, file = paste(paste(graph_det$txt_dir[i], graph_det$txt_name[i], sep="/"),".xlsx", sep=""), sheetName="Sheet1", col.names=TRUE, row.names=TRUE, append=FALSE)
+			#dev.off()
+			}			
+		}
+		}
+		graphics.off()
+		}		
+		
+	# Over 10m		
+		
+		
+		# RCG NSEA		
+		if (target_region == "RCG_NSEA"){		
+			graph_det_all <- read.table("graphical_parameters/RCG_NSEA/Annual_Overview/AnnualOverview_RCG_NSEA_CE_Graphical_details_10o.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+			ce_rcg2<-ce_rcg[!VesselLengthCategory=="<10",]		
+			}
+			
+		# RCG BA
+		if (target_region == "RCG_BA"){		
+			graph_det_all <- read.table("graphical_parameters/RCG_BA/Annual_Overview/AnnualOverview_RCG_BA_CE_Graphical_details_10o.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+			ce_rcg2<-ce_rcg[!VesselLengthCategory=="<10",]		
+			}
+
+		# RCG NA			
+		if (target_region == "RCG_NA"){		
+			graph_det_all <- read.table("graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_CE_Graphical_details_10o.txt", sep="\t", stringsAsFactors=FALSE, header=T)
+			ce_rcg2<-ce_rcg[!VesselLengthCategory=="<10",]		
+			}
+			
+			
+			
 		for(Catch_group in unique(graph_det_all$Catch_group))
 		{
 		
