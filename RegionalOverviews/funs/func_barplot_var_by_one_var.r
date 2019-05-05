@@ -95,9 +95,9 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 	title(ylab=y_title, line = graph_par$ylab_line)
 	if(!type_of_threshold == "NULL")
 		{
-		title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = 0)
+		title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = 0.5)
 		} else {
-			title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ","all_data", sep=""), cex.main=0.9, line = 0)
+			title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ","all_data", sep=""), cex.main=0.9, line = .5)
 				}
 	out<-data.frame(var1 = rownames(t1), Var = t1, row.names=NULL)
 	out
