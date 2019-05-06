@@ -17,16 +17,19 @@ output:
 
 #Be aware of all the /n - these controls linebraks and are needed for proper headings
 
+#Maps are created in their own chock to allow for bigger plots. The plot are imported in the general plot chunk
 
 ```
 
 ```{r todo, include = F}
 
-#Work on the filter - make it generic, so possible to filter on whatever e.g loa and catch group
-#Include param for CE and set up something for selecting df - maybe just split the 
-#Include 'Appendix' in heading 4
-#Filter input on period
-#include period
+
+#Include maps - need to run in a seperate chunk du to figure size - import output in general plot loop. 
+#Include riverplots
+#Include fleet reg analysis
+#Save results in csv files
+# .....
+
 
 ```
 
@@ -67,24 +70,10 @@ library(stringr)
 
 #If you want plots stored in a folder, then use ....
 
-# knitr::opts_chunk$set(
-#   fig.width = 8,
-#   fig.height = 5,
-#   fig.path = "outputs/",
-#   dpi = 300,
-#   dev = 'png',
-#   echo = F,
-#   warning = F,
-#   message = F,
-#   error = F,
-#   comment = F
-# )
-
-#If you don't want plots stored, then use ....
-
 knitr::opts_chunk$set(
   fig.width = 9,
   fig.height = 5,
+  fig.path = "outputs/",
   dpi = 300,
   dev = 'png',
   echo = F,
@@ -93,6 +82,20 @@ knitr::opts_chunk$set(
   error = F,
   comment = F
 )
+
+#If you don't want plots stored, then use ....
+
+# knitr::opts_chunk$set(
+#   fig.width = 9,
+#   fig.height = 5,
+#   dpi = 300,
+#   dev = 'png',
+#   echo = F,
+#   warning = F,
+#   message = F,
+#   error = F,
+#   comment = F
+# )
 
 ```
 
