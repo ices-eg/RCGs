@@ -23,24 +23,11 @@ output:
 
 ```
 
-```{r todo, include = F}
-
-
-#Include maps - need to run in a seperate chunk du to figure size - import output in general plot loop. 
-#Include riverplots
-#Include fleet reg analysis
-#Save results in csv files
-# .....
-
-
-```
-
-
 ```{r setup_param, include = F}
 
 RDB_download_date <- "xx/04/2019"
 
-region <- "NSEA"
+region <- "NA"
 years <- c(2018)
 
 period <- "2018"
@@ -59,6 +46,8 @@ data_dir <- "Q:/dfad/users/kibi/data/RCG/from_share_point/"
 ```
 
 ```{r setup_lib, include = F}
+
+options(scipen = 999)
 
 library(dplyr)
 library(data.table)
@@ -107,6 +96,9 @@ knitr::opts_chunk$set(
 
 source("funs/func_barplot_var_by_one_var.r")	
 source("funs/func_barplot_var_by_two_var_stacked.r")
+source("funs/pointsMap_func.R")
+source("funs/choroplethMap_func.R")
+source("funs/scatterpieMap_func.R")
 
 param <-
   read.table(
@@ -115,6 +107,8 @@ param <-
     stringsAsFactors = FALSE,
     header = T
   )
+
+param <- arrange(param, Order)
 
 colour_table <-
   read.table(
@@ -172,10 +166,10 @@ date: `r Sys.Date()`
 #This needs to be more generic - for easy loading the naming needs to be more generic
 
 load(
-  "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NSEA_CL_2009_2018_prepared_201905051104.Rdata"
+  "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NA_CL_2009_2018_prepared_201905051115.Rdata"
 )
 load(
-  "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NSEA_CE_2009_2018_prepared_201905051104.Rdata"
+  "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NA_CE_2009_2018_prepared_201905051115.Rdata"
 )
 
 #Adds IDs [move to preparation]
@@ -211,6 +205,16 @@ TODO - Kirsten, I think I promised to script that
 #Adopt Nuno's script 003_xxxx
 
 ```
+
+```{r maps, fig.width = 9}
+
+#Setting up all the files needed for the maps ----
+
+#Mapping ----
+
+
+```
+
 
 ###### Page break
 
@@ -318,3 +322,30 @@ kable(arrange(summarise(
 
 ```
 
+#### Notes for development
+
+```{r notes}
+
+#TODO ----
+
+#Include maps - need to run in a seperate chunk du to figure size - import output in general plot loop. 
+#Include riverplots
+#Include fleet reg analysis
+#Save results in csv files
+# .....
+
+#Notes ----
+#The names of parameter vars could be cleaned up
+
+
+
+```
+
+
+```{r todo, include = F}
+
+
+
+
+
+```
