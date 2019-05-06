@@ -237,7 +237,7 @@ scatterpieMap_func = function(df,
                                  function(d) ggplotGrob(ggplot(d,
                                                                aes(x = 1, y = var, fill = groupBy2))+
                                                           scale_fill_manual(values = color_palette)+
-                                                        geom_col(color = "black",
+                                                        geom_col(color = "black", size = 0.2,
                                                                    show.legend = FALSE) +
                                                           coord_polar(theta = "y") +
                                                           theme_void() ))) %>% 
