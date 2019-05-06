@@ -1,18 +1,17 @@
 ---
+header-includes: \usepackage{float} \floatplacement{figure}{H} \floatplacement{table}{H}
 output:
   word_document:
-    toc: true
-    toc_depth: 5
     reference_docx: word_template.docx
-header-includes:
- \usepackage{float}
- \floatplacement{figure}{H}
- \floatplacement{table}{H}
+    toc: yes
+    toc_depth: 5
 ---
 
 ```{r guide, include = F}
 
 #This script is controlled by the param.csv and the chunks before Title is declared. 
+
+#The style of the docx is controlled by the 
 
 #Title is declared a bit down, so it will fit the filter
 
@@ -41,6 +40,8 @@ years <- c(2017)
 
 period <- "2017"
 
+
+
 ```
 
 ```{r setup_dir, include = F}
@@ -57,6 +58,7 @@ data_dir <- "Q:/dfad/users/kibi/data/RCG/from_share_point/"
 library(dplyr)
 library(data.table)
 library(knitr)
+library(stringr)
 
 ```
 
@@ -81,7 +83,7 @@ library(knitr)
 #If you don't want plots stored, then use ....
 
 knitr::opts_chunk$set(
-  fig.width = 8,
+  fig.width = 9,
   fig.height = 5,
   dpi = 300,
   dev = 'png',
@@ -122,20 +124,21 @@ colour_table <-
 
 ```{r funs, include = F}
 
-filter_df <- function(df = df, filter_var = filter_var, filter = filter) {
-        
-        filter_var <- enquo(filter_var)
-        
-        if (filter != "") {
+filter_df <-
+  function(df = df,
+           filter_var = filter_var,
+           filter = filter) {
+    
+    if (filter == "") {
 
-          df <- filter(df, Catch_group == filter)
-
-      } else {
-
-        df <- df
-
-      }
-      }
+      df <- df
+    } else {
+           filter <- unlist(str_split(filter, ","))
+      
+      df <- filter(df, !!rlang::sym(filter_var) %in% filter)
+      
+    }
+  }
 
 ```
 
@@ -159,10 +162,10 @@ date: `r Sys.Date()`
 #This needs to be more generic - for easy loading the naming needs to be more generic
 
 load(
-  "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NA_CL_2009_2018_prepared_201904300921.Rdata"
+  "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NA_CL_2009_2018_prepared_201905051115.Rdata"
 )
 load(
-  "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NA_CE_2009_2018_prepared_201904300921.Rdata"
+  "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NA_CE_2009_2018_prepared_201905051115.Rdata"
 )
 
 #Adds IDs [move to preparation]
@@ -178,7 +181,9 @@ colnames(ce_rcg)[colnames(ce_rcg) == "LandingCountry"] <-
 #Filter
 
 cl <- filter(cl_rcg, Year %in% years)
+cl <- mutate(cl, Period = period)
 ce <- filter(ce_rcg, Year %in% years)
+ce <- mutate(ce, Period = period)
 
 
 ```
@@ -197,12 +202,10 @@ TODO - Kirsten, I think I promised to script that
 
 ###### Page break
 
-```{r cl, results = "asis"}
+```{r plots, results = "asis"}
 
-  param_cl <- filter(param, Data == "CL")
-
-for (a in unique(param_cl$Section)) {
-  param_sec <- filter(param_cl, Section == a)
+for (a in unique(param$Section)) {
+  param_sec <- filter(param, Section == a)
   
   cat('  \n')
   cat(paste0("# ", unique(param_sec$Section_name), '  \n'))
@@ -219,9 +222,19 @@ for (a in unique(param_cl$Section)) {
       cat('  \n')
       cat(paste0("### ", unique(graph_det$Subsubsection_name), '  \n'))
       
+      #Select data input
+    
+      if (unique(graph_det$Data == "CL")) {
+        
+        df <- cl
+      } else if (unique(graph_det$Data == "CE")) {
+        
+        df <- ce
+      }
+      
       #Filter input
-      filter_input <- distinct(graph_det, Filter, Filter_var)
-      df <- filter_df(df = cl, filter_var = filter_input$Filter_var, filter = filter_input$Filter)
+      
+      df <- filter_df(df = df, filter_var = unique(graph_det$Filter_var), filter = unique(graph_det$Filter))
       
        # bar plots
        for (i in 1:nrow(graph_det))
@@ -269,7 +282,7 @@ for (a in unique(param_cl$Section)) {
 ```
 
 
-```{r ce, results = "asis"}
+```{r ce, results = "asis", eval = F}
 
   param_ce <- filter(param, Data == "CE")
 
@@ -358,7 +371,7 @@ Downloaded `r RDB_download_date`
 ```{r, results = 'asis'}
 
 kable(arrange(summarise(
-  group_by(cl_rcg, Region, Species, Catch_group),
+  group_by(cl, Region, Period, Species, Catch_group),
   tons = round(sum(OfficialLandingCatchWeight_ton), digits = 0)
 ), Catch_group))
 
