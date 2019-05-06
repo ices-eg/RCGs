@@ -1,33 +1,35 @@
 ---
+header-includes: \usepackage{float} \floatplacement{figure}{H} \floatplacement{table}{H}
 output:
   word_document:
-    toc: true
-    toc_depth: 5
     reference_docx: word_template.docx
-header-includes:
- \usepackage{float}
- \floatplacement{figure}{H}
- \floatplacement{table}{H}
+    toc: yes
+    toc_depth: 5
 ---
 
 ```{r guide, include = F}
 
 #This script is controlled by the param.csv and the chunks before Title is declared. 
 
+#The style of the docx is controlled by the 
+
 #Title is declared a bit down, so it will fit the filter
 
 #Be aware of all the /n - these controls linebraks and are needed for proper headings
 
+#Maps are created in their own chock to allow for bigger plots. The plot are imported in the general plot chunk
 
 ```
 
 ```{r todo, include = F}
 
-#Work on the filter - make it generic, so possible to filter on whatever e.g loa and catch group
-#Include param for CE and set up something for selecting df - maybe just split the 
-#Include 'Appendix' in heading 4
-#Filter input on period
-#include period
+
+#Include maps - need to run in a seperate chunk du to figure size - import output in general plot loop. 
+#Include riverplots
+#Include fleet reg analysis
+#Save results in csv files
+# .....
+
 
 ```
 
@@ -37,9 +39,11 @@ header-includes:
 RDB_download_date <- "xx/04/2019"
 
 region <- "NA"
-years <- c(2017)
+years <- c(2018)
 
-period <- "2017"
+period <- "2018"
+
+
 
 ```
 
@@ -57,6 +61,8 @@ data_dir <- "Q:/dfad/users/kibi/data/RCG/from_share_point/"
 library(dplyr)
 library(data.table)
 library(knitr)
+library(stringr)
+library(RCMfunctions) #sharepoint -> RCG Data Group -> R packages
 
 ```
 
@@ -65,24 +71,10 @@ library(knitr)
 
 #If you want plots stored in a folder, then use ....
 
-# knitr::opts_chunk$set(
-#   fig.width = 8,
-#   fig.height = 5,
-#   fig.path = "outputs/",
-#   dpi = 300,
-#   dev = 'png',
-#   echo = F,
-#   warning = F,
-#   message = F,
-#   error = F,
-#   comment = F
-# )
-
-#If you don't want plots stored, then use ....
-
 knitr::opts_chunk$set(
-  fig.width = 8,
+  fig.width = 9,
   fig.height = 5,
+  fig.path = "outputs/",
   dpi = 300,
   dev = 'png',
   echo = F,
@@ -91,6 +83,20 @@ knitr::opts_chunk$set(
   error = F,
   comment = F
 )
+
+#If you don't want plots stored, then use ....
+
+# knitr::opts_chunk$set(
+#   fig.width = 9,
+#   fig.height = 5,
+#   dpi = 300,
+#   dev = 'png',
+#   echo = F,
+#   warning = F,
+#   message = F,
+#   error = F,
+#   comment = F
+# )
 
 ```
 
@@ -122,20 +128,21 @@ colour_table <-
 
 ```{r funs, include = F}
 
-filter_df <- function(df = df, filter_var = filter_var, filter = filter) {
-        
-        filter_var <- enquo(filter_var)
-        
-        if (filter != "") {
+filter_df <-
+  function(df = df,
+           filter_var = filter_var,
+           filter = filter) {
+    
+    if (filter == "") {
 
-          df <- filter(df, Catch_group == filter)
-
-      } else {
-
-        df <- df
-
-      }
-      }
+      df <- df
+    } else {
+           filter <- unlist(str_split(filter, ","))
+      
+      df <- filter(df, !!rlang::sym(filter_var) %in% filter)
+      
+    }
+  }
 
 ```
 
@@ -159,10 +166,10 @@ date: `r Sys.Date()`
 #This needs to be more generic - for easy loading the naming needs to be more generic
 
 load(
-  "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NA_CL_2009_2018_prepared_201904300921.Rdata"
+  "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NA_CL_2009_2018_prepared_201905051115.Rdata"
 )
 load(
-  "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NA_CE_2009_2018_prepared_201904300921.Rdata"
+  "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NA_CE_2009_2018_prepared_201905051115.Rdata"
 )
 
 #Adds IDs [move to preparation]
@@ -178,8 +185,12 @@ colnames(ce_rcg)[colnames(ce_rcg) == "LandingCountry"] <-
 #Filter
 
 cl <- filter(cl_rcg, Year %in% years)
+cl <- mutate(cl, Period = period)
 ce <- filter(ce_rcg, Year %in% years)
+ce <- mutate(ce, Period = period)
 
+cl <- droplevels(cl)
+ce <- droplevels(ce) 
 
 ```
 
@@ -197,12 +208,10 @@ TODO - Kirsten, I think I promised to script that
 
 ###### Page break
 
-```{r cl, results = "asis"}
+```{r plots, results = "asis"}
 
-  param_cl <- filter(param, Data == "CL")
-
-for (a in unique(param_cl$Section)) {
-  param_sec <- filter(param_cl, Section == a)
+for (a in unique(param$Section)) {
+  param_sec <- filter(param, Section == a)
   
   cat('  \n')
   cat(paste0("# ", unique(param_sec$Section_name), '  \n'))
@@ -219,9 +228,19 @@ for (a in unique(param_cl$Section)) {
       cat('  \n')
       cat(paste0("### ", unique(graph_det$Subsubsection_name), '  \n'))
       
+      #Select data input
+    
+      if (unique(graph_det$Data == "CL")) {
+        
+        df <- cl
+      } else if (unique(graph_det$Data == "CE")) {
+        
+        df <- ce
+      }
+      
       #Filter input
-      filter_input <- distinct(graph_det, Filter, Filter_var)
-      df <- filter_df(df = cl, filter_var = filter_input$Filter_var, filter = filter_input$Filter)
+      
+      df <- filter_df(df = df, filter_var = unique(graph_det$Filter_var), filter = unique(graph_det$Filter))
       
        # bar plots
        for (i in 1:nrow(graph_det))
@@ -265,77 +284,6 @@ for (a in unique(param_cl$Section)) {
   }
 }
 
-
-```
-
-
-```{r ce, results = "asis"}
-
-  param_ce <- filter(param, Data == "CE")
-
-for (a in unique(param_ce$Section)) {
-  param_sec <- filter(param_ce, Section == a)
-  
-  cat('  \n')
-  cat(paste0("# ", unique(param_sec$Section_name), '  \n'))
-  
-  for (b in unique(param_sec$Subsection)) {
-    param_subsection <- filter(param_sec, Subsection == b)
-    
-    cat('  \n')
-    cat(paste0("## ", unique(param_subsection$Subsection_name), '  \n'))
-    
-    for (c in unique(param_subsection$Subsubsection)) {
-      graph_det <- filter(param_subsection, Subsubsection == c)
-      
-      cat('  \n')
-      cat(paste0("### ", unique(graph_det$Subsubsection_name), '  \n'))
-      
-      #Filter input
-      filter_input <- distinct(graph_det, Filter, Filter_var)
-      df <- filter_df(df = ce, filter_var = filter_input$Filter_var, filter = filter_input$Filter)
-      
-       # bar plots
-       for (i in 1:nrow(graph_det))
-       {
-         if (graph_det$Graph_type[i] == 1)
-         {
-           barplot_var_by_one_var(
-             x = as.data.frame(df),
-             Var = graph_det$Var[i] ,
-             var1 = graph_det$var1[i],
-             tapply_type = graph_det$tapply_type[i],
-             type_of_threshold = graph_det$type_of_threshold[i],
-             value_of_threshold = graph_det$value_of_threshold[i],
-             sorted = graph_det$sorted[i],
-             graph_par = eval(parse(text = graph_det$graph_par[i]))
-           )
-         }
-         
-         cat('  \n ')
-         
-         if (graph_det$Graph_type[i] == 2)
-         {
-           barplot_var_by_two_var_stacked(
-             x = as.data.frame(df),
-             Var = graph_det$Var[i] ,
-             var1 = graph_det$var1[i],
-             var2 = graph_det$var2[i],
-             tapply_type = graph_det$tapply_type[i],
-             proportion = graph_det$proportion[i],
-             type_of_threshold = graph_det$type_of_threshold[i],
-             value_of_threshold = graph_det$value_of_threshold[i],
-             sorted = graph_det$sorted[i],
-             graph_par = eval(parse(text = graph_det$graph_par[i])),
-             legend_par = graph_det$legend_par
-           )
-         }
-         
-         cat('  \n ')
-       }
-    }
-  }
-}
 
 ```
 
@@ -358,7 +306,7 @@ Downloaded `r RDB_download_date`
 ```{r, results = 'asis'}
 
 kable(arrange(summarise(
-  group_by(cl_rcg, Region, Species, Catch_group),
+  group_by(cl, Region, Period, Species, Catch_group),
   tons = round(sum(OfficialLandingCatchWeight_ton), digits = 0)
 ), Catch_group))
 
