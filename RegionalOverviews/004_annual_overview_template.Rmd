@@ -36,9 +36,9 @@ output:
 RDB_download_date <- "xx/04/2019"
 
 region <- "NA"
-years <- c(2017)
+years <- c(2018)
 
-period <- "2017"
+period <- "2018"
 
 
 
@@ -185,6 +185,8 @@ cl <- mutate(cl, Period = period)
 ce <- filter(ce_rcg, Year %in% years)
 ce <- mutate(ce, Period = period)
 
+cl <- droplevels(cl)
+ce <- droplevels(ce) 
 
 ```
 
@@ -278,77 +280,6 @@ for (a in unique(param$Section)) {
   }
 }
 
-
-```
-
-
-```{r ce, results = "asis", eval = F}
-
-  param_ce <- filter(param, Data == "CE")
-
-for (a in unique(param_ce$Section)) {
-  param_sec <- filter(param_ce, Section == a)
-  
-  cat('  \n')
-  cat(paste0("# ", unique(param_sec$Section_name), '  \n'))
-  
-  for (b in unique(param_sec$Subsection)) {
-    param_subsection <- filter(param_sec, Subsection == b)
-    
-    cat('  \n')
-    cat(paste0("## ", unique(param_subsection$Subsection_name), '  \n'))
-    
-    for (c in unique(param_subsection$Subsubsection)) {
-      graph_det <- filter(param_subsection, Subsubsection == c)
-      
-      cat('  \n')
-      cat(paste0("### ", unique(graph_det$Subsubsection_name), '  \n'))
-      
-      #Filter input
-      filter_input <- distinct(graph_det, Filter, Filter_var)
-      df <- filter_df(df = ce, filter_var = filter_input$Filter_var, filter = filter_input$Filter)
-      
-       # bar plots
-       for (i in 1:nrow(graph_det))
-       {
-         if (graph_det$Graph_type[i] == 1)
-         {
-           barplot_var_by_one_var(
-             x = as.data.frame(df),
-             Var = graph_det$Var[i] ,
-             var1 = graph_det$var1[i],
-             tapply_type = graph_det$tapply_type[i],
-             type_of_threshold = graph_det$type_of_threshold[i],
-             value_of_threshold = graph_det$value_of_threshold[i],
-             sorted = graph_det$sorted[i],
-             graph_par = eval(parse(text = graph_det$graph_par[i]))
-           )
-         }
-         
-         cat('  \n ')
-         
-         if (graph_det$Graph_type[i] == 2)
-         {
-           barplot_var_by_two_var_stacked(
-             x = as.data.frame(df),
-             Var = graph_det$Var[i] ,
-             var1 = graph_det$var1[i],
-             var2 = graph_det$var2[i],
-             tapply_type = graph_det$tapply_type[i],
-             proportion = graph_det$proportion[i],
-             type_of_threshold = graph_det$type_of_threshold[i],
-             value_of_threshold = graph_det$value_of_threshold[i],
-             sorted = graph_det$sorted[i],
-             graph_par = eval(parse(text = graph_det$graph_par[i])),
-             legend_par = graph_det$legend_par
-           )
-         }
-         
-         cat('  \n ')
-       }
-    }
-  }
-}
 
 ```
 
