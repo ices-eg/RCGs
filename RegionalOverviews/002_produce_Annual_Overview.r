@@ -18,7 +18,7 @@
 		rm(list=ls())
 		
 		# RCG
-		target_region<-"RCG_BA"
+		target_region<-"RCG_NSEA"
 		
 			if (target_region == "RCG_NA")
 			{
@@ -170,7 +170,7 @@
 		if (target_region == "RCG_NSEA")
 		{
 		    StatRectshp  = sf::st_read(
-		      "shapefiles/RCG_BA_ICESrect.shp"
+		      "shapefiles/RCG_NSEA_ICESrect.shp"
 		    )
 		}	
 
