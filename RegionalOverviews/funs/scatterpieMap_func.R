@@ -237,7 +237,7 @@ scatterpieMap_func = function(df,
                                  function(d) ggplotGrob(ggplot(d,
                                                                aes(x = 1, y = var, fill = groupBy2))+
                                                           scale_fill_manual(values = color_palette)+
-                                                        geom_col(color = "black", size = 0.2,
+                                                        geom_col(color = "black", size = 0.3,
                                                                    show.legend = FALSE) +
                                                           coord_polar(theta = "y") +
                                                           theme_void() ))) %>% 
@@ -275,7 +275,7 @@ if(groupBy_name %in% c('Area','AreaMap', 'FishingGround')){
   
     p+
       geom_sf(data = m,  fill = "antiquewhite")+
-     # geom_sf(data = st_as_sf(mdf), aes(fill = groupBy) , na.rm = TRUE)+ # for foreign part
+      #geom_sf(data = st_as_sf(mdf), aes(fill = groupBy) , na.rm = TRUE)+ # for foreign part
     coord_sf( crs = "+init=epsg:4326",
               xlim =xlim,
               ylim = ylim,
