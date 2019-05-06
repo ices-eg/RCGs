@@ -9,6 +9,8 @@ output:
 
 ```{r guide, include = F}
 
+#Run render_overviews.rmd 
+
 #This script is controlled by the param.csv and the chunks before Title is declared. 
 
 #The style of the docx is controlled by the 
@@ -38,7 +40,7 @@ output:
 
 RDB_download_date <- "xx/04/2019"
 
-region <- "NA"
+region <- "NSEA"
 years <- c(2018)
 
 period <- "2018"
@@ -151,6 +153,10 @@ filter_df <-
 
 if (region == "NA") {
   front_title <- paste("Annual overview North Atlantic, ",  period, "  \n ","![](logo.png)", sep = "")
+} else if (region == "BA") {
+  front_title <- paste("Annual overview Baltic, ",  period, "  \n ","![](logo.png)", sep = "")
+} else if (region == "NSEA") {
+  front_title <- paste("Annual overview North Sea and Eastern Arctic, ",  period, "  \n ","![](logo.png)", sep = "")
 }
 
 ```
@@ -166,10 +172,10 @@ date: `r Sys.Date()`
 #This needs to be more generic - for easy loading the naming needs to be more generic
 
 load(
-  "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NA_CL_2009_2018_prepared_201905051115.Rdata"
+  "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NSEA_CL_2009_2018_prepared_201905051104.Rdata"
 )
 load(
-  "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NA_CE_2009_2018_prepared_201905051115.Rdata"
+  "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NSEA_CE_2009_2018_prepared_201905051104.Rdata"
 )
 
 #Adds IDs [move to preparation]
