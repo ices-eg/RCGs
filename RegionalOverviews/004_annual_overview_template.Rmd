@@ -62,6 +62,7 @@ library(dplyr)
 library(data.table)
 library(knitr)
 library(stringr)
+library(RCMfunctions) #sharepoint -> RCG Data Group -> R packages
 
 ```
 
