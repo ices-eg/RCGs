@@ -23,42 +23,29 @@ output:
 
 ```
 
-```{r todo, include = F}
-
-
-#Include maps - need to run in a seperate chunk du to figure size - import output in general plot loop. 
-#Include riverplots
-#Include fleet reg analysis
-#Save results in csv files
-# .....
-
-
-```
-
-
 ```{r setup_param, include = F}
 
 RDB_download_date <- "xx/04/2019"
 
-region <- "NSEA"
+target_region <- "RCG_NA"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
 years <- c(2018)
 
 period <- "2018"
-
-
 
 ```
 
 ```{r setup_dir, include = F}
 
 #If running outside knitr, then set wd
-#setwd("RegionalOverviews")
+setwd("RegionalOverviews")
 
 data_dir <- "Q:/dfad/users/kibi/data/RCG/from_share_point/"
 
 ```
 
 ```{r setup_lib, include = F}
+
+options(scipen = 999)
 
 library(dplyr)
 library(data.table)
@@ -76,7 +63,7 @@ library(RCMfunctions) #sharepoint -> RCG Data Group -> R packages
 knitr::opts_chunk$set(
   fig.width = 9,
   fig.height = 5,
-  fig.path = "outputs/",
+  fig.path = "outputs/figures/",
   dpi = 300,
   dev = 'png',
   echo = F,
@@ -107,14 +94,42 @@ knitr::opts_chunk$set(
 
 source("funs/func_barplot_var_by_one_var.r")	
 source("funs/func_barplot_var_by_two_var_stacked.r")
+source("funs/pointsMap_func.R")
+source("funs/choroplethMap_func.R")
+source("funs/scatterpieMap_func.R")
 
-param <-
-  read.table(
-    "graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_parameters.csv",
-    sep = ",",
-    stringsAsFactors = FALSE,
-    header = T
-  )
+
+
+if (target_region == "RCG_NA") {
+  param <-
+    read.table(
+      "graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_parameters.csv",
+      sep = ",",
+      stringsAsFactors = FALSE,
+      header = T
+    )
+}
+# if (target_region == "RCG_BA") {
+#   param <-
+#     read.table(
+#       "graphical_parameters/RCG_BA/Annual_Overview/AnnualOverview_RCG_BA_CL_Graphical_details.txt",
+#       sep = "\t",
+#       stringsAsFactors = FALSE,
+#       header = T
+#     )
+# }
+# if (target_region == "RCG_NSEA") {
+#   param <-
+#     read.table(
+#       "graphical_parameters/RCG_NSEA/Annual_Overview/AnnualOverview_RCG_NSEA_CL_Graphical_details.txt",
+#       sep = "\t",
+#       stringsAsFactors = FALSE,
+#       header = T
+#     )
+# }
+
+
+param <- arrange(param, Order)
 
 colour_table <-
   read.table(
@@ -151,11 +166,11 @@ filter_df <-
 
 ```{r title, include = F}
 
-if (region == "NA") {
+if (target_region == "RCG_NSEA") {
   front_title <- paste("Annual overview North Atlantic, ",  period, "  \n ","![](logo.png)", sep = "")
-} else if (region == "BA") {
+} else if (target_region == "RCG_BA") {
   front_title <- paste("Annual overview Baltic, ",  period, "  \n ","![](logo.png)", sep = "")
-} else if (region == "NSEA") {
+} else if (target_region == "RCG_NSEA") {
   front_title <- paste("Annual overview North Sea and Eastern Arctic, ",  period, "  \n ","![](logo.png)", sep = "")
 }
 
@@ -171,18 +186,36 @@ date: `r Sys.Date()`
 
 #This needs to be more generic - for easy loading the naming needs to be more generic
 
-load(
-  "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NSEA_CL_2009_2018_prepared_201905051104.Rdata"
-)
-load(
-  "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NSEA_CE_2009_2018_prepared_201905051104.Rdata"
-)
+if (target_region == "RCG_NA")
+{
+  load(
+    "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NA_CL_2009_2018_prepared_201905051115.Rdata"
+  )
+  load(
+    "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NA_CE_2009_2018_prepared_201905051115.Rdata"
+  )
+}
+
+if (target_region == "RCG_BA")
+{
+  load(
+    "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_BA_CL_2009_2018_prepared_201905051119.Rdata"
+  )
+  load(
+    "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_BA_CE_2009_2018_prepared_201905051119.Rdata"
+  )
+}
+if (target_region == "RCG_NSEA")
+{
+  load(
+    "Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NSEA_CL_2009_2018_prepared_201905051104.Rdata"
+  )
+  load("Q:/dfad/users/kibi/data/RCG/from_share_point/RDB_RCG_NSEA_CE_2009_2018_prepared_201905051104.Rdata")
+			}	
 
 #Adds IDs [move to preparation]
-cl_rcg[, FlagCountry_Loa := paste(FlagCountry, VesselLengthCategory, sep =
-                                    "_")]
-ce_rcg[, FlagCountry_Loa := paste(FlagCountry, VesselLengthCategory, sep =
-                                    "_")]
+cl_rcg[, FlagCountry_Loa := paste(FlagCountry, VesselLengthCategory, sep = "_")]
+ce_rcg[, FlagCountry_Loa := paste(FlagCountry, VesselLengthCategory, sep = "_")]
 
 # Add to preparation [and convert 2-letter code to 3-letter code]
 colnames(ce_rcg)[colnames(ce_rcg) == "LandingCountry"] <-
@@ -211,6 +244,83 @@ TODO - Kirsten, I think I promised to script that
 #Adopt Nuno's script 003_xxxx
 
 ```
+
+```{r maps, fig.width = 9}
+
+#Setting up all the files needed for the maps ---- copied directly from 002
+
+# Load shapefiles and Harbour Lists
+########################################################################################################################################################################
+# Prepare the dataset with coordinates <-----------------------  WORK on this part
+# Harbour list
+
+data(UNLOCODE)
+UNLOCODE %>%
+  mutate(Harbour = loCode) %>%
+  filter(!is.na(Harbour)) %>%
+  select(Harbour, lat, lon) -> Harbours
+
+# load shapefile
+if (target_region == "RCG_NA")
+{
+  shp  = sf::st_read("shapefiles/RCG_NA_FAOareas.shp") %>% filter(F_LEVEL ==
+                                                                    'DIVISION') # for NA maps on DIVISIONS level
+}
+
+if (target_region == "RCG_BA")
+{
+  shp  = sf::st_read("shapefiles/RCG_BA_FAOareas.shp") %>% filter(F_LEVEL ==
+                                                                    'SUBDIVISION') # for BA maps on DIVISIONS level -> WATCH OUT ...28.1/...28.2
+}
+if (target_region == "RCG_NSEA")
+{
+  shp  = sf::st_read("shapefiles/RCG_NSEA_FAOareas.shp") %>%  filter(
+    F_LEVEL == 'DIVISION' |
+      F_LEVEL == 'SUBAREA' |
+      F_CODE == '27.3.a.20' | F_CODE == '27.3.a.21'
+  )
+}
+
+shp %>%
+  mutate(AreaMap = F_CODE, Area = F_CODE) -> shp
+
+# For plotting FishingGrounds
+cl %>% group_by(FishingGround) %>% distinct(Area) -> FishingGround
+shp %>% left_join(FishingGround) %>% group_by(FishingGround) %>% summarise(ID = mean(ID)) -> FAOshpFG
+FAOshpFG = cbind(FAOshpFG,  sf::st_coordinates(sf::st_centroid(FAOshpFG$geometry))) %>% mutate(lon = X, lat = Y)
+
+# For plotting Areas
+# add centroids - to put areas labels there, and to put piecharts there, creates new columns to the dataset named X, Y
+FAOshp = cbind(shp,  sf::st_coordinates(sf::st_centroid(shp$geometry))) %>% mutate(lon = X, lat = Y)
+
+if (target_region == "RCG_NA")
+{
+  StatRectshp  = sf::st_read("shapefiles/RCG_NA_ICESrect.shp")
+}
+
+if (target_region == "RCG_BA")
+{
+  StatRectshp  = sf::st_read("shapefiles/RCG_BA_ICESrect.shp")# for BA maps on DIVISIONS level -> WATCH OUT ...28.1/...28.2
+}
+if (target_region == "RCG_NSEA")
+{
+  StatRectshp  = sf::st_read("shapefiles/RCG_NSEA_ICESrect.shp")
+}
+
+StatRectshp %>% mutate(StatisticalRectangle = ICESNAME) -> StatRectshp
+StatRectshp = cbind(StatRectshp,  sf::st_coordinates(sf::st_centroid(StatRectshp$geometry))) %>% mutate(lon = X, lat = Y)
+
+
+# adjust color palette to the ggplot maps
+aux_colours_ggplot = c(colour_table$colour4)
+names(aux_colours_ggplot) = c(colour_table$Country)
+
+#Mapping ----
+
+
+
+```
+
 
 ###### Page break
 
@@ -318,3 +428,33 @@ kable(arrange(summarise(
 
 ```
 
+#### Notes for development
+
+```{r notes}
+
+#TODO ----
+
+#Include maps - need to run in a seperate chunk due to figure size - import output in general plot loop.
+#Make param files for NSEA and BA
+#Setup render script
+#Include riverplots
+#Include fleet reg analysis
+#Save results in csv files
+# .....
+
+#Notes ----
+#The names of parameter vars could be cleaned up
+#Change file names of prep data, so the script is more generic
+
+
+
+```
+
+
+```{r todo, include = F}
+
+
+
+
+
+```
