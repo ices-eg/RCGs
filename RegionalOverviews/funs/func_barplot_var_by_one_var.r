@@ -104,8 +104,9 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 	# 			}
 	if(save_plot_to_list)
 		{
-	  #win.metafile()
+	  win.metafile()
 	  dev.control("enable")
+	  if(grouped==TRUE) par(cex=0.8, mai = graph_par$mai) else  par(cex=0.8, oma = graph_par$oma, mai = graph_par$mai)
 	  barplot(t1, las=2, col=colour_scale, ylab = "", main = "", cex.names = graph_par$cex.x)
 	  if(title_root!="") title(main = paste(title_root,":",Var,"by", var1), line = 1.8) else title(main = paste(Var,"by", var1), line = 1.8)
 	  title(ylab=y_title, line = graph_par$ylab_line)
