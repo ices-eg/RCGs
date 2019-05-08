@@ -276,7 +276,7 @@ if(groupBy_name %in% c('Area','AreaMap', 'FishingGround')){
     p+
       geom_sf(data = m,  fill = "antiquewhite")->p
     
-    if('LandingCountry' %in% colnames(points_coord)){
+    if(groupBy_name == 'LandingCountry' & groupBy2_name == 'FlagCountry'){
       p+
       geom_sf(data = st_as_sf(mdf), aes(fill = groupBy) , na.rm = TRUE)->p # for foreign part
     }
