@@ -41,6 +41,8 @@ period <- "2018"
 
 data_dir <- "Q:/dfad/users/kibi/data/RCG/from_share_point/"
 
+table_dir <- "outputs/RCG_NA/figures/"
+
 ```
 
 ```{r setup_lib, include = F}
@@ -106,7 +108,7 @@ source("funs/scatterpieMap_func.R")
 if (target_region == "RCG_NA") {
   param <-
     read.table(
-      "graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_parameters_test.csv",
+      "graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_parameters.csv",
       sep = ",",
       stringsAsFactors = FALSE,
       header = T
@@ -425,87 +427,87 @@ for (a in unique(param$Section)) {
         # 
         # cat('  \n ')
         # 
-        # if (graph_det$Graph_type[i] == 3)
-        # {
-        #   res <- pointsMap_func(
-        #     df = df,
-        #     var = graph_det$var[i],
-        #     groupBy = graph_det$groupBy[i],
-        #     facet = graph_det$facet[i],
-        #     func = graph_det$func[i],
-        #     type_of_threshold = graph_det$type_of_threshold[i],
-        #     value_of_threshold =  graph_det$value_of_threshold[i],
-        #     points_coord =  eval(parse(text = graph_det$points_coord[i])),
-        #     plot_labels = graph_det$plot_labels[i],
-        #     saveResults = FALSE,
-        #     outputPath = NA,
-        #     Catch_group_name = NA,
-        #     newVarName = graph_det$newVarName[i],
-        #     addExtraShp = graph_det$addExtraShp[i],
-        #     extraShp = eval(parse(text = graph_det$extraShp[i])),
-        #     addToTitle = graph_det$addToTitle[i]
-        #   )
-        #   
-        #   subchunkify(res[[2]], graph_det$png_name[i],8, 8)
-        #   
-        # }
-        # 
-        # cat('  \n ')
-        # 
-        # if (graph_det$Graph_type[i] == 4)
-        # {
-        #   res <- choroplethMap_func(
-        #     df = df,
-        #     var = graph_det$var[i],
-        #     groupBy = graph_det$groupBy[i],
-        #     facet = graph_det$facet[i],
-        #     func = graph_det$func[i],
-        #     type_of_threshold = graph_det$type_of_threshold[i],
-        #     value_of_threshold =  graph_det$value_of_threshold[i],
-        #     points_coord =  eval(parse(text = graph_det$points_coord[i])),
-        #     plot_labels = graph_det$plot_labels[i],
-        #     saveResults = FALSE,
-        #     outputPath = NA,
-        #     Catch_group_name = NA,
-        #     newVarName = graph_det$newVarName[i],
-        #     addExtraShp = graph_det$addExtraShp[i],
-        #     extraShp = eval(parse(text = graph_det$extraShp[i])),
-        #     addToTitle = graph_det$addToTitle[i]
-        #   )
-        #   
-        #   subchunkify(res[[2]], graph_det$png_name[i],8, 8)
-        #   
-        # }
-        # 
-        # cat('  \n ')
-        # 
-        # if (graph_det$Graph_type[i] == 5)
-        # {
-        #   res <- scatterpieMap_func(
-        #     df = df,
-        #     var = graph_det$var[i],
-        #     groupBy = graph_det$groupBy[i],
-        #     groupBy2 = graph_det$groupBy2[i] ,
-        #     facet = graph_det$facet[i],
-        #     func = graph_det$func[i],
-        #     type_of_threshold = graph_det$type_of_threshold[i],
-        #     value_of_threshold =  graph_det$value_of_threshold[i],
-        #     points_coord =  eval(parse(text = graph_det$points_coord[i])),
-        #     plot_labels = graph_det$plot_labels[i],
-        #     saveResults = FALSE,
-        #     outputPath = NA,
-        #     Catch_group_name = NA,
-        #     newVarName = graph_det$newVarName[i],
-        #     addExtraShp = graph_det$addExtraShp[i],
-        #     extraShp = eval(parse(text = graph_det$extraShp[i])),
-        #     color_palette = aux_colours_ggplot,
-        #     addToTitle = graph_det$addToTitle[i]
-        #   )
-        #   
-        #   subchunkify(res[[2]], graph_det$png_name[i],8, 8)
-        #   
-        # }
-        
+        if (graph_det$Graph_type[i] == 3)
+        {
+          res <- pointsMap_func(
+            df = df,
+            var = graph_det$var[i],
+            groupBy = graph_det$groupBy[i],
+            facet = graph_det$facet[i],
+            func = graph_det$func[i],
+            type_of_threshold = graph_det$type_of_threshold[i],
+            value_of_threshold =  graph_det$value_of_threshold[i],
+            points_coord =  eval(parse(text = graph_det$points_coord[i])),
+            plot_labels = graph_det$plot_labels[i],
+            saveResults = FALSE,
+            outputPath = NA,
+            Catch_group_name = NA,
+            newVarName = graph_det$newVarName[i],
+            addExtraShp = graph_det$addExtraShp[i],
+            extraShp = eval(parse(text = graph_det$extraShp[i])),
+            addToTitle = graph_det$addToTitle[i]
+          )
+
+          subchunkify(res[[2]], graph_det$png_name[i],8, 8)
+
+        }
+
+        cat('  \n ')
+
+        if (graph_det$Graph_type[i] == 4)
+        {
+          res <- choroplethMap_func(
+            df = df,
+            var = graph_det$var[i],
+            groupBy = graph_det$groupBy[i],
+            facet = graph_det$facet[i],
+            func = graph_det$func[i],
+            type_of_threshold = graph_det$type_of_threshold[i],
+            value_of_threshold =  graph_det$value_of_threshold[i],
+            points_coord =  eval(parse(text = graph_det$points_coord[i])),
+            plot_labels = graph_det$plot_labels[i],
+            saveResults = FALSE,
+            outputPath = NA,
+            Catch_group_name = NA,
+            newVarName = graph_det$newVarName[i],
+            addExtraShp = graph_det$addExtraShp[i],
+            extraShp = eval(parse(text = graph_det$extraShp[i])),
+            addToTitle = graph_det$addToTitle[i]
+          )
+
+          subchunkify(res[[2]], graph_det$png_name[i],8, 8)
+
+        }
+
+        cat('  \n ')
+
+        if (graph_det$Graph_type[i] == 5)
+        {
+          res <- scatterpieMap_func(
+            df = df,
+            var = graph_det$var[i],
+            groupBy = graph_det$groupBy[i],
+            groupBy2 = graph_det$groupBy2[i] ,
+            facet = graph_det$facet[i],
+            func = graph_det$func[i],
+            type_of_threshold = graph_det$type_of_threshold[i],
+            value_of_threshold =  graph_det$value_of_threshold[i],
+            points_coord =  eval(parse(text = graph_det$points_coord[i])),
+            plot_labels = graph_det$plot_labels[i],
+            saveResults = FALSE,
+            outputPath = NA,
+            Catch_group_name = NA,
+            newVarName = graph_det$newVarName[i],
+            addExtraShp = graph_det$addExtraShp[i],
+            extraShp = eval(parse(text = graph_det$extraShp[i])),
+            color_palette = aux_colours_ggplot,
+            addToTitle = graph_det$addToTitle[i]
+          )
+
+          subchunkify(res[[2]], graph_det$png_name[i],8, 8)
+
+        }
+
         cat('  \n ')
       }
     }
