@@ -1,9 +1,9 @@
-barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, proportion, type_of_threshold, value_of_threshold, sorted = FALSE, graph_par=list(oma = c(1,1,1,1), mai = c(1,1,.5,.5), ylab_line = 4, cex.x = 1, col=NA), legend_par, grouped=FALSE, title_root="")
+barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, proportion, type_of_threshold, value_of_threshold, sorted = FALSE, graph_par=list(oma = c(1,1,1,1), mai = c(1,1,.5,.5), ylab_line = 4, cex.x = 1, col=NA), legend_par, grouped=FALSE, title_root="", save_plot_to_list=TRUE)
 	{
 	# Prepares a barplot of Var per var1 (with var 2 stacked)
 	# Nuno Prista, SLU, Sweden
 	# Developed @ RCM NS&EA 2017-18, RCG subgroup work 2019
-	
+		
 	# e.g.: 
 		# CA:
 			# barplot_var_by_two_var_stacked(x = data1$caSub,  Var = "Age", var1 = "FlagCountry", var2 = "CatchCategory", tapply_type = "length")
@@ -20,6 +20,8 @@ barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, pro
 		# 2019-04-11: added tapply_type length_unique
 		# 2019-04-11: added title_root
 		# 2019-04-14: improve colour specification		
+		# 2019-05-08: changed output to list with values "table" and "plot"
+		# 2019-05-08: added argument save_plot_to_list (saves plot as second argument of final list)
 	
 		percent_Var <- round(sum(!is.na(x[,Var]))/dim(x)[1]*100,2)
 		percent_var1 <- round(sum(!is.na(x[,var1]))/dim(x)[1]*100,2)
@@ -106,7 +108,15 @@ barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, pro
 		} else {
 			title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; z:",percent_var2,"%; ","all_data", sep=""), cex.main=0.9, line = .7)
 				}
-	out<-data.frame(var1 = rownames(t1), Var = t1, row.names=NULL)
+
+	if(save_plot_to_list)
+		{
+		p <- recordPlot()
+		out<-list(table = data.frame(var1 = rownames(t1), Var = t1, row.names=NULL), plot = p)
+		} else {
+			out<-list(table = data.frame(var1 = rownames(t1), Var = t1, row.names=NULL), plot = NULL)
+			}
+
 	out	
 	
 	}
