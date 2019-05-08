@@ -54,6 +54,7 @@ library(data.table)
 library(knitr)
 library(stringr)
 library(RCMfunctions) #sharepoint -> RCG Data Group -> R packages
+library(rnaturalearth)
 
 ```
 
@@ -334,6 +335,16 @@ if (target_region == "RCG_NSEA")
 StatRectshp %>% mutate(StatisticalRectangle = ICESNAME) -> StatRectshp
 StatRectshp = cbind(StatRectshp,  sf::st_coordinates(sf::st_centroid(StatRectshp$geometry))) %>% mutate(lon = X, lat = Y)
 
+adm_country <- ne_countries(scale = "medium", returnclass = "sf")
+adm_unit  = sf::st_read( # needed for GBT because of GBT, ANG, SCT, WLS,...
+  'shapefiles/countries shp/ne_10m_admin_0_map_units.shp'
+)
+adm_unit %>% filter(ADMIN=='United Kingdom')-> adm_unit
+adm_country %>%  mutate(LandingCountry = gu_a3) %>%  select(LandingCountry)-> countries 
+adm_unit %>%  mutate(LandingCountry = GU_A3) %>%  select(LandingCountry)-> units
+CTRshp = rbind(countries, units)
+CTRshp = cbind(CTRshp,  sf::st_coordinates(sf::st_centroid(CTRshp$geometry,of_largest_polygon = TRUE))) %>% mutate(lon = X, lat = Y)
+		
 
 # adjust color palette to the ggplot maps
 aux_colours_ggplot = c(colour_table$colour4)
