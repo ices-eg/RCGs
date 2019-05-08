@@ -15,7 +15,12 @@ scatterpieMap_func = function(df,
                               extraShp = NA,
                               newVarName = NA,
                               addToTitle = NA,
-                              color_palette = NA) {
+                              color_palette = NA,
+                              filter_ON = FALSE,
+                              filter_column  = NA,
+                              filter_type = NA,
+                              filter_threshold = NA,
+                              filter_func = NA) {
   # df - a data frame
   # var -  a column to be summmarised e.g. var = 'OfficialLandingCatchWeight'
   # groupBy - name of column, by which the grouping should be carried out. e.g. groupBy = 'Area'
@@ -34,6 +39,7 @@ scatterpieMap_func = function(df,
   # newVarName - set it if you want to rename the var e.g. OfficialLandingCatchWeight -> Landings
   # addToTitle - additional information to the title (e.g. for effort information about filtering vessels <10 or >10)
   # color_palette - set it, if you want to use the same color for groupBy2. it should have a form of a named vector. 
+  # filter_... - used when you want to limit your dataset to e.g. top 5 metiers
   
   # Marta Suska
   # NMFRI
@@ -66,6 +72,21 @@ scatterpieMap_func = function(df,
   func_name = func
   func = eval_tidy(as.symbol(func))
   
+  if(filter_ON == TRUE){ # <------- ADD SOME MORE CHECKS
+    # this loop is needed - if you want to make a scatterpie for e.g. top 5 metiers. - for top sth different from spatial variable (!= Area, StatisticalRectangle, Harbour,...)
+    filter_column_name = filter_column
+    filter_column <- as.symbol(filter_column_name)
+   #top filtered
+    group_func(df,
+               var = var_name,
+               groupBy = filter_column_name,
+               facet = facet_name,
+               func = filter_func,
+               type_of_threshold = filter_type,
+               value_of_threshold = filter_threshold)-> filteredVariable
+    df %>% filter(!!filter_column %in% (filteredVariable[[1]] %>% pull(!!filter_column))) %>% droplevels() -> df 
+    
+  }
   
   # creating the groupped df
   grouping_result = group_func(df, var_name, groupBy_name,groupBy2 = groupBy2_name, facet_name, func_name, type_of_threshold = type_of_threshold, 

@@ -483,7 +483,13 @@ for (a in unique(param$Section)) {
             newVarName = graph_det$newVarName[i],
             addExtraShp = graph_det$addExtraShp[i],
             extraShp = eval(parse(text = graph_det$extraShp[i])),
-            addToTitle = graph_det$addToTitle[i]
+            addToTitle = graph_det$addToTitle[i],
+            filter_ON = graph_det$filter_ON[i],
+            filter_column = graph_det$filter_column[i],
+            filter_type = graph_det$filter_type[i],
+            filter_func = graph_det$filter_func[i],
+            filter_threshold = graph_det$filter_threshold[i],
+            filter_facet = graph_det$filter_facet[i]
           )
 
           subchunkify(res[[2]], graph_det$png_name[i],8, 8)
@@ -511,8 +517,13 @@ for (a in unique(param$Section)) {
             newVarName = graph_det$newVarName[i],
             addExtraShp = graph_det$addExtraShp[i],
             extraShp = eval(parse(text = graph_det$extraShp[i])),
-            color_palette = aux_colours_ggplot,
-            addToTitle = graph_det$addToTitle[i]
+            color_palette = eval(parse(text = ifelse(graph_det$color_palette[i]=='none',NA, graph_det$color_palette[i]))),
+            addToTitle = graph_det$addToTitle[i],
+            filter_ON = graph_det$filter_ON[i],
+            filter_column = graph_det$filter_column[i],
+            filter_type = graph_det$filter_type[i],
+            filter_func = graph_det$filter_func[i],
+            filter_threshold = graph_det$filter_threshold[i]
           )
 
           subchunkify(res[[2]], graph_det$png_name[i],8, 8)
