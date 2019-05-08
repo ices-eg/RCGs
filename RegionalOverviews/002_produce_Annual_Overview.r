@@ -184,6 +184,17 @@
 		
 		options(scipen=10000) # to remove scientific notation from the legend
 		
+		# Map of foreign landings - some issues with 
+		adm_country <- ne_countries(scale = "medium", returnclass = "sf")
+		adm_unit  = sf::st_read( # needed for GBT because of GBT, ANG, SCT, WLS,...
+		  'D:/WG/RCG/IntersessionalWork/Subgroup on Regional Overviews/Data/countries shp/ne_10m_admin_0_map_units.shp'
+		)
+		adm_unit %>% filter(ADMIN=='United Kingdom')-> adm_unit
+		adm_country %>%  mutate(LandingCountry = gu_a3) %>%  select(LandingCountry)-> countries 
+		adm_unit %>%  mutate(LandingCountry = GU_A3) %>%  select(LandingCountry)-> units
+		CTRshp = rbind(countries, units)
+		CTRshp = cbind(CTRshp,  sf::st_coordinates(sf::st_centroid(CTRshp$geometry,of_largest_polygon = TRUE))) %>% mutate(lon = X, lat = Y)
+		
 		########################################################################################################################################################################
 		source("funs/pointsMap_func.R")
 		source("funs/choroplethMap_func.R")
