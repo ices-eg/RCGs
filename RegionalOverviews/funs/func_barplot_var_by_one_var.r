@@ -1,4 +1,4 @@
-barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold, value_of_threshold, sorted = FALSE, graph_par=list(oma = c(1,1,1,1), mai = c(1,1,.5,.5), ylab_line = 4, cex.x = 1, col=NA), grouped = FALSE, title_root="")
+barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold, value_of_threshold, sorted = FALSE, graph_par=list(oma = c(1,1,1,1), mai = c(1,1,.5,.5), ylab_line = 4, cex.x = 1, col=NA), grouped = FALSE, title_root="", save_plot_to_list=TRUE)
 	{
 	#
 	# prepares a barplot of Var per var1
@@ -27,6 +27,8 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 		# 2019-04-11: added argument title_root
 		# 2019-04-14: improve colour specification
 		# 2019-04-29: improve colour specification (do single colour barplots)
+		# 2019-05-08: changed output to list with values "table" and "plot"
+		# 2019-05-08: added argument save_plot_to_list (saves plot as second argument of final list)
 		
 		percent_Var <- round(sum(!is.na(x[,Var]))/dim(x)[1]*100,2)
 		percent_var1 <- round(sum(!is.na(x[,var1]))/dim(x)[1]*100,2)
@@ -89,7 +91,8 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 								}
 					if(nrow(t1)>length(colour_scale)) stop ("check colours")			
 					}		
-
+	
+	plot.new() ## clean up device
 	barplot(t1, las=2, col=colour_scale, ylab = "", main = "", cex.names = graph_par$cex.x)
 	if(title_root!="") title(main = paste(title_root,":",Var,"by", var1), line = 1.8) else title(main = paste(Var,"by", var1), line = 1.8)
 	title(ylab=y_title, line = graph_par$ylab_line)
@@ -99,6 +102,12 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 		} else {
 			title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ","all_data", sep=""), cex.main=0.9, line = 0.5)
 				}
-	out<-data.frame(var1 = rownames(t1), Var = t1, row.names=NULL)
+	if(save_plot_to_list)
+		{
+		p <- recordPlot()
+		out<-list(table = data.frame(var1 = rownames(t1), Var = t1, row.names=NULL), plot = p)
+		} else {
+			out<-list(table = data.frame(var1 = rownames(t1), Var = t1, row.names=NULL), plot = NULL)
+			}
 	out
 	}
