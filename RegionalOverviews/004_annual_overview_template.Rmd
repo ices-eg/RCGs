@@ -41,6 +41,8 @@ period <- "2018"
 
 data_dir <- "Q:/dfad/users/kibi/data/RCG/from_share_point/"
 
+table_dir <- "outputs/RCG_NA/figures/"
+
 ```
 
 ```{r setup_lib, include = F}
@@ -386,40 +388,45 @@ for (a in unique(param$Section)) {
       {
         if (graph_det$Graph_type[i] == 1)
         {
-          barplot_var_by_one_var(
+          res <- barplot_var_by_one_var(
             x = as.data.frame(df),
             Var = graph_det$Var[i] ,
             var1 = graph_det$var1[i],
             tapply_type = graph_det$tapply_type[i],
-            type_of_threshold = graph_det$type_of_threshold[i],
-            value_of_threshold = graph_det$value_of_threshold[i],
-            sorted = graph_det$sorted[i],
-            graph_par = eval(parse(text = graph_det$graph_par[i]))
-          )
-        }
-        
-        cat('  \n ')
-        
-        if (graph_det$Graph_type[i] == 2)
-        {
-          barplot_var_by_two_var_stacked(
-            x = as.data.frame(df),
-            Var = graph_det$Var[i] ,
-            var1 = graph_det$var1[i],
-            var2 = graph_det$var2[i],
-            tapply_type = graph_det$tapply_type[i],
-            proportion = graph_det$proportion[i],
             type_of_threshold = graph_det$type_of_threshold[i],
             value_of_threshold = graph_det$value_of_threshold[i],
             sorted = graph_det$sorted[i],
             graph_par = eval(parse(text = graph_det$graph_par[i])),
-            legend_par = graph_det$legend_par
+            save_plot_to_list = T
           )
           
+          subchunkify(res[[2]], graph_det$png_name[i], 5, 8)
         }
         
         cat('  \n ')
         
+        # if (graph_det$Graph_type[i] == 2)
+        # {
+        #   barplot_var_by_two_var_stacked(
+        #     x = as.data.frame(df),
+        #     Var = graph_det$Var[i] ,
+        #     var1 = graph_det$var1[i],
+        #     var2 = graph_det$var2[i],
+        #     tapply_type = graph_det$tapply_type[i],
+        #     proportion = graph_det$proportion[i],
+        #     type_of_threshold = graph_det$type_of_threshold[i],
+        #     value_of_threshold = graph_det$value_of_threshold[i],
+        #     sorted = graph_det$sorted[i],
+        #     graph_par = eval(parse(text = graph_det$graph_par[i])),
+        #     legend_par = graph_det$legend_par
+        #   )
+        #   
+        #   #subchunkify(res[[2]], graph_det$png_name[i], 5, 8)
+        #   
+        # }
+        # 
+        # cat('  \n ')
+        # 
         if (graph_det$Graph_type[i] == 3)
         {
           res <- pointsMap_func(
@@ -440,13 +447,13 @@ for (a in unique(param$Section)) {
             extraShp = eval(parse(text = graph_det$extraShp[i])),
             addToTitle = graph_det$addToTitle[i]
           )
-          
+
           subchunkify(res[[2]], graph_det$png_name[i],8, 8)
-          
+
         }
-        
+
         cat('  \n ')
-        
+
         if (graph_det$Graph_type[i] == 4)
         {
           res <- choroplethMap_func(
@@ -467,13 +474,13 @@ for (a in unique(param$Section)) {
             extraShp = eval(parse(text = graph_det$extraShp[i])),
             addToTitle = graph_det$addToTitle[i]
           )
-          
+
           subchunkify(res[[2]], graph_det$png_name[i],8, 8)
-          
+
         }
-        
+
         cat('  \n ')
-        
+
         if (graph_det$Graph_type[i] == 5)
         {
           res <- scatterpieMap_func(
@@ -496,11 +503,11 @@ for (a in unique(param$Section)) {
             color_palette = aux_colours_ggplot,
             addToTitle = graph_det$addToTitle[i]
           )
-          
+
           subchunkify(res[[2]], graph_det$png_name[i],8, 8)
-          
+
         }
-        
+
         cat('  \n ')
       }
     }
