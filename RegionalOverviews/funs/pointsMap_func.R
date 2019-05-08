@@ -232,7 +232,7 @@ pointsMap_func = function(df,
       shape = 21,
       alpha = 0.8
     ) +
-    scale_size(range = c(0, 20), guide = FALSE) +
+    scale_size(range = c(0, 15), guide = FALSE) +
     viridis::scale_fill_viridis(
       option = "viridis",
       # trans = "log",
