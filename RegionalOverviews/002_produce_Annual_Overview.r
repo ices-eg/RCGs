@@ -184,7 +184,7 @@
 		
 		options(scipen=10000) # to remove scientific notation from the legend
 		
-		# Map of foreign landings - some issues with 
+		# Map of foreign landings 
 		adm_country <- ne_countries(scale = "medium", returnclass = "sf")
 		adm_unit  = sf::st_read( # needed for GBT because of GBT, ANG, SCT, WLS,...
 		  'shapefiles/countries shp/ne_10m_admin_0_map_units.shp'
