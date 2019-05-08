@@ -17,3 +17,4 @@ demersal	2	2.3	2.3.10	5		OfficialLandingCatchWeight	StatisticalRectangle	FlagCou
 flatfish	2	2.4	2.4.9	5		OfficialLandingCatchWeight	StatisticalRectangle	FlagCountry	Year	sum	percent	95	StatRectshp	FALSE	outputs\RCG_NA\Annual_Overview\figures	2.4.9_5	outputs\RCG_NA\Annual_Overview\tables	2.4.9_5	Landings	TRUE	FAOshp
 flatfish	2	2.4	2.4.7	3		OfficialLandingCatchWeight	Harbour		Year	sum	top_n	20	Harbours	TRUE	outputs\RCG_NA\Annual_Overview\figures	2.4.7_3	outputs\RCG_NA\Annual_Overview\tables	2.4.7_3	Landings	TRUE	FAOshp
 flatfish	2	2.4	2.4.9	4		OfficialLandingCatchWeight	StatisticalRectangle		Year	sum	percent	100	StatRectshp	FALSE	outputs\RCG_NA\Annual_Overview\figures	2.4.9_4	outputs\RCG_NA\Annual_Overview\tables	2.4.9_4	Landings	TRUE	FAOshp
+NULL	2	2.1	2.1.9	5		OfficialLandingCatchWeight	LandingCountry	FlagCountry	Year	sum	percent	100	CTRshp	TRUE	outputs\RCG_NA\Annual_Overview\figures	2.1.9_5	outputs\RCG_NA\Annual_Overview\tables	2.1.9_5	Landings	FALSE		
