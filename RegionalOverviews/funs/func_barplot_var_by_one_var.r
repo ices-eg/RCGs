@@ -91,23 +91,45 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 								}
 					if(nrow(t1)>length(colour_scale)) stop ("check colours")			
 					}		
-	
-	plot.new() ## clean up device
-	barplot(t1, las=2, col=colour_scale, ylab = "", main = "", cex.names = graph_par$cex.x)
-	if(title_root!="") title(main = paste(title_root,":",Var,"by", var1), line = 1.8) else title(main = paste(Var,"by", var1), line = 1.8)
-	title(ylab=y_title, line = graph_par$ylab_line)
-	if(!type_of_threshold == "NULL")
-		{
-		title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = 0.5)
-		} else {
-			title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ","all_data", sep=""), cex.main=0.9, line = 0.5)
-				}
+	# 
+	# #plot.new() ## clean up device
+	# barplot(t1, las=2, col=colour_scale, ylab = "", main = "", cex.names = graph_par$cex.x)
+	# if(title_root!="") title(main = paste(title_root,":",Var,"by", var1), line = 1.8) else title(main = paste(Var,"by", var1), line = 1.8)
+	# title(ylab=y_title, line = graph_par$ylab_line)
+	# if(!type_of_threshold == "NULL")
+	# 	{
+	# 	title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = 0.5)
+	# 	} else {
+	# 		title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ","all_data", sep=""), cex.main=0.9, line = 0.5)
+	# 			}
 	if(save_plot_to_list)
 		{
+	  #win.metafile()
+	  dev.control("enable")
+	  barplot(t1, las=2, col=colour_scale, ylab = "", main = "", cex.names = graph_par$cex.x)
+	  if(title_root!="") title(main = paste(title_root,":",Var,"by", var1), line = 1.8) else title(main = paste(Var,"by", var1), line = 1.8)
+	  title(ylab=y_title, line = graph_par$ylab_line)
+	  if(!type_of_threshold == "NULL")
+	  {
+	    title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = 0.5)
+	  } else {
+	    title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ","all_data", sep=""), cex.main=0.9, line = 0.5)
+	  }
 		p <- recordPlot()
 		out<-list(table = data.frame(var1 = rownames(t1), Var = t1, row.names=NULL), plot = p)
+		dev.off()
 		} else {
+		  barplot(t1, las=2, col=colour_scale, ylab = "", main = "", cex.names = graph_par$cex.x)
+		  if(title_root!="") title(main = paste(title_root,":",Var,"by", var1), line = 1.8) else title(main = paste(Var,"by", var1), line = 1.8)
+		  title(ylab=y_title, line = graph_par$ylab_line)
+		  if(!type_of_threshold == "NULL")
+		  {
+		    title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = 0.5)
+		  } else {
+		    title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ","all_data", sep=""), cex.main=0.9, line = 0.5)
+		  }
 			out<-list(table = data.frame(var1 = rownames(t1), Var = t1, row.names=NULL), plot = NULL)
+			out
 			}
 	out
 	}
