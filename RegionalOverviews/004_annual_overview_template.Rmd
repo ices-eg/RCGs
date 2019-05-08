@@ -65,7 +65,7 @@ library(RCMfunctions) #sharepoint -> RCG Data Group -> R packages
 knitr::opts_chunk$set(
   fig.width = 9,
   fig.height = 5,
-  fig.path = "outputs/figures/",
+  fig.path = "outputs/RCG_NA/figures/",
   dpi = 300,
   dev = 'png',
   fig.pos = 'H',
@@ -166,13 +166,13 @@ filter_df <-
   }
 
 #Function below from http://michaeljw.com/blog/post/subchunkify/
-subchunkify <- function(g, fig_height=7, fig_width=5) {
+subchunkify <- function(g, chunk_name = chunk_name, fig_height=7, fig_width=5) {
   g_deparsed <- paste0(deparse(
     function() {g}
   ), collapse = '')
   
   sub_chunk <- paste0("
-  `","``{r sub_chunk_", floor(runif(1) * 10000), ", fig.height=", fig_height, ", fig.width=", fig_width, ", echo=FALSE, result = \"asis\", warning = F, fig.pos = \"H\"}",
+  `","``{r fig_", chunk_name, ", fig.height=", fig_height, ", fig.width=", fig_width, ", echo=FALSE, result = \"asis\", warning = F, fig.pos = \"H\"}",
   "  \n (", 
     g_deparsed
     , ")()", "  \n ",
@@ -441,7 +441,7 @@ for (a in unique(param$Section)) {
             addToTitle = graph_det$addToTitle[i]
           )
           
-          subchunkify(res[[2]],8, 8)
+          subchunkify(res[[2]], graph_det$png_name[i],8, 8)
           
         }
         
@@ -468,7 +468,7 @@ for (a in unique(param$Section)) {
             addToTitle = graph_det$addToTitle[i]
           )
           
-          subchunkify(res[[2]],8, 8)
+          subchunkify(res[[2]], graph_det$png_name[i],8, 8)
           
         }
         
@@ -497,7 +497,7 @@ for (a in unique(param$Section)) {
             addToTitle = graph_det$addToTitle[i]
           )
           
-          subchunkify(res[[2]],8, 8)
+          subchunkify(res[[2]], graph_det$png_name[i],8, 8)
           
         }
         
