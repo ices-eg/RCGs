@@ -23,8 +23,14 @@ output:
 
 ```
 
-```{r setup_param, include = F}
+```{r 1_setup_param_dir, include = F}
 
+#If running outside knitr, then set wd. When knitting the wd is set to the folder where the .rmd is stored
+#setwd("RegionalOverviews")
+
+data_dir <- "Q:/dfad/users/kibi/data/RCG/from_share_point/"
+
+#Paramters
 RDB_download_date <- "xx/04/2019"
 
 target_region <- "RCG_NA"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
@@ -32,23 +38,25 @@ years <- c(2018)
 
 period <- "2018"
 
+figures <- "yes" #yes / no - all figures outputtet to a folder
+tables <- "yes" #yes / no - all tabales outputtet to a folder
+
+#Folder for figures and tables
+table_dir <- paste("outputs/", target_region, "/tables/", sep = "")
+figur_dir <- paste("outputs/", target_region, "/figures/", sep = "")
+
+#Landings per stock settings
+
+years_stock <- c(2016, 2017, 2018)
+period_stock <- "2016-2018"
+
 ```
 
-```{r setup_dir, include = F}
-
-#If running outside knitr, then set wd
-#setwd("RegionalOverviews")
-
-data_dir <- "Q:/dfad/users/kibi/data/RCG/from_share_point/"
-
-table_dir <- "outputs/RCG_NA/figures/"
-
-```
-
-```{r setup_lib, include = F}
+```{r 2_setup_lib, include = F}
 
 options(scipen = 999)
 
+library(tidyverse)
 library(dplyr)
 library(data.table)
 library(knitr)
@@ -58,17 +66,15 @@ library(rnaturalearth)
 
 ```
 
-
-```{r setup_markdown, include = F}
+```{r 3_setup_markdown, include = F}
 
 #Don't set the dpi too high, then the .docx crash
 
-#If you want plots stored in a folder, then use .... 
-
-knitr::opts_chunk$set(
+if (figures == "yes") {
+  knitr::opts_chunk$set(
   fig.width = 9,
   fig.height = 5,
-  fig.path = "outputs/RCG_NA/figures/",
+  fig.path = figur_dir,
   dpi = 300,
   dev = 'png',
   fig.pos = 'H',
@@ -78,62 +84,46 @@ knitr::opts_chunk$set(
   error = F,
   comment = F
 )
-
-#If you don't want plots stored, then use ....
-
-# knitr::opts_chunk$set(
-#   fig.width = 9,
-#   fig.height = 5,
-#   dpi = 300,
-#   dev = 'png',
-#   echo = F,
-#   warning = F,
-#   message = F,
-#   error = F,
-#   comment = F
-# )
+} else {
+  knitr::opts_chunk$set(
+  fig.width = 9,
+  fig.height = 5,
+  dpi = 300,
+  dev = 'png',
+  echo = F,
+  warning = F,
+  message = F,
+  error = F,
+  comment = F
+)
+}
 
 ```
 
 
-```{r source_ref, include = F}
+```{r 4_source_ref, include = F}
 
-source("funs/func_barplot_var_by_one_var.r")	
-source("funs/func_barplot_var_by_two_var_stacked.r")
+source("funs/func_barplot_var_by_one_var_rmd.r")
+source("funs/func_barplot_var_by_two_var_stacked_rmd.r")
 source("funs/pointsMap_func.R")
 source("funs/choroplethMap_func.R")
 source("funs/scatterpieMap_func.R")
 
 
-
-if (target_region == "RCG_NA") {
-  param <-
-    read.table(
-      "graphical_parameters/RCG_NA/Annual_Overview/AnnualOverview_RCG_NA_parameters.csv",
-      sep = ",",
-      stringsAsFactors = FALSE,
-      header = T
-    )
-}
-# if (target_region == "RCG_BA") {
-#   param <-
-#     read.table(
-#       "graphical_parameters/RCG_BA/Annual_Overview/AnnualOverview_RCG_BA_CL_Graphical_details.txt",
-#       sep = "\t",
-#       stringsAsFactors = FALSE,
-#       header = T
-#     )
-# }
-# if (target_region == "RCG_NSEA") {
-#   param <-
-#     read.table(
-#       "graphical_parameters/RCG_NSEA/Annual_Overview/AnnualOverview_RCG_NSEA_CL_Graphical_details.txt",
-#       sep = "\t",
-#       stringsAsFactors = FALSE,
-#       header = T
-#     )
-# }
-
+param <-
+  read.table(
+    paste(
+      "graphical_parameters/",
+      target_region,
+      "/Annual_Overview/AnnualOverview_",
+      target_region,
+      "_parameters.csv",
+      sep = ""
+    ),
+    sep = ",",
+    stringsAsFactors = FALSE,
+    header = T
+  )
 
 param <- arrange(param, Order)
 param$value_of_threshold <- as.numeric(param$value_of_threshold)
@@ -356,7 +346,7 @@ names(aux_colours_ggplot) = c(colour_table$Country)
 
 ###### Page break
 
-```{r plots, results = "asis"}
+```{r plots, results = "asis", eval = F}
 
 
 for (a in unique(param$Section)) {
@@ -412,32 +402,59 @@ for (a in unique(param$Section)) {
           )
           
           subchunkify(res[[2]], graph_det$png_name[i], 5, 8)
+          
+          if (tables == "yes") {
+            write.table(
+              res[[1]],
+              file =  
+                paste(table_dir, graph_det$txt_name[i],
+                ".txt",
+                sep = ""
+              ),
+              sep = '\t',
+              dec = '.',
+              row.names = F
+            )
+          }
         }
         
         cat('  \n ')
         
-        # if (graph_det$Graph_type[i] == 2)
-        # {
-        #   barplot_var_by_two_var_stacked(
-        #     x = as.data.frame(df),
-        #     Var = graph_det$Var[i] ,
-        #     var1 = graph_det$var1[i],
-        #     var2 = graph_det$var2[i],
-        #     tapply_type = graph_det$tapply_type[i],
-        #     proportion = graph_det$proportion[i],
-        #     type_of_threshold = graph_det$type_of_threshold[i],
-        #     value_of_threshold = graph_det$value_of_threshold[i],
-        #     sorted = graph_det$sorted[i],
-        #     graph_par = eval(parse(text = graph_det$graph_par[i])),
-        #     legend_par = graph_det$legend_par
-        #   )
-        #   
-        #   #subchunkify(res[[2]], graph_det$png_name[i], 5, 8)
-        #   
-        # }
-        # 
-        # cat('  \n ')
-        # 
+        if (graph_det$Graph_type[i] == 2)
+        {
+          res <- barplot_var_by_two_var_stacked(
+            x = as.data.frame(df),
+            Var = graph_det$Var[i] ,
+            var1 = graph_det$var1[i],
+            var2 = graph_det$var2[i],
+            tapply_type = graph_det$tapply_type[i],
+            proportion = graph_det$proportion[i],
+            type_of_threshold = graph_det$type_of_threshold[i],
+            value_of_threshold = graph_det$value_of_threshold[i],
+            sorted = graph_det$sorted[i],
+            graph_par = eval(parse(text = graph_det$graph_par[i])),
+            legend_par = graph_det$legend_par[i],
+            save_plot_to_list = T
+          )
+          
+          subchunkify(res[[2]], graph_det$png_name[i], 5, 8)
+          
+          if (tables == "yes") {
+            write.table(
+              res[[1]],
+              file =
+                paste(table_dir, graph_det$txt_name[i],
+                      ".txt",
+                      sep = ""),
+              sep = '\t',
+              dec = '.',
+              row.names = F
+            )
+          }
+        }
+
+        cat('  \n ')
+
         if (graph_det$Graph_type[i] == 3)
         {
           res <- pointsMap_func(
@@ -460,7 +477,19 @@ for (a in unique(param$Section)) {
           )
 
           subchunkify(res[[2]], graph_det$png_name[i],8, 8)
-
+          
+          if (tables == "yes") {
+            write.table(
+              res[[1]],
+              file =
+                paste(table_dir, graph_det$txt_name[i],
+                      ".txt",
+                      sep = ""),
+              sep = '\t',
+              dec = '.',
+              row.names = F
+            )
+          }
         }
 
         cat('  \n ')
@@ -493,7 +522,18 @@ for (a in unique(param$Section)) {
           )
 
           subchunkify(res[[2]], graph_det$png_name[i],8, 8)
-
+          if (tables == "yes") {
+            write.table(
+              res[[1]],
+              file =
+                paste(table_dir, graph_det$txt_name[i],
+                      ".txt",
+                      sep = ""),
+              sep = '\t',
+              dec = '.',
+              row.names = F
+            )
+          }
         }
 
         cat('  \n ')
@@ -527,7 +567,19 @@ for (a in unique(param$Section)) {
           )
 
           subchunkify(res[[2]], graph_det$png_name[i],8, 8)
-
+          
+          if (tables == "yes") {
+            write.table(
+              res[[1]],
+              file =
+                paste(table_dir, graph_det$txt_name[i],
+                      ".txt",
+                      sep = ""),
+              sep = '\t',
+              dec = '.',
+              row.names = F
+            )
+          }
         }
 
         cat('  \n ')
@@ -563,19 +615,41 @@ kable(arrange(summarise(
 
 ```
 
-#### Notes for development
+#### Mean Landings per stock, `r period_stock`
+
+Landings per year, stock, species, area and vessel flag country can be found in `r paste("\"landings_per_stock_", min(years_stock), "_", max(years_stock), ".csv\"", sep = "")` for `r period_stock`.
+
+```{r}
+
+cl_stock <- mutate(filter(cl_rcg, Year %in% years_stock), period = period_stock)
+cl_stock <- droplevels(cl_stock)
+
+kable(spread(summarise(
+  group_by(cl_stock, Region, stock, FlagCountry),
+  tons = round(sum(OfficialLandingCatchWeight_ton)/length(years_stock), digits = 0)), 
+  FlagCountry, tons, fill = "-"))
+
+cl_stock_csv <- summarise(
+  group_by(cl_stock, Region, period, Year, stock, Species, Area, FlagCountry),
+  tons = sum(OfficialLandingCatchWeight_ton))
+
+write.csv(cl_stock_csv, paste(table_dir, "landings_per_stock_", min(years_stock), "_", max(years_stock), ".csv", sep = ""), row.names = F)
+
+```
+
 
 ```{r notes}
 
 #TODO ----
 
-#Include maps - need to run in a seperate chunk due to figure size - import output in general plot loop.
-#Make param files for NSEA and BA
-#Setup render script
-#Include riverplots
+
+#Include riverplots - Marta is working on that one
 #Include fleet reg analysis
-#Save results in csv files
-# .....
+#Save results in csv files - done
+#Include landings per stock - done
+#Style tables
+#Include fig.width and fig.height from param file
+#Have a look at the barplot function and how to output the figures - espcially for the grouped plots
 
 #Notes ----
 #The names of parameter vars could be cleaned up
