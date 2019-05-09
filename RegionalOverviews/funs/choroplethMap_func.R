@@ -330,7 +330,9 @@ choroplethMap_func = function(df,
         linetype = 'dashed',
         size = 0.5
       ),
-      strip.text = element_text(size = ifelse(length(unique(mdf2$facet))==1,10,7))
+      strip.text = element_text(size = ifelse(length(unique(mdf2$facet))==1,10,5)),
+      axis.text.x = element_text(size = ifelse(length(unique(mdf2$facet))==1,9,7)),
+      axis.text.y = element_text(size = ifelse(length(unique(mdf2$facet))==1,9,7))
     ) -> plot
   
   if (plot_labels == TRUE) {
