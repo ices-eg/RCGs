@@ -313,7 +313,7 @@ choroplethMap_func = function(df,
       subtitle = subtitle,
       caption = caption
     ) +
-    facet_wrap(~facet, ncol = 2)+
+    facet_wrap(~facet, ncol = ifelse(unique(df$Region)!='NSEA',3,2))+
     theme_classic() +
     theme(
       text = element_text(color = "#22211d"),
