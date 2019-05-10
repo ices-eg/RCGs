@@ -25,6 +25,9 @@
 	# 2019-04-13: adapted structure of data directory to multiple RCGs
 	# 2019-04-27: completed species groups RCG BA and RCG NSEA
 	# 2019-04-27: added column AreaMap to allow more consistent aggregation level in maps
+	# 2019-05-10: added column KWDays_1000x and GTDays_1000x
+	# 2019-05-10: improved QCA checks on AreaMap
+	# 2019-05-10: added possibility of fixed time_tag
 	
 
 # ========================
@@ -272,6 +275,12 @@ dir_output_all<-"data\\002_prepared"
 		
 	# CE 
 		
+		# KWDays_thousands
+			ce[,KWDays_1000x := KWDays/1000]				
+			ce_rcg[,KWDays_1000x := KWDays/1000]				
+		# GTDays_thousands
+			ce[,GTDays_1000x := GTDays/1000]		
+			ce_rcg[,GTDays_1000x := GTDays/1000]		
 		# fleet segment (FlagCountry_Loa)	
 			ce[,FlagCountry_Loa:=paste(FlagCountry, VesselLengthCategory, sep="_")]
 			ce_rcg[,FlagCountry_Loa:=paste(FlagCountry, VesselLengthCategory, sep="_")]
@@ -284,9 +293,10 @@ dir_output_all<-"data\\002_prepared"
 				nrow(ce[is.na(HarbourCountry) & !is.na(HarbourCountry2),]) == 0
 
 		
+		
 	# AreaMap
-		cl_rcg$AreaMap<-cl_rcg$Area
-		ce_rcg$AreaMap<-ce_rcg$Area
+		cl_rcg[,AreaMap:=Area,]
+		ce_rcg[,AreaMap:=Area,]
 		
 		if(target_region=="RCG_BA") 
 			{		
@@ -345,8 +355,10 @@ dir_output_all<-"data\\002_prepared"
 			
 			}			
 	# QCA: visual
-		cl_rcg[,.N,list(AreaMap,Area)][order(AreaMap)]
-		ce_rcg[,.N,list(AreaMap,Area)][order(AreaMap)]
+		cl_rcg[, list(N=.N,ton1000 = round(sum(OfficialLandingCatchWeight_1000ton),1)),list(AreaMap,Area)][order(AreaMap)]
+		cl_rcg[, list(N=.N,ton1000 = round(sum(OfficialLandingCatchWeight_1000ton),1)),list(AreaMap,Area, FlagCountry, Year)][order(AreaMap)][AreaMap=="NA",]
+		ce_rcg[, list(N=.N,TripsNumber = sum(TripsNumber)),list(AreaMap,Area)][order(AreaMap)]
+		ce_rcg[, list(N=.N,TripsNumber = sum(TripsNumber)),list(AreaMap,Area, FlagCountry, Year)][order(AreaMap)][AreaMap=="NA",]
 	
 # ========================	
 # Creates and tweaks ISSCAAP codes
@@ -486,6 +498,9 @@ dir_output_all<-"data\\002_prepared"
 	ce[,DaysAtSea:=as.numeric(DaysAtSea)]
 	ce[,KWDays:=as.numeric(KWDays)]
 	ce[,GTDays:=as.numeric(GTDays)]
+	ce[,KWDays_1000x:=as.numeric(KWDays_1000x)]
+	ce[,GTDays_1000x:=as.numeric(GTDays_1000x)]
+
 	
 	ce_rcg[,FlagCountry:=factor(FlagCountry, levels=sort(unique(FlagCountry))),]
 	ce_rcg[,FishingActivityCategoryEuropeanLvl5:=factor(FishingActivityCategoryEuropeanLvl5, levels=sort(unique(FishingActivityCategoryEuropeanLvl5))),]
@@ -495,6 +510,8 @@ dir_output_all<-"data\\002_prepared"
 	ce_rcg[,DaysAtSea:=as.numeric(DaysAtSea)]
 	ce_rcg[,KWDays:=as.numeric(KWDays)]
 	ce_rcg[,GTDays:=as.numeric(GTDays)]
+	ce_rcg[,KWDays_1000x:=as.numeric(KWDays_1000x)]
+	ce_rcg[,GTDays_1000x:=as.numeric(GTDays_1000x)]
 
 
 	# region specific	
@@ -561,8 +578,10 @@ dir_output_all<-"data\\002_prepared"
 		}	
 
 	# QCA: visual
-		cl_rcg[,.N,list(AreaMap,Area)][order(AreaMap)]
-		ce_rcg[,.N,list(AreaMap,Area)][order(AreaMap)]
+		cl_rcg[, list(N=.N,ton1000 = round(sum(OfficialLandingCatchWeight_1000ton),1)),list(AreaMap,Area)][order(AreaMap)]
+		cl_rcg[, list(N=.N,ton1000 = round(sum(OfficialLandingCatchWeight_1000ton),1)),list(AreaMap,Area, FlagCountry, Year)][order(AreaMap)][is.na(AreaMap),]
+		ce_rcg[, list(N=.N,TripsNumber = sum(TripsNumber)),list(AreaMap,Area)][order(AreaMap)]
+		ce_rcg[, list(N=.N,TripsNumber = sum(TripsNumber)),list(AreaMap,Area, FlagCountry, Year)][order(AreaMap)][is.na(AreaMap),]
 		
 # ================	
 # data update: IRL	
@@ -621,6 +640,7 @@ dir_output_all<-"data\\002_prepared"
 	file_info_ce<-file.info(file_ce)
 
 	time_tag<-format(Sys.time(), "%Y%m%d%H%M")
+	#time_tag<-201905101612
 
 	save(cl_rcg, file_info_cl, file = paste(dir_output_rcg, paste("\\RDB",target_region,"CL", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
 	save(ce_rcg, file_info_ce, file = paste(dir_output_rcg, paste("\\RDB",target_region,"CE", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
@@ -628,5 +648,5 @@ dir_output_all<-"data\\002_prepared"
 	save(cl, file_info_cl, file = paste(dir_output_all, paste("\\RDB","All_Regions","CL", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
 	save(ce, file_info_ce, file = paste(dir_output_all, paste("\\RDB","All_Regions","CE", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
 
-
+fwrite(cl_rcg, file = "test.csv")
 	
