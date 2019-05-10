@@ -131,11 +131,9 @@ flowPlot_func = function(df,
   return(list(mdf, plot))
   # to do:
   # info about missing values
-  # cope with NAs
   # /sum - case when =0
   # catch group
   # save results
-  # if not all countries have a color
 
 }
 
