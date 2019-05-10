@@ -650,14 +650,12 @@ write.csv(cl_stock_csv, paste(table_dir, "landings_per_stock_", min(years_stock)
 #Save results in csv files - done
 #Include landings per stock - done
 #Style tables
-#Include fig.width and fig.height from param file
+#Include fig.width and fig.height from param file - done
 #Have a look at the barplot function and how to output the figures - espcially for the grouped plots
 
 #Notes ----
 #The names of parameter vars could be cleaned up
 #Change file names of prep data, so the script is more generic
-
-
 
 ```
 
