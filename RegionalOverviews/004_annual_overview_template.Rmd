@@ -127,6 +127,8 @@ param <-
 
 param <- arrange(param, Order)
 param$value_of_threshold <- as.numeric(param$value_of_threshold)
+param$width <- as.numeric(param$width)
+param$height <- as.numeric(param$height)
 
 colour_table <-
   read.table(
@@ -346,7 +348,7 @@ names(aux_colours_ggplot) = c(colour_table$Country)
 
 ###### Page break
 
-```{r plots, results = "asis", eval = F}
+```{r plots, results = "asis", eval = T}
 
 
 for (a in unique(param$Section)) {
@@ -401,7 +403,7 @@ for (a in unique(param$Section)) {
             save_plot_to_list = T
           )
           
-          subchunkify(res[[2]], graph_det$png_name[i], 5, 8)
+         subchunkify(res[[2]], graph_det$png_name[i], graph_det$height[i], graph_det$width[i])
           
           if (tables == "yes") {
             write.table(
@@ -437,7 +439,7 @@ for (a in unique(param$Section)) {
             save_plot_to_list = T
           )
           
-          subchunkify(res[[2]], graph_det$png_name[i], 5, 8)
+          subchunkify(res[[2]], graph_det$png_name[i], graph_det$height[i], graph_det$width[i])
           
           if (tables == "yes") {
             write.table(
@@ -476,7 +478,7 @@ for (a in unique(param$Section)) {
             addToTitle = graph_det$addToTitle[i]
           )
 
-          subchunkify(res[[2]], graph_det$png_name[i],8, 8)
+          subchunkify(res[[2]], graph_det$png_name[i], graph_det$height[i], graph_det$width[i])
           
           if (tables == "yes") {
             write.table(
@@ -521,7 +523,7 @@ for (a in unique(param$Section)) {
             filter_facet = graph_det$filter_facet[i]
           )
 
-          subchunkify(res[[2]], graph_det$png_name[i],8, 8)
+          subchunkify(res[[2]], graph_det$png_name[i], graph_det$height[i], graph_det$width[i])
           if (tables == "yes") {
             write.table(
               res[[1]],
@@ -566,7 +568,7 @@ for (a in unique(param$Section)) {
             filter_threshold = graph_det$filter_threshold[i]
           )
 
-          subchunkify(res[[2]], graph_det$png_name[i],8, 8)
+          subchunkify(res[[2]], graph_det$png_name[i], graph_det$height[i], graph_det$width[i])
           
           if (tables == "yes") {
             write.table(
