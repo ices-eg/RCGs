@@ -22,19 +22,19 @@
 		
 			if (target_region == "RCG_NA")
 			{
-			load("data\\002_prepared\\RCG_NA\\RDB_RCG_NA_CL_2009_2018_prepared_201905051115.Rdata")
-			load("data\\002_prepared\\RCG_NA\\RDB_RCG_NA_CE_2009_2018_prepared_201905051115.Rdata")
+			  load("data\\002_prepared\\RCG_NA\\RDB_RCG_NA_CL_2009_2018_prepared_201905101612.Rdata")
+			  load("data\\002_prepared\\RCG_NA\\RDB_RCG_NA_CE_2009_2018_prepared_201905101612.Rdata")
 			}
 			
 			if (target_region == "RCG_BA")
 			{
-			load("data\\002_prepared\\RCG_BA\\RDB_RCG_BA_CL_2009_2018_prepared_201905051119.Rdata")
-			load("data\\002_prepared\\RCG_BA\\RDB_RCG_BA_CE_2009_2018_prepared_201905051119.Rdata")
+			load("data\\002_prepared\\RCG_BA\\RDB_RCG_BA_CL_2009_2018_prepared_201905101612.Rdata")
+			load("data\\002_prepared\\RCG_BA\\RDB_RCG_BA_CE_2009_2018_prepared_201905101612.Rdata")
 			}		
 			if (target_region == "RCG_NSEA")
 			{
-			load("data\\002_prepared\\RCG_NSEA\\RDB_RCG_NSEA_CL_2009_2018_prepared_201905051104.Rdata")
-			load("data\\002_prepared\\RCG_NSEA\\RDB_RCG_NSEA_CE_2009_2018_prepared_201905051104.Rdata")
+			load("data\\002_prepared\\RCG_NSEA\\RDB_RCG_NSEA_CL_2009_2018_prepared_201905101612.Rdata")
+			load("data\\002_prepared\\RCG_NSEA\\RDB_RCG_NSEA_CE_2009_2018_prepared_201905101612.Rdata")
 			}	
 		
 		
