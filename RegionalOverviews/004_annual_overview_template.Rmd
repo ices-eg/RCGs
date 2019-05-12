@@ -108,6 +108,7 @@ source("funs/func_barplot_var_by_two_var_stacked_rmd.r")
 source("funs/pointsMap_func.R")
 source("funs/choroplethMap_func.R")
 source("funs/scatterpieMap_func.R")
+source("funs/flowPlot_func.R")
 
 
 param <-
@@ -235,8 +236,11 @@ cl_rcg[, FlagCountry_Loa := paste(FlagCountry, VesselLengthCategory, sep = "_")]
 ce_rcg[, FlagCountry_Loa := paste(FlagCountry, VesselLengthCategory, sep = "_")]
 
 # Add to preparation [and convert 2-letter code to 3-letter code]
-colnames(ce_rcg)[colnames(ce_rcg) == "LandingCountry"] <-
-  "LandingCountry2"
+#colnames(ce_rcg)[colnames(ce_rcg) == "LandingCountry"] <-
+#  "LandingCountry2" # <-------------------------------------------------- No more LandingCountry in ce,lines to delete?
+
+# for maps of foreign landings 'LandingCountry' is needed
+ce_rcg[,LandingCountry := HarbourCountry]
 
 #Filter
 
@@ -309,6 +313,17 @@ FAOshpFG = cbind(FAOshpFG,  sf::st_coordinates(sf::st_centroid(FAOshpFG$geometry
 # For plotting Areas
 # add centroids - to put areas labels there, and to put piecharts there, creates new columns to the dataset named X, Y
 FAOshp = cbind(shp,  sf::st_coordinates(sf::st_centroid(shp$geometry))) %>% mutate(lon = X, lat = Y)
+
+if(target_region=='RCG_BA'){ # fixed wrong calculation of centroid of 27.3.d.30
+  FAOshp = FAOshp %>%   
+    mutate(X = ifelse(AreaMap=='27.3.d.30', 19.5 ,X), Y =  ifelse(AreaMap=='27.3.d.30',62 ,Y)) %>%
+    mutate(lon = X, lat = Y) 
+  
+  FAOshpFG = FAOshpFG %>% 
+    mutate(X = ifelse(FishingGround=='25-32', 20 ,X), Y =  ifelse(FishingGround=='25-32',58 ,Y)) %>% 
+    mutate(lon = X, lat = Y) 
+
+}
 
 if (target_region == "RCG_NA")
 {
@@ -585,6 +600,41 @@ for (a in unique(param$Section)) {
         }
 
         cat('  \n ')
+        
+                 
+        if(graph_det$Graph_type[i] == 6){
+          res <- flowPlot_func(
+            df = df,
+            var1 = graph_det$var1[i],
+            var2 = graph_det$var2[i],
+            Var = graph_det$Var[i],
+            value_of_threshold =  graph_det$value_of_threshold[i],
+            saveResults = FALSE,
+            outputPath = NA,
+            Catch_group_name = NA,
+            newVarName = graph_det$newVarName[i],
+            color_palette = eval(parse(text = ifelse(graph_det$color_palette[i]=='none',NA, graph_det$color_palette[i]))),
+            addToTitle = graph_det$addToTitle[i]
+          )
+
+          subchunkify(res[[2]], graph_det$png_name[i], graph_det$height[i], graph_det$width[i])
+
+          if (tables == "yes") {
+            write.table(
+              res[[1]],
+              file =
+                paste(table_dir, graph_det$txt_name[i],
+                      ".txt",
+                      sep = ""),
+              sep = '\t',
+              dec = '.',
+              row.names = F
+            )
+          }
+
+        }
+         
+         cat(' \n')
       }
     }
   }
