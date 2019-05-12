@@ -1,7 +1,7 @@
 require(riverplot)
 
 		# RCG
-		target_region<-"RCG_BA"
+		target_region<-"RCG_NSEA"
 		
 			if (target_region == "RCG_NA")
 			{
@@ -23,6 +23,8 @@ require(riverplot)
 			
 cl_rcg <- subset(cl_rcg,Year==2018)
 ce_rcg <- subset(ce_rcg,Year==2018)
+cl_rcg<-as.data.frame(cl_rcg)
+ce_rcg<-as.data.frame(ce_rcg)
 #gc(reset=T)
 
 pal <- read.table("aux_colours.txt", header=T, sep="\t", colClasses="character", na.strings="", comment.char="")
@@ -78,36 +80,15 @@ riverplotfun <- function(data=cl_rcg,left='FlagCountry',right='LandingCountry',
     mtext(title,3,0)
   if(save) dev.off()
 }
-cl_rcg<-as.data.frame(cl_rcg)
-riverplotfun(cl_rcg,title='2018 - all species',palette=pal,filename='2.1.8_r1.png')
-riverplotfun(subset(cl_rcg,Catch_group=='small pelagic'),title='2018 - small pelagic',palette=pal,filename='2.2.8_r1.png')
-riverplotfun(subset(cl_rcg,Catch_group=='demersal'),title='2018 - demersal',palette=pal,filename='2.3.8_r1.png')
-riverplotfun(subset(cl_rcg,Catch_group=='flatfish'),title='2018 - flatfish',palette=pal,filename='2.4.8_r1.png')
 
-# no landing country in ce_rcg
-ce_rcg$LandingCountry2 <- substring(ce_rcg$Harbour,1,2)
-# manual fix
-ce_rcg$LandingCountry <- NA
-ce_rcg$LandingCountry[ce_rcg$LandingCountry2=='BE'] <- 'BEL'
-ce_rcg$LandingCountry[ce_rcg$LandingCountry2=='DE'] <- 'DEU'
-ce_rcg$LandingCountry[ce_rcg$LandingCountry2=='DK'] <- 'DNK'
-ce_rcg$LandingCountry[ce_rcg$LandingCountry2=='ES'] <- 'ESP'
-ce_rcg$LandingCountry[ce_rcg$LandingCountry2=='FO'] <- 'FRO'
-ce_rcg$LandingCountry[ce_rcg$LandingCountry2=='FR'] <- 'FRA'
-ce_rcg$LandingCountry[ce_rcg$LandingCountry2=='GB'] <- 'GBR'
-ce_rcg$LandingCountry[ce_rcg$LandingCountry2=='GG'] <- 'GGY'
-ce_rcg$LandingCountry[ce_rcg$LandingCountry2=='IE'] <- 'IRL'
-ce_rcg$LandingCountry[ce_rcg$LandingCountry2=='IM'] <- 'IMN'
-ce_rcg$LandingCountry[ce_rcg$LandingCountry2=='IS'] <- 'ISL'
-ce_rcg$LandingCountry[ce_rcg$LandingCountry2=='JE'] <- 'JEY'
-ce_rcg$LandingCountry[ce_rcg$LandingCountry2=='MA'] <- 'MAR'
-ce_rcg$LandingCountry[ce_rcg$LandingCountry2=='NL'] <- 'NLD'
-ce_rcg$LandingCountry[ce_rcg$LandingCountry2=='NO'] <- 'NOR'
-ce_rcg$LandingCountry[ce_rcg$LandingCountry2=='PL'] <- 'POL'
-ce_rcg$LandingCountry[ce_rcg$LandingCountry2=='PT'] <- 'PRT'
+# CE
+riverplotfun(cl_rcg, title='FlagCountry (left) to LandingCountry (right) - landings - all species',palette=pal,filename=paste(target_region,'_2.1.8_r1.png', sep=""))
+riverplotfun(subset(cl_rcg,Catch_group=='small pelagic'),title='FlagCountry (left) to LandingCountry (right) - landings - small pelagic',palette=pal,filename=paste(target_region,'_2.2.8_r1.png', sep=""))
+riverplotfun(subset(cl_rcg,Catch_group=='demersal'),title='FlagCountry (left) to LandingCountry (right) - landings - demersal',palette=pal,filename=paste(target_region,'_2.3.8_r1.png', sep=""))
+riverplotfun(subset(cl_rcg,Catch_group=='flatfish'),title='FlagCountry (left) to LandingCountry (right) - landings - flatfish',palette=pal,filename=paste(target_region,'_2.4.8_r1.png', sep=""))
 
-
-riverplotfun(ce_rcg,title='2017 - KWDays',value='KWDays',filename='2.5.8_r1.png')
+# CL
+riverplotfun(ce_rcg, left = 'FlagCountry', right = 'HarbourCountry', title='FlagCountry (left) to HarbourCountry (right) - TripsNumber - all vessel lengths',value='TripsNumber',filename=paste(target_region,'_2.5.8_r1.png', sep=""))
 
 
 
