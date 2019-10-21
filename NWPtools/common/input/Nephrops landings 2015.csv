@@ -1,66 +1,93 @@
-Stock;YearData;Country;CatchCategory;TotalLanding in kg
-nep-10;2015;UK(Scotland);Landings;15240
-nep-11;2015;UK (England);Landings;201
-nep-11;2015;UK(Scotland);Landings;2944950
-nep-12;2015;Ireland;Landings;33458
-nep-12;2015;UK (England);Landings;2928.2
-nep-12;2015;UK(Northern Ireland);Landings;19110
-nep-12;2015;UK(Scotland);Landings;3318530
-nep-13;2015;Ireland;Landings;67
-nep-13;2015;UK (England);Landings;2953.3
-nep-13;2015;UK(Northern Ireland);Landings;895293
-nep-13;2015;UK(Scotland);Landings;4232320
-nep-14;2015;Belgium;Landings;58
-nep-14;2015;Ireland;Landings;88115
-nep-14;2015;UK (England);Landings;177904.1
-nep-14;2015;UK(Northern Ireland);Landings;105851
-nep-14;2015;UK(Scotland);Landings;5760
-nep-15;2015;Belgium;Landings;271
-nep-15;2015;Ireland;Landings;2198536
-nep-15;2015;UK (England);Landings;26279.8
-nep-15;2015;UK(Northern Ireland);Landings;6396001
-nep-15;2015;UK(Scotland);Landings;11100
-nep-17;2015;Ireland;Landings;369951.186
-nep-17;2015;UK (England);Landings;2
-nep-22;2015;Belgium;Landings;4660
-nep-22;2015;Ireland;Landings;2258012.358
-nep-22;2015;UK (England);Landings;421.9
-nep-22;2015;UK(Northern Ireland);Landings;75784
-nep-22;2015;UK(Scotland);Landings;20400
-nep-34;2015;Denmark;Landings;330
-nep-34;2015;France;Landings;0
-nep-34;2015;Sweden;Landings;0
-nep-34;2015;UK (England);Landings;38743
-nep-34;2015;UK(Scotland);Landings;408120
-nep-5;2015;Belgium;Landings;145987
-nep-5;2015;Denmark;Landings;13
-nep-5;2015;France;Landings;0
-nep-5;2015;Germany;Landings;184020
-nep-5;2015;Netherlands;Landings;680655
-nep-5;2015;Sweden;Landings;0
-nep-5;2015;UK (England);Landings;470841.6
-nep-5;2015;UK(Scotland);Landings;35160
-nep-6;2015;Belgium;Landings;210
-nep-6;2015;Denmark;Landings;1275
-nep-6;2015;France;Landings;0
-nep-6;2015;Netherlands;Landings;9078
-nep-6;2015;UK (England);Landings;1186253.6
-nep-6;2015;UK(Scotland);Landings;174300
-nep-7;2015;Denmark;Landings;8086
-nep-7;2015;France;Landings;0
-nep-7;2015;Sweden;Landings;31
-nep-7;2015;UK (England);Landings;4166.6
-nep-7;2015;UK(Scotland);Landings;1847820
-nep-8;2015;UK (England);Landings;67555.2
-nep-8;2015;UK(Scotland);Landings;1895400
-nep-9;2015;UK (England);Landings;1594.6
-nep-9;2015;UK(Scotland);Landings;809630
-nep-32;2015;Denmark;Landings;110000
-nep-32;2015;Sweden;Landings;0
-nep-32;2015;UK (England);Landings;0
-nep-32;2015;UK(Scotland);Landings;0
-nep-33;2015;Belgium;Landings;299000
-nep-33;2015;Denmark;Landings;371000
-nep-33;2015;Germany;Landings;142000
-nep-33;2015;Netherlands;Landings;187000
-nep-33;2015;UK;Landings;4000
+Stock,YearData,Country,CatchCategory,TotalLanding in kg,reference
+nep-10,2015,UK(Scotland),Landings,15240,
+nep-11,2015,UK (England),Landings,201,
+nep-11,2015,UK(Scotland),Landings,2944950,
+nep-12,2015,Ireland,Landings,33458,
+nep-12,2015,UK (England),Landings,2928.2,
+nep-12,2015,UK(Northern Ireland),Landings,19110,
+nep-12,2015,UK(Scotland),Landings,3318530,
+nep-13,2015,Ireland,Landings,67,
+nep-13,2015,UK (England),Landings,2953.3,
+nep-13,2015,UK(Northern Ireland),Landings,895293,
+nep-13,2015,UK(Scotland),Landings,4232320,
+nep-14,2015,Belgium,Landings,58,
+nep-14,2015,Ireland,Landings,88115,
+nep-14,2015,UK (England),Landings,177904.1,
+nep-14,2015,UK(Northern Ireland),Landings,105851,
+nep-14,2015,UK(Scotland),Landings,5760,
+nep-15,2015,Belgium,Landings,271,
+nep-15,2015,Ireland,Landings,2198536,
+nep-15,2015,UK (England),Landings,26279.8,
+nep-15,2015,UK(Northern Ireland),Landings,6396001,
+nep-15,2015,UK(Scotland),Landings,11100,
+nep-17,2015,Ireland,Landings,369951.186,
+nep-17,2015,UK (England),Landings,2,
+nep-22,2015,Belgium,Landings,4660,
+nep-22,2015,Ireland,Landings,2258012.358,
+nep-22,2015,UK (England),Landings,421.9,
+nep-22,2015,UK(Northern Ireland),Landings,75784,
+nep-22,2015,UK(Scotland),Landings,20400,
+nep-34,2015,Denmark,Landings,330,
+nep-34,2015,France,Landings,0,
+nep-34,2015,Sweden,Landings,0,
+nep-34,2015,UK (England),Landings,38743,
+nep-34,2015,UK(Scotland),Landings,408120,
+nep-5,2015,Belgium,Landings,145987,
+nep-5,2015,Denmark,Landings,13,
+nep-5,2015,France,Landings,0,
+nep-5,2015,Germany,Landings,184020,
+nep-5,2015,Netherlands,Landings,680655,
+nep-5,2015,Sweden,Landings,0,
+nep-5,2015,UK (England),Landings,470841.6,
+nep-5,2015,UK(Scotland),Landings,35160,
+nep-6,2015,Belgium,Landings,210,
+nep-6,2015,Denmark,Landings,1275,
+nep-6,2015,France,Landings,0,
+nep-6,2015,Netherlands,Landings,9078,
+nep-6,2015,UK (England),Landings,1186253.6,
+nep-6,2015,UK(Scotland),Landings,174300,
+nep-7,2015,Denmark,Landings,8086,
+nep-7,2015,France,Landings,0,
+nep-7,2015,Sweden,Landings,31,
+nep-7,2015,UK (England),Landings,4166.6,
+nep-7,2015,UK(Scotland),Landings,1847820,
+nep-8,2015,UK (England),Landings,67555.2,
+nep-8,2015,UK(Scotland),Landings,1895400,
+nep-9,2015,UK (England),Landings,1594.6,
+nep-9,2015,UK(Scotland),Landings,809630,
+nep-32,2015,Denmark,Landings,110000,ICES WGNSSK REPORT 2018
+nep-32,2015,Sweden,Landings,0,ICES WGNSSK REPORT 2018
+nep-32,2015,UK (England),Landings,0,ICES WGNSSK REPORT 2018
+nep-32,2015,UK(Scotland),Landings,0,ICES WGNSSK REPORT 2018
+nep-33,2015,Belgium,Landings,299000,ICES WGNSSK REPORT 2018
+nep-33,2015,Denmark,Landings,371000,ICES WGNSSK REPORT 2018
+nep-33,2015,Germany,Landings,142000,ICES WGNSSK REPORT 2018
+nep-33,2015,Netherlands,Landings,187000,ICES WGNSSK REPORT 2018
+nep-33,2015,UK,Landings,4000,ICES WGNSSK REPORT 2018
+nep-32,2016,Denmark,Landings,80000,ICES WGNSSK REPORT 2018
+nep-32,2016,Sweden,Landings,0,ICES WGNSSK REPORT 2018
+nep-32,2016,UK (England),Landings,0,ICES WGNSSK REPORT 2018
+nep-32,2016,UK(Scotland),Landings,0,ICES WGNSSK REPORT 2018
+nep-32,2017,Denmark,Landings,53000,ICES WGNSSK REPORT 2018
+nep-32,2017,Sweden,Landings,0,ICES WGNSSK REPORT 2018
+nep-32,2017,UK (England),Landings,0,ICES WGNSSK REPORT 2018
+nep-32,2017,UK(Scotland),Landings,0,ICES WGNSSK REPORT 2018
+nep-32,2018,Denmark,Landings,34000,ICES WGNSSK REPORT 2018
+nep-32,2018,Sweden,Landings,0,ICES WGNSSK REPORT 2018
+nep-32,2018,UK (England),Landings,0,ICES WGNSSK REPORT 2018
+nep-32,2018,UK(Scotland),Landings,0,ICES WGNSSK REPORT 2018
+nep-33,2016,Belgium,Landings,430000,ICES WGNSSK REPORT 2018
+nep-33,2016,Denmark,Landings,642000,ICES WGNSSK REPORT 2018
+nep-33,2016,Germany,Landings,201000,ICES WGNSSK REPORT 2018
+nep-33,2016,Netherlands,Landings,320000,ICES WGNSSK REPORT 2018
+nep-33,2016,UK,Landings,43000,ICES WGNSSK REPORT 2018
+nep-33,2017,Belgium,Landings,423000,ICES WGNSSK REPORT 2018
+nep-33,2017,Denmark,Landings,511000,ICES WGNSSK REPORT 2018
+nep-33,2017,Germany,Landings,197000,ICES WGNSSK REPORT 2018
+nep-33,2017,Netherlands,Landings,336000,ICES WGNSSK REPORT 2018
+nep-33,2017,UK,Landings,5000,ICES WGNSSK REPORT 2018
+nep-33,2018,Belgium,Landings,280000,ICES WGNSSK REPORT 2018
+nep-33,2018,Denmark,Landings,48000,ICES WGNSSK REPORT 2018
+nep-33,2018,Germany,Landings,210000,ICES WGNSSK REPORT 2018
+nep-33,2018,Netherlands,Landings,236000,ICES WGNSSK REPORT 2018
+nep-33,2018,UK,Landings,2000,ICES WGNSSK REPORT 2018
