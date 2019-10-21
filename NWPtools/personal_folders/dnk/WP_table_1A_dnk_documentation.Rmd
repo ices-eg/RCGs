@@ -1,5 +1,5 @@
 ---
-title: "WP_table_1A_dnk_version"
+title: "WP_table_1A_dnk_documentation"
 author: "Kirsten Birch Håkansson, DTU Aqua"
 date: "21/10/2019"
 output: pdf_document
