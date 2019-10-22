@@ -64,7 +64,9 @@ DF <- rbind.data.frame(DF, DF51)
 
 TAC <- read.csv(file.path(input_path_common,'EU opening quota 2018.csv'), header=TRUE, sep=';',as.is=TRUE) 
 NEP <- read.csv(file.path(input_path_common,'Nephrops landings 2015.csv'), header=TRUE, sep=';', as.is=TRUE)
+COD <- read.table(file.path(input_path_common, 'patch_codIIIa_20191009.txt'), sep = '\t', header = TRUE, as.is = TRUE)
 MED <- read.csv(file.path(input_path_common,'RCM MED landings.csv'), header=TRUE, sep=';', as.is=TRUE)
+
 ```
 2. Reference tables:
   + EuroStat Geo.def: full names of countries
@@ -190,6 +192,12 @@ for (i in 1:nrow(table1A)) {
 	T1A$Thresh[T1A$TAC <.1 & T1A$Comments >=.25] <- 'N'   # 25% rule, sampling to be coordinated between MS
 }
 ```
+
+```{r cod}
+
+```
+
+
 
 ##Formatting
 ```{r}
