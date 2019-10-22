@@ -98,9 +98,9 @@ coln <- sapply(refYears, function(x) which(grepl(x,names(DF))))
 DFT <- data.frame(X3A_CODE = toupper(SRG.m[,1]), area = toupper(SRG.m[,2]), geo = SRG.m[,4],
 Y1 = DF[,coln[1]], Y2 = DF[,coln[2]], Y3 = DF[,coln[3]])
 DFM <- merge(DFT, GEO, all.x=TRUE)
-DFM$Y1 <- as.numeric(as.character(DFM$Y1))
-DFM$Y2 <- as.numeric(as.character(DFM$Y2))
-DFM$Y3 <- as.numeric(as.character(DFM$Y3))
+DFM$Y1 <- as.numeric(str_remove_all(as.character(DFM$Y1), "[bcdefinpzsu]")) #Removing characthers in amount
+DFM$Y2 <- as.numeric(str_remove_all(as.character(DFM$Y2), "[bcdefinpzsu]")) #Removing characthers in amount
+DFM$Y3 <- as.numeric(str_remove_all(as.character(DFM$Y3), "[bcdefinpzsu]")) #Removing characthers in amount
 DFM <- DFM[!is.na(DFM$Country),]
 DFM <- merge(DFM, ASFIS[,c(3:6)], all.x=TRUE)
 ```

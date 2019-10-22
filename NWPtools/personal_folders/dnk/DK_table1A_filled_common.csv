@@ -1,26 +1,26 @@
 MS;refYears;spp;region;RFMO;area;select;landings;TAC;shareLanding;Thresh;Comments;Comments2
 DK;2016-2018;Anguilla anguilla;Baltic Sea;ICES;22-32;Yes;186;-;20%;No;-;NA
 DK;2016-2018;Clupea harengus;Baltic Sea;ICES;22-24;Y;5234;14%;11%;N;-;FIDES Initial.Quantity = 2426
-DK;2016-2018;Clupea harengus;Baltic Sea;ICES;25-29,32;N;8603;2%;4%;Y;8%;FIDES Initial.Quantity = 5045
+DK;2016-2018;Clupea harengus;Baltic Sea;ICES;25-29,32;N;8603;2%;2%;Y;8%;FIDES Initial.Quantity = 5045
 DK;2016-2018;Clupea harengus;Baltic Sea;ICES;30;-;-;-;-;-;-;NA
 DK;2016-2018;Clupea harengus;Baltic Sea;ICES;31;-;-;-;-;-;-;NA
 DK;2016-2018;Clupea harengus;Baltic Sea;ICES;Gulf of Riga;-;-;-;-;-;-;NA
 DK;2016-2018;Coregonus albula;Baltic Sea;ICES;22-32;-;-;-;-;-;-;NA
 DK;2016-2018;Coregonus lavaretus;Baltic Sea;ICES;IIId;-;-;-;-;-;-;NA
-DK;2016-2018;Gadus morhua;Baltic Sea;ICES;22-24;Y;3080;44%;31%;N;-;FIDES Initial.Quantity = 2444
-DK;2016-2018;Gadus morhua;Baltic Sea;ICES;25-32;Y;5096;23%;16%;N;-;FIDES Initial.Quantity = 6521
-DK;2016-2018;Limanda limanda;Baltic Sea;ICES;22-32;Y;301;-;12%;N;-;NA
+DK;2016-2018;Gadus morhua;Baltic Sea;ICES;22-24;Y;3080;44%;23%;N;-;FIDES Initial.Quantity = 2444
+DK;2016-2018;Gadus morhua;Baltic Sea;ICES;25-32;Y;5096;23%;11%;N;-;FIDES Initial.Quantity = 6521
+DK;2016-2018;Limanda limanda;Baltic Sea;ICES;22-32;Y;301;-;13%;N;-;NA
 DK;2016-2018;Perca fluviatilis;Baltic Sea;ICES;IIId;N;5;-;0%;Y;-;NA
 DK;2016-2018;Platichthys flesus;Baltic Sea;ICES;22-32;N;914;-;3%;Y;-;NA
-DK;2016-2018;Pleuronectes platessa;Baltic Sea;ICES;22-32;Y;1845;72%;33%;N;-;FIDES Initial.Quantity = 5070
-DK;2016-2018;Psetta maxima;Baltic Sea;ICES;22-32;N;123;-;27%;Y;-;NA
-DK;2016-2018;Salmo salar;Baltic Sea;ICES;22-31;N;33;21%;6%;Y;-;FIDES Initial.Quantity = 18885
+DK;2016-2018;Pleuronectes platessa;Baltic Sea;ICES;22-32;Y;1845;72%;32%;N;-;FIDES Initial.Quantity = 5070
+DK;2016-2018;Psetta maxima;Baltic Sea;ICES;22-32;N;123;-;23%;Y;-;NA
+DK;2016-2018;Salmo salar;Baltic Sea;ICES;22-31;N;33;21%;4%;Y;-;FIDES Initial.Quantity = 18885
 DK;2016-2018;Salmo salar;Baltic Sea;ICES;32;-;-;-;-;-;-;NA
-DK;2016-2018;Salmo trutta;Baltic Sea;ICES;22-32;N;4;-;1%;Y;-;NA
+DK;2016-2018;Salmo trutta;Baltic Sea;ICES;22-32;N;4;-;0%;Y;-;NA
 DK;2016-2018;Sander lucioperca;Baltic Sea;ICES;IIId;-;-;-;-;-;-;NA
 DK;2016-2018;Scophthalmus rhombus;Baltic Sea;ICES;22-32;N;40;-;47%;Y;-;NA
-DK;2016-2018;Solea solea;Baltic Sea;ICES;22;N;43;-;49%;Y;-;NA
-DK;2016-2018;Sprattus sprattus;Baltic Sea;ICES;22-32;Y;23341;10%;8%;N;Sum of MS shares <10% = 26%%;FIDES Initial.Quantity = 25875
+DK;2016-2018;Solea solea;Baltic Sea;ICES;22;N;43;-;50%;Y;-;NA
+DK;2016-2018;Sprattus sprattus;Baltic Sea;ICES;22-32;Y;23341;10%;5%;N;Sum of MS shares <10% = 26%%;FIDES Initial.Quantity = 25875
 DK;2015;Alopias vulpinus;Mediterranean and Black Sea;GFCM;All areas;-;-;-;-;-;-;NA
 DK;2015;Anguilla anguilla;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
 DK;2015;Aphia minuta;Mediterranean and Black Sea;GFCM;GSA 9,10,16 and 19;-;-;-;-;-;-;NA
@@ -196,7 +196,7 @@ DK;2016-2018;Loligo vulgaris;North Atlantic;ICES;VIIIc, IXa;-;-;-;-;-;-;NA
 DK;2016-2018;Lophius budegassa;North Atlantic;ICES;IV, VI;N;-;5%;0%;Y;20%;FIDES Initial.Quantity = 1264
 DK;2016-2018;Lophius budegassa;North Atlantic;ICES;VIIb-k, VIIIabd;-;-;-;-;-;-;NA
 DK;2016-2018;Lophius budegassa;North Atlantic;ICES;VIIIc, IXa;-;-;-;-;-;-;NA
-DK;2016-2018;Lophius piscatorius;North Atlantic;ICES;IV, VI;N;2286;5%;39%;Y;20%;FIDES Initial.Quantity = 1264
+DK;2016-2018;Lophius piscatorius;North Atlantic;ICES;IV, VI;N;2286;5%;37%;Y;20%;FIDES Initial.Quantity = 1264
 DK;2016-2018;Lophius piscatorius;North Atlantic;ICES;VIIb-k, VIIIabd;-;-;-;-;-;-;NA
 DK;2016-2018;Lophius piscatorius;North Atlantic;ICES;VIIIc, IXa;-;-;-;-;-;-;NA
 DK;2016-2018;Maja squinado;North Atlantic;ICES;V, VI, VII;-;-;-;-;-;-;NA
@@ -217,7 +217,7 @@ DK;2016-2018;Merlangius merlangus;North Atlantic;ICES;VIII;-;-;-;-;-;-;NA
 DK;2016-2018;Merluccius merluccius;North Atlantic;ICES;IIIa, IV, VI, VII, VIIIab;N;4434;0%;2%;Y;-;FIDES Initial.Quantity = 0
 DK;2016-2018;Merluccius merluccius;North Atlantic;ICES;VIIIc, IXa;-;-;-;-;-;-;NA
 DK;2016-2018;Microchirus variegatus;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Micromesistius poutassou;North Atlantic;ICES;I-IX, XII, XIV;Y;62932;15%;11%;N;-;FIDES Initial.Quantity = 61277
+DK;2016-2018;Micromesistius poutassou;North Atlantic;ICES;I-IX, XII, XIV;Y;62932;15%;10%;N;-;FIDES Initial.Quantity = 61277
 DK;2016-2018;Microstomus kitt;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
 DK;2016-2018;Molva dypterygia;North Atlantic;ICES;all areas excluding X;-;-;-;-;-;-;NA
 DK;2016-2018;Molva macrophthalma;North Atlantic;ICES;X;-;-;-;-;-;-;NA
@@ -331,8 +331,8 @@ DK;2016-2018;Aspitrigla cuculus;North Sea and Eastern Arctic;ICES;IIIa;-;-;-;-;-
 DK;2016-2018;Brosme brosme;North Sea and Eastern Arctic;ICES;I-II;-;-;-;-;-;-;NA
 DK;2016-2018;Brosme brosme;North Sea and Eastern Arctic;ICES;IV;N;36;27%;21%;Y;-;FIDES Initial.Quantity = 68
 DK;2016-2018;Clupea harengus;North Sea and Eastern Arctic;ICES;22-24,IIIa;Y;8986;54%;9%;N;-;FIDES Initial.Quantity = 25947
-DK;2016-2018;Clupea harengus;North Sea and Eastern Arctic;ICES;I-II;Y;15491;34%;30%;N;-;FIDES Initial.Quantity = 9704
-DK;2016-2018;Clupea harengus;North Sea and Eastern Arctic;ICES;IV, VIId;Y;122664;96%;15%;N;-;FIDES Initial.Quantity = 9256
+DK;2016-2018;Clupea harengus;North Sea and Eastern Arctic;ICES;I-II;Y;15491;34%;25%;N;-;FIDES Initial.Quantity = 9704
+DK;2016-2018;Clupea harengus;North Sea and Eastern Arctic;ICES;IV, VIId;Y;122664;96%;16%;N;-;FIDES Initial.Quantity = 9256
 DK;2016-2018;Coryphaenoides rupestris;North Sea and Eastern Arctic;ICES;IIIa;N;1;95%;48%;Y;-;FIDES Initial.Quantity = 211
 DK;2016-2018;Crangon crangon;North Sea and Eastern Arctic;ICES;IV, VIId;N;2141;-;3%;Y;-;NA
 DK;2016-2018;Dasyatis tortonesei;North Sea and Eastern Arctic;ICES;all areas;-;-;-;-;-;-;NA
@@ -345,31 +345,31 @@ DK;2016-2018;Gadus morhua;North Sea and Eastern Arctic;ICES;IIIaN;Y;3857;83%;84%
 DK;2016-2018;Gadus morhua;North Sea and Eastern Arctic;ICES;IIIaS;N;191;62%;71%;Y;-;FIDES Initial.Quantity = 389
 DK;2016-2018;Gadus morhua;North Sea and Eastern Arctic;ICES;IV, VIId;Y;6108;20%;10%;N;-;FIDES Initial.Quantity = 7327
 DK;2016-2018;Galeorhinus galeus;North Sea and Eastern Arctic;ICES;all areas;N;1;-;1%;Y;-;NA
-DK;2016-2018;Glyptocephalus cynoglossus;North Sea and Eastern Arctic;ICES;IIIa;Y;910;-;39%;N;-;NA
-DK;2016-2018;Glyptocephalus cynoglossus;North Sea and Eastern Arctic;ICES;IV;Y;522;-;19%;N;-;NA
+DK;2016-2018;Glyptocephalus cynoglossus;North Sea and Eastern Arctic;ICES;IIIa;Y;910;-;40%;N;-;NA
+DK;2016-2018;Glyptocephalus cynoglossus;North Sea and Eastern Arctic;ICES;IV;Y;522;-;18%;N;-;NA
 DK;2016-2018;Helicolenus dactylopterus;North Sea and Eastern Arctic;ICES;IV;-;-;-;-;-;-;NA
 DK;2016-2018;Hydrolagus affinis;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;-;NA
 DK;2016-2018;Lepidorhombus boscii;North Sea and Eastern Arctic;ICES;IV, VIId;N;-;0%;0%;Y;4%;FIDES Initial.Quantity = 7
-DK;2016-2018;Lepidorhombus whiffiagonis;North Sea and Eastern Arctic;ICES;IV, VIId;N;56;0%;47%;Y;4%;FIDES Initial.Quantity = 7
-DK;2016-2018;Limanda limanda;North Sea and Eastern Arctic;ICES;IIIa;Y;613;-;36%;N;-;NA
-DK;2016-2018;Limanda limanda;North Sea and Eastern Arctic;ICES;IV, VIId;N;602;-;6%;Y;-;NA
+DK;2016-2018;Lepidorhombus whiffiagonis;North Sea and Eastern Arctic;ICES;IV, VIId;N;56;0%;44%;Y;4%;FIDES Initial.Quantity = 7
+DK;2016-2018;Limanda limanda;North Sea and Eastern Arctic;ICES;IIIa;Y;613;-;37%;N;-;NA
+DK;2016-2018;Limanda limanda;North Sea and Eastern Arctic;ICES;IV, VIId;N;602;-;7%;Y;-;NA
 DK;2016-2018;Lophius budegassa;North Sea and Eastern Arctic;ICES;IV, VIId;N;-;8%;0%;Y;19%;FIDES Initial.Quantity = 1264
-DK;2016-2018;Lophius piscatorius;North Sea and Eastern Arctic;ICES;IV;N;2286;8%;48%;Y;19%;FIDES Initial.Quantity = 1264
+DK;2016-2018;Lophius piscatorius;North Sea and Eastern Arctic;ICES;IV;N;2286;8%;46%;Y;19%;FIDES Initial.Quantity = 1264
 DK;2016-2018;Macrourus berglax;North Sea and Eastern Arctic;ICES;IV;Y;-;10%;0%;N;Sum of MS shares <10% = 30%%;FIDES Initial.Quantity = 0.01
 DK;2016-2018;Mallotus villosus;North Sea and Eastern Arctic;ICES;I-II;-;-;-;-;-;-;NA
 DK;2016-2018;Melanogrammus aeglefinus;North Sea and Eastern Arctic;ICES;I-II;N;19;-;1%;Y;-;NA
-DK;2016-2018;Melanogrammus aeglefinus;North Sea and Eastern Arctic;ICES;IIIa;Y;809;-;36%;N;-;NA
+DK;2016-2018;Melanogrammus aeglefinus;North Sea and Eastern Arctic;ICES;IIIa;Y;809;-;37%;N;-;NA
 DK;2016-2018;Melanogrammus aeglefinus;North Sea and Eastern Arctic;ICES;IV;N;1172;5%;2%;Y;16%;FIDES Initial.Quantity = 1657
-DK;2016-2018;Merlangius merlangus;North Sea and Eastern Arctic;ICES;IIIa;Y;343;90%;37%;N;-;FIDES Initial.Quantity = 929
+DK;2016-2018;Merlangius merlangus;North Sea and Eastern Arctic;ICES;IIIa;Y;343;90%;39%;N;-;FIDES Initial.Quantity = 929
 DK;2016-2018;Merlangius merlangus;North Sea and Eastern Arctic;ICES;IV, VIId;N;2590;9%;7%;Y;19%;FIDES Initial.Quantity = 1912
-DK;2016-2018;Merluccius merluccius;North Sea and Eastern Arctic;ICES;IIIa;Y;598;-;45%;N;-;NA
+DK;2016-2018;Merluccius merluccius;North Sea and Eastern Arctic;ICES;IIIa;Y;598;-;44%;N;-;NA
 DK;2016-2018;Merluccius merluccius;North Sea and Eastern Arctic;ICES;IV VII;Y;3832;58%;13%;N;-;FIDES Initial.Quantity = 2112
-DK;2016-2018;Micromesistius poutassou;North Sea and Eastern Arctic;ICES;I-II;N;86;15%;1%;Y;-;FIDES Initial.Quantity = 61277
+DK;2016-2018;Micromesistius poutassou;North Sea and Eastern Arctic;ICES;I-II;N;86;15%;0%;Y;-;FIDES Initial.Quantity = 61277
 DK;2016-2018;Micromesistius poutassou;North Sea and Eastern Arctic;ICES;IIIa;N;28;15%;9%;Y;-;FIDES Initial.Quantity = 61277
 DK;2016-2018;Micromesistius poutassou;North Sea and Eastern Arctic;ICES;IV, VIId;N;24;15%;0%;Y;-;FIDES Initial.Quantity = 61277
 DK;2016-2018;Microstomus kitt;North Sea and Eastern Arctic;ICES;IV, VIId;Y;967;-;15%;N;-;NA
 DK;2016-2018;Molva dypterygia;North Sea and Eastern Arctic;ICES;IV;N;2;8%;8%;Y;23%;FIDES Initial.Quantity = 4
-DK;2016-2018;Molva molva;North Sea and Eastern Arctic;ICES;IV;Y;945;10%;12%;N;-;FIDES Initial.Quantity = 385
+DK;2016-2018;Molva molva;North Sea and Eastern Arctic;ICES;IV;Y;945;10%;11%;N;-;FIDES Initial.Quantity = 385
 DK;2016-2018;Mullus barbatus;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;-;NA
 DK;2016-2018;Mullus surmuletus;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;-;NA
 DK;2016-2018;Mustelus asterias;North Sea and Eastern Arctic;ICES;all areas;-;-;-;-;-;-;NA
@@ -387,14 +387,14 @@ DK;2016-2018;Pandalus borealis;North Sea and Eastern Arctic;ICES;IIIa;Y;1834;65%
 DK;2016-2018;Pandalus borealis;North Sea and Eastern Arctic;ICES;IV;N;183;74%;27%;Y;-;FIDES Initial.Quantity = 1453
 DK;2016-2018;Pandalus borealis;North Sea and Eastern Arctic;ICES;IVa;N;175;74%;27%;Y;-;FIDES Initial.Quantity = 1453
 DK;2016-2018;Pecten maximus;North Sea and Eastern Arctic;ICES;VIId;-;-;-;-;-;-;NA
-DK;2016-2018;Phycis blennoides;North Sea and Eastern Arctic;ICES;IV;N;15;-;54%;Y;-;NA
+DK;2016-2018;Phycis blennoides;North Sea and Eastern Arctic;ICES;IV;N;15;-;47%;Y;-;NA
 DK;2016-2018;Phycis phycis;North Sea and Eastern Arctic;ICES;IV;-;-;-;-;-;-;NA
-DK;2016-2018;Platichthys flesus;North Sea and Eastern Arctic;ICES;IV;N;101;-;3%;Y;-;NA
-DK;2016-2018;Pleuronectes platessa;North Sea and Eastern Arctic;ICES;IIIa;Y;7106;80%;36%;N;-;FIDES Initial.Quantity = 13266
+DK;2016-2018;Platichthys flesus;North Sea and Eastern Arctic;ICES;IV;N;101;-;4%;Y;-;NA
+DK;2016-2018;Pleuronectes platessa;North Sea and Eastern Arctic;ICES;IIIa;Y;7106;80%;38%;N;-;FIDES Initial.Quantity = 13266
 DK;2016-2018;Pleuronectes platessa;North Sea and Eastern Arctic;ICES;IV;Y;12906;20%;9%;N;-;FIDES Initial.Quantity = 20952
 DK;2016-2018;Pleuronectes platessa;North Sea and Eastern Arctic;ICES;VIId;-;-;-;-;-;-;NA
 DK;2016-2018;Pollachius virens;North Sea and Eastern Arctic;ICES;I-II;N;6;-;0%;Y;-;NA
-DK;2016-2018;Pollachius virens;North Sea and Eastern Arctic;ICES;IIIa;Y;1456;-;42%;N;-;NA
+DK;2016-2018;Pollachius virens;North Sea and Eastern Arctic;ICES;IIIa;Y;1456;-;38%;N;-;NA
 DK;2016-2018;Pollachius virens;North Sea and Eastern Arctic;ICES;IV;N;4141;-;7%;Y;-;NA
 DK;2016-2018;Psetta maxima;North Sea and Eastern Arctic;ICES;IIIa;N;133;-;39%;Y;-;NA
 DK;2016-2018;Psetta maxima;North Sea and Eastern Arctic;ICES;IV, VIId;N;441;-;6%;Y;-;NA
@@ -421,16 +421,16 @@ DK;2016-2018;Scophthalmus rhombus;North Sea and Eastern Arctic;ICES;IIIa;N;115;-
 DK;2016-2018;Scophthalmus rhombus;North Sea and Eastern Arctic;ICES;IV, VIId;N;116;-;3%;Y;-;NA
 DK;2016-2018;Scyliorhinus canicula;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;-;NA
 DK;2016-2018;Scyliorhinus stellaris;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;-;NA
-DK;2016-2018;Sebastes marinus;North Sea and Eastern Arctic;ICES;I-II;N;4;-;3%;Y;-;NA
+DK;2016-2018;Sebastes marinus;North Sea and Eastern Arctic;ICES;I-II;N;4;-;4%;Y;-;NA
 DK;2016-2018;Sebastes mentella;North Sea and Eastern Arctic;ICES;I-II;-;-;-;-;-;-;NA
 DK;2016-2018;Sebastes mentella;North Sea and Eastern Arctic;ICES;IV;N;1;-;64%;Y;-;NA
-DK;2016-2018;Solea solea;North Sea and Eastern Arctic;ICES;IIIa;Y;306;-;47%;N;-;NA
+DK;2016-2018;Solea solea;North Sea and Eastern Arctic;ICES;IIIa;Y;306;-;41%;N;-;NA
 DK;2016-2018;Solea solea;North Sea and Eastern Arctic;ICES;IV;N;385;4%;2%;Y;25%;FIDES Initial.Quantity = 597
 DK;2016-2018;Solea solea;North Sea and Eastern Arctic;ICES;VIId;-;-;-;-;-;-;NA
 DK;2016-2018;Sprattus sprattus;North Sea and Eastern Arctic;ICES;IIIa;Y;3770;72%;41%;N;-;FIDES Initial.Quantity = 17840
-DK;2016-2018;Sprattus sprattus;North Sea and Eastern Arctic;ICES;IV;Y;155091;91%;40%;N;-;FIDES Initial.Quantity = 151264
+DK;2016-2018;Sprattus sprattus;North Sea and Eastern Arctic;ICES;IV;Y;155091;91%;46%;N;-;FIDES Initial.Quantity = 151264
 DK;2016-2018;Sprattus sprattus;North Sea and Eastern Arctic;ICES;VIId;N;-;32%;0%;Y;-;FIDES Initial.Quantity = 1071
-DK;2016-2018;Squalus acanthias;North Sea and Eastern Arctic;ICES;all areas;N;14;-;23%;Y;-;NA
+DK;2016-2018;Squalus acanthias;North Sea and Eastern Arctic;ICES;all areas;N;14;-;27%;Y;-;NA
 DK;2016-2018;Torpedo nobiliana;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;-;NA
 DK;2016-2018;Trachurus trachurus;North Sea and Eastern Arctic;ICES;IIa;Y;-;10%;0%;N;Sum of MS shares <10% = 33%%;FIDES Initial.Quantity = 9861
 DK;2016-2018;Trachurus trachurus;North Sea and Eastern Arctic;ICES;IV, VIId;Y;337;47%;3%;N;-;FIDES Initial.Quantity = 5985
