@@ -42,7 +42,7 @@ asfis$latinComm<-ifelse(is.na(asfis$X3A_CODE),"latinName_old not in ASFIS", "NA"
 
 names(asfis)
 
-linkage_new <- rename(asfis, latinName_old = latinName, latinName = latinName_new)
+linkage_new <- mutate(asfis, latinName_old = latinName, latinName = latinName_new)
 
 names(linkage)
 names(linkage_new)
