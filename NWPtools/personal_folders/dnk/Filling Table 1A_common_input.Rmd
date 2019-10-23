@@ -132,8 +132,10 @@ DFM <- rbind.data.frame(DFM, MED)
 ```{r}
 T1A <- data.frame()
 for (i in 1:nrow(table1A)) {
+  
 	ctry2 <- GEO$Country[GEO$geo %in% CTRY]
 	reg <- strsplit(as.character(table1A$areaBis[i]), split=',')
+	
 	if (table1A$region[i] %in% 'Mediterranean and Black Sea') {
 	    DT <- DFM[DFM$Scientific_name %in% table1A$latinName[i] & tolower(DFM$area) %in% tolower(paste(reg[[1]], collapse=',')),]
 	  } else {
