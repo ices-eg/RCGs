@@ -1,646 +1,646 @@
-MS;refYears;spp;region;RFMO;area;select;landings;TAC;shareLanding;Thresh;Comments;Comments2
-DK;2016-2018;Anguilla anguilla;Baltic Sea;ICES;22-32;Yes;186;-;41%;No;-;NA
-DK;2016-2018;Clupea harengus;Baltic Sea;ICES;22-24;Y;5234;14%;22%;N;-;FIDES Initial.Quantity = 2426
-DK;2016-2018;Clupea harengus;Baltic Sea;ICES;25-29,32;N;8603;2%;5%;Y;8%;FIDES Initial.Quantity = 5045
-DK;2016-2018;Clupea harengus;Baltic Sea;ICES;30;-;-;-;-;-;-;NA
-DK;2016-2018;Clupea harengus;Baltic Sea;ICES;31;-;-;-;-;-;-;NA
-DK;2016-2018;Clupea harengus;Baltic Sea;ICES;Gulf of Riga;-;-;-;-;-;-;NA
-DK;2016-2018;Coregonus albula;Baltic Sea;ICES;22-32;-;-;-;-;-;-;NA
-DK;2016-2018;Coregonus lavaretus;Baltic Sea;ICES;IIId;-;-;-;-;-;-;NA
-DK;2016-2018;Gadus morhua;Baltic Sea;ICES;22-24;Y;3080;44%;48%;N;-;FIDES Initial.Quantity = 2444
-DK;2016-2018;Gadus morhua;Baltic Sea;ICES;25-32;Y;5096;23%;25%;N;-;FIDES Initial.Quantity = 6521
-DK;2016-2018;Limanda limanda;Baltic Sea;ICES;22-32;Y;301;-;26%;N;-;NA
-DK;2016-2018;Perca fluviatilis;Baltic Sea;ICES;IIId;N;5;-;0%;Y;-;NA
-DK;2016-2018;Platichthys flesus;Baltic Sea;ICES;22-32;N;914;-;5%;Y;-;NA
-DK;2016-2018;Pleuronectes platessa;Baltic Sea;ICES;22-32;Y;1845;72%;58%;N;-;FIDES Initial.Quantity = 5070
-DK;2016-2018;Psetta maxima;Baltic Sea;ICES;22-32;N;123;-;43%;Y;-;NA
-DK;2016-2018;Salmo salar;Baltic Sea;ICES;22-31;N;33;21%;7%;Y;-;FIDES Initial.Quantity = 18885
-DK;2016-2018;Salmo salar;Baltic Sea;ICES;32;-;-;-;-;-;-;NA
-DK;2016-2018;Salmo trutta;Baltic Sea;ICES;22-32;N;4;-;1%;Y;-;NA
-DK;2016-2018;Sander lucioperca;Baltic Sea;ICES;IIId;-;-;-;-;-;-;NA
-DK;2016-2018;Scophthalmus rhombus;Baltic Sea;ICES;22-32;N;40;-;89%;Y;-;NA
-DK;2016-2018;Solea solea;Baltic Sea;ICES;22;N;43;-;98%;Y;-;NA
-DK;2016-2018;Sprattus sprattus;Baltic Sea;ICES;22-32;Y;23341;10%;10%;N;Sum of MS shares <10% = 26%%;FIDES Initial.Quantity = 25875
-DK;2015;Alopias vulpinus;Mediterranean and Black Sea;GFCM;All areas;-;-;-;-;-;-;NA
-DK;2015;Anguilla anguilla;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Aphia minuta;Mediterranean and Black Sea;GFCM;GSA 9,10,16 and 19;-;-;-;-;-;-;NA
-DK;2015;Aristaeomorpha foliacea;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Aristeus antennatus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Atherina spp;Mediterranean and Black Sea;GFCM;GSA 9,10,16 and 19;-;-;-;-;-;-;NA
-DK;2015;Boops boops;Mediterranean and Black Sea;GFCM;1.3, 2.1, 2.2, 3.1, 3.2;-;-;-;-;-;-;NA
-DK;2015;Carcharhinidae;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Centrophorus granulosus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Centrophorus squamosus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Centrophorus uyato;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Centroscymnus coelolepis;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Chelidonichthys lucerna;Mediterranean and Black Sea;GFCM;1.3, 2.2, 3.1;-;-;-;-;-;-;NA
-DK;2015;Dalatias licha;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Dasyatidae;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Dasyatis centroura;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Dasyatis pastinaca;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Dasyatis violacea;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Dicentrarchus labrax;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Eledone cirrhosa;Mediterranean and Black Sea;GFCM;1.1, 1.3, 2.1, 2.2, 3.1;-;-;-;-;-;-;NA
-DK;2015;Eledone moschata;Mediterranean and Black Sea;GFCM;1.3, 2.1, 2.2, 3.1;-;-;-;-;-;-;NA
-DK;2015;Engraulis encrasicolus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Engraulis encrasicolus;Mediterranean and Black Sea;GFCM;Black Sea GSA 29;-;-;-;-;-;-;NA
-DK;2015;Etmopterus spinax;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Eutrigla gurnardus;Mediterranean and Black Sea;GFCM;2.2, 3.1;-;-;-;-;-;-;NA
-DK;2015;Galeorhinus galeus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Galeus melastomus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Galeus spp;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Heptranchias perlo;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Hexanchus griseus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Illex spp;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Isurus oxyrinchus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Isurus oxyrinchus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Lamna nasus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Loligo vulgaris;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Lophius budegassa;Mediterranean and Black Sea;GFCM;1.1, 1.2, 1.3, 2.2, 3.1;-;-;-;-;-;-;NA
-DK;2015;Lophius piscatorius;Mediterranean and Black Sea;GFCM;1.1, 1.2, 1.3, 2.2, 3.1;-;-;-;-;-;-;NA
-DK;2015;Merlangius merlangus;Mediterranean and Black Sea;GFCM;Black Sea GSA 29;-;-;-;-;-;-;NA
-DK;2015;Merluccius merluccius;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Micromesistius poutassou;Mediterranean and Black Sea;GFCM;1.1, 3.1;-;-;-;-;-;-;NA
-DK;2015;Mugilidae;Mediterranean and Black Sea;GFCM;1.3, 2.1, 2.2, 3.1;-;-;-;-;-;-;NA
-DK;2015;Mullus barbatus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Mullus barbatus;Mediterranean and Black Sea;GFCM;Black Sea GSA 29;-;-;-;-;-;-;NA
-DK;2015;Mullus surmuletus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Mustelus asterias;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Mustelus mustelus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Mustelus spp;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Myliobatis aquila;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Nephrops norvegicus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Octopus vulgaris;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Oxynotus centrina;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Pagellus erythrinus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Parapenaeus longirostris;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Penaeus kerathurus;Mediterranean and Black Sea;GFCM;3.1;-;-;-;-;-;-;NA
-DK;2015;Prionace glauca;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Psetta maxima;Mediterranean and Black Sea;GFCM;Black Sea GSA 29;-;-;-;-;-;-;NA
-DK;2015;Pteromylaeus bovinus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Raja alba;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Raja asterias;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Raja batis;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Raja brachyura;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Raja circularis;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Raja clavata;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Raja fullonica;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Raja melitensis;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Raja microocellata;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Raja miraletus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Raja montagui;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Raja naevus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Raja oxyrinchus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Raja polystigma;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Raja radula;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Raja undulata;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Sardina pilchardus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Scomber spp,Scomber australasicus,Scomber scombrus,Scomber japonicus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Scyliorhinus canicula;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Scyliorhinus spp;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Scyliorhinus stellaris;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Sepia officinalis;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Solea solea;Mediterranean and Black Sea;GFCM;1.2, 2.1, 3.1;-;-;-;-;-;-;NA
-DK;2015;Sparus aurata;Mediterranean and Black Sea;GFCM;1.2, 3.1;-;-;-;-;-;-;NA
-DK;2015;Sphyrna spp;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Spicara smaris;Mediterranean and Black Sea;GFCM;2.1, 3.1, 3.2;-;-;-;-;-;-;NA
-DK;2015;Sprattus sprattus;Mediterranean and Black Sea;GFCM;Black Sea GSA 29;-;-;-;-;-;-;NA
-DK;2015;Squalus acanthias;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Squalus blainville;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Squalus spp;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Squatina squatina;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Squilla mantis;Mediterranean and Black Sea;GFCM;1.3, 2.1, 2.2;-;-;-;-;-;-;NA
-DK;2015;Todarodes spp;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Torpedo marmorata;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Torpedo nobiliana;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Torpedo spp;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Trachurus mediterraneus;Mediterranean and Black Sea;GFCM;All areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Trachurus mediterraneus;Mediterranean and Black Sea;GFCM;Black Sea GSA 29;-;-;-;-;-;-;NA
-DK;2015;Trachurus trachurus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Trachurus trachurus;Mediterranean and Black Sea;GFCM;Black Sea GSA 29;-;-;-;-;-;-;NA
-DK;2015;Triakidae;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Trisopterus minutus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;-;NA
-DK;2015;Veneridae;Mediterranean and Black Sea;GFCM;2.1, 2.2;-;-;-;-;-;-;NA
-DK;2016-2018;Aequipecten opercularis;North Atlantic;ICES;VII;-;-;-;-;-;-;NA
-DK;2016-2018;Alepocephalus bairdii;North Atlantic;ICES;VI,XII;-;-;-;-;-;-;NA
-DK;2016-2018;Ammodytes spp,Ammodytes tobianus;North Atlantic;ICES;VIa;-;-;-;-;-;-;NA
-DK;2016-2018;Anguilla anguilla;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Aphanopus spp,Aphanopus intermedius,Aphanopus carbo;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Argentina spp,Argentina sphyraena,Argentina silus,Argentina kagoshimae,Argentina elongata;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Argyrosomus regius;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Aspitrigla cuculus;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Bathyraja richardsoni;North Atlantic;ICES;All areas;-;-;-;-;-;-;NA
-DK;2016-2018;Bathyraja spinicauda;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Beryx spp,Beryx splendens,Beryx decadactylus;North Atlantic;ICES;all areas excluding X and IXa;-;-;-;-;-;-;NA
-DK;2016-2018;Beryx spp,Beryx splendens,Beryx decadactylus;North Atlantic;ICES;IXa and X;-;-;-;-;-;-;NA
-DK;2016-2018;Cancer pagurus;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Capros aper,Caproidae;North Atlantic;ICES;V, VI, VII;Y;236;25%;2%;N;-;FIDES Initial.Quantity = 5001
-DK;2016-2018;Centrophorus squamosus;North Atlantic;ICES;All areas;-;-;-;-;-;-;NA
-DK;2016-2018;Centroscymnus coelolepis;North Atlantic;ICES;All areas;-;-;-;-;-;-;NA
-DK;2016-2018;Chimaera monstrosa;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Chimaera opalescens;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Clupea harengus;North Atlantic;ICES;VIa;N;33;-;1%;Y;-;NA
-DK;2016-2018;Clupea harengus;North Atlantic;ICES;VIaS,VIIbc;N;33;-;1%;Y;-;NA
-DK;2016-2018;Clupea harengus;North Atlantic;ICES;VIIa;-;-;-;-;-;-;NA
-DK;2016-2018;Clupea harengus;North Atlantic;ICES;VIIj;-;-;-;-;-;-;NA
-DK;2016-2018;Conger conger;North Atlantic;ICES;all areas excluding X;-;-;-;-;-;-;NA
-DK;2016-2018;Conger conger;North Atlantic;ICES;X;-;-;-;-;-;-;NA
-DK;2016-2018;Coryphaenoides rupestris;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Dalatias licha;North Atlantic;ICES;All areas;-;-;-;-;-;-;NA
-DK;2016-2018;Dalatias licha;North Atlantic;ICES;All areas;-;-;-;-;-;-;NA
-DK;2016-2018;Dasyatis centroura;North Atlantic;ICES;All areas;-;-;-;-;-;-;NA
-DK;2016-2018;Dasyatis pastinaca;North Atlantic;ICES;VII, VIII;-;-;-;-;-;-;NA
-DK;2016-2018;Dasyatis pastinaca;North Atlantic;ICES;VII, VIII;-;-;-;-;-;-;NA
-DK;2016-2018;Dasyatis tortonesei;North Atlantic;ICES;VII, VIII;-;-;-;-;-;-;NA
-DK;2016-2018;Dasyatis violacea;North Atlantic;ICES;All areas;-;-;-;-;-;-;NA
-DK;2016-2018;Deania calcea;North Atlantic;ICES;V, VI, VII, IX, X, XII;-;-;-;-;-;-;NA
-DK;2016-2018;Deania calcea;North Atlantic;ICES;V, VI, VII, IX, X, XII;-;-;-;-;-;-;NA
-DK;2016-2018;Dicentrarchus labrax;North Atlantic;ICES;all areas excluding IX;-;-;-;-;-;-;NA
-DK;2016-2018;Dicentrarchus labrax;North Atlantic;ICES;IX;-;-;-;-;-;-;NA
-DK;2016-2018;Dicologlossa cuneata;North Atlantic;ICES;VIIIc, IX;-;-;-;-;-;-;NA
-DK;2016-2018;Dipturus intermedius;North Atlantic;ICES;IIa, V, VI, VII, VIII, IXa;-;-;-;-;-;-;NA
-DK;2016-2018;Engraulis encrasicolus;North Atlantic;ICES;IXa (only Cadiz);-;-;-;-;-;-;NA
-DK;2016-2018;Engraulis encrasicolus;North Atlantic;ICES;VIII;-;-;-;-;-;-;NA
-DK;2016-2018;Etmopterus spinax;North Atlantic;ICES;VI, VII, VIII;-;-;-;-;-;-;NA
-DK;2016-2018;Etmopterus spinax;North Atlantic;ICES;VI, VII, VIII;-;-;-;-;-;-;NA
-DK;2016-2018;Eutrigla gurnardus;North Atlantic;ICES;VIIde;-;-;-;-;-;-;NA
-DK;2016-2018;Gadus morhua;North Atlantic;ICES;Va;-;-;-;-;-;-;NA
-DK;2016-2018;Gadus morhua;North Atlantic;ICES;Vb;-;-;-;-;-;-;NA
-DK;2016-2018;Gadus morhua;North Atlantic;ICES;VIa;N;1;-;0%;Y;-;NA
-DK;2016-2018;Gadus morhua;North Atlantic;ICES;Vib;-;-;-;-;-;-;NA
-DK;2016-2018;Gadus morhua;North Atlantic;ICES;VIIa;-;-;-;-;-;-;NA
-DK;2016-2018;Gadus morhua;North Atlantic;ICES;VIIe-k;-;-;-;-;-;-;NA
-DK;2016-2018;Galeorhinus galeus;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Galeus melastomus;North Atlantic;ICES;VI, VII;-;-;-;-;-;-;NA
-DK;2016-2018;Glyptocephalus cynoglossus;North Atlantic;ICES;VI, VII;-;-;-;-;-;-;NA
-DK;2016-2018;Harriotta raleighana;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Helicolenus dactylopterus;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Hexanchus griseus;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Hippoglossus hippoglossus;North Atlantic;ICES;V, XIV;-;-;-;-;-;-;NA
-DK;2016-2018;Homarus gammarus;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Hoplostethus atlanticus;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Hydrolagus affinis;North Atlantic;ICES;All areas;-;-;-;-;-;-;NA
-DK;2016-2018;Hydrolagus mirabilis;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Hydrolagus pallidus;North Atlantic;ICES;All areas;-;-;-;-;-;-;NA
-DK;2016-2018;Isurus oxyrinchus;North Atlantic;ICES;all areas (North of 50°N);-;-;-;-;-;-;NA
-DK;2016-2018;Lamna nasus;North Atlantic;ICES;all areas (subareas 1-14);-;-;-;-;-;-;NA
-DK;2016-2018;Lepidopus caudatus;North Atlantic;ICES;IXa;-;-;-;-;-;-;NA
-DK;2016-2018;Lepidorhombus boscii;North Atlantic;ICES;VIIIc, IXa;-;-;-;-;-;-;NA
-DK;2016-2018;Lepidorhombus whiffiagonis;North Atlantic;ICES;VI;-;-;-;-;-;-;NA
-DK;2016-2018;Lepidorhombus whiffiagonis;North Atlantic;ICES;VII, VIIIabd;-;-;-;-;-;-;NA
-DK;2016-2018;Lepidorhombus whiffiagonis;North Atlantic;ICES;VIIIc, IXa;-;-;-;-;-;-;NA
-DK;2016-2018;Limanda limanda;North Atlantic;ICES;VIIa,f-h;-;-;-;-;-;-;NA
-DK;2016-2018;Limanda limanda;North Atlantic;ICES;VIIe;-;-;-;-;-;-;NA
-DK;2016-2018;Loligo vulgaris;North Atlantic;ICES;all areas excluding VIIIc, IXa;-;-;-;-;-;-;NA
-DK;2016-2018;Loligo vulgaris;North Atlantic;ICES;VIIIc, IXa;-;-;-;-;-;-;NA
-DK;2016-2018;Lophius budegassa;North Atlantic;ICES;IV, VI;N;-;9%;0%;Y;24%;FIDES Initial.Quantity = 2569
-DK;2016-2018;Lophius budegassa;North Atlantic;ICES;VIIb-k, VIIIabd;-;-;-;-;-;-;NA
-DK;2016-2018;Lophius budegassa;North Atlantic;ICES;VIIIc, IXa;-;-;-;-;-;-;NA
-DK;2016-2018;Lophius piscatorius;North Atlantic;ICES;IV, VI;N;2286;5%;71%;Y;20%;FIDES Initial.Quantity = 1264
-DK;2016-2018;Lophius piscatorius;North Atlantic;ICES;VIIb-k, VIIIabd;-;-;-;-;-;-;NA
-DK;2016-2018;Lophius piscatorius;North Atlantic;ICES;VIIIc, IXa;-;-;-;-;-;-;NA
-DK;2016-2018;Maja squinado;North Atlantic;ICES;V, VI, VII;-;-;-;-;-;-;NA
-DK;2016-2018;Mallotus villosus;North Atlantic;ICES;XIV;-;-;-;-;-;-;FIDES Initial.Quantity = 0
-DK;2016-2018;Melanogrammus aeglefinus;North Atlantic;ICES;Va;-;-;-;-;-;-;NA
-DK;2016-2018;Melanogrammus aeglefinus;North Atlantic;ICES;Vb;-;-;-;-;-;-;NA
-DK;2016-2018;Melanogrammus aeglefinus;North Atlantic;ICES;VIa;N;2;0%;0%;Y;-;FIDES Initial.Quantity = 0
-DK;2016-2018;Melanogrammus aeglefinus;North Atlantic;ICES;Vib;-;-;-;-;-;-;NA
-DK;2016-2018;Melanogrammus aeglefinus;North Atlantic;ICES;VIIa;-;-;-;-;-;-;NA
-DK;2016-2018;Melanogrammus aeglefinus;North Atlantic;ICES;VIIb-k;N;1;-;0%;Y;-;NA
-DK;2016-2018;Merlangius merlangus;North Atlantic;ICES;IX, X;-;-;-;-;-;-;NA
-DK;2016-2018;Merlangius merlangus;North Atlantic;ICES;Vb;-;-;-;-;-;-;NA
-DK;2016-2018;Merlangius merlangus;North Atlantic;ICES;VIa;N;2;-;1%;Y;-;NA
-DK;2016-2018;Merlangius merlangus;North Atlantic;ICES;Vib;-;-;-;-;-;-;NA
-DK;2016-2018;Merlangius merlangus;North Atlantic;ICES;VIIa;-;-;-;-;-;-;NA
-DK;2016-2018;Merlangius merlangus;North Atlantic;ICES;VIIe-k;N;-;0%;0%;Y;-;FIDES Initial.Quantity = 0
-DK;2016-2018;Merlangius merlangus;North Atlantic;ICES;VIII;-;-;-;-;-;-;NA
-DK;2016-2018;Merluccius merluccius;North Atlantic;ICES;IIIa, IV, VI, VII, VIIIab;N;4434;0%;5%;Y;-;FIDES Initial.Quantity = 0
-DK;2016-2018;Merluccius merluccius;North Atlantic;ICES;VIIIc, IXa;-;-;-;-;-;-;NA
-DK;2016-2018;Microchirus variegatus;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Micromesistius poutassou;North Atlantic;ICES;I-IX, XII, XIV;Y;62932;15%;18%;N;-;FIDES Initial.Quantity = 61277
-DK;2016-2018;Microstomus kitt;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Molva dypterygia;North Atlantic;ICES;all areas excluding X;-;-;-;-;-;-;NA
-DK;2016-2018;Molva macrophthalma;North Atlantic;ICES;X;-;-;-;-;-;-;NA
-DK;2016-2018;Molva molva;North Atlantic;ICES;all areas;N;-;0%;0%;Y;9%;FIDES Initial.Quantity = 8
-DK;2016-2018;Mullus surmuletus;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Mustelus asterias;North Atlantic;ICES;VI, VII, VIII, IX;-;-;-;-;-;-;NA
-DK;2016-2018;Mustelus mustelus;North Atlantic;ICES;VI, VII, VIII, IX;-;-;-;-;-;-;NA
-DK;2016-2018;Mustelus punctulatus;North Atlantic;ICES;VI, VII, VIII, IX;-;-;-;-;-;-;NA
-DK;2016-2018;Myliobatis aquila;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2015;Nephrops norvegicus;North Atlantic;ICES;VI Fuctional unit 11;-;-;-;-;-;-;NA
-DK;2015;Nephrops norvegicus;North Atlantic;ICES;VI Fuctional unit 12;-;-;-;-;-;-;NA
-DK;2015;Nephrops norvegicus;North Atlantic;ICES;VI Fuctional unit 13;-;-;-;-;-;-;NA
-DK;2015;Nephrops norvegicus;North Atlantic;ICES;VII Functional unit 14;-;-;-;-;-;-;NA
-DK;2015;Nephrops norvegicus;North Atlantic;ICES;VII Functional unit 15;-;-;-;-;-;-;NA
-DK;2016-2018;Nephrops norvegicus;North Atlantic;ICES;VII Functional unit 16 (TAC FU16);-;-;-;-;-;-;NA
-DK;2015;Nephrops norvegicus;North Atlantic;ICES;VII Functional unit 17;-;-;-;-;-;-;NA
-DK;2016-2018;Nephrops norvegicus;North Atlantic;ICES;VII Functional unit 18 (TAC VII);-;-;-;-;-;-;NA
-DK;2016-2018;Nephrops norvegicus;North Atlantic;ICES;VII Functional unit 19 (TAC VII);-;-;-;-;-;-;NA
-DK;2016-2018;Nephrops norvegicus;North Atlantic;ICES;VII Functional unit 20-21 (TAC VII);-;-;-;-;-;-;NA
-DK;2015;Nephrops norvegicus;North Atlantic;ICES;VII Functional unit 22;-;-;-;-;-;-;NA
-DK;2015;Nephrops norvegicus;North Atlantic;ICES;VIII,IX Functional unit 23,24;-;-;-;-;-;-;NA
-DK;2015;Nephrops norvegicus;North Atlantic;ICES;VIII,IX Functional unit 25,31;-;-;-;-;-;-;NA
-DK;2015;Nephrops norvegicus;North Atlantic;ICES;VIIIk IX Functional unit 26-27, 28-29, 30;-;-;-;-;-;-;NA
-DK;2016-2018;Octopus vulgaris;North Atlantic;ICES;all areas excluding VIIIc, IXa;-;-;-;-;-;-;NA
-DK;2016-2018;Octopus vulgaris;North Atlantic;ICES;VIIIc, IXa;-;-;-;-;-;-;NA
-DK;2016-2018;Pagellus bogaraveo;North Atlantic;ICES;IXa, X;-;-;-;-;-;-;NA
-DK;2016-2018;Pandalus spp,Pandalus amplus,Pandalus nipponensis,Pandalus kessleri,Pandalus goniurus,Pandalus danae,Pandalus montagui,Pandalus jordani,Pandalus borealis,Pandalus platyceros,Pandalus hypsinotus;North Atlantic;ICES;all areas;Y;305;50%;84%;N;-;FIDES Initial.Quantity = 525
-DK;2016-2018;Parapenaeus longirostris;North Atlantic;ICES;IXa;-;-;-;-;-;-;NA
-DK;2016-2018;Pecten maximus;North Atlantic;ICES;IV, VI, VII;-;-;-;-;-;-;NA
-DK;2016-2018;Phycis blennoides;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Phycis phycis;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Pleuronectes platessa;North Atlantic;ICES;VIIa;-;-;-;-;-;-;NA
-DK;2016-2018;Pleuronectes platessa;North Atlantic;ICES;VIIbc;-;-;-;-;-;-;NA
-DK;2016-2018;Pleuronectes platessa;North Atlantic;ICES;VIIe;-;-;-;-;-;-;NA
-DK;2016-2018;Pleuronectes platessa;North Atlantic;ICES;VIIfg;-;-;-;-;-;-;NA
-DK;2016-2018;Pleuronectes platessa;North Atlantic;ICES;VIIh-k;-;-;-;-;-;-;NA
-DK;2016-2018;Pleuronectes platessa;North Atlantic;ICES;VIII,IX, X;-;-;-;-;-;-;NA
-DK;2016-2018;Pollachius pollachius;North Atlantic;ICES;all areas except IX, X;-;-;-;-;-;-;NA
-DK;2016-2018;Pollachius pollachius;North Atlantic;ICES;IX, X;-;-;-;-;-;-;NA
-DK;2016-2018;Pollachius virens;North Atlantic;ICES;IV,IIIa,VI;N;2;-;0%;Y;-;NA
-DK;2016-2018;Pollachius virens;North Atlantic;ICES;Va;-;-;-;-;-;-;NA
-DK;2016-2018;Pollachius virens;North Atlantic;ICES;Vb;-;-;-;-;-;-;NA
-DK;2016-2018;Pollachius virens;North Atlantic;ICES;VII,VIII;-;-;-;-;-;-;NA
-DK;2016-2018;Polyprion americanus;North Atlantic;ICES;X;-;-;-;-;-;-;NA
-DK;2016-2018;Prionace glauca;North Atlantic;ICES;all areas (North of 5N);-;-;-;-;-;-;NA
-DK;2016-2018;Psetta maxima;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Pseudotriakis microdon;North Atlantic;ICES;All areas;-;-;-;-;-;-;NA
-DK;2016-2018;Pteromylaeus bovinus;North Atlantic;ICES;All areas;-;-;-;-;-;-;NA
-DK;2016-2018;Raja alba;North Atlantic;ICES;All areas;-;-;-;-;-;-;NA
-DK;2016-2018;Raja asterias;North Atlantic;ICES;All areas;-;-;-;-;-;-;NA
-DK;2016-2018;Raja batis;North Atlantic;ICES;IIa,V,VI,VII,VIII,IXa;-;-;-;-;-;-;NA
-DK;2016-2018;Raja brachyura;North Atlantic;ICES;VI,VIIa,VIIe-g,IXa;-;-;-;-;-;-;NA
-DK;2016-2018;Raja circularis;North Atlantic;ICES;VI,VII,VIII;-;-;-;-;-;-;NA
-DK;2016-2018;Raja clavata;North Atlantic;ICES;VI,VIIa,e-g,VIII,IXa;-;-;-;-;-;-;NA
-DK;2016-2018;Raja fullonica;North Atlantic;ICES;All areas;-;-;-;-;-;-;NA
-DK;2016-2018;Raja fyllae;North Atlantic;ICES;All areas;-;-;-;-;-;-;NA
-DK;2016-2018;Raja hyperborea;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Raja lintea;North Atlantic;ICES;All areas;-;-;-;-;-;-;NA
-DK;2016-2018;Raja microocellata;North Atlantic;ICES;VIIe-g;-;-;-;-;-;-;NA
-DK;2016-2018;Raja montagui;North Atlantic;ICES;VI,VIIa,VIIb,VIIe-h,j,VIII,IXa;-;-;-;-;-;-;NA
-DK;2016-2018;Raja naevus;North Atlantic;ICES;VI,VIIa-c,IXa;-;-;-;-;-;-;NA
-DK;2016-2018;Raja nidarosiensis;North Atlantic;ICES;VI,VIIa-c,VIIe-h,VIIk;-;-;-;-;-;-;NA
-DK;2016-2018;Raja oxyrinchus;North Atlantic;ICES;All areas;-;-;-;-;-;-;NA
-DK;2016-2018;Raja radiata;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Raja undulata;North Atlantic;ICES;VIIb-c,VIIe-j,VIIIa-c,IXa;-;-;-;-;-;-;NA
-DK;2016-2018;Rajella kukujevi;North Atlantic;ICES;All areas;-;-;-;-;-;-;NA
-DK;2016-2018;Reinhardtius hippoglossoides;North Atlantic;ICES;V,XIV;-;-;-;-;-;-;NA
-DK;2016-2018;Reinhardtius hippoglossoides;North Atlantic;ICES;VI;N;-;1%;0%;Y;9%;FIDES Initial.Quantity = 16
-DK;2016-2018;Rhinochimaera atlantica;North Atlantic;ICES;V,XIV;-;-;-;-;-;-;NA
-DK;2016-2018;Salmo salar;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Sardina pilchardus;North Atlantic;ICES;VIIIabd;-;-;-;-;-;-;NA
-DK;2016-2018;Sardina pilchardus;North Atlantic;ICES;VIIIc,IXa;-;-;-;-;-;-;NA
-DK;2016-2018;Scomber japonicus;North Atlantic;ICES;VIII,IX,X;-;-;-;-;-;-;NA
-DK;2016-2018;Scomber scombrus;North Atlantic;ICES;II,IIIa,IV,V,VI,VII,VIII,IX;Y;37315;8%;8%;N;Sum of MS shares <10% = 29%%;FIDES Initial.Quantity = 30639
-DK;2016-2018;Scophthalmus rhombus;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Scyliorhinus canicula;North Atlantic;ICES;VI,VIIa-c,VIIe-j,VIIIa-d,IXa;-;-;-;-;-;-;NA
-DK;2016-2018;Scyliorhinus stellaris;North Atlantic;ICES;VI,VII;-;-;-;-;-;-;NA
-DK;2016-2018;Scymnodon ringens;North Atlantic;ICES;All areas;-;-;-;-;-;-;NA
-DK;2016-2018;Sebastes marinus;North Atlantic;ICES;ICES Sub areas V,VI,XII,XIV & NAFO SA 2 + (Div. 1F + 3K).;-;-;-;-;-;-;NA
-DK;2016-2018;Sebastes mentella;North Atlantic;ICES;ICES Sub areas V,VI,XII,XIV & NAFO SA 2 + (Div. 1F + 3K);-;-;-;-;-;-;NA
-DK;2016-2018;Sepia officinalis;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Solea solea;North Atlantic;ICES;Ixa;-;-;-;-;-;-;NA
-DK;2016-2018;Solea solea;North Atlantic;ICES;VIIa;-;-;-;-;-;-;NA
-DK;2016-2018;Solea solea;North Atlantic;ICES;VIIbc;-;-;-;-;-;-;NA
-DK;2016-2018;Solea solea;North Atlantic;ICES;VIIe;-;-;-;-;-;-;NA
-DK;2016-2018;Solea solea;North Atlantic;ICES;VIIfg;-;-;-;-;-;-;NA
-DK;2016-2018;Solea solea;North Atlantic;ICES;VIIhjk;-;-;-;-;-;-;NA
-DK;2016-2018;Solea solea;North Atlantic;ICES;VIIIab;-;-;-;-;-;-;NA
-DK;2016-2018;Solea solea;North Atlantic;ICES;VIIIc;-;-;-;-;-;-;NA
-DK;2016-2018;Sparidae;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Squalus acanthias;North Atlantic;ICES;All areas;-;-;-;-;-;-;NA
-DK;2016-2018;Torpedo marmorata;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Torpedo nobiliana;North Atlantic;ICES;All areas;-;-;-;-;-;-;NA
-DK;2016-2018;Trachurus mediterraneus;North Atlantic;ICES;VIII,IX;-;-;-;-;-;-;NA
-DK;2016-2018;Trachurus picturatus;North Atlantic;ICES;VIII,IX,X;-;-;-;-;-;-;NA
-DK;2016-2018;Trachurus trachurus;North Atlantic;ICES;IIa,IVa,Vb,VIa,VIIa-c,e-k,VIIIabde;Y;6840;10%;11%;N;Sum of MS shares <10% = 33%%;FIDES Initial.Quantity = 9861
-DK;2016-2018;Trachurus trachurus;North Atlantic;ICES;VIIIc,IXa;-;-;-;-;-;-;NA
-DK;2016-2018;Trachurus trachurus;North Atlantic;ICES;X;-;-;-;-;-;-;NA
-DK;2016-2018;Trisopterus spp,Trisopterus luscus,Trisopterus minutus,Trisopterus esmarkii;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Zeus faber;North Atlantic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Alopias vulpinus;North Sea and Eastern Arctic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Amblyraja radiata;North Sea and Eastern Arctic;ICES;IV;-;-;-;-;-;-;NA
-DK;2016-2018;Ammodytes spp,Ammodytes tobianus;North Sea and Eastern Arctic;ICES;IIIa;Y;15368;94%;99%;N;-;FIDES Initial.Quantity = 195875
-DK;2016-2018;Ammodytes spp,Ammodytes tobianus;North Sea and Eastern Arctic;ICES;IV;Y;171158;94%;85%;N;-;FIDES Initial.Quantity = 195875
-DK;2016-2018;Anarhichas spp,Anarhichas minor,Anarhichas denticulatus,Anarhichas lupus;North Sea and Eastern Arctic;ICES;IV;Y;400;-;42%;N;-;NA
-DK;2016-2018;Anguilla anguilla;North Sea and Eastern Arctic;ICES;I-II;-;-;-;-;-;-;NA
-DK;2016-2018;Anguilla anguilla;North Sea and Eastern Arctic;ICES;IIIa;No;23;-;99%;Yes;-;NA
-DK;2016-2018;Anguilla anguilla;North Sea and Eastern Arctic;ICES;IV, VIId;Yes;14;-;48%;No;-;NA
-DK;2016-2018;Argentina spp,Argentina sphyraena,Argentina silus,Argentina kagoshimae,Argentina elongata;North Sea and Eastern Arctic;ICES;IV;N;122;89%;40%;Y;-;FIDES Initial.Quantity = 1093
-DK;2016-2018;Aspitrigla cuculus;North Sea and Eastern Arctic;ICES;IIIa;-;-;-;-;-;-;NA
-DK;2016-2018;Brosme brosme;North Sea and Eastern Arctic;ICES;I-II;-;-;-;-;-;-;NA
-DK;2016-2018;Brosme brosme;North Sea and Eastern Arctic;ICES;IV;N;36;55%;40%;Y;-;FIDES Initial.Quantity = 233
-DK;2016-2018;Chelidonichthys lucerna;North Sea and Eastern Arctic;ICES;IV;N;37;-;1%;Y;-;NA
-DK;2016-2018;Clupea harengus;North Sea and Eastern Arctic;ICES;22-24,IIIa;Y;8986;54%;20%;N;-;FIDES Initial.Quantity = 25947
-DK;2016-2018;Clupea harengus;North Sea and Eastern Arctic;ICES;I-II;Y;15491;34%;51%;N;-;FIDES Initial.Quantity = 9704
-DK;2016-2018;Clupea harengus;North Sea and Eastern Arctic;ICES;IV, VIId;Y;122664;26%;31%;N;-;FIDES Initial.Quantity = 113017
-DK;2016-2018;Coryphaenoides rupestris;North Sea and Eastern Arctic;ICES;IIIa;N;1;95%;94%;Y;-;FIDES Initial.Quantity = 211
-DK;2016-2018;Crangon crangon;North Sea and Eastern Arctic;ICES;IV, VIId;N;2141;-;6%;Y;-;NA
-DK;2016-2018;Dasyatis tortonesei;North Sea and Eastern Arctic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Dicentrarchus labrax;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;-;NA
-DK;2016-2018;Eutrigla gurnardus;North Sea and Eastern Arctic;ICES;IIIa;N;92;-;91%;Y;-;NA
-DK;2016-2018;Eutrigla gurnardus;North Sea and Eastern Arctic;ICES;IV;Y;1089;-;61%;N;-;NA
-DK;2016-2018;Eutrigla gurnardus;North Sea and Eastern Arctic;ICES;IV;Y;1089;-;61%;N;-;NA
-DK;2016-2018;Gadus morhua;North Sea and Eastern Arctic;ICES;I-II;N;383;-;1%;Y;-;NA
-DK;2016-2018;Gadus morhua;North Sea and Eastern Arctic;ICES;IIIaN;Y;3857;83%;84%;N;-;FIDES Initial.Quantity = 6397
-DK;2016-2018;Gadus morhua;North Sea and Eastern Arctic;ICES;IIIaS;N;191;62%;71%;Y;-;FIDES Initial.Quantity = 389
-DK;2016-2018;Gadus morhua;North Sea and Eastern Arctic;ICES;IV, VIId;Y;6108;19%;21%;N;-;FIDES Initial.Quantity = 7327
-DK;2016-2018;Galeorhinus galeus;North Sea and Eastern Arctic;ICES;all areas;N;1;-;2%;Y;-;NA
-DK;2016-2018;Glyptocephalus cynoglossus;North Sea and Eastern Arctic;ICES;IIIa;Y;910;-;82%;N;-;NA
-DK;2016-2018;Glyptocephalus cynoglossus;North Sea and Eastern Arctic;ICES;IV;Y;522;15%;34%;N;-;FIDES Initial.Quantity = 953
-DK;2016-2018;Helicolenus dactylopterus;North Sea and Eastern Arctic;ICES;IV;-;-;-;-;-;-;NA
-DK;2016-2018;Hydrolagus affinis;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;-;NA
-DK;2016-2018;Lepidorhombus boscii;North Sea and Eastern Arctic;ICES;IV, VIId;N;-;0%;0%;Y;4%;FIDES Initial.Quantity = 7
-DK;2016-2018;Lepidorhombus whiffiagonis;North Sea and Eastern Arctic;ICES;IV, VIId;N;56;0%;86%;Y;4%;FIDES Initial.Quantity = 7
-DK;2016-2018;Limanda limanda;North Sea and Eastern Arctic;ICES;IIIa;Y;613;-;74%;N;-;NA
-DK;2016-2018;Limanda limanda;North Sea and Eastern Arctic;ICES;IV, VIId;Y;602;-;14%;N;-;NA
-DK;2016-2018;Lophius budegassa;North Sea and Eastern Arctic;ICES;IV, VIId;N;-;14%;0%;Y;-;FIDES Initial.Quantity = 2569
-DK;2016-2018;Lophius piscatorius;North Sea and Eastern Arctic;ICES;IV;Y;2286;14%;92%;N;-;FIDES Initial.Quantity = 2569
-DK;2016-2018;Macrourus berglax;North Sea and Eastern Arctic;ICES;IV;Y;-;10%;0%;N;Sum of MS shares <10% = 30%%;FIDES Initial.Quantity = 0.01
-DK;2016-2018;Mallotus villosus;North Sea and Eastern Arctic;ICES;I-II;-;-;-;-;-;-;NA
-DK;2016-2018;Melanogrammus aeglefinus;North Sea and Eastern Arctic;ICES;I-II;N;19;-;1%;Y;-;NA
-DK;2016-2018;Melanogrammus aeglefinus;North Sea and Eastern Arctic;ICES;IIIa;Y;809;84%;80%;N;-;FIDES Initial.Quantity = 2070
-DK;2016-2018;Melanogrammus aeglefinus;North Sea and Eastern Arctic;ICES;IV;N;1172;5%;4%;Y;18%;FIDES Initial.Quantity = 1657
-DK;2016-2018;Merlangius merlangus;North Sea and Eastern Arctic;ICES;IIIa;Y;343;90%;88%;N;-;FIDES Initial.Quantity = 929
-DK;2016-2018;Merlangius merlangus;North Sea and Eastern Arctic;ICES;IV, VIId;N;2590;9%;14%;Y;19%;FIDES Initial.Quantity = 1912
-DK;2016-2018;Merluccius merluccius;North Sea and Eastern Arctic;ICES;IIIa;Y;598;92%;89%;N;-;FIDES Initial.Quantity = 2890
-DK;2016-2018;Merluccius merluccius;North Sea and Eastern Arctic;ICES;IV VII;Y;3832;58%;26%;N;-;FIDES Initial.Quantity = 2112
-DK;2016-2018;Micromesistius poutassou;North Sea and Eastern Arctic;ICES;I-II;N;86;15%;1%;Y;-;FIDES Initial.Quantity = 61277
-DK;2016-2018;Micromesistius poutassou;North Sea and Eastern Arctic;ICES;IIIa;N;28;15%;22%;Y;-;FIDES Initial.Quantity = 61277
-DK;2016-2018;Micromesistius poutassou;North Sea and Eastern Arctic;ICES;IV, VIId;N;24;15%;0%;Y;-;FIDES Initial.Quantity = 61277
-DK;2016-2018;Microstomus kitt;North Sea and Eastern Arctic;ICES;IV, VIId;Y;967;15%;31%;N;-;FIDES Initial.Quantity = 953
-DK;2016-2018;Molva dypterygia;North Sea and Eastern Arctic;ICES;IV;N;2;8%;15%;Y;23%;FIDES Initial.Quantity = 4
-DK;2016-2018;Molva molva;North Sea and Eastern Arctic;ICES;IV;Y;945;30%;22%;N;-;FIDES Initial.Quantity = 1572
-DK;2016-2018;Mullus barbatus;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;-;NA
-DK;2016-2018;Mullus surmuletus;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;-;NA
-DK;2016-2018;Mustelus asterias;North Sea and Eastern Arctic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2015;Nephrops norvegicus;North Sea and Eastern Arctic;ICES;Functional unit 3-4;Y;4093;73%;72%;N;-;FIDES Initial.Quantity = 8626
-DK;2015;Nephrops norvegicus;North Sea and Eastern Arctic;ICES;functional units 10;N;-;-;0%;Y;13%;FIDES Initial.Quantity = 1282
-DK;2016-2018;Nephrops norvegicus;North Sea and Eastern Arctic;ICES;functional units 32 (TAC IIa, IV);N;41;5%;1%;Y;13%;FIDES Initial.Quantity = 1282
-DK;2016-2018;Nephrops norvegicus;North Sea and Eastern Arctic;ICES;functional units 33 (TAC IIa, VI);N;440;5%;5%;Y;13%;FIDES Initial.Quantity = 1282
-DK;2015;Nephrops norvegicus;North Sea and Eastern Arctic;ICES;functional units 34;N;-;-;0%;Y;13%;FIDES Initial.Quantity = 1282
-DK;2015;Nephrops norvegicus;North Sea and Eastern Arctic;ICES;functional units 6;N;1;5%;0%;Y;13%;FIDES Initial.Quantity = 1282
-DK;2015;Nephrops norvegicus;North Sea and Eastern Arctic;ICES;functional units 7;N;8;5%;0%;Y;13%;FIDES Initial.Quantity = 1282
-DK;2015;Nephrops norvegicus;North Sea and Eastern Arctic;ICES;functional units 8;N;-;-;0%;Y;13%;FIDES Initial.Quantity = 1282
-DK;2015;Nephrops norvegicus;North Sea and Eastern Arctic;ICES;functional units 9;N;-;-;0%;Y;13%;FIDES Initial.Quantity = 1282
-DK;2016-2018;Pandalus borealis;North Sea and Eastern Arctic;ICES;I-II;Y;1372;74%;11%;N;-;FIDES Initial.Quantity = 1453
-DK;2016-2018;Pandalus borealis;North Sea and Eastern Arctic;ICES;IIIa;Y;1834;65%;56%;N;-;FIDES Initial.Quantity = 2162
-DK;2016-2018;Pandalus borealis;North Sea and Eastern Arctic;ICES;IV;N;183;74%;60%;Y;-;FIDES Initial.Quantity = 1453
-DK;2016-2018;Pandalus borealis;North Sea and Eastern Arctic;ICES;IVa;N;175;74%;59%;Y;-;FIDES Initial.Quantity = 1453
-DK;2016-2018;Pecten maximus;North Sea and Eastern Arctic;ICES;VIId;-;-;-;-;-;-;NA
-DK;2016-2018;Phycis blennoides;North Sea and Eastern Arctic;ICES;IV;N;15;-;72%;Y;-;NA
-DK;2016-2018;Phycis phycis;North Sea and Eastern Arctic;ICES;IV;-;-;-;-;-;-;NA
-DK;2016-2018;Platichthys flesus;North Sea and Eastern Arctic;ICES;IV;N;101;-;7%;Y;-;NA
-DK;2016-2018;Pleuronectes platessa;North Sea and Eastern Arctic;ICES;IIIa;Y;7106;80%;80%;N;-;FIDES Initial.Quantity = 13266
-DK;2016-2018;Pleuronectes platessa;North Sea and Eastern Arctic;ICES;IV;Y;12906;20%;20%;N;-;FIDES Initial.Quantity = 20952
-DK;2016-2018;Pleuronectes platessa;North Sea and Eastern Arctic;ICES;VIId;-;-;-;-;-;-;NA
-DK;2016-2018;Pollachius virens;North Sea and Eastern Arctic;ICES;I-II;N;6;8%;0%;Y;10%;FIDES Initial.Quantity = 4365
-DK;2016-2018;Pollachius virens;North Sea and Eastern Arctic;ICES;IIIa;N;1456;9%;69%;Y;10%;FIDES Initial.Quantity = 4365
-DK;2016-2018;Pollachius virens;North Sea and Eastern Arctic;ICES;IV;N;4141;8%;13%;Y;12%;FIDES Initial.Quantity = 4365
-DK;2016-2018;Psetta maxima;North Sea and Eastern Arctic;ICES;IIIa;N;133;-;80%;Y;-;NA
-DK;2016-2018;Psetta maxima;North Sea and Eastern Arctic;ICES;IV, VIId;Y;441;16%;11%;N;-;FIDES Initial.Quantity = 1113
-DK;2016-2018;Raja alba;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;-;NA
-DK;2016-2018;Raja asterias;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;-;NA
-DK;2016-2018;Raja brachyura;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;-;NA
-DK;2016-2018;Raja circularis;North Sea and Eastern Arctic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Raja clavata;North Sea and Eastern Arctic;ICES;IV, VIId;N;1;-;0%;Y;-;NA
-DK;2016-2018;Raja fullonica;North Sea and Eastern Arctic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Raja hyperborea;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;-;NA
-DK;2016-2018;Raja microocellata;North Sea and Eastern Arctic;ICES;all areas;-;-;-;-;-;-;NA
-DK;2016-2018;Raja montagui;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;-;NA
-DK;2016-2018;Raja naevus;North Sea and Eastern Arctic;ICES;IV, VIId;N;1;-;0%;Y;-;NA
-DK;2016-2018;Raja undulata;North Sea and Eastern Arctic;ICES;VIId;-;-;-;-;-;-;NA
-DK;2016-2018;Reinhardtius hippoglossoides;North Sea and Eastern Arctic;ICES;I-II;N;2;-;0%;Y;-;NA
-DK;2016-2018;Reinhardtius hippoglossoides;North Sea and Eastern Arctic;ICES;IV;N;-;1%;0%;Y;9%;FIDES Initial.Quantity = 16
-DK;2016-2018;Salmo salar;North Sea and Eastern Arctic;ICES;I-II;-;-;-;-;-;-;NA
-DK;2016-2018;Salmo salar;North Sea and Eastern Arctic;ICES;IIIa;-;-;-;-;-;-;NA
-DK;2016-2018;Salmo salar;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;-;NA
-DK;2016-2018;Scomber scombrus;North Sea and Eastern Arctic;ICES;II;N;97;74%;1%;Y;-;FIDES Initial.Quantity = 30639
-DK;2016-2018;Scomber scombrus;North Sea and Eastern Arctic;ICES;IIIa;Y;233;62%;43%;N;-;FIDES Initial.Quantity = 17836
-DK;2016-2018;Scomber scombrus;North Sea and Eastern Arctic;ICES;IV, VIId;Y;23442;74%;12%;N;-;FIDES Initial.Quantity = 30639
-DK;2016-2018;Scophthalmus rhombus;North Sea and Eastern Arctic;ICES;IIIa;N;115;-;79%;Y;-;NA
-DK;2016-2018;Scophthalmus rhombus;North Sea and Eastern Arctic;ICES;IV, VIId;N;116;16%;7%;Y;-;FIDES Initial.Quantity = 1113
-DK;2016-2018;Scyliorhinus canicula;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;-;NA
-DK;2016-2018;Scyliorhinus stellaris;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;-;NA
-DK;2016-2018;Sebastes marinus;North Sea and Eastern Arctic;ICES;I-II;N;4;-;6%;Y;-;NA
-DK;2016-2018;Sebastes mentella;North Sea and Eastern Arctic;ICES;I-II;-;-;-;-;-;-;NA
-DK;2016-2018;Sebastes mentella;North Sea and Eastern Arctic;ICES;IV;N;1;-;100%;Y;-;NA
-DK;2016-2018;Solea solea;North Sea and Eastern Arctic;ICES;IIIa;Y;306;84%;83%;N;-;FIDES Initial.Quantity = 376
-DK;2016-2018;Solea solea;North Sea and Eastern Arctic;ICES;IV;N;385;4%;3%;Y;25%;FIDES Initial.Quantity = 597
-DK;2016-2018;Solea solea;North Sea and Eastern Arctic;ICES;VIId;-;-;-;-;-;-;NA
-DK;2016-2018;Sprattus sprattus;North Sea and Eastern Arctic;ICES;IIIa;Y;3770;72%;82%;N;-;FIDES Initial.Quantity = 17840
-DK;2016-2018;Sprattus sprattus;North Sea and Eastern Arctic;ICES;IV;Y;155091;91%;91%;N;-;FIDES Initial.Quantity = 151264
-DK;2016-2018;Sprattus sprattus;North Sea and Eastern Arctic;ICES;VIId;N;-;32%;0%;Y;-;FIDES Initial.Quantity = 1071
-DK;2016-2018;Squalus acanthias;North Sea and Eastern Arctic;ICES;all areas;N;14;-;54%;Y;-;NA
-DK;2016-2018;Torpedo nobiliana;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;-;NA
-DK;2016-2018;Trachurus trachurus;North Sea and Eastern Arctic;ICES;IIa;Y;-;10%;0%;N;Sum of MS shares <10% = 33%%;FIDES Initial.Quantity = 9861
-DK;2016-2018;Trachurus trachurus;North Sea and Eastern Arctic;ICES;IV, VIId;Y;337;47%;5%;N;-;FIDES Initial.Quantity = 5985
-DK;2016-2018;Trisopterus esmarkii;North Sea and Eastern Arctic;ICES;IIIa;Y;406;100%;99%;N;-;FIDES Initial.Quantity = 85186
-DK;2016-2018;Trisopterus esmarkii;North Sea and Eastern Arctic;ICES;IV;Y;15540;100%;100%;N;-;FIDES Initial.Quantity = 85186
-DK;2016-2018;Zeus faber;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;-;NA
-DK;2016-2018;Istiophorus platypterus;Other regions;;West Central Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Patellidae;Other regions;;Azores, Madeira and Canary Islands;-;-;-;-;-;-;NA
-DK;2016-2018;Sardina pilchardus;Other regions;;Azores, Madeira and Canary Islands;N;988;-;2%;Y;-;NA
-DK;2016-2018;Sardinella maderensis;Other regions;;Azores, Madeira and Canary Islands;-;-;-;-;-;-;NA
-DK;2016-2018;Scomber japonicus;Other regions;;Azores, Madeira and Canary Islands;-;-;-;-;-;-;NA
-DK;2016-2018;Sparisoma cretense;Other regions;;Azores, Madeira and Canary Islands;-;-;-;-;-;-;NA
-DK;2016-2018;Trachurus spp;Other regions;;Azores, Madeira and Canary Islands;-;-;-;-;-;-;NA
-DK;2016-2018;Champsocephalus gunnari;Other regions;CCAMLR;CCAMLR Convention Area;-;-;-;-;-;-;NA
-DK;2016-2018;Dissostichus spp Dissostichus eleginoides and Dissostichus mawsoni);Other regions;CCAMLR;CCAMLR Convention Area;-;-;-;-;-;-;NA
-DK;2016-2018;Euphausia superba;Other regions;CCAMLR;CCAMLR Convention Area;-;-;-;-;-;-;NA
-DK;2016-2018;Brachydeuterus spp;Other regions;CECAF;34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Caranx spp;Other regions;CECAF;34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Cynoglossus spp;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Decapterus spp;Other regions;CECAF;34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Dentex canariensis;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Dentex congoensis;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Dentex macrophthalmus;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Dentex maroccanus;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Dentex spp;Other regions;CECAF;34.1.1;N;11;-;5%;Y;-;NA
-DK;2016-2018;Engraulis encrasicolus;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Epinephelus aeneus;Other regions;CECAF;34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Ethmalosa fimbriata;Other regions;CECAF;34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Farfantepenaeus notialis;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Galeoides decadactylus;Other regions;CECAF;34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Loligo vulgaris;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Merluccius polli;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Merluccius senegalensis;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Merluccius spp;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Octopus vulgaris;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Pagellus acarne;Other regions;CECAF;34.1.1;-;-;-;-;-;-;NA
-DK;2016-2018;Pagellus bellottii;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Pagellus bogaraveo;Other regions;CECAF;34.1.1;-;-;-;-;-;-;NA
-DK;2016-2018;Pagellus spp;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Pagrus caeruleostictus;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Parapenaeus longirostris;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Pomadasys incisus;Other regions;CECAF;34.1.1;-;-;-;-;-;-;NA
-DK;2016-2018;Pomadasys spp;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Pseudotolithus spp;Other regions;CECAF;34.1.1;-;-;-;-;-;-;NA
-DK;2016-2018;Sardina pilchardus;Other regions;CECAF;34.1.1,34.1.3;N;988;-;2%;Y;-;NA
-DK;2016-2018;Sardinella aurita;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Sardinella maderensis;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Scomber japonicus;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Scomber spp,Scomber australasicus,Scomber scombrus,Scomber japonicus;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Sepia hierredda;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Sepia officinalis;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Sepia spp;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Sparidae;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Sparus spp;Other regions;CECAF;34.1.1;-;-;-;-;-;-;NA
-DK;2016-2018;Trachurus trachurus;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;N;153;-;0%;Y;-;NA
-DK;2016-2018;Trachurus trecae;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Umbrina canariensis;Other regions;CECAF;34.3.3-6;-;-;-;-;-;-;NA
-DK;2016-2018;Katsuwonus pelamis;Other regions;IATTC;East Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Makaira indica;Other regions;IATTC;East Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Makaira nigricans (or mazara);Other regions;IATTC;East Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Tetrapturus audax;Other regions;IATTC;East Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Thunnus alalunga;Other regions;IATTC;East Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Thunnus albacares;Other regions;IATTC;East Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Thunnus obesus;Other regions;IATTC;East Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Thunnus orientalis;Other regions;IATTC;East Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Xiphias gladius;Other regions;IATTC;East Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Acanthocybium solandri;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;-;NA
-DK;2016-2018;Auxis rochei;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;-;NA
-DK;2016-2018;Auxis thazard;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;-;NA
-DK;2016-2018;Coryphaena hippurus;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;-;NA
-DK;2016-2018;Euthynnus alleteratus;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;-;NA
-DK;2016-2018;Istiophorus albicans;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;-;NA
-DK;2016-2018;Katsuwonus pelamis;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;-;NA
-DK;2016-2018;Makaira nigricans (or mazara);Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;-;NA
-DK;2016-2018;Orcynopsis unicolor;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;-;NA
-DK;2016-2018;Prionace glauca;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;-;NA
-DK;2016-2018;Sarda sarda;Other regions;ICCAT;Atlantic Ocean and adjacent seas;Y;1;-;0%;N;-;NA
-DK;2016-2018;Scomberomorus brasiliensis;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;-;NA
-DK;2016-2018;Scomberomorus cavalla;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;-;NA
-DK;2016-2018;Scomberomorus maculatus;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;-;NA
-DK;2016-2018;Scomberomorus regalis;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;-;NA
-DK;2016-2018;Scomberomorus tritor;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;-;NA
-DK;2016-2018;Tetrapturus albidus;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;-;NA
-DK;2016-2018;Thunnus alalunga;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;-;NA
-DK;2016-2018;Thunnus albacares;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;-;NA
-DK;2016-2018;Thunnus atlanticus;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;-;NA
-DK;2016-2018;Thunnus obesus;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;-;NA
-DK;2016-2018;Thunnus thynnus;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;-;NA
-DK;2016-2018;Xiphias gladius;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;-;NA
-DK;2016-2018;Alopias pelagicus;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;-;NA
-DK;2016-2018;Alopias superciliosus;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;-;NA
-DK;2016-2018;Auxis rochei;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;-;NA
-DK;2016-2018;Auxis thazard;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;-;NA
-DK;2016-2018;Carcharhinus falciformes;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;-;NA
-DK;2016-2018;Carcharhinus longimanus;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;-;NA
-DK;2016-2018;Coryphaena hippurus;Other regions;IOTC;Runion et Mayotte;-;-;-;-;-;-;NA
-DK;2016-2018;Euthynnus affinis;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;-;NA
-DK;2016-2018;Istiophorus platypterus;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;-;NA
-DK;2016-2018;Katsuwonus pelamis;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;-;NA
-DK;2016-2018;Makaira indica;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;-;NA
-DK;2016-2018;Makaira nigricans (or mazara);Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;-;NA
-DK;2016-2018;Prionace glauca;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;-;NA
-DK;2016-2018;Scomberomorus commerson;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;-;NA
-DK;2016-2018;Scomberomorus guttatus;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;-;NA
-DK;2016-2018;Sphyrna lewini;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;-;NA
-DK;2016-2018;Tetrapturus audax;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;-;NA
-DK;2016-2018;Thunnus alalunga;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;-;NA
-DK;2016-2018;Thunnus albacares;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;-;NA
-DK;2016-2018;Thunnus obesus;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;-;NA
-DK;2016-2018;Thunnus tonggol;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;-;NA
-DK;2016-2018;Xiphias gladius;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;-;NA
-DK;2016-2018;Gadus morhua;Other regions;NAFO 2J 3KL;21;-;-;-;-;-;-;NA
-DK;2016-2018;Glyptocephalus cynoglossus;Other regions;NAFO 2J3KL;21;-;-;-;-;-;-;NA
-DK;2016-2018;Reinhardtius hippoglossoides;Other regions;NAFO 3KLMNO;21;-;-;-;-;-;-;NA
-DK;2016-2018;Sebastes spp;Other regions;NAFO 3LN;21;-;-;-;-;-;-;NA
-DK;2016-2018;Hippoglossoides platessoides;Other regions;NAFO 3LNO;21;-;-;-;-;-;-;NA
-DK;2016-2018;Limanda ferruginea;Other regions;NAFO 3LNO;21;-;-;-;-;-;-;NA
-DK;2016-2018;Pandalus borealis;Other regions;NAFO 3LNO;21;-;-;-;-;-;-;NA
-DK;2016-2018;Amblyraja radiata;Other regions;NAFO 3LNOPs;21;-;-;-;-;-;-;NA
-DK;2016-2018;Gadus morhua;Other regions;NAFO 3M;21;-;-;-;-;-;-;NA
-DK;2016-2018;Hippoglossoides platessoides;Other regions;NAFO 3M;21;-;-;-;-;-;-;NA
-DK;2016-2018;Pandalus borealis;Other regions;NAFO 3M;21;-;-;-;-;-;-;NA
-DK;2016-2018;Sebastes spp;Other regions;NAFO 3M;21;-;-;-;-;-;-;NA
-DK;2016-2018;Gadus morhua;Other regions;NAFO 3NO;21;-;-;-;-;-;-;NA
-DK;2016-2018;Glyptocephalus cynoglossus;Other regions;NAFO 3NO;21;-;-;-;-;-;-;NA
-DK;2016-2018;Mallotus villosus;Other regions;NAFO 3NO;21;-;-;-;-;-;-;NA
-DK;2016-2018;Urophycis tenuis;Other regions;NAFO 3NO;21;-;-;-;-;-;-;NA
-DK;2016-2018;Sebastes spp;Other regions;NAFO 3O;21;-;-;-;-;-;-;NA
-DK;2016-2018;Gadus morhua;Other regions;NAFO 3Ps;21;-;-;-;-;-;-;NA
-DK;2016-2018;Beryx sp.;Other regions;NAFO 6G;21;-;-;-;-;-;-;NA
-DK;2016-2018;Salmo salar;Other regions;NAFO S1 + ICES Sub- area XIV;21;-;-;-;-;-;-;NA
-DK;2016-2018;Coryphaenoides rupestris;Other regions;NAFO SA0 + 1;21;-;-;-;-;-;-;NA
-DK;2016-2018;Gadus morhua;Other regions;NAFO SA1;21;-;-;-;-;-;-;NA
-DK;2016-2018;Hippoglossus hippoglossus;Other regions;NAFO SA1;21;-;-;-;-;-;-;NA
-DK;2016-2018;Reinhardtius hippoglossoides;Other regions;NAFO SA1;21;-;-;-;-;-;-;NA
-DK;2016-2018;Sebastes mentella;Other regions;NAFO SA1;21;-;-;-;-;-;-;NA
-DK;2016-2018;Macrourus berglax;Other regions;NAFO SA2 + 3;21;-;-;-;-;-;-;NA
-DK;2016-2018;Illex illecebrosus;Other regions;NAFO Subareas 3 + 4;21;-;-;-;-;-;-;NA
-DK;2016-2018;Allocyttus guineensis;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Allocyttus verucossus;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Antimora rostrata;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Beryx spp,Beryx splendens,Beryx decadactylus;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Chaceon spp;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Dissostichus eleginoides;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Emmelichthys nitidus;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Epigonus spp;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Helicolenus spp;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Hoplostethus atlanticus;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Jasus tristani;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Lepidotus caudatus;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Macrourus spp;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Merluccius spp;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Neocyttus romboidales;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Notopogon fernandezianus;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Octopodidae and Loliginidae;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Polyprion americanus;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Promethichthys prometheus;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Pseudocyttu smaculatus;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Pseudopentaceros richardsoni;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Ruvettus pretiosus;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Schedophilus ovalis;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Schedophilus velaini;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Scomber spp,Scomber australasicus,Scomber scombrus,Scomber japonicus;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Trachurus spp;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Lutjanidae;Other regions;SIOFA;Runion et Mayotte;-;-;-;-;-;-;NA
-DK;2016-2018;Selar crumenophthalmus;Other regions;SIOFA;Runion et Mayotte;-;-;-;-;-;-;NA
-DK;2016-2018;Serranidae;Other regions;SIOFA;Runion et Mayotte;-;-;-;-;-;-;NA
-DK;2016-2018;Trachurus murphyi;Other regions;SPRFMO;SPRFMO Convention Area;-;-;-;-;-;-;NA
-DK;2016-2018;Acanthocybium solandri;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Alopias pelagicus;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Alopias superciliosus;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Alopias vulpinus;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Carcharhinus falciformis;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Carcharhinus longimanus;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Coryphaena hippurus;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Elagatis bipinnulata;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Katsuwonus pelamis;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Lampris regius;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Lepidocybium f lavobrunneum;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Makaira indica;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Makaira nigricans (or mazara);Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Mola mola;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Prionace glauca;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Ruvettus pretiosus;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Tetrapturus angustirostris;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Tetrapturus audax;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Thunnus alalunga;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Thunnus albacares;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Thunnus obesus;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Thunnus orientalis;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018;Xiphias gladius;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;-;NA
-DK;2016-2018; Rajidae;Other regions;WECAFC;West Central Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Ariidae;Other regions;WECAFC;French Guyana;-;-;-;-;-;-;NA
-DK;2016-2018;Centropomus spp;Other regions;WECAFC;French Guyana;-;-;-;-;-;-;NA
-DK;2016-2018;Cynoscion acoupa;Other regions;WECAFC;French Guyana;-;-;-;-;-;-;NA
-DK;2016-2018;Cynoscion steindachneri;Other regions;WECAFC;French Guyana;-;-;-;-;-;-;NA
-DK;2016-2018;Cynoscion virescens;Other regions;WECAFC;French Guyana;-;-;-;-;-;-;NA
-DK;2016-2018;Epinephelus guttatus;Other regions;WECAFC;West Central Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Genyatremus luteus;Other regions;WECAFC;French Guyana;-;-;-;-;-;-;NA
-DK;2016-2018;Haemulidae;Other regions;WECAFC;Guadeloupe and Martinique;-;-;-;-;-;-;NA
-DK;2016-2018;Lobotes surinamensis;Other regions;WECAFC;French Guyana;-;-;-;-;-;-;NA
-DK;2016-2018;Lutjanidae;Other regions;WECAFC;Guadeloupe and Martinique;-;-;-;-;-;-;NA
-DK;2016-2018;Lutjanus buccanella;Other regions;WECAFC;West Central Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Lutjanus campechanus;Other regions;WECAFC;West Central Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Lutjanus purpureus;Other regions;WECAFC;French Guyana;-;-;-;-;-;-;NA
-DK;2016-2018;Lutjanus vivanus;Other regions;WECAFC;West Central Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Mugil spp;Other regions;WECAFC;Guadeloupe and Martinique;-;-;-;-;-;-;NA
-DK;2016-2018;Panulirus argus;Other regions;WECAFC;West Central Atlantic;-;-;-;-;-;-;NA
-DK;2016-2018;Penaeus subtilis;Other regions;WECAFC;French Guyana;-;-;-;-;-;-;NA
-DK;2016-2018;Pterois volitans;Other regions;WECAFC;Guadeloupe and Martinique;-;-;-;-;-;-;NA
-DK;2016-2018;Serranidae;Other regions;WECAFC;Guadeloupe and Martinique;-;-;-;-;-;-;NA
-DK;2016-2018;Strombus gigas;Other regions;WECAFC;West Central Atlantic;-;-;-;-;-;-;NA
+MS;refYears;spp;region;RFMO;area;select;landings;TAC;shareLanding;Thresh;Comments;areaBis;speciesIncluded
+DK;2016-2018;Solea solea;Baltic Sea;ICES;22;N;43;-;98%;Y;;27_3_C_22;Solea solea
+DK;2015;Raja circularis;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Raja circularis
+DK;2015;Psetta maxima;Mediterranean and Black Sea;GFCM;Black Sea GSA 29;-;-;-;-;-;;Black Sea GSA 29;Psetta maxima
+DK;2015;Raja asterias;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Raja asterias
+DK;2015;Raja alba;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Raja alba
+DK;2015;Pagellus erythrinus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Pagellus erythrinus
+DK;2015;Raja melitensis;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Raja melitensis
+DK;2015;Raja microocellata;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Raja microocellata
+DK;2016-2018;Deania calcea;North Atlantic;ICES;V, VI, VII, IX, X, XII;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_9,27_10,27_12;Deania calcea
+DK;2016-2018;Dicentrarchus labrax;North Atlantic;ICES;IX;-;-;-;-;-;;27_9;Dicentrarchus labrax
+DK;2015;Nephrops norvegicus;North Atlantic;ICES;VI Fuctional unit 11;-;-;-;-;-;;nep-11;Nephrops norvegicus
+DK;2016-2018;Pandalus borealis;North Sea and Eastern Arctic;ICES;I-II;Y;1372;74%;11%;N;FIDES Initial.Quantity = 1453;27_1,27_2;Pandalus borealis
+DK;2016-2018;Phycis blennoides;North Sea and Eastern Arctic;ICES;IV;N;15;-;72%;Y;;27_4;Phycis blennoides
+DK;2016-2018;Psetta maxima;North Sea and Eastern Arctic;ICES;IIIa;N;133;-;80%;Y;;27_3_A;Psetta maxima
+DK;2016-2018;Scophthalmus rhombus;North Sea and Eastern Arctic;ICES;IV, VIId;N;116;16%;7%;Y;FIDES Initial.Quantity = 1113;27_4,27_7_D;Scophthalmus rhombus
+DK;2016-2018;Euphausia superba;Other regions;CCAMLR;CCAMLR Convention Area;-;-;-;-;-;;48, 58, 88;Euphausia superba
+DK;2016-2018;Euthynnus alleteratus;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;;21,31,27,34,37;Euthynnus alleteratus
+DK;2016-2018;Farfantepenaeus notialis;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Farfantepenaeus notialis
+DK;2016-2018;Gadus morhua;Other regions;NAFO 2J 3KL;21;-;-;-;-;-;;;Gadus morhua
+DK;2016-2018;Lutjanidae;Other regions;WECAFC;Guadeloupe and Martinique;-;-;-;-;-;;31;Lutjanidae
+DK;2016-2018;Pandalus borealis;Other regions;NAFO 3M;21;-;-;-;-;-;;;Pandalus borealis
+DK;2016-2018;Ruvettus pretiosus;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Ruvettus pretiosus
+DK;2016-2018;Pleuronectes platessa;Baltic Sea;ICES;22-32;Y;1845;72%;58%;N;FIDES Initial.Quantity = 5070;27_3_C_22,27_3_B_23,27_3_D_24,27_3_D_25,27_3_D_26,27_3_D_27,27_3_D_28,27_3_D_29,27_3_D_30,27_3_D_31,27_3_D_32;Pleuronectes platessa
+DK;2015;Alopias vulpinus;Mediterranean and Black Sea;GFCM;All areas;-;-;-;-;-;;all areas in the Med;Alopias vulpinus
+DK;2015;Boops boops;Mediterranean and Black Sea;GFCM;1.3, 2.1, 2.2, 3.1, 3.2;-;-;-;-;-;;1.3, 2.1, 2.2, 3.1, 3.2;Boops boops
+DK;2015;Centroscymnus coelolepis;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Centroscymnus coelolepis
+DK;2015;Chelidonichthys lucerna;Mediterranean and Black Sea;GFCM;1.3, 2.2, 3.1;-;-;-;-;-;;1.3, 2.2, 3.1;Chelidonichthys lucerna
+DK;2015;Dasyatis centroura;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Dasyatis centroura
+DK;2015;Galeus melastomus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Galeus melastomus
+DK;2015;Loligo vulgaris;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Loligo vulgaris
+DK;2015;Micromesistius poutassou;Mediterranean and Black Sea;GFCM;1.1, 3.1;-;-;-;-;-;;1.1, 3.1;Micromesistius poutassou
+DK;2015;Mullus barbatus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Mullus barbatus
+DK;2015;Mullus barbatus;Mediterranean and Black Sea;GFCM;Black Sea GSA 29;-;-;-;-;-;;Black Sea GSA 29;Mullus barbatus
+DK;2015;Mustelus mustelus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Mustelus mustelus
+DK;2016-2018;Thunnus tonggol;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;;51,57;Thunnus tonggol
+DK;2015;Solea solea;Mediterranean and Black Sea;GFCM;1.2, 2.1, 3.1;-;-;-;-;-;;1.2, 2.1, 3.1;Solea solea
+DK;2015;Sparus aurata;Mediterranean and Black Sea;GFCM;1.2, 3.1;-;-;-;-;-;;1.2, 3.1;Sparus aurata
+DK;2015;Spicara smaris;Mediterranean and Black Sea;GFCM;2.1, 3.1, 3.2;-;-;-;-;-;;2.1, 3.1, 3.2;Spicara smaris
+DK;2015;Squalus acanthias;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Squalus acanthias
+DK;2015;Todarodes spp;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Todarodes spp
+DK;2016-2018;Alepocephalus bairdii;North Atlantic;ICES;VI,XII;-;-;-;-;-;;27_6,27_12;Alepocephalus bairdii
+DK;2016-2018;Aspitrigla cuculus;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Aspitrigla cuculus
+DK;2016-2018;Bathyraja richardsoni;North Atlantic;ICES;All areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Bathyraja richardsoni
+DK;2016-2018;Beryx spp;North Atlantic;ICES;all areas excluding X and IXa;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9_B,27_12,27_14;Beryx spp,Beryx splendens,Beryx decadactylus
+DK;2016-2018;Cancer pagurus;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Cancer pagurus
+DK;2016-2018;Clupea harengus;North Atlantic;ICES;VIIa;-;-;-;-;-;;27_7_A;Clupea harengus
+DK;2016-2018;Dasyatis pastinaca;North Atlantic;ICES;VII, VIII;-;-;-;-;-;;27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8;Dasyatis pastinaca
+DK;2016-2018;Galeus melastomus;North Atlantic;ICES;VI, VII;-;-;-;-;-;;27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K ;Galeus melastomus
+DK;2016-2018;Helicolenus dactylopterus;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Helicolenus dactylopterus
+DK;2016-2018;Hexanchus griseus;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Hexanchus griseus
+DK;2016-2018;Lepidorhombus whiffiagonis;North Atlantic;ICES;VII, VIIIabd;-;-;-;-;-;;27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8_A,27_8_B;Lepidorhombus whiffiagonis
+DK;2016-2018;Limanda limanda;North Atlantic;ICES;VIIa,f-h;-;-;-;-;-;;27_7_A,27_7_F,27_7_G,27_7_H;Limanda limanda
+DK;2016-2018;Melanogrammus aeglefinus;North Atlantic;ICES;Vb;-;-;-;-;-;;27_5_B;Melanogrammus aeglefinus
+DK;2016-2018;Melanogrammus aeglefinus;North Atlantic;ICES;VIIb-k;N;1;-;0%;Y;;27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K;Melanogrammus aeglefinus
+DK;2016-2018;Merlangius merlangus;North Atlantic;ICES;IX, X;-;-;-;-;-;;27_9,27_10;Merlangius merlangus
+DK;2016-2018;Merluccius merluccius;North Atlantic;ICES;IIIa, IV, VI, VII, VIIIab;N;4434;0%;5%;Y;FIDES Initial.Quantity = 0;27_3_A,27_4,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8_A,27_8_B;Merluccius merluccius
+DK;2016-2018;Nephrops norvegicus;North Atlantic;ICES;VII Functional unit 20-21 (TAC VII);-;-;-;-;-;;27_7_H,27_7_G;Nephrops norvegicus
+DK;2016-2018;Octopus vulgaris;North Atlantic;ICES;all areas excluding VIIIc, IXa;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8_A,27_8_B,27_8_D,27_8_E,27_9_B,27_10,27_12,27_14;Octopus vulgaris
+DK;2016-2018;Pandalus spp;North Atlantic;ICES;all areas;Y;305;50%;84%;N;FIDES Initial.Quantity = 525;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Pandalus spp,Pandalus amplus,Pandalus nipponensis,Pandalus kessleri,Pandalus goniurus,Pandalus danae,Pandalus montagui,Pandalus jordani,Pandalus borealis,Pandalus platyceros,Pandalus hypsinotus
+DK;2016-2018;Raja radiata;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Raja radiata
+DK;2016-2018;Sardina pilchardus;North Atlantic;ICES;VIIIc,IXa;-;-;-;-;-;;27_8_C,27_9_A;Sardina pilchardus
+DK;2016-2018;Sepia officinalis;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Sepia officinalis
+DK;2016-2018;Torpedo nobiliana;North Atlantic;ICES;All areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Torpedo nobiliana
+DK;2016-2018;Trachurus mediterraneus;North Atlantic;ICES;VIII,IX;-;-;-;-;-;;27_8,27_9;Trachurus mediterraneus
+DK;2016-2018;Trachurus picturatus;North Atlantic;ICES;VIII,IX,X;-;-;-;-;-;;27_8,27_9,27_10;Trachurus picturatus
+DK;2016-2018;Trachurus trachurus;North Atlantic;ICES;VIIIc,IXa;-;-;-;-;-;;27_8_C,27_9_A;Trachurus trachurus
+DK;2016-2018;Alopias vulpinus;North Sea and Eastern Arctic;ICES;all areas;-;-;-;-;-;;27_4,27_7_D;Alopias vulpinus
+DK;2016-2018;Ammodytes spp;North Sea and Eastern Arctic;ICES;IV;Y;171158;94%;85%;N;FIDES Initial.Quantity = 195875;27_4;Ammodytes spp,Ammodytes tobianus
+DK;2016-2018;Anguilla anguilla;North Sea and Eastern Arctic;ICES;I-II;-;-;-;-;-;;27_1,27_2;Anguilla anguilla
+DK;2016-2018;Anguilla anguilla;North Sea and Eastern Arctic;ICES;IV, VIId;Yes;14;-;48%;No;;27_4,27_7_D;Anguilla anguilla
+DK;2016-2018;Brosme brosme;North Sea and Eastern Arctic;ICES;IV;N;36;55%;40%;Y;FIDES Initial.Quantity = 233;27_4;Brosme brosme
+DK;2016-2018;Mallotus villosus;North Sea and Eastern Arctic;ICES;I-II;-;-;-;-;-;;27_1,27_2;Mallotus villosus
+DK;2016-2018;Melanogrammus aeglefinus;North Sea and Eastern Arctic;ICES;IIIa;Y;809;84%;80%;N;FIDES Initial.Quantity = 2070;27_3_A;Melanogrammus aeglefinus
+DK;2016-2018;Merluccius merluccius;North Sea and Eastern Arctic;ICES;IV VII;Y;3832;58%;26%;N;FIDES Initial.Quantity = 2112;27_4,27_7_D;Merluccius merluccius
+DK;2015;Nephrops norvegicus;North Sea and Eastern Arctic;ICES;functional units 10;N;-;-;0%;Y;Sum of MS shares <10% = 13% | FIDES Initial.Quantity = 1282;nep-10;Nephrops norvegicus
+DK;2015;Nephrops norvegicus;North Sea and Eastern Arctic;ICES;functional units 8;N;-;-;0%;Y;Sum of MS shares <10% = 13% | FIDES Initial.Quantity = 1282;nep-8;Nephrops norvegicus
+DK;2016-2018;Salmo salar;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;;27_4,27_7_D;Salmo salar
+DK;2016-2018;Sebastes marinus;North Sea and Eastern Arctic;ICES;I-II;N;4;-;6%;Y;;27_1,27_2;Sebastes marinus
+DK;2016-2018;Sprattus sprattus;North Sea and Eastern Arctic;ICES;IV;Y;155091;91%;91%;N;FIDES Initial.Quantity = 151264;27_4;Sprattus sprattus
+DK;2016-2018;Torpedo nobiliana;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;;27_4,27_7_D;Torpedo nobiliana
+DK;2016-2018;Trisopterus esmarkii;North Sea and Eastern Arctic;ICES;IIIa;Y;406;100%;99%;N;FIDES Initial.Quantity = 85186;27_3_A;Trisopterus esmarkii
+DK;2016-2018; Rajidae;Other regions;WECAFC;West Central Atlantic;-;-;-;-;-;;31; Rajidae
+DK;2016-2018;Acanthocybium solandri;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;;71;Acanthocybium solandri
+DK;2016-2018;Alopias pelagicus;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;;51,57;Alopias pelagicus
+DK;2016-2018;Alopias superciliosus;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;;51,57;Alopias superciliosus
+DK;2016-2018;Amblyraja radiata;Other regions;NAFO 3LNOPs;21;-;-;-;-;-;;;Amblyraja radiata
+DK;2016-2018;Beryx sp.;Other regions;NAFO 6G;21;-;-;-;-;-;;;Beryx sp.
+DK;2016-2018;Brachydeuterus spp;Other regions;CECAF;34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Brachydeuterus spp
+DK;2016-2018;Carcharhinus falciformes;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;;51,57;Carcharhinus falciformes
+DK;2016-2018;Carcharhinus longimanus;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;;71;Carcharhinus longimanus
+DK;2016-2018;Champsocephalus gunnari;Other regions;CCAMLR;CCAMLR Convention Area;-;-;-;-;-;;48, 58, 88;Champsocephalus gunnari
+DK;2016-2018;Coryphaena hippurus;Other regions;IOTC;Runion et Mayotte;-;-;-;-;-;;51;Coryphaena hippurus
+DK;2016-2018;Coryphaenoides rupestris;Other regions;NAFO SA0 + 1;21;-;-;-;-;-;;;Coryphaenoides rupestris
+DK;2016-2018;Cynoscion acoupa;Other regions;WECAFC;French Guyana;-;-;-;-;-;;31;Cynoscion acoupa
+DK;2016-2018;Decapterus spp;Other regions;CECAF;34.3.1,34.3.3-6;-;-;-;-;-;;34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Decapterus spp
+DK;2016-2018;Gadus morhua;Other regions;NAFO 3Ps;21;-;-;-;-;-;;;Gadus morhua
+DK;2016-2018;Jasus tristani;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Jasus tristani
+DK;2016-2018;Lutjanus campechanus;Other regions;WECAFC;West Central Atlantic;-;-;-;-;-;;31;Lutjanus campechanus
+DK;2016-2018;Macrourus berglax;Other regions;NAFO SA2 + 3;21;-;-;-;-;-;;;Macrourus berglax
+DK;2016-2018;Macrourus spp;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Macrourus spp
+DK;2016-2018;Notopogon fernandezianus;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Notopogon fernandezianus
+DK;2016-2018;Pomadasys spp;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Pomadasys spp
+DK;2016-2018;Promethichthys prometheus;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Promethichthys prometheus
+DK;2016-2018;Pseudotolithus spp;Other regions;CECAF;34.1.1;-;-;-;-;-;;34_1_1;Pseudotolithus spp
+DK;2016-2018;Pterois volitans;Other regions;WECAFC;Guadeloupe and Martinique;-;-;-;-;-;;31;Pterois volitans
+DK;2016-2018;Ruvettus pretiosus;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;;71;Ruvettus pretiosus
+DK;2016-2018;Sardina pilchardus;Other regions;CECAF;34.1.1,34.1.3;N;988;-;2%;Y;;34_1_1,34_1_3;Sardina pilchardus
+DK;2016-2018;Sardinella aurita;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Sardinella aurita
+DK;2016-2018;Sardinella maderensis;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Sardinella maderensis
+DK;2016-2018;Sardinella maderensis;Other regions;;Azores, Madeira and Canary Islands;-;-;-;-;-;;34;Sardinella maderensis
+DK;2016-2018;Schedophilus ovalis;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Schedophilus ovalis
+DK;2016-2018;Sparisoma cretense;Other regions;;Azores, Madeira and Canary Islands;-;-;-;-;-;;34;Sparisoma cretense
+DK;2016-2018;Sphyrna lewini;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;;51,57;Sphyrna lewini
+DK;2016-2018;Tetrapturus albidus;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;;21,31,27,34,37;Tetrapturus albidus
+DK;2016-2018;Tetrapturus audax;Other regions;IATTC;East Pacific Ocean;-;-;-;-;-;;;Tetrapturus audax
+DK;2016-2018;Tetrapturus audax;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;;51,57;Tetrapturus audax
+DK;2016-2018;Thunnus alalunga;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;;31, 34, 41, 47;Thunnus alalunga
+DK;2016-2018;Thunnus obesus;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;;51,57;Thunnus obesus
+DK;2016-2018;Thunnus obesus;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;;21,31,27,34,37;Thunnus obesus
+DK;2016-2018;Thunnus orientalis;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;;71;Thunnus orientalis
+DK;2016-2018;Trachurus spp;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Trachurus spp
+DK;2016-2018;Urophycis tenuis;Other regions;NAFO 3NO;21;-;-;-;-;-;;;Urophycis tenuis
+DK;2016-2018;Clupea harengus;Baltic Sea;ICES;30;-;-;-;-;-;;27_3_D_30;Clupea harengus
+DK;2016-2018;Clupea harengus;Baltic Sea;ICES;31;-;-;-;-;-;;27_3_D_31;Clupea harengus
+DK;2016-2018;Sander lucioperca;Baltic Sea;ICES;IIId;-;-;-;-;-;;27_3_D;Sander lucioperca
+DK;2015;Aristaeomorpha foliacea;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Aristaeomorpha foliacea
+DK;2015;Atherina spp;Mediterranean and Black Sea;GFCM;GSA 9,10,16 and 19;-;-;-;-;-;;GSA 9, 10, 16 and 19;Atherina spp
+DK;2015;Carcharhinidae;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Carcharhinidae
+DK;2015;Centrophorus squamosus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Centrophorus squamosus
+DK;2015;Dasyatidae;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Dasyatidae
+DK;2015;Eledone moschata;Mediterranean and Black Sea;GFCM;1.3, 2.1, 2.2, 3.1;-;-;-;-;-;;1.3, 2.1, 2.2, 3.1;Eledone moschata
+DK;2015;Engraulis encrasicolus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Engraulis encrasicolus
+DK;2015;Galeorhinus galeus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Galeorhinus galeus
+DK;2015;Etmopterus spinax;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Etmopterus spinax
+DK;2015;Illex spp;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Illex spp
+DK;2015;Isurus oxyrinchus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Isurus oxyrinchus
+DK;2015;Mugilidae;Mediterranean and Black Sea;GFCM;1.3, 2.1, 2.2, 3.1;-;-;-;-;-;;1.3, 2.1, 2.2, 3.1;Mugilidae
+DK;2015;Mustelus asterias;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Mustelus asterias
+DK;2015;Nephrops norvegicus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Nephrops norvegicus
+DK;2015;Octopus vulgaris;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Octopus vulgaris
+DK;2015;Prionace glauca;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Prionace glauca
+DK;2015;Pteromylaeus bovinus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Pteromylaeus bovinus
+DK;2015;Raja batis;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Raja batis
+DK;2015;Penaeus kerathurus;Mediterranean and Black Sea;GFCM;3.1;-;-;-;-;-;;3.1;Penaeus kerathurus
+DK;2015;Raja clavata;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Raja clavata
+DK;2015;Raja fullonica;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Raja fullonica
+DK;2015;Raja polystigma;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Raja polystigma
+DK;2015;Scyliorhinus stellaris;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Scyliorhinus stellaris
+DK;2015;Sepia officinalis;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Sepia officinalis
+DK;2015;Sphyrna spp;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Sphyrna spp
+DK;2015;Sprattus sprattus;Mediterranean and Black Sea;GFCM;Black Sea GSA 29;-;-;-;-;-;;Black Sea GSA 29;Sprattus sprattus
+DK;2015;Squalus blainville;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Squalus blainville
+DK;2015;Squalus spp;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Squalus spp
+DK;2015;Squilla mantis;Mediterranean and Black Sea;GFCM;1.3, 2.1, 2.2;-;-;-;-;-;;1.3, 2.1, 2.2;Squilla mantis
+DK;2015;Torpedo marmorata;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Torpedo marmorata
+DK;2015;Torpedo nobiliana;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Torpedo nobiliana
+DK;2016-2018;Aequipecten opercularis;North Atlantic;ICES;VII;-;-;-;-;-;;27_7;Aequipecten opercularis
+DK;2015;Trisopterus minutus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Trisopterus minutus
+DK;2016-2018;Ammodytes spp;North Atlantic;ICES;VIa;-;-;-;-;-;;27_6_A;Ammodytes spp,Ammodytes tobianus
+DK;2016-2018;Anguilla anguilla;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Anguilla anguilla
+DK;2016-2018;Capros aper;North Atlantic;ICES;V, VI, VII;Y;236;25%;2%;N;FIDES Initial.Quantity = 5001;27_5,27_6,27_7;Capros aper,Caproidae
+DK;2016-2018;Centrophorus squamosus;North Atlantic;ICES;All areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Centrophorus squamosus
+DK;2016-2018;Clupea harengus;North Atlantic;ICES;VIaS,VIIbc;N;33;-;1%;Y;;27_6_A,27_7_B,27_7_C;Clupea harengus
+DK;2016-2018;Clupea harengus;North Atlantic;ICES;VIIj;-;-;-;-;-;;27_7_J;Clupea harengus
+DK;2016-2018;Dasyatis pastinaca;North Atlantic;ICES;VII, VIII;-;-;-;-;-;;27_7,27_8;Dasyatis pastinaca
+DK;2016-2018;Dicologlossa cuneata;North Atlantic;ICES;VIIIc, IX;-;-;-;-;-;;27_8_C,27_9;Dicologlossa cuneata
+DK;2016-2018;Dasyatis violacea;North Atlantic;ICES;All areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Dasyatis violacea
+DK;2016-2018;Etmopterus spinax;North Atlantic;ICES;VI, VII, VIII;-;-;-;-;-;;27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_8,27_7_K;Etmopterus spinax
+DK;2016-2018;Gadus morhua;North Atlantic;ICES;Vb;-;-;-;-;-;;27_5_B;Gadus morhua
+DK;2016-2018;Etmopterus spinax;North Atlantic;ICES;VI, VII, VIII;-;-;-;-;-;;27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8;Etmopterus spinax
+DK;2016-2018;Gadus morhua;North Atlantic;ICES;VIa;N;1;-;0%;Y;;27_6_A;Gadus morhua
+DK;2016-2018;Glyptocephalus cynoglossus;North Atlantic;ICES;VI, VII;-;-;-;-;-;;27_6,27_7_A,27_7_B,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K;Glyptocephalus cynoglossus
+DK;2016-2018;Harriotta raleighana;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Harriotta raleighana
+DK;2016-2018;Homarus gammarus;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Homarus gammarus
+DK;2016-2018;Lamna nasus;North Atlantic;ICES;all areas (subareas 1-14);-;-;-;-;-;;27;Lamna nasus
+DK;2016-2018;Lepidopus caudatus;North Atlantic;ICES;IXa;-;-;-;-;-;;27_9_A;Lepidopus caudatus
+DK;2016-2018;Lepidorhombus whiffiagonis;North Atlantic;ICES;VIIIc, IXa;-;-;-;-;-;;27_8_C,27_9_A;Lepidorhombus whiffiagonis
+DK;2016-2018;Loligo vulgaris;North Atlantic;ICES;VIIIc, IXa;-;-;-;-;-;;27_8_C,27_9_A;Loligo vulgaris
+DK;2016-2018;Lophius budegassa;North Atlantic;ICES;VIIb-k, VIIIabd;-;-;-;-;-;;27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8_A,27_8_B,27_8_D;Lophius budegassa
+DK;2016-2018;Lophius piscatorius;North Atlantic;ICES;IV, VI;N;2286;5%;71%;Y;Sum of MS shares <10% = 20% | FIDES Initial.Quantity = 1264;27_4,27_6;Lophius piscatorius
+DK;2016-2018;Lophius piscatorius;North Atlantic;ICES;VIIIc, IXa;-;-;-;-;-;;27_8_C,27_9_A;Lophius piscatorius
+DK;2016-2018;Maja squinado;North Atlantic;ICES;V, VI, VII;-;-;-;-;-;;27_5,27_6,27_7;Maja squinado
+DK;2016-2018;Mallotus villosus;North Atlantic;ICES;XIV;-;-;-;-;-;FIDES Initial.Quantity = 0;27_14;Mallotus villosus
+DK;2016-2018;Merlangius merlangus;North Atlantic;ICES;Vb;-;-;-;-;-;;27_5_B;Merlangius merlangus
+DK;2016-2018;Merluccius merluccius;North Atlantic;ICES;VIIIc, IXa;-;-;-;-;-;;27_8_C,27_9_A;Merluccius merluccius
+DK;2016-2018;Microstomus kitt;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Microstomus kitt
+DK;2016-2018;Molva macrophthalma;North Atlantic;ICES;X;-;-;-;-;-;;27_10;Molva macrophthalma
+DK;2016-2018;Mullus surmuletus;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Mullus surmuletus
+DK;2016-2018;Mustelus mustelus;North Atlantic;ICES;VI, VII, VIII, IX;-;-;-;-;-;;27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_8,27_9,27_7_K;Mustelus mustelus
+DK;2016-2018;Mustelus asterias;North Atlantic;ICES;VI, VII, VIII, IX;-;-;-;-;-;;27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_8,27_9,27_7_K;Mustelus asterias
+DK;2015;Nephrops norvegicus;North Atlantic;ICES;VII Functional unit 14;-;-;-;-;-;;nep-14;Nephrops norvegicus
+DK;2015;Nephrops norvegicus;North Atlantic;ICES;VI Fuctional unit 12;-;-;-;-;-;;nep-12;Nephrops norvegicus
+DK;2016-2018;Nephrops norvegicus;North Atlantic;ICES;VII Functional unit 18 (TAC VII);-;-;-;-;-;;27_7_B;Nephrops norvegicus
+DK;2015;Nephrops norvegicus;North Atlantic;ICES;VII Functional unit 17;-;-;-;-;-;;nep-17;Nephrops norvegicus
+DK;2015;Nephrops norvegicus;North Atlantic;ICES;VIIIk IX Functional unit 26-27, 28-29, 30;-;-;-;-;-;;27_9_A;Nephrops norvegicus
+DK;2015;Nephrops norvegicus;North Atlantic;ICES;VII Functional unit 22;-;-;-;-;-;;nep-22;Nephrops norvegicus
+DK;2015;Nephrops norvegicus;North Atlantic;ICES;VIII,IX Functional unit 25,31;-;-;-;-;-;;27_8_C;Nephrops norvegicus
+DK;2016-2018;Octopus vulgaris;North Atlantic;ICES;VIIIc, IXa;-;-;-;-;-;;27_8_C,27_9_A;Octopus vulgaris
+DK;2016-2018;Parapenaeus longirostris;North Atlantic;ICES;IXa;-;-;-;-;-;;27_9_A;Parapenaeus longirostris
+DK;2016-2018;Pagellus bogaraveo;North Atlantic;ICES;IXa, X;-;-;-;-;-;;27_9_A,27_10;Pagellus bogaraveo
+DK;2016-2018;Pollachius pollachius;North Atlantic;ICES;IX, X;-;-;-;-;-;;27_9,27_10;Pollachius pollachius
+DK;2016-2018;Pteromylaeus bovinus;North Atlantic;ICES;All areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Pteromylaeus bovinus
+DK;2016-2018;Raja circularis;North Atlantic;ICES;VI,VII,VIII;-;-;-;-;-;;27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_8,27_7_K;Raja circularis
+DK;2016-2018;Raja fyllae;North Atlantic;ICES;All areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Raja fyllae
+DK;2016-2018;Raja fullonica;North Atlantic;ICES;All areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Raja fullonica
+DK;2016-2018;Raja asterias;North Atlantic;ICES;All areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Raja asterias
+DK;2016-2018;Raja batis;North Atlantic;ICES;IIa,V,VI,VII,VIII,IXa;-;-;-;-;-;;27_2_A,27_5,27_6,27_7,27_8,27_9_A;Raja batis
+DK;2016-2018;Raja lintea;North Atlantic;ICES;All areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Raja lintea
+DK;2016-2018;Raja nidarosiensis;North Atlantic;ICES;VI,VIIa-c,VIIe-h,VIIk;-;-;-;-;-;;27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_K;Raja nidarosiensis
+DK;2016-2018;Raja oxyrinchus;North Atlantic;ICES;All areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Raja oxyrinchus
+DK;2016-2018;Raja montagui;North Atlantic;ICES;VI,VIIa,VIIb,VIIe-h,j,VIII,IXa;-;-;-;-;-;;27_6,27_7_A,27_7_B,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_9_A;Raja montagui
+DK;2016-2018;Raja microocellata;North Atlantic;ICES;VIIe-g;-;-;-;-;-;;27_7_E,27_7_F,27_7_G;Raja microocellata
+DK;2016-2018;Rajella kukujevi;North Atlantic;ICES;All areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Rajella kukujevi
+DK;2016-2018;Raja undulata;North Atlantic;ICES;VIIb-c,VIIe-j,VIIIa-c,IXa;-;-;-;-;-;;27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_8_A,27_8_B,27_8_C,27_9_A;Raja undulata
+DK;2016-2018;Reinhardtius hippoglossoides;North Atlantic;ICES;VI;N;-;1%;0%;Y;Sum of MS shares <10% = 9% | FIDES Initial.Quantity = 16;27_6;Reinhardtius hippoglossoides
+DK;2016-2018;Scomber japonicus;North Atlantic;ICES;VIII,IX,X;-;-;-;-;-;;27_8,27_9,27_10;Scomber japonicus
+DK;2016-2018;Sardina pilchardus;North Atlantic;ICES;VIIIabd;-;-;-;-;-;;27_8_A,27_8_B,27_8_D;Sardina pilchardus
+DK;2016-2018;Scymnodon ringens;North Atlantic;ICES;All areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Scymnodon ringens
+DK;2016-2018;Sebastes mentella;North Atlantic;ICES;ICES Sub areas V,VI,XII,XIV & NAFO SA 2 + (Div. 1F + 3K);-;-;-;-;-;;27_5,27_6,27_12,27_14,21?;Sebastes mentella
+DK;2016-2018;Solea solea;North Atlantic;ICES;VIIbc;-;-;-;-;-;;27_7_B,27_7_C;Solea solea
+DK;2016-2018;Solea solea;North Atlantic;ICES;VIIIab;-;-;-;-;-;;27_8_A,27_8_B;Solea solea
+DK;2016-2018;Solea solea;North Atlantic;ICES;VIIIc;-;-;-;-;-;;27_8_C;Solea solea
+DK;2016-2018;Sparidae;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Sparidae
+DK;2016-2018;Trachurus trachurus;North Atlantic;ICES;X;-;-;-;-;-;;27_10;Trachurus trachurus
+DK;2016-2018;Amblyraja radiata;North Sea and Eastern Arctic;ICES;IV;-;-;-;-;-;;27_4;Amblyraja radiata
+DK;2016-2018;Ammodytes spp;North Sea and Eastern Arctic;ICES;IIIa;Y;15368;94%;99%;N;FIDES Initial.Quantity = 195875;27_3_A;Ammodytes spp,Ammodytes tobianus
+DK;2016-2018;Anarhichas spp;North Sea and Eastern Arctic;ICES;IV;Y;400;-;42%;N;;27_4;Anarhichas spp,Anarhichas minor,Anarhichas denticulatus,Anarhichas lupus
+DK;2016-2018;Anguilla anguilla;North Sea and Eastern Arctic;ICES;IIIa;No;23;-;99%;Yes;;27_3_A;Anguilla anguilla
+DK;2016-2018;Gadus morhua;North Sea and Eastern Arctic;ICES;IIIaS;N;191;62%;71%;Y;FIDES Initial.Quantity = 389;27_3_A;Gadus morhua
+DK;2016-2018;Aspitrigla cuculus;North Sea and Eastern Arctic;ICES;IIIa;-;-;-;-;-;;27_3_A;Aspitrigla cuculus
+DK;2016-2018;Chelidonichthys lucerna;North Sea and Eastern Arctic;ICES;IV;N;37;-;1%;Y;;27_4;Chelidonichthys lucerna
+DK;2016-2018;Coryphaenoides rupestris;North Sea and Eastern Arctic;ICES;IIIa;N;1;95%;94%;Y;FIDES Initial.Quantity = 211;27_3_A;Coryphaenoides rupestris
+DK;2016-2018;Gadus morhua;North Sea and Eastern Arctic;ICES;I-II;N;383;-;1%;Y;;27_1,27_2;Gadus morhua
+DK;2016-2018;Lepidorhombus whiffiagonis;North Sea and Eastern Arctic;ICES;IV, VIId;N;56;0%;86%;Y;Sum of MS shares <10% = 4% | FIDES Initial.Quantity = 7;27_4,27_7_D;Lepidorhombus whiffiagonis
+DK;2016-2018;Galeorhinus galeus;North Sea and Eastern Arctic;ICES;all areas;N;1;-;2%;Y;;27_4,27_7_D;Galeorhinus galeus
+DK;2016-2018;Helicolenus dactylopterus;North Sea and Eastern Arctic;ICES;IV;-;-;-;-;-;;27_4;Helicolenus dactylopterus
+DK;2016-2018;Glyptocephalus cynoglossus;North Sea and Eastern Arctic;ICES;IIIa;Y;910;-;82%;N;;27_3_A;Glyptocephalus cynoglossus
+DK;2016-2018;Eutrigla gurnardus;North Sea and Eastern Arctic;ICES;IV;Y;1089;-;61%;N;;27_4;Eutrigla gurnardus
+DK;2016-2018;Clupea harengus;North Sea and Eastern Arctic;ICES;I-II;Y;15491;34%;51%;N;FIDES Initial.Quantity = 9704;27_1,27_2;Clupea harengus
+DK;2016-2018;Eutrigla gurnardus;North Sea and Eastern Arctic;ICES;IIIa;N;92;-;91%;Y;;27_3_A;Eutrigla gurnardus
+DK;2016-2018;Brosme brosme;North Sea and Eastern Arctic;ICES;I-II;-;-;-;-;-;;27_1,27_2;Brosme brosme
+DK;2016-2018;Hydrolagus affinis;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;;27_4,27_7_D;Hydrolagus affinis
+DK;2016-2018;Lophius piscatorius;North Sea and Eastern Arctic;ICES;IV;Y;2286;14%;92%;N;FIDES Initial.Quantity = 2569;27_4;Lophius piscatorius
+DK;2016-2018;Lophius budegassa;North Sea and Eastern Arctic;ICES;IV, VIId;N;-;14%;0%;Y;FIDES Initial.Quantity = 2569;27_4,27_7_D;Lophius budegassa
+DK;2016-2018;Merlangius merlangus;North Sea and Eastern Arctic;ICES;IV, VIId;N;2590;9%;14%;Y;Sum of MS shares <10% = 19% | FIDES Initial.Quantity = 1912;27_4,27_7_D;Merlangius merlangus
+DK;2016-2018;Mustelus asterias;North Sea and Eastern Arctic;ICES;all areas;-;-;-;-;-;;27_4,27_7_D;Mustelus asterias
+DK;2016-2018;Nephrops norvegicus;North Sea and Eastern Arctic;ICES;functional units 33 (TAC IIa, VI);N;440;5%;5%;Y;Sum of MS shares <10% = 13% | FIDES Initial.Quantity = 1282;27_4_B;Nephrops norvegicus
+DK;2016-2018;Nephrops norvegicus;North Sea and Eastern Arctic;ICES;functional units 6;N;1;5%;0%;Y;Sum of MS shares <10% = 13% | FIDES Initial.Quantity = 1282;nep-6;Nephrops norvegicus
+DK;2016-2018;Pandalus borealis;North Sea and Eastern Arctic;ICES;IV;N;183;74%;60%;Y;FIDES Initial.Quantity = 1453;27_4;Pandalus borealis
+DK;2016-2018;Pecten maximus;North Sea and Eastern Arctic;ICES;VIId;-;-;-;-;-;;27_7_D;Pecten maximus
+DK;2016-2018;Raja alba;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;;27_4,27_7_D;Raja alba
+DK;2016-2018;Pollachius virens;North Sea and Eastern Arctic;ICES;IIIa;N;1456;9%;69%;Y;Sum of MS shares <10% = 10% | FIDES Initial.Quantity = 4365;27_3_A;Pollachius virens
+DK;2016-2018;Pleuronectes platessa;North Sea and Eastern Arctic;ICES;VIId;-;-;-;-;-;;27_7_D;Pleuronectes platessa
+DK;2016-2018;Pollachius virens;North Sea and Eastern Arctic;ICES;IV;N;4141;8%;13%;Y;Sum of MS shares <10% = 12% | FIDES Initial.Quantity = 4365;27_4;Pollachius virens
+DK;2016-2018;Psetta maxima;North Sea and Eastern Arctic;ICES;IV, VIId;Y;441;16%;11%;N;FIDES Initial.Quantity = 1113;27_4,27_7_D;Psetta maxima
+DK;2016-2018;Platichthys flesus;North Sea and Eastern Arctic;ICES;IV;N;101;-;7%;Y;;27_4;Platichthys flesus
+DK;2016-2018;Raja brachyura;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;;27_4,27_7_D;Raja brachyura
+DK;2016-2018;Raja asterias;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;;27_4,27_7_D;Raja asterias
+DK;2016-2018;Raja clavata;North Sea and Eastern Arctic;ICES;IV, VIId;N;1;-;0%;Y;;27_4,27_7_D;Raja clavata
+DK;2016-2018;Raja hyperborea;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;;27_4,27_7_D;Raja hyperborea
+DK;2016-2018;Raja fullonica;North Sea and Eastern Arctic;ICES;all areas;-;-;-;-;-;;27_4,27_7_D;Raja fullonica
+DK;2016-2018;Raja naevus;North Sea and Eastern Arctic;ICES;IV, VIId;N;1;-;0%;Y;;27_4,27_7_D;Raja naevus
+DK;2016-2018;Reinhardtius hippoglossoides;North Sea and Eastern Arctic;ICES;I-II;N;2;-;0%;Y;;27_1,27_2;Reinhardtius hippoglossoides
+DK;2016-2018;Scomber scombrus;North Sea and Eastern Arctic;ICES;IV, VIId;Y;23442;74%;12%;N;FIDES Initial.Quantity = 30639;27_4,27_7_D;Scomber scombrus
+DK;2016-2018;Scyliorhinus stellaris;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;;27_4,27_7_D;Scyliorhinus stellaris
+DK;2016-2018;Solea solea;North Sea and Eastern Arctic;ICES;VIId;-;-;-;-;-;;27_7_D;Solea solea
+DK;2016-2018;Sprattus sprattus;North Sea and Eastern Arctic;ICES;VIId;N;-;32%;0%;Y;FIDES Initial.Quantity = 1071;27_7_D;Sprattus sprattus
+DK;2016-2018;Trachurus trachurus;North Sea and Eastern Arctic;ICES;IIa;Y;-;10%;0%;N;Sum of MS shares <10% = 33% | FIDES Initial.Quantity = 9861;27_2_A;Trachurus trachurus
+DK;2016-2018;Trachurus trachurus;North Sea and Eastern Arctic;ICES;IV, VIId;Y;337;47%;5%;N;FIDES Initial.Quantity = 5985;27_4,27_7_D;Trachurus trachurus
+DK;2016-2018;Zeus faber;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;;27_4,27_7_D;Zeus faber
+DK;2016-2018;Allocyttus guineensis;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Allocyttus guineensis
+DK;2016-2018;Allocyttus verucossus;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Allocyttus verucossus
+DK;2016-2018;Alopias vulpinus;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;;71;Alopias vulpinus
+DK;2016-2018;Ariidae;Other regions;WECAFC;French Guyana;-;-;-;-;-;;31;Ariidae
+DK;2016-2018;Auxis rochei;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;;21,31,27,34,37;Auxis rochei
+DK;2016-2018;Auxis thazard;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;;21,31,27,34,37;Auxis thazard
+DK;2016-2018;Auxis thazard;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;;51,57;Auxis thazard
+DK;2016-2018;Caranx spp;Other regions;CECAF;34.3.1,34.3.3-6;-;-;-;-;-;;34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Caranx spp
+DK;2016-2018;Carcharhinus longimanus;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;;51,57;Carcharhinus longimanus
+DK;2016-2018;Chaceon spp;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Chaceon spp
+DK;2016-2018;Coryphaena hippurus;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;;21,31,27,34,37;Coryphaena hippurus
+DK;2016-2018;Coryphaena hippurus;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;;71;Coryphaena hippurus
+DK;2016-2018;Cynoglossus spp;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Cynoglossus spp
+DK;2016-2018;Cynoscion steindachneri;Other regions;WECAFC;French Guyana;-;-;-;-;-;;31;Cynoscion steindachneri
+DK;2016-2018;Dentex canariensis;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Dentex canariensis
+DK;2016-2018;Dentex maroccanus;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Dentex maroccanus
+DK;2016-2018;Dentex macrophthalmus;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Dentex macrophthalmus
+DK;2016-2018;Elagatis bipinnulata;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;;71;Elagatis bipinnulata
+DK;2016-2018;Epinephelus guttatus;Other regions;WECAFC;West Central Atlantic;-;-;-;-;-;;31;Epinephelus guttatus
+DK;2016-2018;Galeoides decadactylus;Other regions;CECAF;34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Galeoides decadactylus
+DK;2016-2018;Gadus morhua;Other regions;NAFO 3NO;21;-;-;-;-;-;;;Gadus morhua
+DK;2016-2018;Hippoglossus hippoglossus;Other regions;NAFO SA1;21;-;-;-;-;-;;;Hippoglossus hippoglossus
+DK;2016-2018;Illex illecebrosus;Other regions;NAFO Subareas 3 + 4;21;-;-;-;-;-;;;Illex illecebrosus
+DK;2016-2018;Lutjanus buccanella;Other regions;WECAFC;West Central Atlantic;-;-;-;-;-;;31;Lutjanus buccanella
+DK;2016-2018;Lutjanus vivanus;Other regions;WECAFC;West Central Atlantic;-;-;-;-;-;;31;Lutjanus vivanus
+DK;2016-2018;Makaira indica;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;;51,57;Makaira indica
+DK;2016-2018;Makaira indica;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;;71;Makaira indica
+DK;2016-2018;Makaira nigricans (or mazara);Other regions;IATTC;East Pacific Ocean;-;-;-;-;-;;77,87;Makaira nigricans (or mazara)
+DK;2016-2018;Mallotus villosus;Other regions;NAFO 3NO;21;-;-;-;-;-;;;Mallotus villosus
+DK;2016-2018;Neocyttus romboidales;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Neocyttus romboidales
+DK;2016-2018;Parapenaeus longirostris;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Parapenaeus longirostris
+DK;2016-2018;Pagrus caeruleostictus;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Pagrus caeruleostictus
+DK;2016-2018;Patellidae;Other regions;;Azores, Madeira and Canary Islands;-;-;-;-;-;;34;Patellidae
+DK;2016-2018;Penaeus subtilis;Other regions;WECAFC;French Guyana;-;-;-;-;-;;31;Penaeus subtilis
+DK;2016-2018;Pagellus bellottii;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Pagellus bellottii
+DK;2016-2018;Panulirus argus;Other regions;WECAFC;West Central Atlantic;-;-;-;-;-;;31;Panulirus argus
+DK;2016-2018;Polyprion americanus;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Polyprion americanus
+DK;2016-2018;Pomadasys incisus;Other regions;CECAF;34.1.1;-;-;-;-;-;;34_1_1;Pomadasys incisus
+DK;2016-2018;Prionace glauca;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;;21,31,27,34,37;Prionace glauca
+DK;2016-2018;Sardina pilchardus;Other regions;;Azores, Madeira and Canary Islands;N;988;-;2%;Y;;34;Sardina pilchardus
+DK;2016-2018;Sparus spp;Other regions;CECAF;34.1.1;-;-;-;-;-;;34_1_1;Sparus spp
+DK;2016-2018;Tetrapturus angustirostris;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;;71;Tetrapturus angustirostris
+DK;2016-2018;Tetrapturus audax;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;;71;Tetrapturus audax
+DK;2016-2018;Thunnus alalunga;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;;51,57;Thunnus alalunga
+DK;2016-2018;Thunnus albacares;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;;51,57;Thunnus albacares
+DK;2016-2018;Thunnus atlanticus;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;;21,31,27,34,37;Thunnus atlanticus
+DK;2016-2018;Thunnus albacares;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;;71;Thunnus albacares
+DK;2016-2018;Trachurus trachurus;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;N;153;-;0%;Y;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Trachurus trachurus
+NA;NA;NA;NA;NA;NA;NA;NA;NA;NA;NA;NA;NA;NA
+DK;2016-2018;Platichthys flesus;Baltic Sea;ICES;22-32;N;914;-;5%;Y;;27_3_C_22,27_3_B_23,27_3_D_24,27_3_D_25,27_3_D_26,27_3_D_27,27_3_D_28,27_3_D_29,27_3_D_30,27_3_D_31,27_3_D_32;Platichthys flesus
+DK;2016-2018;Salmo salar;Baltic Sea;ICES;22-31;N;33;21%;7%;Y;FIDES Initial.Quantity = 18885;27_3_C_22,27_3_B_23,27_3_D_24,27_3_D_25,27_3_D_26,27_3_D_27,27_3_D_28,27_3_D_29,27_3_D_30,27_3_D_31;Salmo salar
+DK;2016-2018;Salmo trutta;Baltic Sea;ICES;22-32;N;4;-;1%;Y;;27_3_C_22,27_3_B_23,27_3_D_24,27_3_D_25,27_3_D_26,27_3_D_27,27_3_D_28,27_3_D_29,27_3_D_30,27_3_D_31,27_3_D_32;Salmo trutta
+DK;2016-2018;Salmo salar;Baltic Sea;ICES;32;-;-;-;-;-;;27_3_D_32;Salmo salar
+DK;2016-2018;Scophthalmus rhombus;Baltic Sea;ICES;22-32;N;40;-;89%;Y;;27_3_C_22,27_3_B_23,27_3_D_24,27_3_D_25,27_3_D_26,27_3_D_27,27_3_D_28,27_3_D_29,27_3_D_30,27_3_D_31,27_3_D_32;Scophthalmus rhombus
+DK;2016-2018;Sprattus sprattus;Baltic Sea;ICES;22-32;Y;23341;10%;10%;N;Sum of MS shares <10% = 26% | FIDES Initial.Quantity = 25875;27_3_C_22,27_3_B_23,27_3_D_24,27_3_D_25,27_3_D_26,27_3_D_27,27_3_D_28,27_3_D_29,27_3_D_30,27_3_D_31,27_3_D_32;Sprattus sprattus
+DK;2015;Anguilla anguilla;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Anguilla anguilla
+DK;2015;Aphia minuta;Mediterranean and Black Sea;GFCM;GSA 9,10,16 and 19;-;-;-;-;-;;GSA 9,10,16 and 19;Aphia minuta
+DK;2015;Centrophorus granulosus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Centrophorus granulosus
+DK;2015;Dalatias licha;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Dalatias licha
+DK;2015;Heptranchias perlo;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Heptranchias perlo
+DK;2015;Hexanchus griseus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Hexanchus griseus
+DK;2016-2018;Thunnus thynnus;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;;31,27,34,37,47;Thunnus thynnus
+DK;2015;Oxynotus centrina;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Oxynotus centrina
+DK;2015;Raja brachyura;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Raja brachyura
+DK;2015;Parapenaeus longirostris;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Parapenaeus longirostris
+DK;2015;Raja radula;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Raja radula
+DK;2015;Raja undulata;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Raja undulata
+DK;2015;Squatina squatina;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Squatina squatina
+DK;2015;Veneridae;Mediterranean and Black Sea;GFCM;2.1, 2.2;-;-;-;-;-;;2.1, 2.2;Veneridae
+DK;2016-2018;Dasyatis centroura;North Atlantic;ICES;All areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Dasyatis centroura
+DK;2016-2018;Dalatias licha;North Atlantic;ICES;All areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Dalatias licha
+DK;2016-2018;Dalatias licha;North Atlantic;ICES;All areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Dalatias licha
+DK;2016-2018;Engraulis encrasicolus;North Atlantic;ICES;IXa (only Cadiz);-;-;-;-;-;;27_9_A;Engraulis encrasicolus
+DK;2016-2018;Engraulis encrasicolus;North Atlantic;ICES;VIII;-;-;-;-;-;;27_8;Engraulis encrasicolus
+DK;2016-2018;Dipturus intermedius;North Atlantic;ICES;IIa, V, VI, VII, VIII, IXa;-;-;-;-;-;;27_2_A,27_5,27_6,27_7,27_8,27_9_A;Dipturus intermedius
+DK;2016-2018;Eutrigla gurnardus;North Atlantic;ICES;VIIde;-;-;-;-;-;;27_7_D,27_7_E;Eutrigla gurnardus
+DK;2016-2018;Galeorhinus galeus;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Galeorhinus galeus
+DK;2016-2018;Hoplostethus atlanticus;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Hoplostethus atlanticus
+DK;2016-2018;Hydrolagus pallidus;North Atlantic;ICES;All areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Hydrolagus pallidus
+DK;2016-2018;Lepidorhombus boscii;North Atlantic;ICES;VIIIc, IXa;-;-;-;-;-;;27_8_C,27_9_A;Lepidorhombus boscii
+DK;2016-2018;Lophius piscatorius;North Atlantic;ICES;VIIb-k, VIIIabd;-;-;-;-;-;;27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8_A,27_8_B,27_8_D;Lophius piscatorius
+DK;2016-2018;Molva dypterygia;North Atlantic;ICES;all areas excluding X;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_12,27_14;Molva dypterygia
+DK;2016-2018;Molva molva;North Atlantic;ICES;all areas;N;-;0%;0%;Y;Sum of MS shares <10% = 9% | FIDES Initial.Quantity = 8;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Molva molva
+DK;2015;Nephrops norvegicus;North Atlantic;ICES;VI Fuctional unit 13;-;-;-;-;-;;nep-13;Nephrops norvegicus
+DK;2015;Nephrops norvegicus;North Atlantic;ICES;VII Functional unit 15;-;-;-;-;-;;nep-15;Nephrops norvegicus
+DK;2015;Nephrops norvegicus;North Atlantic;ICES;VIII,IX Functional unit 23,24;-;-;-;-;-;;27_8_A,27_8_B;Nephrops norvegicus
+DK;2016-2018;Pecten maximus;North Atlantic;ICES;IV, VI, VII;-;-;-;-;-;;27_4,27_6,27_7_E,27_7_A,27_7_B,27_7_C,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K;Pecten maximus
+DK;2016-2018;Pleuronectes platessa;North Atlantic;ICES;VIIh-k;-;-;-;-;-;;27_7_H,27_7_J,27_7_K;Pleuronectes platessa
+DK;2016-2018;Pseudotriakis microdon;North Atlantic;ICES;All areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Pseudotriakis microdon
+DK;2016-2018;Raja clavata;North Atlantic;ICES;VI,VIIa,e-g,VIII,IXa;-;-;-;-;-;;27_6,27_7_A,27_7_E,27_7_F,27_7_G,27_9_A;Raja clavata
+DK;2016-2018;Raja hyperborea;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Raja hyperborea
+DK;2016-2018;Raja brachyura;North Atlantic;ICES;VI,VIIa,VIIe-g,IXa;-;-;-;-;-;;27_6,27_7_A,27_7_E,27_7_F,27_7_G,27_9_A;Raja brachyura
+DK;2016-2018;Raja naevus;North Atlantic;ICES;VI,VIIa-c,IXa;-;-;-;-;-;;27_6,27_7_A,27_7_B,27_7_C,27_9_A;Raja naevus
+DK;2016-2018;Reinhardtius hippoglossoides;North Atlantic;ICES;V,XIV;-;-;-;-;-;;27_5,27_14;Reinhardtius hippoglossoides
+DK;2016-2018;Rhinochimaera atlantica;North Atlantic;ICES;V,XIV;-;-;-;-;-;;27_5,27_14;Rhinochimaera atlantica
+DK;2016-2018;Salmo salar;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Salmo salar
+DK;2016-2018;Solea solea;North Atlantic;ICES;Ixa;-;-;-;-;-;;27_9_A;Solea solea
+DK;2016-2018;Sebastes marinus;North Atlantic;ICES;ICES Sub areas V,VI,XII,XIV & NAFO SA 2 + (Div. 1F + 3K).;-;-;-;-;-;;27_5,27_6,27_12,27_14,21_1;Sebastes marinus
+DK;2016-2018;Solea solea;North Atlantic;ICES;VIIa;-;-;-;-;-;;27_7_A;Solea solea
+DK;2016-2018;Solea solea;North Atlantic;ICES;VIIe;-;-;-;-;-;;27_7_E;Solea solea
+DK;2016-2018;Solea solea;North Atlantic;ICES;VIIhjk;-;-;-;-;-;;27_7_H,27_7_J,27_7_K;Solea solea
+DK;2016-2018;Squalus acanthias;North Atlantic;ICES;All areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Squalus acanthias
+DK;2016-2018;Trachurus trachurus;North Atlantic;ICES;IIa,IVa,Vb,VIa,VIIa-c,e-k,VIIIabde;Y;6840;10%;11%;N;Sum of MS shares <10% = 33% | FIDES Initial.Quantity = 9861;27_2_A,27_4_A,27_5_B,27_6_A,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8_A,27_8_B,27_8_D,27_8_E;Trachurus trachurus
+DK;2016-2018;Trisopterus spp;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Trisopterus spp,Trisopterus luscus,Trisopterus minutus,Trisopterus esmarkii
+DK;2016-2018;Zeus faber;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Zeus faber
+DK;2016-2018;Dicentrarchus labrax;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;;27_4,27_7_D;Dicentrarchus labrax
+DK;2016-2018;Crangon crangon;North Sea and Eastern Arctic;ICES;IV, VIId;N;2141;-;6%;Y;;27_4,27_7_D;Crangon crangon
+DK;2016-2018;Lepidorhombus boscii;North Sea and Eastern Arctic;ICES;IV, VIId;N;-;0%;0%;Y;Sum of MS shares <10% = 4% | FIDES Initial.Quantity = 7;27_4,27_7_D;Lepidorhombus boscii
+DK;2016-2018;Dasyatis tortonesei;North Sea and Eastern Arctic;ICES;all areas;-;-;-;-;-;;27_4,27_7_D;Dasyatis tortonesei
+DK;2016-2018;Clupea harengus;North Sea and Eastern Arctic;ICES;22-24,IIIa;Y;8986;54%;20%;N;FIDES Initial.Quantity = 25947;27_3_A,27_3_C_22,27_3_D_24;Clupea harengus
+DK;2016-2018;Gadus morhua;North Sea and Eastern Arctic;ICES;IIIaN;Y;3857;83%;84%;N;FIDES Initial.Quantity = 6397;27_3_A;Gadus morhua
+DK;2016-2018;Gadus morhua;North Sea and Eastern Arctic;ICES;IV, VIId;Y;6108;19%;21%;N;FIDES Initial.Quantity = 7327;27_4,27_7_D;Gadus morhua
+DK;2016-2018;Glyptocephalus cynoglossus;North Sea and Eastern Arctic;ICES;IV;Y;522;15%;34%;N;FIDES Initial.Quantity = 953;27_4;Glyptocephalus cynoglossus
+DK;2016-2018;Clupea harengus;North Sea and Eastern Arctic;ICES;IV, VIId;Y;122664;26%;31%;N;FIDES Initial.Quantity = 113017;27_4,27_7_D;Clupea harengus
+DK;2016-2018;Mullus surmuletus;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;;27_4,27_7_D;Mullus surmuletus
+DK;2016-2018;Molva dypterygia;North Sea and Eastern Arctic;ICES;IV;N;2;8%;15%;Y;Sum of MS shares <10% = 23% | FIDES Initial.Quantity = 4;27_4;Molva dypterygia
+DK;2016-2018;Micromesistius poutassou;North Sea and Eastern Arctic;ICES;IV, VIId;N;24;15%;0%;Y;FIDES Initial.Quantity = 61277;27_4,27_7_D;Micromesistius poutassou
+DK;2016-2018;Mullus barbatus;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;;27_4,27_7_D;Mullus barbatus
+DK;2016-2018;Nephrops norvegicus;North Sea and Eastern Arctic;ICES;functional units 7;N;8;5%;0%;Y;Sum of MS shares <10% = 13% | FIDES Initial.Quantity = 1282;nep-7;Nephrops norvegicus
+DK;2016-2018;Pandalus borealis;North Sea and Eastern Arctic;ICES;IIIa;Y;1834;65%;56%;N;FIDES Initial.Quantity = 2162;27_3_A;Pandalus borealis
+DK;2016-2018;Pandalus borealis;North Sea and Eastern Arctic;ICES;IVa;N;175;74%;59%;Y;FIDES Initial.Quantity = 1453;27_4_A;Pandalus borealis
+DK;2016-2018;Phycis phycis;North Sea and Eastern Arctic;ICES;IV;-;-;-;-;-;;27_4;Phycis phycis
+DK;2016-2018;Pleuronectes platessa;North Sea and Eastern Arctic;ICES;IV;Y;12906;20%;20%;N;FIDES Initial.Quantity = 20952;27_4;Pleuronectes platessa
+DK;2016-2018;Pollachius virens;North Sea and Eastern Arctic;ICES;I-II;N;6;8%;0%;Y;Sum of MS shares <10% = 10% | FIDES Initial.Quantity = 4365;27_1,27_2;Pollachius virens
+DK;2016-2018;Pleuronectes platessa;North Sea and Eastern Arctic;ICES;IIIa;Y;7106;80%;80%;N;FIDES Initial.Quantity = 13266;27_3_A;Pleuronectes platessa
+DK;2016-2018;Raja microocellata;North Sea and Eastern Arctic;ICES;all areas;-;-;-;-;-;;27_4,27_7_D;Raja microocellata
+DK;2016-2018;Raja circularis;North Sea and Eastern Arctic;ICES;all areas;-;-;-;-;-;;27_4,27_7_D;Raja circularis
+DK;2016-2018;Raja montagui;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;;27_4,27_7_D;Raja montagui
+DK;2016-2018;Scyliorhinus canicula;North Sea and Eastern Arctic;ICES;IV, VIId;-;-;-;-;-;;27_4,27_7_D;Scyliorhinus canicula
+DK;2016-2018;Sebastes mentella;North Sea and Eastern Arctic;ICES;I-II;-;-;-;-;-;;27_1,27_2;Sebastes mentella
+DK;2016-2018;Squalus acanthias;North Sea and Eastern Arctic;ICES;all areas;N;14;-;54%;Y;;27_4,27_7_D;Squalus acanthias
+DK;2016-2018;Trisopterus esmarkii;North Sea and Eastern Arctic;ICES;IV;Y;15540;100%;100%;N;FIDES Initial.Quantity = 85186;27_4;Trisopterus esmarkii
+DK;2016-2018;Acanthocybium solandri;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;;21,31,27,34,37;Acanthocybium solandri
+DK;2016-2018;Alopias pelagicus;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;;71;Alopias pelagicus
+DK;2016-2018;Alopias superciliosus;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;;71;Alopias superciliosus
+DK;2016-2018;Antimora rostrata;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Antimora rostrata
+DK;2016-2018;Auxis rochei;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;;51,57;Auxis rochei
+DK;2016-2018;Beryx spp;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Beryx spp,Beryx splendens,Beryx decadactylus
+DK;2016-2018;Carcharhinus falciformis;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;;71;Carcharhinus falciformis
+DK;2016-2018;Centropomus spp;Other regions;WECAFC;French Guyana;-;-;-;-;-;;31;Centropomus spp
+DK;2016-2018;Cynoscion virescens;Other regions;WECAFC;French Guyana;-;-;-;-;-;;31;Cynoscion virescens
+DK;2016-2018;Dissostichus spp Dissostichus eleginoides and Dissostichus mawsoni);Other regions;CCAMLR;CCAMLR Convention Area;-;-;-;-;-;;48, 58, 88;Dissostichus spp Dissostichus eleginoides and Dissostichus mawsoni)
+DK;2016-2018;Dentex congoensis;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Dentex congoensis
+DK;2016-2018;Ethmalosa fimbriata;Other regions;CECAF;34.3.1,34.3.3-6;-;-;-;-;-;;34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Ethmalosa fimbriata
+DK;2016-2018;Epinephelus aeneus;Other regions;CECAF;34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Epinephelus aeneus
+DK;2016-2018;Epigonus spp;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Epigonus spp
+DK;2016-2018;Istiophorus platypterus;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;;51,57;Istiophorus platypterus
+DK;2016-2018;Istiophorus albicans;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;;21,31,27,34,37;Istiophorus albicans
+DK;2016-2018;Istiophorus platypterus;Other regions;;West Central Pacific Ocean;-;-;-;-;-;;71;Istiophorus platypterus
+DK;2016-2018;Lutjanidae;Other regions;SIOFA;Runion et Mayotte;-;-;-;-;-;;;Lutjanidae
+DK;2016-2018;Loligo vulgaris;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Loligo vulgaris
+DK;2016-2018;Lutjanus purpureus;Other regions;WECAFC;French Guyana;-;-;-;-;-;;31;Lutjanus purpureus
+DK;2016-2018;Makaira indica;Other regions;IATTC;East Pacific Ocean;-;-;-;-;-;;;Makaira indica
+DK;2016-2018;Makaira nigricans (or mazara);Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;;21,31,27,34,37;Makaira nigricans (or mazara)
+DK;2016-2018;Makaira nigricans (or mazara);Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;;51,57;Makaira nigricans (or mazara)
+DK;2016-2018;Merluccius polli;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Merluccius polli
+DK;2016-2018;Pagellus spp;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Pagellus spp
+DK;2016-2018;Pagellus bogaraveo;Other regions;CECAF;34.1.1;-;-;-;-;-;;34_1_1;Pagellus bogaraveo
+DK;2016-2018;Pandalus borealis;Other regions;NAFO 3LNO;21;-;-;-;-;-;;;Pandalus borealis
+DK;2016-2018;Salmo salar;Other regions;NAFO S1 + ICES Sub- area XIV;21;-;-;-;-;-;;;Salmo salar
+DK;2016-2018;Reinhardtius hippoglossoides;Other regions;NAFO 3KLMNO;21;-;-;-;-;-;;;Reinhardtius hippoglossoides
+DK;2016-2018;Reinhardtius hippoglossoides;Other regions;NAFO SA1;21;-;-;-;-;-;;;Reinhardtius hippoglossoides
+DK;2016-2018;Sarda sarda;Other regions;ICCAT;Atlantic Ocean and adjacent seas;Y;1;-;0%;N;;21,31,27,34,37;Sarda sarda
+DK;2016-2018;Strombus gigas;Other regions;WECAFC;West Central Atlantic;-;-;-;-;-;;31;Strombus gigas
+DK;2016-2018;Thunnus obesus;Other regions;IATTC;East Pacific Ocean;-;-;-;-;-;;;Thunnus obesus
+DK;2016-2018;Thunnus albacares;Other regions;IATTC;East Pacific Ocean;-;-;-;-;-;;;Thunnus albacares
+DK;2016-2018;Trachurus murphyi;Other regions;SPRFMO;SPRFMO Convention Area;-;-;-;-;-;;81,87;Trachurus murphyi
+DK;2016-2018;Trachurus spp;Other regions;;Azores, Madeira and Canary Islands;-;-;-;-;-;;34;Trachurus spp
+NA;NA;NA;NA;NA;NA;NA;NA;NA;NA;NA;NA;NA;NA
+DK;2016-2018;Melanogrammus aeglefinus;North Atlantic;ICES;VIIa;-;-;-;-;-;;27_7_A;Melanogrammus aeglefinus
+DK;2015;Nephrops norvegicus;North Sea and Eastern Arctic;ICES;functional units 34;N;-;-;0%;Y;Sum of MS shares <10% = 13% | FIDES Initial.Quantity = 1282;nep-34;Nephrops norvegicus
+DK;2016-2018;Gadus morhua;Other regions;NAFO SA1;21;-;-;-;-;-;;;Gadus morhua
+DK;2016-2018;Haemulidae;Other regions;WECAFC;Guadeloupe and Martinique;-;-;-;-;-;;31;Haemulidae
+DK;2016-2018;Hippoglossoides platessoides;Other regions;NAFO 3M;21;-;-;-;-;-;;;Hippoglossoides platessoides
+DK;2016-2018;Prionace glauca;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;;71;Prionace glauca
+DK;2016-2018;Thunnus alalunga;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;;71;Thunnus alalunga
+DK;2015;Myliobatis aquila;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Myliobatis aquila
+DK;2016-2018;Argentina spp;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F27_7_G;Argentina spp,Argentina sphyraena,Argentina silus,Argentina kagoshimae,Argentina elongata
+DK;2016-2018;Conger conger;North Atlantic;ICES;all areas excluding X;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_12,27_14;Conger conger
+DK;2015;Galeus spp;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Galeus spp
+DK;2015;Lamna nasus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Lamna nasus
+DK;2015;Sardina pilchardus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Sardina pilchardus
+DK;2015;Torpedo spp;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Torpedo spp
+DK;2015;Trachurus mediterraneus;Mediterranean and Black Sea;GFCM;All areas in the Med;-;-;-;-;-;;All areas in the Med;Trachurus mediterraneus
+DK;2015;Trachurus mediterraneus;Mediterranean and Black Sea;GFCM;Black Sea GSA 29;-;-;-;-;-;;Black Sea GSA 29;Trachurus mediterraneus
+DK;2015;Trachurus trachurus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Trachurus trachurus
+DK;2015;Trachurus trachurus;Mediterranean and Black Sea;GFCM;Black Sea GSA 29;-;-;-;-;-;;Black Sea GSA 29;Trachurus trachurus
+DK;2015;Triakidae;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Triakidae
+DK;2016-2018;Beryx spp;North Atlantic;ICES;IXa and X;-;-;-;-;-;;27_9_A,27_10;Beryx spp,Beryx splendens,Beryx decadactylus
+DK;2016-2018;Chimaera monstrosa;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Chimaera monstrosa
+DK;2016-2018;Clupea harengus;North Atlantic;ICES;VIa;N;33;-;1%;Y;;27_6_A;Clupea harengus
+DK;2016-2018;Dasyatis tortonesei;North Atlantic;ICES;VII, VIII;-;-;-;-;-;;27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8;Dasyatis tortonesei
+DK;2016-2018;Gadus morhua;North Atlantic;ICES;VIIe-k;-;-;-;-;-;;27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K;Gadus morhua
+DK;2016-2018;Nephrops norvegicus;North Atlantic;ICES;VII Functional unit 19 (TAC VII);-;-;-;-;-;;27_7_G,27_7_J;Nephrops norvegicus
+DK;2016-2018;Scomber scombrus;North Atlantic;ICES;II,IIIa,IV,V,VI,VII,VIII,IX;Y;37315;8%;8%;N;Sum of MS shares <10% = 29% | FIDES Initial.Quantity = 30639;27_2,27_3_A,27_4,27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9;Scomber scombrus
+DK;2016-2018;Scophthalmus rhombus;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Scophthalmus rhombus
+DK;2016-2018;Scyliorhinus stellaris;North Atlantic;ICES;VI,VII;-;-;-;-;-;;27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K ;Scyliorhinus stellaris
+DK;2016-2018;Macrourus berglax;North Sea and Eastern Arctic;ICES;IV;Y;-;10%;0%;N;Sum of MS shares <10% = 30% | FIDES Initial.Quantity = 0.01;27_4;Macrourus berglax
+DK;2016-2018;Melanogrammus aeglefinus;North Sea and Eastern Arctic;ICES;IV;N;1172;5%;4%;Y;Sum of MS shares <10% = 18% | FIDES Initial.Quantity = 1657;27_4;Melanogrammus aeglefinus
+DK;2016-2018;Merlangius merlangus;North Sea and Eastern Arctic;ICES;IIIa;Y;343;90%;88%;N;FIDES Initial.Quantity = 929;27_3_A;Merlangius merlangus
+DK;2016-2018;Merluccius merluccius;North Sea and Eastern Arctic;ICES;IIIa;Y;598;92%;89%;N;FIDES Initial.Quantity = 2890;27_3_A;Merluccius merluccius
+DK;2016-2018;Micromesistius poutassou;North Sea and Eastern Arctic;ICES;I-II;N;86;15%;1%;Y;FIDES Initial.Quantity = 61277;27_1,27_2;Micromesistius poutassou
+DK;2016-2018;Micromesistius poutassou;North Sea and Eastern Arctic;ICES;IIIa;N;28;15%;22%;Y;FIDES Initial.Quantity = 61277;27_3_A;Micromesistius poutassou
+DK;2016-2018;Nephrops norvegicus;North Sea and Eastern Arctic;ICES;functional units 32 (TAC IIa, IV);N;41;5%;1%;Y;Sum of MS shares <10% = 13% | FIDES Initial.Quantity = 1282;27_4_A;Nephrops norvegicus
+DK;2016-2018;Reinhardtius hippoglossoides;North Sea and Eastern Arctic;ICES;IV;N;-;1%;0%;Y;Sum of MS shares <10% = 9% | FIDES Initial.Quantity = 16;27_4;Reinhardtius hippoglossoides
+DK;2016-2018;Salmo salar;North Sea and Eastern Arctic;ICES;I-II;-;-;-;-;-;;27_1,27_2;Salmo salar
+DK;2016-2018;Solea solea;North Sea and Eastern Arctic;ICES;IV;N;385;4%;3%;Y;Sum of MS shares <10% = 25% | FIDES Initial.Quantity = 597;27_4;Solea solea
+DK;2016-2018;Genyatremus luteus;Other regions;WECAFC;French Guyana;-;-;-;-;-;;31;Genyatremus luteus
+DK;2016-2018;Glyptocephalus cynoglossus;Other regions;NAFO 2J3KL;21;-;-;-;-;-;;;Glyptocephalus cynoglossus
+DK;2016-2018;Glyptocephalus cynoglossus;Other regions;NAFO 3NO;21;-;-;-;-;-;;;Glyptocephalus cynoglossus
+DK;2016-2018;Hoplostethus atlanticus;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Hoplostethus atlanticus
+DK;2016-2018;Katsuwonus pelamis;Other regions;IATTC;East Pacific Ocean;-;-;-;-;-;;;Katsuwonus pelamis
+DK;2016-2018;Mugil spp;Other regions;WECAFC;Guadeloupe and Martinique;-;-;-;-;-;;31;Mugil spp
+DK;2016-2018;Octopodidae and Loliginidae;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Octopodidae and Loliginidae
+DK;2016-2018;Octopus vulgaris;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Octopus vulgaris
+DK;2016-2018;Prionace glauca;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;;51,57;Prionace glauca
+DK;2016-2018;Pseudocyttu smaculatus;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Pseudocyttu smaculatus
+DK;2016-2018;Thunnus obesus;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;;71;Thunnus obesus
+DK;2016-2018;Thunnus orientalis;Other regions;IATTC;East Pacific Ocean;-;-;-;-;-;;;Thunnus orientalis
+DK;2016-2018;Trachurus trecae;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Trachurus trecae
+DK;2016-2018;Merlangius merlangus;North Atlantic;ICES;VIII;-;-;-;-;-;;27_8;Merlangius merlangus
+DK;2016-2018;Pollachius virens;North Atlantic;ICES;IV,IIIa,VI;N;2;-;0%;Y;;27_4_27_3_A,27_6;Pollachius virens
+DK;2016-2018;Pollachius virens;North Atlantic;ICES;VII,VIII;-;-;-;-;-;;27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8;Pollachius virens
+DK;2016-2018;Scomber spp;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Scomber spp,Scomber australasicus,Scomber scombrus,Scomber japonicus
+DK;2016-2018;Scomberomorus cavalla;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;;21,31,27,34,37;Scomberomorus cavalla
+DK;2016-2018;Sebastes spp;Other regions;NAFO 3LN;21;-;-;-;-;-;;;Sebastes spp
+DK;2016-2018;Sepia officinalis;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Sepia officinalis
+DK;2016-2018;Sepia spp;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Sepia spp
+DK;2016-2018;Xiphias gladius;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;;21,31,27,34,37;Xiphias gladius
+DK;2016-2018;Clupea harengus;Baltic Sea;ICES;25-29,32;N;8603;2%;5%;Y;Sum of MS shares <10% = 8% | FIDES Initial.Quantity = 5045;27_3_D_25,27_3_D_26,27_3_D_27,27_3_D_28_2,27_3_D_29,27_3_D_32;Clupea harengus
+DK;2015;Dasyatis pastinaca;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Dasyatis pastinaca
+DK;2015;Eledone cirrhosa;Mediterranean and Black Sea;GFCM;1.1, 1.3, 2.1, 2.2, 3.1;-;-;-;-;-;;1.1, 1.3, 2.1, 2.2, 3.1;Eledone cirrhosa
+DK;2015;Raja montagui;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Raja montagui
+DK;2016-2018;Coryphaenoides rupestris;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Coryphaenoides rupestris
+DK;2016-2018;Melanogrammus aeglefinus;North Atlantic;ICES;VIa;N;2;0%;0%;Y;FIDES Initial.Quantity = 0;27_6_A;Melanogrammus aeglefinus
+DK;2016-2018;Merlangius merlangus;North Atlantic;ICES;VIIe-k;N;-;0%;0%;Y;FIDES Initial.Quantity = 0;27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K;Merlangius merlangus
+DK;2016-2018;Polyprion americanus;North Atlantic;ICES;X;-;-;-;-;-;;27_10;Polyprion americanus
+DK;2016-2018;Melanogrammus aeglefinus;North Sea and Eastern Arctic;ICES;I-II;N;19;-;1%;Y;;27_1,27_2;Melanogrammus aeglefinus
+DK;2016-2018;Scomber scombrus;North Sea and Eastern Arctic;ICES;IIIa;Y;233;62%;43%;N;FIDES Initial.Quantity = 17836;27_3_A;Scomber scombrus
+DK;2016-2018;Gadus morhua;Other regions;NAFO 3M;21;-;-;-;-;-;;;Gadus morhua
+DK;2016-2018;Katsuwonus pelamis;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;;51,57;Katsuwonus pelamis
+DK;2016-2018;Katsuwonus pelamis;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;;71;Katsuwonus pelamis
+DK;2016-2018;Lepidotus caudatus;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Lepidotus caudatus
+DK;2016-2018;Limanda ferruginea;Other regions;NAFO 3LNO;21;-;-;-;-;-;;;Limanda ferruginea
+DK;2016-2018;Lobotes surinamensis;Other regions;WECAFC;French Guyana;-;-;-;-;-;;31;Lobotes surinamensis
+DK;2016-2018;Scomber japonicus;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Scomber japonicus
+DK;2016-2018;Scomberomorus maculatus;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;;21,31,27,34,37;Scomberomorus maculatus
+DK;2016-2018;Scomberomorus tritor;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;;21,31,27,34,37;Scomberomorus tritor
+DK;2016-2018;Sebastes spp;Other regions;NAFO 3M;21;-;-;-;-;-;;;Sebastes spp
+DK;2016-2018;Sebastes spp;Other regions;NAFO 3O;21;-;-;-;-;-;;;Sebastes spp
+DK;2016-2018;Serranidae;Other regions;SIOFA;Runion et Mayotte;-;-;-;-;-;;;Serranidae
+DK;2016-2018;Xiphias gladius;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;;71;Xiphias gladius
+DK;2016-2018;Coregonus lavaretus;Baltic Sea;ICES;IIId;-;-;-;-;-;;27_3_D;Coregonus lavaretus
+DK;2016-2018;Gadus morhua;Baltic Sea;ICES;25-32;Y;5096;23%;25%;N;FIDES Initial.Quantity = 6521;27_3_D_25,27_3_D_26,27_3_D_27,27_3_D_28,27_3_D_29,27_3_D_30, 27_3_D_31,27_3_D_32;Gadus morhua
+DK;2015;Dasyatis violacea;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Dasyatis violacea
+DK;2015;Dicentrarchus labrax;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Dicentrarchus labrax
+DK;2015;Lophius budegassa;Mediterranean and Black Sea;GFCM;1.1, 1.2, 1.3, 2.2, 3.1;-;-;-;-;-;;1.1, 1.2, 1.3, 2.2, 3.1;Lophius budegassa
+DK;2015;Merlangius merlangus;Mediterranean and Black Sea;GFCM;Black Sea GSA 29;-;-;-;-;-;;Black Sea GSA 29;Merlangius merlangus
+DK;2015;Raja miraletus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Raja miraletus
+DK;2016-2018;Conger conger;North Atlantic;ICES;X;-;-;-;-;-;;27_10;Conger conger
+DK;2016-2018;Melanogrammus aeglefinus;North Atlantic;ICES;Vib;-;-;-;-;-;;27_6_B;Melanogrammus aeglefinus
+DK;2016-2018;Merlangius merlangus;North Atlantic;ICES;VIIa;-;-;-;-;-;;27_7_A;Merlangius merlangus
+DK;2016-2018;Pollachius virens;North Atlantic;ICES;Vb;-;-;-;-;-;;27_5_B;Pollachius virens
+DK;2016-2018;Prionace glauca;North Atlantic;ICES;all areas (North of 5N);-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Prionace glauca
+DK;2016-2018;Scomber scombrus;North Sea and Eastern Arctic;ICES;II;N;97;74%;1%;Y;FIDES Initial.Quantity = 30639;27_2;Scomber scombrus
+DK;2016-2018;Lampris regius;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;;71;Lampris regius
+DK;2016-2018;Lepidocybium f lavobrunneum;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;;71;Lepidocybium f lavobrunneum
+DK;2016-2018;Pseudopentaceros richardsoni;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Pseudopentaceros richardsoni
+DK;2016-2018;Scomber spp;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Scomber spp,Scomber australasicus,Scomber scombrus,Scomber japonicus
+DK;2016-2018;Scomberomorus commerson;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;;51,57;Scomberomorus commerson
+DK;2016-2018;Scomberomorus regalis;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;;21,31,27,34,37;Scomberomorus regalis
+DK;2016-2018;Sepia hierredda;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Sepia hierredda
+DK;2016-2018;Sparidae;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Sparidae
+DK;2016-2018;Xiphias gladius;Other regions;IATTC;East Pacific Ocean;-;-;-;-;-;;;Xiphias gladius
+DK;2016-2018;Dicentrarchus labrax;North Atlantic;ICES;all areas excluding IX;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_10,27_12,27_14;Dicentrarchus labrax
+DK;2016-2018;Hydrolagus affinis;North Atlantic;ICES;All areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Hydrolagus affinis
+DK;2016-2018;Dentex spp;Other regions;CECAF;34.1.1;N;11;-;5%;Y;; 34.1.3,34.3.1,34.3.3-6,34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3?;Dentex spp
+DK;2016-2018;Merluccius spp;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Merluccius spp
+DK;2016-2018;Loligo vulgaris;North Atlantic;ICES;all areas excluding VIIIc, IXa;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8_A,27_8_B,27_8_D,27_8_E,27_9_ B,27_10,27_12,27_14;Loligo vulgaris
+DK;2016-2018;Myliobatis aquila;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Myliobatis aquila
+DK;2016-2018;Molva molva;North Sea and Eastern Arctic;ICES;IV;Y;945;30%;22%;N;FIDES Initial.Quantity = 1572;27_4;Molva molva
+DK;2016-2018;Psetta maxima;Baltic Sea;ICES;22-32;N;123;-;43%;Y;;27_3_C_22,27_3_B_23,27_3_D_24,27_3_D_25,27_3_D_26,27_3_D_27,27_3_D_28,27_3_D_29,27_3_D_30,27_3_D_31,27_3_D_32;Psetta maxima
+DK;2016-2018;Deania calcea;North Atlantic;ICES;V, VI, VII, IX, X, XII;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12;Deania calcea
+DK;2016-2018;Limanda limanda;North Atlantic;ICES;VIIe;-;-;-;-;-;;27_7_E;Limanda limanda
+DK;2016-2018;Microstomus kitt;North Sea and Eastern Arctic;ICES;IV, VIId;Y;967;15%;31%;N;FIDES Initial.Quantity = 953;27_4,27_7_D;Microstomus kitt
+DK;2016-2018;Merluccius senegalensis;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Merluccius senegalensis
+DK;2016-2018;Gadus morhua;North Atlantic;ICES;Vib;-;-;-;-;-;;27_6_B;Gadus morhua
+DK;2016-2018;Hydrolagus mirabilis;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Hydrolagus mirabilis
+DK;2016-2018;Raja alba;North Atlantic;ICES;All areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Raja alba
+DK;2016-2018;Umbrina canariensis;Other regions;CECAF;34.3.3-6;-;-;-;-;-;;34_3_3,34_3_4,34_3_5,34_3_6;Umbrina canariensis
+DK;2016-2018;Merluccius spp;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Merluccius spp
+DK;2016-2018;Gadus morhua;North Atlantic;ICES;VIIa;-;-;-;-;-;;27_7_A;Gadus morhua
+DK;2015;Engraulis encrasicolus;Mediterranean and Black Sea;GFCM;Black Sea GSA 29;-;-;-;-;-;;Black Sea GSA 29;Engraulis encrasicolus
+DK;2016-2018;Euthynnus affinis;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;;51,57;Euthynnus affinis
+DK;2015;Raja oxyrinchus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Raja oxyrinchus
+DK;2016-2018;Gadus morhua;North Atlantic;ICES;Va;-;-;-;-;-;;27_5_A;Gadus morhua
+DK;2016-2018;Lophius budegassa;North Atlantic;ICES;IV, VI;N;-;9%;0%;Y;Sum of MS shares <10% = 24% | FIDES Initial.Quantity = 2569;27_4,27_6;Lophius budegassa
+DK;2016-2018;Dissostichus eleginoides;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Dissostichus eleginoides
+DK;2016-2018;Makaira nigricans (or mazara);Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;;71;Makaira nigricans (or mazara)
+DK;2016-2018;Pleuronectes platessa;North Atlantic;ICES;VIII,IX, X;-;-;-;-;-;;27_8,27_9,27_10;Pleuronectes platessa
+DK;2016-2018;Melanogrammus aeglefinus;North Atlantic;ICES;Va;-;-;-;-;-;;27_5_A;Melanogrammus aeglefinus
+DK;2016-2018;Clupea harengus;Baltic Sea;ICES;Gulf of Riga;-;-;-;-;-;;27_3_D_28_1;Clupea harengus
+DK;2016-2018;Coregonus albula;Baltic Sea;ICES;22-32;-;-;-;-;-;;27_3_C_22,27_3_B_23,27_3_D_24,27_3_D_25,27_3_D_26,27_3_D_27,27_3_D_28,27_3_D_29,27_3_D_30,27_3_D_31,27_3_D_32;Coregonus albula
+DK;2015;Aristeus antennatus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Aristeus antennatus
+DK;2015;Eutrigla gurnardus;Mediterranean and Black Sea;GFCM;2.2, 3.1;-;-;-;-;-;;2.2, 3.1;Eutrigla gurnardus
+DK;2015;Mustelus spp;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Mustelus spp
+DK;2016-2018;Aphanopus spp;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Aphanopus spp,Aphanopus intermedius,Aphanopus carbo
+DK;2016-2018;Bathyraja spinicauda;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Bathyraja spinicauda
+DK;2016-2018;Centroscymnus coelolepis;North Atlantic;ICES;All areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Centroscymnus coelolepis
+DK;2016-2018;Lepidorhombus whiffiagonis;North Atlantic;ICES;VI;-;-;-;-;-;;27_6;Lepidorhombus whiffiagonis
+DK;2016-2018;Lophius budegassa;North Atlantic;ICES;VIIIc, IXa;-;-;-;-;-;;27_8_C,27_9_A;Lophius budegassa
+DK;2016-2018;Merlangius merlangus;North Atlantic;ICES;VIa;N;2;-;1%;Y;;27_6_A;Merlangius merlangus
+DK;2016-2018;Mustelus punctulatus;North Atlantic;ICES;VI, VII, VIII, IX;-;-;-;-;-;;27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_8,27_9,27_7_K;Mustelus punctulatus
+DK;2016-2018;Pollachius pollachius;North Atlantic;ICES;all areas except IX, X;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_12,27_14;Pollachius pollachius
+DK;2016-2018;Scyliorhinus canicula;North Atlantic;ICES;VI,VIIa-c,VIIe-j,VIIIa-d,IXa;-;-;-;-;-;;27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_8_A,27_8_B,27_8_C,27_8_D,27_9_A;Scyliorhinus canicula
+DK;2016-2018;Argentina spp;North Sea and Eastern Arctic;ICES;IV;N;122;89%;40%;Y;FIDES Initial.Quantity = 1093;27_4;Argentina spp,Argentina sphyraena,Argentina silus,Argentina kagoshimae,Argentina elongata
+DK;2016-2018;Limanda limanda;North Sea and Eastern Arctic;ICES;IIIa;Y;613;-;74%;N;;27_3_A;Limanda limanda
+DK;2016-2018;Limanda limanda;North Sea and Eastern Arctic;ICES;IV, VIId;Y;602;-;14%;N;;27_4,27_7_D;Limanda limanda
+DK;2016-2018;Raja undulata;North Sea and Eastern Arctic;ICES;VIId;-;-;-;-;-;;27_7_D;Raja undulata
+DK;2016-2018;Scophthalmus rhombus;North Sea and Eastern Arctic;ICES;IIIa;N;115;-;79%;Y;;27_3_A;Scophthalmus rhombus
+DK;2016-2018;Sebastes mentella;North Sea and Eastern Arctic;ICES;IV;N;1;-;100%;Y;;27_4;Sebastes mentella
+DK;2016-2018;Solea solea;North Sea and Eastern Arctic;ICES;IIIa;Y;306;84%;83%;N;FIDES Initial.Quantity = 376;27_3_A;Solea solea
+DK;2016-2018;Emmelichthys nitidus;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Emmelichthys nitidus
+DK;2016-2018;Helicolenus spp;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Helicolenus spp
+DK;2016-2018;Hippoglossoides platessoides;Other regions;NAFO 3LNO;21;-;-;-;-;-;;;Hippoglossoides platessoides
+DK;2016-2018;Katsuwonus pelamis;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;;21,31,27,34,37;Katsuwonus pelamis
+DK;2016-2018;Thunnus albacares;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;;21,27, 37;Thunnus albacares
+DK;2016-2018;Phycis phycis;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Phycis phycis
+DK;2016-2018;Mola mola;Other regions;WCPFC;West Central Pacific Ocean;-;-;-;-;-;;71;Mola mola
+DK;2016-2018;Orcynopsis unicolor;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;;21,31,27,34,37;Orcynopsis unicolor
+DK;2016-2018;Thunnus alalunga;Other regions;IATTC;East Pacific Ocean;-;-;-;-;-;;;Thunnus alalunga
+DK;2016-2018;Clupea harengus;Baltic Sea;ICES;22-24;Y;5234;14%;22%;N;FIDES Initial.Quantity = 2426;27_3_C_22,27_3_B_23,27_3_D_24;Clupea harengus
+DK;2016-2018;Gadus morhua;Baltic Sea;ICES;22-24;Y;3080;44%;48%;N;FIDES Initial.Quantity = 2444;27_3_C_22, 27_3_B_23,27_3_D_24;Gadus morhua
+DK;2016-2018;Limanda limanda;Baltic Sea;ICES;22-32;Y;301;-;26%;N;;27_3_C_22,27_3_B_23,27_3_D_24, 27_3_D_25,27_3_D_26,27_3_D_27,27_3_D_28,27_3_D_29,27_3_D_30,27_3_D_31,27_3_D_32;Limanda limanda
+DK;2016-2018;Perca fluviatilis;Baltic Sea;ICES;IIId;N;5;-;0%;Y;;27_3_D;Perca fluviatilis
+DK;2015;Lophius piscatorius;Mediterranean and Black Sea;GFCM;1.1, 1.2, 1.3, 2.2, 3.1;-;-;-;-;-;;1.1, 1.2, 1.3, 2.2, 3.1;Lophius piscatorius
+DK;2015;Merluccius merluccius;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Merluccius merluccius
+DK;2015;Raja naevus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Raja naevus
+DK;2016-2018;Argyrosomus regius;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Argyrosomus regius
+DK;2016-2018;Merlangius merlangus;North Atlantic;ICES;Vib;-;-;-;-;-;;27_6_B;Merlangius merlangus
+DK;2016-2018;Microchirus variegatus;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Microchirus variegatus
+DK;2016-2018;Micromesistius poutassou;North Atlantic;ICES;I-IX, XII, XIV;Y;62932;15%;18%;N;FIDES Initial.Quantity = 61277;27_1,27_2,27_3,27_4,27_5,27_6,27_7,27_8,27_9,27_12,27_14;Micromesistius poutassou
+DK;2016-2018;Pollachius virens;North Atlantic;ICES;Va;-;-;-;-;-;;27_5_A;Pollachius virens
+DK;2016-2018;Psetta maxima;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Psetta maxima
+DK;2016-2018;Solea solea;North Atlantic;ICES;VIIfg;-;-;-;-;-;;27_7_F,27_7_G;Solea solea
+DK;2016-2018;Salmo salar;North Sea and Eastern Arctic;ICES;IIIa;-;-;-;-;-;;27_3_A;Salmo salar
+DK;2016-2018;Engraulis encrasicolus;Other regions;CECAF;34.1.1,34.1.3,34.3.1,34.3.3-6;-;-;-;-;-;;34_1_1,34_1_3,34_3_1,34_3_3,34_3_4,34_3_5,34_3_6;Engraulis encrasicolus
+DK;2016-2018;Scomber japonicus;Other regions;;Azores, Madeira and Canary Islands;-;-;-;-;-;;34;Scomber japonicus
+DK;2016-2018;Scomberomorus brasiliensis;Other regions;ICCAT;Atlantic Ocean and adjacent seas;-;-;-;-;-;;21,31,27,34,37;Scomberomorus brasiliensis
+DK;2016-2018;Scomberomorus guttatus;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;;51,57;Scomberomorus guttatus
+DK;2016-2018;Sebastes mentella;Other regions;NAFO SA1;21;-;-;-;-;-;;;Sebastes mentella
+DK;2016-2018;Selar crumenophthalmus;Other regions;SIOFA;Runion et Mayotte;-;-;-;-;-;;;Selar crumenophthalmus
+DK;2016-2018;Serranidae;Other regions;WECAFC;Guadeloupe and Martinique;-;-;-;-;-;;31;Serranidae
+DK;2016-2018;Xiphias gladius;Other regions;IOTC;Indian Ocean Western and Eastern;-;-;-;-;-;;51,57;Xiphias gladius
+DK;2016-2018;Anguilla anguilla;Baltic Sea;ICES;22-32;Yes;186;-;41%;No;;27_3_C_22,27_3_B_23,27_3_D_24,27_3_D_25,27_3_D_26,27_3_D_27,27_3_D_28,27_3_D_29,27_3_D_30,27_3_D_31,27_3_D_32;Anguilla anguilla
+DK;2015;Centrophorus uyato;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Centrophorus uyato
+DK;2015;Mullus surmuletus;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Mullus surmuletus
+DK;2015;Scomber spp;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Scomber spp,Scomber australasicus,Scomber scombrus,Scomber japonicus
+DK;2015;Scyliorhinus canicula;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Scyliorhinus canicula
+DK;2015;Scyliorhinus spp;Mediterranean and Black Sea;GFCM;all areas in the Med;-;-;-;-;-;;all areas in the Med;Scyliorhinus spp
+DK;2016-2018;Chimaera opalescens;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Chimaera opalescens
+DK;2016-2018;Hippoglossus hippoglossus;North Atlantic;ICES;V, XIV;-;-;-;-;-;;27_5,27_14;Hippoglossus hippoglossus
+DK;2016-2018;Isurus oxyrinchus;North Atlantic;ICES;all areas (North of 50°N);-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Isurus oxyrinchus
+DK;2016-2018;Nephrops norvegicus;North Atlantic;ICES;VII Functional unit 16 (TAC FU16);-;-;-;-;-;;27_7_C,27_C_K;Nephrops norvegicus
+DK;2016-2018;Phycis blennoides;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Phycis blennoides
+DK;2016-2018;Pleuronectes platessa;North Atlantic;ICES;VIIa;-;-;-;-;-;;27_7_A;Pleuronectes platessa
+DK;2016-2018;Pleuronectes platessa;North Atlantic;ICES;VIIbc;-;-;-;-;-;;27_7_B,27_7_C;Pleuronectes platessa
+DK;2016-2018;Pleuronectes platessa;North Atlantic;ICES;VIIe;-;-;-;-;-;;27_7_E;Pleuronectes platessa
+DK;2016-2018;Pleuronectes platessa;North Atlantic;ICES;VIIfg;-;-;-;-;-;;27_7_F,27_7_G;Pleuronectes platessa
+DK;2016-2018;Torpedo marmorata;North Atlantic;ICES;all areas;-;-;-;-;-;;27_5,27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9,27_10,27_12,27_14;Torpedo marmorata
+DK;2016-2018;Nephrops norvegicus;North Sea and Eastern Arctic;ICES;Functional unit 3-4;Y;4093;73%;72%;N;FIDES Initial.Quantity = 8626;27_3_A;Nephrops norvegicus
+DK;2015;Nephrops norvegicus;North Sea and Eastern Arctic;ICES;functional units 9;N;-;-;0%;Y;Sum of MS shares <10% = 13% | FIDES Initial.Quantity = 1282;nep-9;Nephrops norvegicus
+DK;2016-2018;Sprattus sprattus;North Sea and Eastern Arctic;ICES;IIIa;Y;3770;72%;82%;N;FIDES Initial.Quantity = 17840;27_3_A;Sprattus sprattus
+DK;2016-2018;Pagellus acarne;Other regions;CECAF;34.1.1;-;-;-;-;-;;34_1_1;Pagellus acarne
+DK;2016-2018;Schedophilus velaini;Other regions;SEAFO;South-East Atlantic;-;-;-;-;-;;47;Schedophilus velaini

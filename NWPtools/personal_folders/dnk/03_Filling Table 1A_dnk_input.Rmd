@@ -33,6 +33,7 @@ output_path <- "Q:/scientific-projects/eu-data-collection/Work_Plan/2020/scripts
 library(tidyr)
 library(stringr)
 library(reshape)
+library(dplyr)
 
 CTRY <- 'DK'
 refYears <- 2016:2018
@@ -223,12 +224,12 @@ T1B$TAC[T1B$TAC %in% c('NA%','NaN%','Inf%')] <- '-'
 T1B$shareLanding <- paste(round(100*T1B$shareLanding,0),'%',sep='')
 T1B$shareLanding[T1B$shareLanding %in% c('NA%','NaN%','Inf%')] <- '-'
 T1B$Thresh[T1B$landings %in% '-' & T1B$TAC %in% '-'] <- T1B$shareLanding[T1B$landings %in% '-' & T1B$TAC %in% '-'] <- '-'
-ind <- which(T1B$Comments>.25)
+ind <- which(T1B$Comments>.0) #Changed, so I know what the figures means
 T1B$Comments <- paste(round(100*T1B$Comments,0),'%',sep='')
 T1B$Comments[T1B$Comments<.25] <- '-'
 T1B$Comments[T1B$Comments %in% c('NA%','NaN%','Inf%')] <- '-'
-T1B$Comments[ind] <- paste('Sum of MS shares <10% = ',T1B$Comments[ind],'%',sep='')
-T1B[!ind]<-'-'
+T1B$Comments[ind] <- paste('Sum of MS shares <10% = ',T1B$Comments[ind],sep='')
+T1B$Comments[!ind]<-'-'
 T1B$select <- '-'
 T1B$select[T1B$Thresh %in% c('N')] <- 'Y'
 T1B$select[T1B$Thresh %in% 'Y'] <- 'N'
@@ -236,15 +237,35 @@ T1B[T1B$RFMO %in% c('ICCAT','IOTC','WCPFC') & T1B$landings>0,c('select','Thresh'
 T1B[T1B$spp %in% 'Anguilla anguilla' & T1B$landings>0,c('select','Thresh')] <- c('Yes','No')
 T1B[T1B$spp %in% 'Nephrops norvegicus' & !(grepl('TAC', T1B$area)) & T1B$landings < 0,'TAC'] <- '-' #Changed a bit, so it don't overwrites TAC in 3a
 levels(T1B$refYears) <- c(levels(T1B$refYears), '2015')
-T1B[T1B$spp %in% 'Nephrops norvegicus' & !(grepl('TAC', T1B$area)),'refYears'] <- '2015'
+T1B[T1B$spp %in% 'Nephrops norvegicus' & !(grepl('TAC', T1B$area)) & T1B$landings < 0,'refYears'] <- '2015' #Not totally correct ...
 T1B[T1B$RFMO %in% 'GFCM', 'refYears'] <- '2015'
 ```
+
+```{r dnkInfo}
+#Added so we can use the output to create table 1B & C
+names(T1B)
+names(table1A)
+T1B$Comments_comb <- ifelse(T1B$Comments != "-" & !(is.na(T1B$Comments2)), paste(T1B$Comments, T1B$Comments2, sep = " | "), 
+                            ifelse(T1B$Comments == "-" & !(is.na(T1B$Comments2)), T1B$Comments2,
+                                   ifelse(T1B$Comments != "-" & is.na(T1B$Comments2), T1B$Comments, "")))
+
+
+T1C <- merge(select(distinct(T1B), -Comments, -Comments2), select(distinct(table1A), -Comments), by.x = c("region","spp","area","RFMO"), by.y = c(c("region","latinName","area","RFMO")))
+names(T1C)
+
+T1C <- mutate(T1C, speciesIncluded = spp, spp = reportingName, Comments = Comments_comb)
+names(T1C)
+
+T1C<-T1C[,c("MS","refYears","spp","region","RFMO","area","select","landings","TAC","shareLanding","Thresh","Comments","areaBis","speciesIncluded")]
+
+```
+
 
 ## Export of Table 1A
 the rule sum of quotas for coutries <10% (less or more than 25%) is noted in the comments column
 ```{r}
 ind <- order(as.character(T1B$region), as.character(T1B$RFMO), as.character(T1B$spp), as.character(T1B$area))
-write.table(T1B[ind,], file=paste(output_path, CTRY,'_table1A_filled_dnk.csv',sep=''), sep=';',row.names=FALSE, quote=FALSE)
+write.table(T1C[ind,], file=paste(output_path, CTRY,'_table1A_filled_dnk.csv',sep=''), sep=';',row.names=FALSE, quote=FALSE)
 ```
 
 
