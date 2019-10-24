@@ -3,9 +3,117 @@ title: "WP_table_1A_dnk_documentation"
 author: "Kirsten Birch Håkansson, DTU Aqua"
 date: \today
 output: pdf_document
+urlcolor: blue
 ---
 
+This .pdf can be found at https://github.com/ices-eg/RCGs/tree/master/NWPtools/personal_folders/dnk
 
+All Joel's work has been put on https://github.com/ices-eg/RCGs/tree/master/NWPtools/common
+
+I have made changed to script and input, which handles Danish cases - everything can be found at https://github.com/ices-eg/RCGs/tree/master/NWPtools/personal_folders/dnk
+
+# Major issues
+## Linkage file
+1.    areaBis: This needs to be reviewed, since 
+2.    Quota codes / FIDES_stockID: . Further, do to the 
+2.    Species: The latinName in the linkage table do not always follow the names in the ASFIS file. Further, the creativity when reporting species to EUROSTAT is quite big e.g. Capros aper is reported as both Capros aper and Caproidae
+
+## Data sources
+1.    Why do we use EUROSTAT? - Often the most recent year is not available for all countries. How do we interpret NA's? - these seems to cover both missing submissions and NULL landings. Joel's program ignores NA in mean, but that don't take true NULL landings into account. Why don't we use the RDB? - only landings from area 27?
+
+```{r, include = F}
+library(stringr)
+library(dplyr)
+input_path <- "Q:/scientific-projects/eu-data-collection/Work_Plan/2020/scripts/gits/RCGs/NWPtools/common/input"
+ASFIS   <- read.table(file.path(input_path, 'ASFIS_sp_Feb_2016.txt'), header = TRUE, sep = "\t", as.is = TRUE)
+
+DF <- read.table(file.path(input_path, "fish_ca_atl27.tsv"), header = TRUE, sep = '\t', as.is = TRUE)  # Atlantique NE
+GEO <- read.table(file.path(input_path, "geo.def"), header = TRUE, sep = ";", as.is = TRUE)
+
+
+names(GEO)[2] <- "Country"
+GEO$geo <- toupper(GEO$geo)
+SRG <- strsplit(as.character(DF$species.fishreg.unit.geo.time),split = ",")
+SRG.m <- matrix(unlist(SRG), ncol = 4, byrow = TRUE)
+DFT <- data.frame(X3A_CODE = toupper(SRG.m[,1]), Region = toupper(SRG.m[,2]), geo = SRG.m[,4],
+                  Y2018 = DF$X2018, Y2017 = DF$X2017, Y2016 = DF$X2016, Y2015 = DF$X2015, Y2014 = DF$X2014, Y2013 = DF$X2013)
+DFM <- merge(DFT, GEO, all.x = TRUE)
+DFM$Y2013 <- as.numeric(str_remove_all(as.character(DFM$Y2013), "[bcdefinpzsu]")) 
+DFM$Y2014 <- as.numeric(str_remove_all(as.character(DFM$Y2014), "[bcdefinpzsu]"))
+DFM$Y2015 <- as.numeric(str_remove_all(as.character(DFM$Y2015), "[bcdefinpzsu]"))
+DFM$Y2016 <- as.numeric(str_remove_all(as.character(DFM$Y2016), "[bcdefinpzsu]"))
+DFM$Y2017 <- as.numeric(str_remove_all(as.character(DFM$Y2017), "[bcdefinpzsu]"))
+DFM$Y2018 <- as.numeric(str_remove_all(as.character(DFM$Y2018), "[bcdefinpzsu]"))
+DFM <- DFM[!is.na(DFM$Country),]
+
+
+sum_year <-
+  summarise(
+    group_by(DFM, Country),
+    sum_2018 = sum(Y2018, na.rm = T),
+    sum_2017 = sum(Y2017, na.rm = T),
+    sum_2016 = sum(Y2016, na.rm = T),
+    sum_2015 = sum(Y2015, na.rm = T),
+    sum_2014 = sum(Y2014, na.rm = T)
+  )
+
+```
+
+```{r, results  = 'asis', echo = F}
+library(knitr)
+
+kable(sum_year, caption = "A lot of missing landings in 2018")
+
+kable(subset(DFM, X3A_CODE %in% c("BOC","BOR") & Region %in% c("27_6", "27_7", "27_8") & geo == "DK"), caption = "In the resulting mean (236 t) Landings from 27_8 are ignored due to missing landings in 2018")
+```
+
+# Update to common/input
+
+patch_codIIIa_20191009: Updated by Nuno
+
+Nephrops landings:*work in progress*. started to update, so far only for FU32 & FU33, but found that the hack with fao areas works ok for Denmark. If more years are added, then the scripts need to take that into account.
+
+EUMAP_Table1A_Linkage_EUROSTAT and EC_TAC: for gadus morhua IIIaN I have changed areaBis from "27_3_A-4_AB_NK" to "27_3_A"
+
+# Scripts in dnk personal_folders
+## Filling Table 1A_common_input.rmd 
+
+Same input as 'Filling Table 1A.rmd' in common folder and script very similar to 'Filling Table 1A.rmd', but the following has been changed in the script
+
+1.    Instead of setwd, then link to folders
+2.    Fixed a bug with number of columns in DFM
+3.    Added Nuno's code for handling of cod in IIIa
+4.    Removed characters in EUROSTAT figures
+5.    Changed T1$shareLanding <- T1$landings/sum(DT$MOY, na.rm=TRUE) - this is not correct since EU28 is there together with landings from each country -> double up on the ECC landings.
+
+*If accepted, then the script runs on the common input*
+
+This script does not really work for Denmark e.g. we end up not being oblige to sample sandeel. Denmark has around 94% of the EU TAC and fish close to 100.000 tons a year. Further, a lot of the qoutas we fish on are not in linkage file. Nearly all the problems are caused by the linkage file, so I have tried to update it, so it can handle Danish fishery.
+
+The updated linkage file can be found at personal_folders/dnk/input - point 2 & 3 below creates the updated version.
+
+1.   (00_update_areaBis): This script is not developed, but it is needed
+2.   01_table_1a_linkage_table_correcting_latinName: The latinName in the linkage table do not always follow the names in the ASFIS file - this is correct here. Further different countries report same species with different species 'aggregation' level (species / family) e.g. boarfish are reported both as Capros aper & Caproidae -> all needed scientific names are inserted in latinName. Further EUMAP sometimes ask for species at the family level e.g. Argentina spp., which in EUROSTAT are the following species; c("CAA","CAB","CAS","CAT") -> also here all needed scientific names are inserted. ...... check 
+3.   02_table_1a_linkage_table_correcting_stockId:
+4.   03_Filling Table 1A_dnk_input: Very similar to 'Filling Table 1A.rmd'. Very small correction in the main script. Some very Danish addition in the end, since we use the output as input to table 1B & C. Using the updated linkage file as input.
+5.   04_Filling_Table_1A_dnk_input_finalized: xxxx
+
+# Random notes
+*Some of them are from 2016*
+
+The codes for quotas apparently change from year to year.
+
+
+
+
+
+# Nephrops / Functinal units
+
+I started to update , but only updated for FU 32 and 33. The structure of the files has changed, do the script needs to be updated. 
+
+I have not For the stocks relevant for DNK the overal FAO areas are ok, so for FU33 ~ 47.4.b and for FU32 ~ 27.4.a
+
+*OBS these stocks need a proper areaBis in the linkage table*
 
 
 # EUMAP_table_1a
@@ -35,29 +143,6 @@ Before running a couple of things need to be done
 
 
 
-# 1_table_1a_linkage_table_correcting_latinName
-
-*2018 - not runned (but started to update) -> using the likage file from 2016*
-
-The latinName in the linkage table do not always follow the names in the ASFIS file - this is correct here.
-
-Further different countries report same species with different species 'aggregation' level (species / family) e.g. boarfish are reported both as Capros aper & Caproidae -> all needed scientific names are inserted in latinName. Further EUMAP sometimes ask for species at the family level e.g. Argentina spp., which in EUROSTAT are the following species; c("CAA","CAB","CAS","CAT") -> also here all needed scientific names are inserted. ...... check 
-
-
-# 2_table_1a_linkage_table_correcting_stockId
-
-*2018 - not runned & not changed -> using the likage file from 2016*
-
-# 3_table_1a_filling_DNK_version
-
-*2018 - no major changes*
-
-Based on the script in 2016. Input files changed and a couple of minor changes.
-
-*It would be nice to get the script out of R markdown, so it is possible to track changes*
-
-# 4_
-
 
 # Checks
 
@@ -67,3 +152,8 @@ Scripts in the /checks folder
 
 This script is used to check which species to merge in 1_table_1a_linkage_table_correcting_latinName, so all relevant landings are extracted from EROSTAT. 
 The script is also used to check some of the outputs against the original figures in EUROSTAT.
+
+
+# Random notes
+Other species	04-N.	Norwegian waters of IV	EEC		10000
+
