@@ -160,7 +160,8 @@ for (i in 1:nrow(table1A)) {
 	ind <- which(DT$geo %in% CTRY)
 	if (length(ind)>0) {
 		T1$landings <- sum(DT$MOY[DT$geo %in% CTRY],na.rm=TRUE)
-		T1$shareLanding <- T1$landings/sum(DT$MOY, na.rm=TRUE)
+		T1$shareLanding <- T1$landings/sum(DT$MOY[DT$geo != 'EU28'], na.rm=TRUE)
+		#T1$shareLanding <- T1$landings/sum(DT$MOY, na.rm=TRUE)
 		} else {
 		T1$landings <- 0
 		T1$shareLanding <- 0
