@@ -40,21 +40,25 @@ share$FIDES_stockID_new<-ifelse(share$reportingName=="Argentina spp" & share$are
                   ifelse(share$reportingName=="Merluccius merluccius" & share$area=="IIIa" & share$region=="North Sea and Eastern Arctic","HKE3A/BCD,HKE03A.",
                   ifelse(share$reportingName=="Merluccius merluccius" & share$area=="IIIa, IV, VI, VII, VIIIab" & share$region=="North Sea and Eastern Arctic","HKE3A/BCD,HKE2AC4-C,HKE571214,HKE8ABDE.",
                   ifelse(share$reportingName=="Microstomus kitt" & share$area=="IV, VIId" & share$region=="North Sea and Eastern Arctic","L/W2AC4-C,LEM2AC4-C",
-                  ifelse(share$reportingName=="Micromesistius poutassou" & share$area=="I-IX, XII, XIV" & share$region=="North Sea and Eastern Arctic","WHB1X14,WHB24AXF",
+                  ifelse(share$reportingName=="Micromesistius poutassou" & share$area=="I-IX, XII, XIV" & share$region=="North Atlantic","WHB1X14,WHB24AXF",
                   ifelse(share$reportingName=="Molva molva" & share$area=="all share$areas" & share$region=="North Atlantic","LIN05EI.,LIN6X14.",
                   ifelse(share$reportingName=="Molva molva" & share$area=="IV" & share$region=="North Sea and Eastern Arctic","LIN04-C.,LIN04-N.",
+                         ifelse(share$reportingName=="Nephrops norvegicus" & share$area=="Functional unit 3-4" & share$region=="North Sea and Eastern Arctic","NEP3A/BCD,NEP03A.",
+                         ifelse(share$reportingName=="Nephrops norvegicus" & share$area=="functional units 32 (TAC IIa, VI)" & share$region=="North Sea and Eastern Arctic","NEP2AC4-C,NEP-04-N.",
+                         ifelse(share$reportingName=="Nephrops norvegicus" & share$area=="functional units 33 (TAC IIa, VI)" & share$region=="North Sea and Eastern Arctic","NEP2AC4-C,NEP-04-N.",
                   ifelse(share$reportingName=="Pandalus borealis" & share$area=="IV" & share$region=="North Sea and Eastern Arctic","PRA2AC4-C, PRA04-N.",
-                  ifelse(share$reportingName=="Pollachius virens" & share$area=="I, II" & share$region=="North Sea and Eastern Arctic","POK1/2INT,POK1N2AB.,POK2A34.",
-                  ifelse(share$reportingName=="Pollachius virens" & share$area=="IV" & share$region=="North Sea and Eastern Arctic","POK2A34.,POK04-N.",
-                  ifelse(share$reportingName=="Pollachius virens" & share$area=="IV, IIIa, VI" & share$region=="North Atlantic","POK56-14, POK2A34.,POK04-N.",
+                  ifelse(share$reportingName=="Pandalus spp" & share$area=="all areas" & share$region=="North Atlantic","PRA514GRN",
+                  ifelse(share$reportingName=="Pollachius virens" & share$area=="I-II" & share$region=="North Sea and Eastern Arctic","POK1/2INT,POK1N2AB.,POK2C3A4.,POK2C3A4",
+                  ifelse(share$reportingName=="Pollachius virens" & share$area=="IV" & share$region=="North Sea and Eastern Arctic","POK2C3A4.,POK04-N.,POK2C3A4",
+                  ifelse(share$reportingName=="Pollachius virens" & share$area=="IIIa" & share$region=="North Sea and Eastern Arctic","POK2C3A4.,POK2C3A4",
                   ifelse(share$reportingName=="Psetta maxima" & share$area=="IV, VIId" & share$region=="North Sea and Eastern Arctic","TUR2AC4-C,T/B2AC4-C",
                   ifelse(share$reportingName=="Scophthalmus rhombus" & share$area=="IV, VIId" & share$region=="North Sea and Eastern Arctic","BLL2AC4-C,T/B2AC4-C",
                   ifelse(share$reportingName=="Scomber scombrus" & share$area=="II" & share$region=="North Sea and Eastern Arctic","MAC2A34.,MAC2A4A-N",
                   ifelse(share$reportingName=="Scomber scombrus" & share$area=="II,IIIa,IV,V,VI,VII,VIII,IX" & share$region=="North Atlantic","MAC2CX14-,MAC2A34.,MAC2A4A-N",
                   ifelse(share$reportingName=="Scomber scombrus" & share$area=="IV, VIId" & share$region=="North Sea and Eastern Arctic","MAC2A34.,MAC2A4A-N",
-                         ifelse(share$reportingName=="Solea solea" & share$area=="IIIa" & share$region=="North Sea and Eastern Arctic","SOL3A/BCD,SOL3ABC24",
+                  ifelse(share$reportingName=="Solea solea" & share$area=="IIIa" & share$region=="North Sea and Eastern Arctic","SOL3A/BCD,SOL3ABC24",
                   ifelse(share$reportingName=="Trisopterus esmarkii" & share$area=="IV" & share$region=="North Sea and Eastern Arctic","NOP04-N.,NOP2A3A4.",
-                         "NA")))))))))))))))))))))))))))))))))
+                         "NA")))))))))))))))))))))))))))))))))))))
 
 check<-subset(share,FIDES_stockID_new!="NA")
 
