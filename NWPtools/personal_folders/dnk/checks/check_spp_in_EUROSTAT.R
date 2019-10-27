@@ -30,6 +30,11 @@ DFM <- DFM[!is.na(DFM$Country),]
 #Is all data from 2017 uploaded?
 sum_year <- summarise(group_by(DFM, Country), sum_2018 = sum(Y2018, na.rm = T), sum_2017 = sum(Y2017, na.rm = T), sum_2016 = sum(Y2016, na.rm = T), sum_2015 = sum(Y2015, na.rm = T)
                       , sum_2014 = sum(Y2014, na.rm = T), sum_2013 = sum(Y2013, na.rm = T))
+#Whiting
+whg <- subset(DFM, X3A_CODE %in% c("WHG") & geo == "DK")
+
+#Herring
+her <- subset(DFM, X3A_CODE %in% c("HER") & geo == "DK")
 
 #Flounder 22-24 per stock
 
