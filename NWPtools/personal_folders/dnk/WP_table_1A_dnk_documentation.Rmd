@@ -14,7 +14,7 @@ I have made changed to script and input, which handles Danish cases - everything
 
 # Major issues
 ## Linkage file
-1.    areaBis: This needs to be reviewed due to inconsistency  e.g. sometime area 27.1 and 27.2 area missing from all areas in the North Sea and Eastern Arctic, stock present in more than one region e.g. mackerel. A common approach should be agreed on at the RCG's.
+1.    areaBis: This needs to be reviewed due to inconsistency  e.g. sometime area 27.1 and 27.2 are missing from all areas in the North Sea and Eastern Arctic, stock present in more than one region e.g. mackerel. A common approach should be agreed on at the RCG's.
 2.    Quota codes / FIDES_stockID: Often quota's do not follow the EUMAP area * species aggregation. Further, a lot of qoutas are missing. A common approach should be agreed on at the RCG's after identifying relevant quotas.
 2.    Species: The latinName in the linkage table do not always follow the names in the ASFIS file. Further, the creativity when reporting species to EUROSTAT is quite big e.g. Capros aper is reported as both Capros aper and Caproidae. A common approach should be agreed on at the RCG's
 
