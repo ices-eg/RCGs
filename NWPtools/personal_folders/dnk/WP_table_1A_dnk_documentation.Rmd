@@ -14,9 +14,9 @@ I have made changed to script and input, which handles Danish cases - everything
 
 # Major issues
 ## Linkage file
-1.    areaBis: This needs to be reviewed, since 
-2.    Quota codes / FIDES_stockID: . Further, do to the 
-2.    Species: The latinName in the linkage table do not always follow the names in the ASFIS file. Further, the creativity when reporting species to EUROSTAT is quite big e.g. Capros aper is reported as both Capros aper and Caproidae
+1.    areaBis: This needs to be reviewed due to inconsistency  e.g. sometime area 27.1 and 27.2 area missing from all areas in the North Sea and Eastern Arctic, stock present in more than one region e.g. mackerel. A common approach should be agreed on at the RCG's.
+2.    Quota codes / FIDES_stockID: Often quota's do not follow the EUMAP area * species aggregation. Further, a lot of qoutas are missing. A common approach should be agreed on at the RCG's after identifying relevant quotas.
+2.    Species: The latinName in the linkage table do not always follow the names in the ASFIS file. Further, the creativity when reporting species to EUROSTAT is quite big e.g. Capros aper is reported as both Capros aper and Caproidae. A common approach should be agreed on at the RCG's
 
 ## Data sources
 1.    Why do we use EUROSTAT? - Often the most recent year is not available for all countries. How do we interpret NA's? - these seems to cover both missing submissions and NULL landings. Joel's program ignores NA in mean, but that don't take true NULL landings into account. Why don't we use the RDB? - only landings from area 27?
@@ -62,9 +62,9 @@ sum_year <-
 ```{r, results  = 'asis', echo = F}
 library(knitr)
 
-kable(sum_year, caption = "A lot of missing landings in 2018")
+kable(sum_year, caption = "True NA's. A lot of missing landings in 2018")
 
-kable(subset(DFM, X3A_CODE %in% c("BOC","BOR") & Region %in% c("27_6", "27_7", "27_8") & geo == "DK"), caption = "In the resulting mean (236 t) Landings from 27_8 are ignored due to missing landings in 2018")
+kable(subset(DFM, X3A_CODE %in% c("BOC","BOR") & Region %in% c("27_6", "27_7", "27_8") & geo == "DK"), caption = "True 0's. In the resulting mean (236 t) Landings from 27_8 are ignored due to missing landings in 2018")
 ```
 
 # Update to common/input
@@ -92,68 +92,15 @@ This script does not really work for Denmark e.g. we end up not being oblige to 
 
 The updated linkage file can be found at personal_folders/dnk/input - point 2 & 3 below creates the updated version.
 
-1.   (00_update_areaBis): This script is not developed, but it is needed
-2.   01_table_1a_linkage_table_correcting_latinName: The latinName in the linkage table do not always follow the names in the ASFIS file - this is correct here. Further different countries report same species with different species 'aggregation' level (species / family) e.g. boarfish are reported both as Capros aper & Caproidae -> all needed scientific names are inserted in latinName. Further EUMAP sometimes ask for species at the family level e.g. Argentina spp., which in EUROSTAT are the following species; c("CAA","CAB","CAS","CAT") -> also here all needed scientific names are inserted. ...... check 
-3.   02_table_1a_linkage_table_correcting_stockId:
-4.   03_Filling Table 1A_dnk_input: Very similar to 'Filling Table 1A.rmd'. Very small correction in the main script. Some very Danish addition in the end, since we use the output as input to table 1B & C. Using the updated linkage file as input.
-5.   04_Filling_Table_1A_dnk_input_finalized: xxxx
+1.   (00_update_areaBis): This script is not developed, but it is needed.
+2.   01_table_1a_linkage_table_correcting_latinName: The latinName in the linkage table do not always follow the names in the ASFIS file - this is corrected here. Different countries report same species with different species 'aggregation' level (species / family) e.g. boar fish are reported both as Capros aper & Caproidae -> all needed scientific names are inserted in latinName. Further, EUMAP sometimes ask for species at the family level e.g. Argentina spp., which in EUROSTAT are the following species; c("CAA","CAB","CAS","CAT") -> all needed scientific names are inserted. /checks/check_spp_in_EUROSTAT.R is used to find correct species
+3.   02_table_1a_linkage_table_correcting_stockId: The quotas Denmark is fishing on is often missing, so the correct ones are added here. /references/kvox18.pdf is used to find the correct qoutas.
+4.   03_Filling Table 1A_dnk_input: Using the updated linkage file as input. Very similar to 'Filling Table 1A.rmd'. Very small correction in the main script. Some very Danish addition in the end, since we use the output as input to table 1B & C. 
+5.   04_Filling_Table_1A_dnk_input_finalized: Very Danish script. Adding comments, seleting, un-selecting and combining. 
 
 # Random notes
 *Some of them are from 2016*
 
 The codes for quotas apparently change from year to year.
 
-
-
-
-
-# Nephrops / Functinal units
-
-I started to update , but only updated for FU 32 and 33. The structure of the files has changed, do the script needs to be updated. 
-
-I have not For the stocks relevant for DNK the overal FAO areas are ok, so for FU33 ~ 47.4.b and for FU32 ~ 27.4.a
-
-*OBS these stocks need a proper areaBis in the linkage table*
-
-
-# EUMAP_table_1a
-
-The Danish table 1a is based on the scripts distributed in 2016 and ammendent to Dainsh fishery in 2016 - Joel has made a newer version, but landings of cod in per subdivions in area 27.3.a are not included
-
-*to do*; 
-
-1.    Can't remember what we changed in 2016 - check _DNK against Joel's program from 2016
-2.    Check Joel's version 2016 and 2018 agiast each other
-3.    Split flounder in the Baltic
-
-Before running a couple of things need to be done
-
-1.    
-
-## Inputs
-
-1.    fish_ca_atl27.tsv: new file downloaded from EORUSTAT https://ec.europa.eu/eurostat/web/fisheries/data/database
-2.    EU opening quota 2017.csv: Using the file Joel distributed September 2018 *remember to add code for StockID in script 3_*
-3.    Nephrops landings 2015.csv: Using the file from 2016. Don't know who made it and how.
-4.    RCM MED landings.csv: Using the file from 2016 - not relevant for Denmark
-5.    patch_codIIIa_DNK.txt: Updated the file from 2016 with figures from advice sheet
-6.    geo.def: Using the file from 2016
-7.    ASFIS_sp_Feb_2012.txt: Using the file from 2016. 
-8.    EUMAP_Table1A_Linkage_EUROSTAT and EC_TAC_DNK_v3.csv: Using the file from 2016, not quite sure how is was made, but think script 1_ and 2_ should be ok for making the file.
-
-
-
-
-# Checks
-
-Scripts in the /checks folder 
-
-## check_spp_in_EUROSTAT
-
-This script is used to check which species to merge in 1_table_1a_linkage_table_correcting_latinName, so all relevant landings are extracted from EROSTAT. 
-The script is also used to check some of the outputs against the original figures in EUROSTAT.
-
-
-# Random notes
-Other species	04-N.	Norwegian waters of IV	EEC		10000
-
+elasmobranch - how are these reported to EUROSTAT - check names *TODO*
