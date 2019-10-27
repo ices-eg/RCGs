@@ -233,8 +233,12 @@ T1B$Comments[!ind]<-'-'
 T1B$select <- '-'
 T1B$select[T1B$Thresh %in% c('N')] <- 'Y'
 T1B$select[T1B$Thresh %in% 'Y'] <- 'N'
-T1B[T1B$RFMO %in% c('ICCAT','IOTC','WCPFC') & T1B$landings>0,c('select','Thresh')] <- c('Y','N')
-T1B[T1B$spp %in% 'Anguilla anguilla' & T1B$landings>0,c('select','Thresh')] <- c('Y','N')
+T1B[T1B$RFMO %in% c('ICCAT','IOTC','WCPFC') & T1B$landings > 0,c('select','Thresh')] <- c('Y','N')
+#T1B[T1B$spp %in% 'Anguilla anguilla' & T1B$landings > 0, c('select','Thresh')] <- c('Y','N')
+
+T1B$select <- ifelse(T1B$spp %in% 'Anguilla anguilla' & T1B$landings > 0, "Y", T1B$select)
+T1B$Thresh <- ifelse(T1B$spp %in% 'Anguilla anguilla' & T1B$landings > 0, "N", T1B$Thresh)
+
 T1B[T1B$spp %in% 'Nephrops norvegicus' & !(grepl('TAC', T1B$area)) & T1B$landings < 0,'TAC'] <- '-' #Changed a bit, so it don't overwrites TAC in 3a
 levels(T1B$refYears) <- c(levels(T1B$refYears), '2015')
 T1B[T1B$spp %in% 'Nephrops norvegicus' & !(grepl('TAC', T1B$area)) & T1B$landings < 0,'refYears'] <- '2015' #Not totally correct ...
