@@ -4,6 +4,7 @@
 #Final work on table 1A
 
 path <- "Q:/scientific-projects/eu-data-collection/Work_Plan/2020/scripts/gits/RCGs/NWPtools/personal_folders/dnk/"
+path_dtu <- "Q:/scientific-projects/eu-data-collection/Work_Plan/2020/scripts/table_1a/"
 
 t1a <- read.csv(paste(path, "DK_table1A_filled_dnk.csv", sep = ""), header = TRUE, sep = ';', as.is = TRUE)
 t1a <- subset(t1a, region != "Mediterranean and Black Sea")
@@ -87,15 +88,16 @@ t1a$areaBis_new[t1a$spp == "Melanogrammus aeglefinus" & t1a$area == "IV"] <- "27
 t1a$commDNK[t1a$spp == "Melanogrammus aeglefinus" & t1a$area == "IV"] <- "Selected and combined with IIIa for sampling, since stock covers both areas"
 
 t1a$select[t1a$spp == "Merlangius merlangus" & t1a$area == "IV, VIId"] <- "Y"
-t1a$commDNK[t1a$spp == "Merlangius merlangus" & t1a$area == "IV, VIId"] <- "Selected due to high level of discard"
+t1a$commDNK[t1a$spp == "Merlangius merlangus" & t1a$area == "IV, VIId"] <- "Selected due to high level of discard and Industial by-catch"
 
-# t1a$area_new[t1a$spp == "Pollachius virens" & t1a$area == "IIIa"] <- "IIIa, IV"
-# t1a$areaBis_new[t1a$spp == "Pollachius virens" & t1a$area == "IIIa"] <- "27_3_A,27_4"
-# t1a$commDNK[t1a$spp == "Pollachius virens" & t1a$area == "IIIa"] <- "Combined with area IV for sampling, since stock covers both areas"
-# t1a$select[t1a$spp == "Pollachius virens" & t1a$area == "IV"] <- "Y"
-# t1a$area_new[t1a$spp == "Pollachius virens" & t1a$area == "IV"] <- "IIIa, IV"
-# t1a$areaBis_new[t1a$spp == "Pollachius virens" & t1a$area == "IV"] <- "27_3_A,27_4"
-# t1a$commDNK[t1a$spp == "Pollachius virens" & t1a$area == "IV"] <- "Selected and combined with IIIa for sampling, since stock covers both areas"
+t1a$select[t1a$spp == "Pollachius virens" & t1a$area == "IIIa"] <- "Y"
+t1a$area_new[t1a$spp == "Pollachius virens" & t1a$area == "IIIa"] <- "IIIa, IV"
+t1a$areaBis_new[t1a$spp == "Pollachius virens" & t1a$area == "IIIa"] <- "27_3_A,27_4"
+t1a$commDNK[t1a$spp == "Pollachius virens" & t1a$area == "IIIa"] <- "Selected due to high pct. of landings. Combined with area IV for sampling, since stock covers both areas"
+t1a$select[t1a$spp == "Pollachius virens" & t1a$area == "IV"] <- "Y"
+t1a$area_new[t1a$spp == "Pollachius virens" & t1a$area == "IV"] <- "IIIa, IV"
+t1a$areaBis_new[t1a$spp == "Pollachius virens" & t1a$area == "IV"] <- "27_3_A,27_4"
+t1a$commDNK[t1a$spp == "Pollachius virens" & t1a$area == "IV"] <- "Selected due to high pct. of landings. Combined with IIIa for sampling, since stock covers both areas"
 
 
 t1a$select[t1a$spp == "Platichthys flesus" & t1a$area == "22-32"] <- "Y"
@@ -142,7 +144,7 @@ t1a$commDNK[t1a$spp == "Trisopterus esmarkii" & t1a$area == "IIIa"] <- "Selected
 t1a$commDNK[t1a$spp == "Selachii"] <- "It is not possible to calulate landings for these specis due to the resultion of the official statistic"
 t1a$spp[t1a$spp == "Selachii"] <- "Selachii, Rajidae"
 
-t1a$commDNK <- ifelse(t1a$commDNK != "", paste("OBS!!", t1a$commDNK), "")
+#t1a$commDNK <- ifelse(t1a$commDNK != "", paste("OBS!!", t1a$commDNK), "")
 
 #Danish names 
 nerv <- read.table('Q:/mynd/SAS Library/Arter/art.csv', header = TRUE, sep = ",", as.is = TRUE)
@@ -174,4 +176,4 @@ t1b<-t1b[,c("MS","refYears","spp","region","RFMO","area","select","landings","TA
             "area_new","areaBis_new","region_new")]
 
 write.table(t1b, paste(path, "DK_table1A_filled_dnk_finalized.csv", sep =""), sep = ';',row.names=FALSE, quote=FALSE)
-
+write.table(t1b, paste(path_dtu, "DK_table1A_filled_dnk_finalized.csv", sep =""), sep = ';',row.names=FALSE, quote=FALSE)
