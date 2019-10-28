@@ -119,6 +119,12 @@ t1a$area_new[t1a$spp == "Pandalus borealis" & t1a$area == "IVa"] <- "IIIa, IVa"
 t1a$areaBis_new[t1a$spp == "Pandalus borealis" & t1a$area == "IVa"] <- "27_3_A,27_4_A,27_4"
 t1a$commDNK[t1a$spp == "Pandalus borealis" & t1a$area == "IVa"] <- "Selected and combined with IIIa & IV for sampling, since stock and sampling covers the fishery the Norway Depp"
 
+t1a$select[t1a$spp == "Pandalus borealis" & t1a$area == "I-II"] <- "N"
+t1a$commDNK[t1a$spp == "Pandalus borealis" & t1a$area == "I-II"] <- "Rie to comment"
+
+t1a$select[t1a$spp == "Pandalus spp" & t1a$area == "all areas"] <- "N"
+t1a$commDNK[t1a$spp == "Pandalus spp" & t1a$area == "all areas"] <- "Rie to comment"
+
 #t1a$select[t1a$spp == "Pandalus borealis" & t1a$area == "I, II"] <- "N"
 #t1a$commDNK[t1a$spp == "Pandalus borealis" & t1a$area == "I, II"] <- "Unselected, since nearly all the Danish alndings are taken in area I, where there is not any TAC. The TAC used for this stock covers area IV and IIa and these landings are covered elsewhere"
 
@@ -140,6 +146,9 @@ t1a$select[t1a$spp == "Trisopterus esmarkii" & t1a$area == "IIIa"] <- "Y"
 t1a$area_new[t1a$spp == "Trisopterus esmarkii" & t1a$area == "IIIa"] <- "IV,IIIa"
 t1a$areaBis_new[t1a$spp == "Trisopterus esmarkii" & t1a$area == "IIIa"] <- "27_3_A,27_4"
 t1a$commDNK[t1a$spp == "Trisopterus esmarkii" & t1a$area == "IIIa"] <- "Selected and combined with IV for sampling, since stock covers both areas"
+
+t1a$select[t1a$spp == "Sarda sarda"] <- "N"
+t1a$commDNK[t1a$spp == "Sarda sarda"] <- "Rie to comment"
 
 t1a$commDNK[t1a$spp == "Selachii"] <- "It is not possible to calulate landings for these specis due to the resultion of the official statistic"
 t1a$spp[t1a$spp == "Selachii"] <- "Selachii, Rajidae"
