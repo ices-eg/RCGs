@@ -39,7 +39,7 @@ period <- "2018"
 figures <- "yes" #yes / no - all figures outputtet to a folder
 tables <- "yes" #yes / no - all tabales outputtet to a folder
 
-data_dir <- "Q:/dfad/users/kibi/data/RCG/from_share_point/"
+data_dir <-data_dir <- paste("data/002_prepared/", target_region, "/", sep = '') # "Q:/dfad/users/kibi/data/RCG/from_share_point/"
 
 #Folder for figures and tables
 table_dir <- paste("outputs/", target_region, "/tables/", sep = "")
@@ -207,10 +207,10 @@ date: `r Sys.Date()`
 if (target_region == "RCG_NA")
 {
   load(
-    paste(data_dir, "RDB_RCG_NA_CL_2009_2018_prepared_201905051115.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NA_CL_2009_2018_prepared_201905101612.Rdata", sep = "")
   )
   load(
-    paste(data_dir, "RDB_RCG_NA_CE_2009_2018_prepared_201905051115.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NA_CE_2009_2018_prepared_201905101612.Rdata", sep = "")
   )
 }
 

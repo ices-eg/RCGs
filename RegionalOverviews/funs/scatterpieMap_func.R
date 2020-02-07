@@ -357,7 +357,7 @@ if(groupBy_name %in% c('Area','AreaMap', 'FishingGround')){
     if (plot_labels == TRUE) {
       #display labels on the plot
       plot +
-        geom_sf_text(data = mdf2, aes(label = groupBy), 
+        geom_sf_text(data = mdf2, aes(label = groupBy, geometry = geometry), 
                      color = 'grey22',
                      size = 3,
                      fontface = "italic",
