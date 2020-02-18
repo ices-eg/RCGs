@@ -2,6 +2,7 @@
 header-includes: \usepackage{float} \floatplacement{figure}{H} \floatplacement{table}{H}
 output:
   word_document:
+    fig_caption: yes
     reference_docx: word_template.docx
     toc: yes
     toc_depth: 5
@@ -118,7 +119,7 @@ param <-
       target_region,
       "/Annual_Overview/AnnualOverview_",
       target_region,
-      "_parameters.csv",
+      "_parameters_10.csv",
       sep = ""
     ),
     sep = ",",
@@ -435,6 +436,10 @@ for (a in unique(param$Section)) {
               row.names = F
             )
           }
+                  j<- i
+        cat('Figure ',graph_det$Subsubsection[i],'.',j,'. ',graph_det$Var[i],' by ',graph_det$var1[i],'  \n ',sep='')
+         cat('  \n ') 
+  cat('text baaablaaa bla  \n ')
         }
         
         cat('  \n ')
@@ -470,9 +475,14 @@ for (a in unique(param$Section)) {
               row.names = F
             )
           }
+           j<- i
+cat('Figure ',graph_det$Subsubsection[i],'.',j,'. blablabls  \n ',sep='')
+#        cat('Figure ',graph_det$Subsubsection[i],'.',j,'. ',graph_det$Var[i],' by ',graph_det$var1[i],' and #',graph_det$var2[i],'  \n ')
+         cat('  \n ') 
+#  cat('2  \n ')
         }
-
-        cat('  \n ')
+        
+         cat('  \n')
 
         if (graph_det$Graph_type[i] == 3)
         {
@@ -509,6 +519,10 @@ for (a in unique(param$Section)) {
               row.names = F
             )
           }
+#          j<- i
+#        cat('Figure ',graph_det$Subsubsection[i],'.',j,'. ',graph_det$func[i],' of ',graph_det$var[i],' and #',graph_det$groupBy[i],'(',graph_det$addToTitle[i],')  \n ')
+         cat('  \n ') 
+#  cat('3  \n ')
         }
 
         cat('  \n ')
@@ -553,6 +567,10 @@ for (a in unique(param$Section)) {
               row.names = F
             )
           }
+#           j<- i
+#        cat('Figure ',graph_det$Subsubsection[i],'.',j,'. ',graph_det$func[i],' of ',graph_det$newVarName[i],' by #',graph_det$groupBy[i],'(',graph_det$addToTitle[i],')  \n ')
+         cat('  \n ') 
+#  cat(' 4 \n ')
         }
 
         cat('  \n ')
@@ -599,6 +617,10 @@ for (a in unique(param$Section)) {
               row.names = F
             )
           }
+#            j<- i
+#        cat('Figure ',graph_det$Subsubsection[i],'.',j,'. ',graph_det$func[i],' of ',graph_det$newVarName[i],' by #',graph_det$groupBy[i],'(',graph_det$addToTitle[i],')  \n ')
+         cat('  \n ') 
+#  cat('5  \n ')
         }
 
         cat('  \n ')
@@ -633,10 +655,12 @@ for (a in unique(param$Section)) {
               row.names = F
             )
           }
-
+#  j<- i
+#        cat('Figure ',graph_det$Subsubsection[i],'.',j,'. ',graph_det$newVarName[i],' by ',graph_det$addToTitle[i],'  \n ')
+         cat('  \n ') 
+#  cat(' 6 \n ')
         }
-         
-         cat(' \n')
+         cat('  \n ') 
       }
     }
   }
