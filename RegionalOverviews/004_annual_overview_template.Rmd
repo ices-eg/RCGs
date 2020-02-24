@@ -110,7 +110,7 @@ source("funs/pointsMap_func.R")
 source("funs/choroplethMap_func.R")
 source("funs/scatterpieMap_func.R")
 source("funs/flowPlot_func.R")
-
+source("funs/func_riverplotfun.R")
 
 param <-
   read.table(
@@ -119,7 +119,7 @@ param <-
       target_region,
       "/Annual_Overview/AnnualOverview_",
       target_region,
-      "_parameters_10.csv",
+      "_parameters.csv",
       sep = ""
     ),
     sep = ",",
@@ -364,6 +364,71 @@ names(aux_colours_ggplot) = c(colour_table$Country)
 ```
 
 
+``` {r include=FALSE}
+#riverplot
+
+for (a in unique(param$Section)) {
+  param_sec <- filter(param, Section == a)
+  
+  cat('  \n')
+  cat(paste0("# ", unique(param_sec$Section_name), '  \n'))
+  
+  for (b in unique(param_sec$Subsection)) {
+    param_subsection <- filter(param_sec, Subsection == b)
+    
+    cat('  \n')
+    cat(paste0("## ", unique(param_subsection$Subsection_name), '  \n'))
+    
+    for (c in unique(param_subsection$Subsubsection)) {
+      graph_det <- filter(param_subsection, Subsubsection == c)
+      
+      cat('  \n')
+      cat(paste0("### ", unique(graph_det$Subsubsection_name), '  \n'))
+      
+      #Select data input
+      
+      if (unique(graph_det$Data == "CL")) {
+        df <- cl
+      } else if (unique(graph_det$Data == "CE")) {
+        df <- ce
+      }
+      
+      #Filter input
+      
+      df <-
+        filter_df(
+          df = df,
+          filter_var = unique(graph_det$Filter_var),
+          filter = unique(graph_det$Filter)
+        )
+      
+      # bar plots
+      for (i in 1:nrow(graph_det))
+      {
+             if(graph_det$Graph_type[i] == 6){
+   
+# pick the colour scheme:
+
+aux_colours_ggplot_rp <- colour_table
+aux_colours_ggplot_rp$colour <- aux_colours_ggplot_rp$colour4
+
+res <- riverplotfun(df, 
+                    palette=aux_colours_ggplot_rp, 
+                   title=paste(graph_det$var1[i]," (left) to ",graph_det$var2[i]," (right) - ",graph_det$newVarName[i]," - ",graph_det$addToTitle[i],sep=""),
+                    value=graph_det$Var[i],
+                    save=TRUE,
+                    filename=paste(figur_dir, graph_det$png_name[i],
+                      ".png",
+                      sep = ""))
+
+   }
+  
+         cat('  \n ') 
+      }
+    }}}
+      
+```
+
 ###### Page break
 
 ```{r plots, results = "asis", eval = T}
@@ -371,7 +436,6 @@ names(aux_colours_ggplot) = c(colour_table$Country)
 
 for (a in unique(param$Section)) {
   param_sec <- filter(param, Section == a)
-
   cat('  \n')
   cat(paste0("# ", unique(param_sec$Section_name), '  \n'))
   
@@ -436,10 +500,10 @@ for (a in unique(param$Section)) {
               row.names = F
             )
           }
-                  j<- i
-        cat('Figure ',graph_det$Subsubsection[i],'.',j,'. ',graph_det$Var[i],' by ',graph_det$var1[i],'  \n ',sep='')
+    
+         cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',graph_det$Var[i],' by ',graph_det$var1[i],'  \n ',sep='')
          cat('  \n ') 
-  cat('text baaablaaa bla  \n ')
+         cat('text baaablaaa bla  \n ')
         }
         
         cat('  \n ')
@@ -475,11 +539,10 @@ for (a in unique(param$Section)) {
               row.names = F
             )
           }
-           j<- i
-cat('Figure ',graph_det$Subsubsection[i],'.',j,'. blablabls  \n ',sep='')
-#        cat('Figure ',graph_det$Subsubsection[i],'.',j,'. ',graph_det$Var[i],' by ',graph_det$var1[i],' and #',graph_det$var2[i],'  \n ')
+
+         cat('Figure ',graph_det$Subsubsection[i],'.',i,'. blablabls  \n ',sep='')
+         cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',graph_det$Var[i],' by ',graph_det$var1[i],' and ',graph_det$var2[i],'  \n ',sep='')
          cat('  \n ') 
-#  cat('2  \n ')
         }
         
          cat('  \n')
@@ -519,10 +582,9 @@ cat('Figure ',graph_det$Subsubsection[i],'.',j,'. blablabls  \n ',sep='')
               row.names = F
             )
           }
-#          j<- i
-#        cat('Figure ',graph_det$Subsubsection[i],'.',j,'. ',graph_det$func[i],' of ',graph_det$var[i],' and #',graph_det$groupBy[i],'(',graph_det$addToTitle[i],')  \n ')
+
+         cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',graph_det$func[i],' of ',graph_det$var[i],' and ',graph_det$groupBy[i],'(',graph_det$addToTitle[i],')  \n ',sep='')
          cat('  \n ') 
-#  cat('3  \n ')
         }
 
         cat('  \n ')
@@ -567,10 +629,10 @@ cat('Figure ',graph_det$Subsubsection[i],'.',j,'. blablabls  \n ',sep='')
               row.names = F
             )
           }
-#           j<- i
-#        cat('Figure ',graph_det$Subsubsection[i],'.',j,'. ',graph_det$func[i],' of ',graph_det$newVarName[i],' by #',graph_det$groupBy[i],'(',graph_det$addToTitle[i],')  \n ')
-         cat('  \n ') 
-#  cat(' 4 \n ')
+
+       cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',graph_det$func[i],' of ',graph_det$newVarName[i],' by ',graph_det$groupBy[i],'(',graph_det$addToTitle[i],')  \n ',sep='')
+      cat('  \n ') 
+      cat(' 4 \n ')
         }
 
         cat('  \n ')
@@ -617,48 +679,22 @@ cat('Figure ',graph_det$Subsubsection[i],'.',j,'. blablabls  \n ',sep='')
               row.names = F
             )
           }
-#            j<- i
-#        cat('Figure ',graph_det$Subsubsection[i],'.',j,'. ',graph_det$func[i],' of ',graph_det$newVarName[i],' by #',graph_det$groupBy[i],'(',graph_det$addToTitle[i],')  \n ')
-         cat('  \n ') 
-#  cat('5  \n ')
+
+        cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',graph_det$func[i],' of ',graph_det$newVarName[i],' by ',graph_det$groupBy[i],'(',graph_det$addToTitle[i],')  \n ',sep='')
+        cat('  \n ') 
+        cat('5  \n ')
         }
 
         cat('  \n ')
-        
                  
-        if(graph_det$Graph_type[i] == 6){
-          res <- flowPlot_func(
-            df = df,
-            var1 = graph_det$var1[i],
-            var2 = graph_det$var2[i],
-            Var = graph_det$Var[i],
-            value_of_threshold =  graph_det$value_of_threshold[i],
-            saveResults = FALSE,
-            outputPath = NA,
-            Catch_group_name = NA,
-            newVarName = graph_det$newVarName[i],
-            color_palette = eval(parse(text = ifelse(graph_det$color_palette[i]=='none',NA, graph_det$color_palette[i]))),
-            addToTitle = graph_det$addToTitle[i]
-          )
+       if(graph_det$Graph_type[i] == 6){
+cat('![plot of chunk ',graph_det$png_name[i],'](',figur_dir,graph_det$png_name[i],'.png)',sep="")
+cat('  \n ') 
 
-          subchunkify(res[[2]], graph_det$png_name[i], graph_det$height[i], graph_det$width[i])
-
-          if (tables == "yes") {
-            write.table(
-              res[[1]],
-              file =
-                paste(table_dir, graph_det$txt_name[i],
-                      ".txt",
-                      sep = ""),
-              sep = '\t',
-              dec = '.',
-              row.names = F
-            )
-          }
-#  j<- i
-#        cat('Figure ',graph_det$Subsubsection[i],'.',j,'. ',graph_det$newVarName[i],' by ',graph_det$addToTitle[i],'  \n ')
-         cat('  \n ') 
-#  cat(' 6 \n ')
+        cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',graph_det$newVarName[i],' by ',graph_det$addToTitle[i],'  \n ',sep="")
+        cat('blabla \n')
+        cat('  \n ') 
+        cat(' 6 \n ')
         }
          cat('  \n ') 
       }
@@ -667,7 +703,6 @@ cat('Figure ',graph_det$Subsubsection[i],'.',j,'. blablabls  \n ',sep='')
 }
 
 ```
-
 
 ###### Page break
 #### Data
