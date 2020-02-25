@@ -357,6 +357,8 @@ CTRshp = cbind(CTRshp,  sf::st_coordinates(sf::st_centroid(CTRshp$geometry,of_la
 		
 
 # adjust color palette to the ggplot maps
+color_kasia<-c("#003153","steelblue","#110141","#800080","#4B0082","slategray","#6066ad","#013033","#017351","#03c383","#aad962","#ef6a32","#607d8b","#ed0345","#a12a5e","#710162","slateblue4","orangered4","#0096c8","#ddeeff","peru","seashell3","#FFC125","violetred4","wheat1","orange","#ce93d8","#6b8e23","#002D6E","slategray2","gold","#6b416b","#DED5D0","#36454F","#964B84","#555555","skyblue4")
+colour_table$colour4<-color_kasia
 aux_colours_ggplot = c(colour_table$colour4)
 names(aux_colours_ggplot) = c(colour_table$Country)
 
