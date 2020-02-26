@@ -54,3 +54,60 @@ riverplotfun <- function(data=cl_rcg,left='FlagCountry',right='LandingCountry',
     mtext(title,3,0)
   if(save) dev.off()
 }
+
+
+
+
+# # data preparation
+#
+#
+#
+#
+# load('../Data/RDB_RCG_NA_CL_2009_2017_prepared_201904020909.RData')
+# load('../Data/RDB_RCG_NA_CE_2009_2017_prepared_201904020909.RData')
+# 
+# cl <- subset(cl_rcg,Year==2017)
+# ce <- subset(ce_rcg,Year==2017)
+# rm(cl_rcg,ce_rcg)
+# gc(reset=T)
+# 
+# pal <- read.table('aux_colours.txt',T)
+# plot.new()
+# legend('left',legend=pal$Country,fill=as.character(pal$colour1),title='colour1')
+# legend('center',legend=pal$Country,fill=as.character(pal$colour2),title='colour2')
+# legend('right',legend=pal$Country,fill=as.character(pal$colour3),title='colour3')
+# 
+# 
+# # pick the colour scheme:
+# pal$colour <- pal$colour3
+# 
+# riverplotfun(cl,title='2017 - all species',palette=pal,filename='2.1.8_r1.png')
+# riverplotfun(subset(cl,Catch_group=='small pelagic'),title='2017 - small pelagic',palette=pal,filename='2.2.8_r1.png')
+# riverplotfun(subset(cl,Catch_group=='demersal'),title='2017 - demersal',palette=pal,filename='2.3.8_r1.png')
+# riverplotfun(subset(cl,Catch_group=='flatfish'),title='2017 - flatfish',palette=pal,filename='2.4.8_r1.png')
+# 
+# # no landing country in ce
+# ce$LandingCountry2 <- substring(ce$Harbour,1,2)
+# # manual fix
+# ce$LandingCountry <- NA
+# ce$LandingCountry[ce$LandingCountry2=='BE'] <- 'BEL'
+# ce$LandingCountry[ce$LandingCountry2=='DE'] <- 'DEU'
+# ce$LandingCountry[ce$LandingCountry2=='DK'] <- 'DNK'
+# ce$LandingCountry[ce$LandingCountry2=='ES'] <- 'ESP'
+# ce$LandingCountry[ce$LandingCountry2=='FO'] <- 'FRO'
+# ce$LandingCountry[ce$LandingCountry2=='FR'] <- 'FRA'
+# ce$LandingCountry[ce$LandingCountry2=='GB'] <- 'GBR'
+# ce$LandingCountry[ce$LandingCountry2=='GG'] <- 'GGY'
+# ce$LandingCountry[ce$LandingCountry2=='IE'] <- 'IRL'
+# ce$LandingCountry[ce$LandingCountry2=='IM'] <- 'IMN'
+# ce$LandingCountry[ce$LandingCountry2=='IS'] <- 'ISL'
+# ce$LandingCountry[ce$LandingCountry2=='JE'] <- 'JEY'
+# ce$LandingCountry[ce$LandingCountry2=='MA'] <- 'MAR'
+# ce$LandingCountry[ce$LandingCountry2=='NL'] <- 'NLD'
+# ce$LandingCountry[ce$LandingCountry2=='NO'] <- 'NOR'
+# ce$LandingCountry[ce$LandingCountry2=='PL'] <- 'POL'
+# ce$LandingCountry[ce$LandingCountry2=='PT'] <- 'PRT'
+# 
+# 
+# riverplotfun(ce,title='2017 - KWDays',value='KWDays',filename='2.5.8_r1.png')
+
