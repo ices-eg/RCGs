@@ -402,7 +402,8 @@ if(groupBy_name %in% c('Area','AreaMap', 'FishingGround')){
   }
   
  mdf %>%  select( -var, - groupBy, -groupBy2, -facet)-> mdf
-  return(list(mdf, plot))
+ caption -> caption
+  return(list(mdf, plot, caption))
 }
 
 # scatterpieMap_func(
