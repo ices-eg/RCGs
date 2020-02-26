@@ -25,7 +25,7 @@ riverplotfun <- function(data=cl_rcg,left='FlagCountry',right='LandingCountry',
   # the rest are parameters for png()
 
   require(riverplot)
-
+  assignInNamespace("debug",FALSE,ns="riverplot")
   
  edges <- aggregate(data[,value],list(N1=toupper(data[,left]),N2=tolower(data[,right])),sum,na.rm=T)
   names(edges)[3] <- 'Value'

@@ -384,7 +384,8 @@ choroplethMap_func = function(df,
   mdf %>%  select(-var, - groupBy, -facet)-> mdf
   
   if(displayInR==TRUE){
-  return(list(mdf, plot)) #should we return all data - mdf (with missing parts) or only the data that were  plotted - mdf2?
+    caption -> caption
+  return(list(mdf, plot, caption)) #should we return all data - mdf (with missing parts) or only the data that were  plotted - mdf2?
   }
   
 }

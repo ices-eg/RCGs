@@ -292,8 +292,8 @@ pointsMap_func = function(df,
   write.table(mdf, file = paste(fileName, ".txt", sep = ""), sep = '\t', dec = '.')
   ggsave(paste(fileName, ".tiff", sep = ""), units="in", width=10, height=10, dpi=300, compression = 'lzw')
   }
-
-  return(list(mdf, plot))
+caption -> caption
+  return(list(mdf, plot, caption))
 }
 
 # pointsMap_func(cl_rcg %>% filter(Year %in% c(2017)),
