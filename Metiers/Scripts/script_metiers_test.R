@@ -3,18 +3,27 @@ library(data.table)
 library(readxl)
 library(purrr)
 
-data.path <- "C:/GitHub/RCGs/Metiers/"
+
 data.file <- "Scripts/Metier_data_format_Example_test.csv"
 
 
 # Function that finds a metier code based on the given parameters
-getMetier<-function(p.gear, p.target, p.area, p.mesh, p.selection){
-  metier<-as.character(metier.list.baltic[gear==p.gear &
-                                            target==p.target &
-                                            AreaCode==p.area &
-                                            (data.table::between(p.mesh,m_size_from,m_size_to) | (m_size_from <=1 & m_size_to==999)) &
-                                            (p.selection == sd_mesh | sd_mesh==0),
-                                metier_level_6][1])
+getMetier<-function(p.rcg, p.gear, p.target, p.mesh, p.selection){
+  # First approach, assign metier by RCG, gear, target assemblage, mesh size and meash size in selection device
+  metier<-as.character(metier.list[RCG==p.rcg & 
+                                     gear==p.gear & 
+                                     target==p.target & 
+                                     (data.table::between(p.mesh,m_size_from,m_size_to) | (m_size_from <=1 & m_size_to==999)) &
+                                     (p.selection == sd_mesh | sd_mesh==0),
+                                   metier_level_6][1])
+  # Second approach, without selection device
+  if(is.na(metier)){
+    metier<-as.character(metier.list[RCG==p.rcg & 
+                                       gear==p.gear & 
+                                       target==p.target & 
+                                       (data.table::between(p.mesh,m_size_from,m_size_to) | (m_size_from <=1 & m_size_to==999)),
+                                     metier_level_6][1])
+  }
   return(metier)
 }
 # Function that returns a measure to be used to determine dominant species/group 
@@ -25,18 +34,29 @@ getMeasure<-function(p.measure){
 }
 
 # Load the input data
-input.data <-data.table(read.csv(paste0(data.path,data.file),stringsAsFactors = F))
+input.data <-data.table(read.csv(data.file,stringsAsFactors = F))
+input.data[,EUR:=as.numeric(EUR)]
+input.data[,selection_mesh:=tstrsplit(selection,"_")[2]]
+if(!"selection_mesh" %in% colnames(input.data)){
+  input.data[,selection_mesh:=NA]
+}
 
+#Load area list. Can be downloaded from GitHub: https://github.com/ices-eg/RCGs/tree/master/Metiers/Reference_lists
+area.list <- data.table(read.csv("Reference_lists/AreaRegionLookup.csv", sep = ",", stringsAsFactors = F))
+setnames(area.list, old = c("Code","AreaCode"), new = c("RCG","area"))
+area.list <- area.list[,map(.SD,trimws)]
+# area 21.0.A is present twice for NA and NSEA. In the next step we merge by area so we must get rid of duplicated areas. Question is how to handle 21.0.A.
+area.list<-area.list[!duplicated(area.list$area)]
+input.data <- merge(input.data, area.list, all.x = T, by = "area")
 
 # Load species reference list
-species.list <- data.table(read_excel(paste(data.path,"Reference_lists/Metier Subgroup Species 2019 04.xlsx",sep = ""), sheet = "Species Reference List"))
+species.list <- data.table(read_excel("Reference_lists/Metier Subgroup Species 2019 04.xlsx", sheet = "Species Reference List"))
 species.list <- unique(species.list[,.(FAOcode,`Grouping 2`)])
 setnames(species.list, old = c("FAOcode","Grouping 2"), new = c("FAO_species", "species_group"))
 
-#Load metier file from ICES http://ices.dk/marine-data/Documents/RDB/RDB%20Metiers%20in%20allowed%20areas.zip
-metier.list <- data.table(read.csv(paste(data.path,"Reference_lists/RDB Metiers in allowed areas.csv",sep = ""), sep = "\t", stringsAsFactors = F))
-setnames(metier.list, old = "FishingActivityCategoryEuropeanLvl6Code", new = "metier_level_6")
-
+#Load new metier file; Can be downloaded from GitHub: https://github.com/ices-eg/RCGs/tree/master/Metiers/Reference_lists
+metier.list <- data.table(read.csv("Reference_lists/RDB_ISSG_Metier_list_20200220.csv", sep = ",", stringsAsFactors = F))
+setnames(metier.list, old = "Metier_level6", new = "metier_level_6")
 
 #Split metier by parts
 metier.list[,c("gear","target","mesh","sd","sd_mesh") := data.table(str_split_fixed(metier_level_6,"_",5))]
@@ -49,17 +69,25 @@ metier.list[substr(mesh,1,1) == ">" & substr(mesh,2,2) != "=", ":="(m_size_from=
                                                                     m_size_to=as.integer(999))]
 metier.list[substr(mesh,1,1) == "<" & substr(mesh,2,2) != "=", ":="(m_size_to=as.integer(gsub("[[:punct:]]", " ",mesh))-as.integer(1),
                                                                     m_size_from=as.integer(1))]
-
 metier.list[mesh == "0", ":="(m_size_from=as.integer(0),
                               m_size_to=as.integer(999))]
-
-#Filtering out only Baltic metiers
-metier.list.baltic <- metier.list[substr(AreaCode,1,5) == "27.3."]
-input.data <- input.data[substr(area,1,5) == "27.3."]
+#-------Remove metier codes that are not assigned to any RCG
+metier.list<-metier.list[!is.na(RCG)]
+#-------Invalid metier code GNS_DEF>0_0_0
+metier.list<-metier.list[metier_level_6 != "GNS_DEF>0_0_0"]
+#-------Remove >=120 metiers in the Baltic
+metier.list<-metier.list[!(RCG == "BS" & mesh == ">=120")]
+#Extract metier lvl5
+metier.list[,metier_level_5 := paste(gear,target,sep="_")]
+#Count the number of lvl5 occurencies by RCG
+metier.list[,lvl5_n:=.N, by=.(RCG, metier_level_5)]
+#Remove metiers with mesh >0 if there other mesh size ranges available for a given RCG and the same metier lvl 5
+metier.list<-metier.list[!(lvl5_n>1 & mesh == ">0")]
 
 # Assign species category to the input data
 input.data <- merge(input.data, species.list, all.x = T, by = "FAO_species")
 
+#Coutry specific adjustments...
 
 
 # Determine the dominant species (by weight), its group and percentage in the total catch for each sequence
@@ -100,16 +128,15 @@ input.data[,group.mismatch:=ifelse(seq_dom_species_group!=seq_dom_group,1,0)]
 
 
 # Assign metier codes
-input.data[,metier_level_6:=as.character(pmap(list(gear, seq_dom_group, area, mesh, selection),
-                                               function(g,t,a,m,s) getMetier(g,t,a,m,s)))]
+input.data[,metier_level_6:=as.character(pmap(list(RCG, gear, seq_dom_group, mesh, selection_mesh),
+                                               function(r,g,t,m,s) getMetier(r,g,t,m,s)))]
 
 # Save results
 input.data<-input.data[order(vessel_id,trip_id,fishing_day,area,ices_rectangle,gear,mesh),
                        .(Country,year,vessel_id,vessel_length,trip_id,haul_id,fishing_day,area,ices_rectangle,gear,mesh,selection,FAO_species,
                          registered_target_assemblage,metier_level_6,KG,EUR,species_group,seq_dom_species_KG,seq_dom_species_group,
                          seq_dom_species_perc_KG,seq_group_KG,seq_group_EUR,seq_dom_group,group.mismatch)]
-write.csv(input.data,paste0(data.path,"metier_results.csv"))
-
+write.csv(input.data,"metier_results.csv")
 
 
 
