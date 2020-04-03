@@ -51,6 +51,10 @@ figur_dir <- paste("outputs/", target_region, "/figures/", sep = "")
 years_stock <- c(2016, 2017, 2018)
 period_stock <- "2016-2018"
 
+
+#Fleet register		
+Date_0<-20180101
+Date_previous<-20170101
 ```
 
 ```{r 2_setup_lib, include = F}
@@ -64,6 +68,7 @@ library(knitr)
 library(stringr)
 library(RCMfunctions) #sharepoint -> RCG Data Group -> R packages
 library(rnaturalearth)
+library(flextable) # R version 3.6.3
 
 ```
 
@@ -110,6 +115,8 @@ source("funs/pointsMap_func.R")
 source("funs/choroplethMap_func.R")
 source("funs/scatterpieMap_func.R")
 source("funs/func_riverplotfun.R")
+source("funs/FAZ_SEGMENTACAO_COMPRIMENTO_DCF2.R")
+source("funs/fun_table.R")
 
 param <-
   read.table(
@@ -258,14 +265,110 @@ ce <- droplevels(ce)
 
 
 
-# Overall fleet evolution
+# Overall fleet evolution (All RCGs)
+## Numer of vessels
+Number of vessels by flag country and length class in the EU vessel register (licence indicator == “Y” in 1st January `r years`. Parentesis: variation relative to `r years-1`.
 
-TODO - Kirsten, I think I promised to script that
+```{r table, include=FALSE}
+#fleet register
+# functions and packages
+	require(data.table)
 
-```{r}
+	fleetreg<-data.table()
 
-#Adopt Nuno's script 003_xxxx
+		# based on full history
+	
+	dir_data<-"data\\fleet_reg\\"
+		
+	for (ctry in c("BEL","DEU","DNK","ESP","EST","FIN","FRA","GBR","IRL","LTU","LVA","NLD","POL","PRT","SWE"))
+		{
+		print(ctry)
+		fleetreg<-rbind(fleetreg,fread(paste(dir_data, ctry,"_export_20190410_fixed.csv", sep = ""), sep = ";",stringsAsFactors=FALSE, verbose=FALSE))	
+		}	
 
+	# subsets data
+		fleetreg<-fleetreg[License_Ind=="Y",]
+
+		
+	# creates status date date and combines data
+	
+		fleetreg$year<-0
+		fleetreg$previousyear<-0
+
+		fleetreg[Event_Start_Date<=Date_0 & Event_End_Date>=Date_0,year:=Date_0,]
+		fleetreg[Event_Start_Date<=Date_previous & Event_End_Date>=Date_previous,previousyear:=Date_previous,]
+
+		fleetreg$Status_date<-0
+	
+		target_cols<-c("Country_Code","CFR","Event_Code","Event_Start_Date","Event_End_Date","License_Ind","Registration_Nbr","Ext_Marking","Vessel_Name","Port_Code","Port_Name","IRCS_Code","IRCS","Vms_Code","Gear_Main_Code","Gear_Sec_Code","Loa","Lbp","Ton_Ref","Ton_Gt","Ton_Oth","Ton_Gts","Power_Main","Power_Aux","Hull_Material","Com_Year","Com_Month","Com_Day","Segment","Exp_Country","Exp_Type","Public_Aid_Code","Decision_Date","Decision_Seg_Code","Construction_Year","Construction_Place","Status_date")
+	
+		dfy<-as.data.frame(fleetreg[year==Date_0,])
+		dfy$Status_date<-Date_0
+		dfy<-dfy[target_cols]
+			
+		dfpy<-as.data.frame(fleetreg[previousyear==Date_previous,])
+		dfpy$Status_date<-Date_previous
+		dfpy<-dfpy[target_cols]
+
+		fleetreg<-as.data.table(rbind(dfy, dfpy))
+	
+	
+	# a few formats and quality checks
+		fleetreg$Power_Main<-as.numeric(fleetreg$Power_Main)
+		fleetreg$Ton_Gt<-as.numeric(fleetreg$Ton_Gt)
+		fleetreg$Ton_Ref<-as.numeric(fleetreg$Ton_Ref)
+		# QCA: should yield 0
+		#tu dac ify
+		
+		sum(is.na(fleetreg$Power_Main))
+		sum(is.na(fleetreg$Ton_Gt))
+		fleetreg[is.na(fleetreg$Ton_Gt),"Ton_Gt"]<-fleetreg[is.na(fleetreg$Ton_Gt),"Ton_Ref"]
+		sum(is.na(fleetreg$Ton_Gt))
+		sum(is.na(fleetreg$Ton_Ref))
+
+	# adds Loa classes
+		fleetreg<-FAZ_SEGMENTACAO_COMPRIMENTO_DCF2(dados = as.data.frame(fleetreg), coluna = "Loa")
+		# QCA: should yield 0
+		sum(is.na(fleetreg$SEG_DCF))
+		res_fleetreg<-table(fleetreg$SEG_DCF, fleetreg$Country_Code, fleetreg$Status_date)
+		res_fleetreg_pwr<-tapply(fleetreg$Power_Main, list(fleetreg$SEG_DCF,fleetreg$Country_Code, fleetreg$Status_date), sum)
+		res_fleetreg_gt<-tapply(fleetreg$Ton_Gt, list(fleetreg$SEG_DCF,fleetreg$Country_Code, fleetreg$Status_date), sum)
+		res_fleetreg_pwr[is.na(res_fleetreg_pwr)]<-0
+		res_fleetreg_gt[is.na(res_fleetreg_gt)]<-0
+```
+
+
+
+```{r, results = 'asis'}
+  pyear<-as.data.frame.matrix(rbind(res_fleetreg[,,1],apply(res_fleetreg[,,1],2,sum)))
+  year<-as.data.frame.matrix(rbind(res_fleetreg[,,2],apply(res_fleetreg[,,2],2,sum)))
+  year_pyear<-as.data.frame.matrix(rbind((res_fleetreg[,,1]-res_fleetreg[,,2]),apply((res_fleetreg[,,1]-res_fleetreg[,,2]),2,sum)))
+ft<-fun_table(year,year_pyear)
+ft
+```
+
+## Power
+Power (1000*kW) by flag country and length class in the EU vessel register (licence indicator == “Y” in 1st January `r years`. Parentesis: variation relative to `r years-1`.
+
+```{r, results = 'asis'}
+  pyear<-as.data.frame.matrix(round(rbind(res_fleetreg_pwr[,,1],apply(res_fleetreg_pwr[,,1],2,sum))/1000,1))
+  year<-as.data.frame.matrix(round(rbind(res_fleetreg_pwr[,,2],apply(res_fleetreg_pwr[,,2],2,sum))/1000,1))
+  year_pyear<-as.data.frame.matrix(round(rbind((res_fleetreg_pwr[,,1]-res_fleetreg_pwr[,,2]),apply((res_fleetreg_pwr[,,1]-res_fleetreg_pwr[,,2]),2,sum))/1000,1))
+ft<-fun_table(year,year_pyear)
+ft
+
+```
+
+## Gross tonnage
+Gross Tonnage(1000*GT) by flag country and length class in the EU vessel register (licence indicator == “Y” in 1st January `r years`. Parentesis: variation relative to `r years-1`.
+
+
+```{r, results = 'asis'}
+  pyear<-as.data.frame.matrix(round(rbind(res_fleetreg_gt[,,1],apply(res_fleetreg_gt[,,1],2,sum))/1000,1))
+  year<-as.data.frame.matrix(round(rbind(res_fleetreg_gt[,,2],apply(res_fleetreg_gt[,,2],2,sum))/1000,1))
+  year_pyear<-as.data.frame.matrix(round(rbind((res_fleetreg_gt[,,1]-res_fleetreg_gt[,,2]),apply((res_fleetreg_gt[,,1]-res_fleetreg_gt[,,2]),2,sum))/1000,1))
+ft<-fun_table(year,year_pyear)
+ft
 ```
 
 ```{r map_prep, include = F}
