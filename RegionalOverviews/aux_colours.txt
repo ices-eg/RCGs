@@ -1,0 +1,38 @@
+Country	Code	Code_agreggate4	colour1	colour2	colour3	colour4
+*HS	High Sea (Sold at sea - only applicable as Landingcountry)	Other	#ED57B2	#FF0000FF	#A6CEE3	#ffd8b1
+ADD	Compl. extrap. data. For administrative purpose only.	Other	#ED5E91	#FF5100FF	#1F78B4	#ffd8b1
+BEL	Belgium	Belgium	#E6696A	#FFA100FF	#B2DF8A	#e6194B
+CAN	Canada	Other	#DA7635	#FFF200FF	#33A02C	#ffd8b1
+CHA	Channel Islands (not included in ISO 3 standards)	United Kingdom - Other	#CA8200	#BCFF00FF	#FB9A99	#3cb44b
+CHL	Chile	Other	#B58D00	#6BFF00FF	#E31A1C	#ffd8b1
+DEU	Germany	Germany	#9A9600	#1BFF00FF	#FDBF6F	#ffe119
+DNK	Denmark	Denmark	#779F00	#00FF36FF	#FF7F00	#4363d8
+ENG	England	England	#3EA600	#00FF86FF	#CAB2D6	#f58231
+ESP	Spain	Spain	#00AC3D	#00FFD7FF	#6A3D9A	#911eb4
+EST	Estonia	Estonia	#00B06D	#00D7FFFF	#E5C494	#42d4f4
+FIN	Finland	Finland	#00B191	#0086FFFF	#B15928	#f032e6
+FRA	France	France	#00B0B1	#0036FFFF	#FDDAEC	#bfef45
+FRO	Faroe Islands	Faroe Islands	#00ACCC	#1B00FFFF	#E7298A	#fabebe
+GBR	United Kingdom	United Kingdom - Other	#00A3E2	#6B00FFFF	#FFFFCC	#3cb44b
+GRL	Greenland	Denmark	#0096F0	#BC00FFFF	#FFED6F	#469990
+IMN	Isle of Man	United Kingdom - Other	#8185F5	#FF00F2FF	#F2F2F2	#3cb44b
+IND	India	Other	#B373F1	#FF00A1FF	#AAAAAA	#ffd8b1
+IRL	Ireland	Ireland	#D362E3	#FF0051FF	#666666	#e6beff
+ISL	Iceland	Iceland				#9A6324
+ITA	Italy	Other				#ffd8b1
+LTU	Lithuania	Lithuania				#fffac8
+LVA	Latvia	Latvia				#800000
+MAR	Morocco	Other				#ffd8b1
+MRT	Mauritania	Other				#ffd8b1
+MUS	Mauritius	Other				#ffd8b1
+NIR	Northern Ireland	Northern Ireland				#aaffc3
+NLD	Netherlands	Netherlands				#808000
+NOR	Norway	Norway				#000075
+POL	Poland	Poland				#a9a9a9
+PRT	Portugal	Portugal				#ffffff
+RUS	Russia	Other				#ffd8b1
+SCT	Scotland	Scotland				#000000
+SWE	Sweden	Sweden				#00FF00
+URY	Uruguay	Other				#ffd8b1
+WLS	Wales	Wales				#FF0000
+ZAF	South Africa	Other				#ffd8b1
