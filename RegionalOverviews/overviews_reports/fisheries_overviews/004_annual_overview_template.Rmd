@@ -32,7 +32,7 @@ output:
 #Paramters
 RDB_download_date <- "xx/04/2019"
 
-target_region <- "RCG_NA"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
+target_region <- "RCG_BA"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
 years <- c(2018)
 
 period <- "2018"
@@ -109,14 +109,14 @@ if (figures == "yes") {
 
 ```{r 4_source_ref, include = F}
 
-source("funs/func_barplot_var_by_one_var_rmd.r")
-source("funs/func_barplot_var_by_two_var_stacked_rmd.r")
-source("funs/pointsMap_func.R")
-source("funs/choroplethMap_func.R")
-source("funs/scatterpieMap_func.R")
-source("funs/func_riverplotfun.R")
-source("funs/FAZ_SEGMENTACAO_COMPRIMENTO_DCF2.R")
-source("funs/fun_table.R")
+source("../../funs/func_barplot_var_by_one_var_rmd.r")
+source("../../funs/func_barplot_var_by_two_var_stacked_rmd.r")
+source("../../funs/pointsMap_func.R")
+source("../../funs/choroplethMap_func.R")
+source("../../funs/scatterpieMap_func.R")
+source("../../funs/func_riverplotfun.R")
+source("../../funs/FAZ_SEGMENTACAO_COMPRIMENTO_DCF2.R")
+source("../../funs/fun_table.R")
 
 param <-
   read.table(
@@ -140,7 +140,7 @@ param$height <- as.numeric(param$height)
 
 colour_table <-
   read.table(
-    "aux_colours.txt",
+    "../../data/aux_colours.txt",
     header = T,
     sep = "\t",
     colClasses = "character",
@@ -192,11 +192,11 @@ subchunkify <- function(g, chunk_name = chunk_name, fig_height=7, fig_width=5) {
 ```{r title, include = F}
 
 if (target_region == "RCG_NA") {
-  front_title <- paste("Annual overview North Atlantic, ",  period, "  \n ","![](logo.png)", sep = "")
+  front_title <- paste("Annual overview North Atlantic, ",  period, "  \n ","![](../../data/logo.png)", sep = "")
 } else if (target_region == "RCG_BA") {
-  front_title <- paste("Annual overview Baltic, ",  period, "  \n ","![](logo.png)", sep = "")
+  front_title <- paste("Annual overview Baltic, ",  period, "  \n ","![](../../data/logo.png)", sep = "")
 } else if (target_region == "RCG_NSEA") {
-  front_title <- paste("Annual overview North Sea and Eastern Arctic, ",  period, "  \n ","![](logo.png)", sep = "")
+  front_title <- paste("Annual overview North Sea and Eastern Arctic, ",  period, "  \n ","![](../../data/logo.png)", sep = "")
 }
 
 ```
@@ -224,10 +224,10 @@ if (target_region == "RCG_NA")
 if (target_region == "RCG_BA")
 {
   load(
-    paste(data_dir, "RDB_RCG_BA_CL_2009_2018_prepared_201905051119.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_BA_CL_2009_2018_prepared_201905101612.Rdata", sep = "")
   )
   load(
-    paste(data_dir, "RDB_RCG_BA_CE_2009_2018_prepared_201905051119.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_BA_CE_2009_2018_prepared_201905101612.Rdata", sep = "")
   )
 }
 if (target_region == "RCG_NSEA")
@@ -278,7 +278,7 @@ Number of vessels by flag country and length class in the EU vessel register (li
 
 		# based on full history
 	
-	dir_data<-"data\\fleet_reg\\"
+	dir_data<-"../../data\\fleet_reg\\"
 		
 	for (ctry in c("BEL","DEU","DNK","ESP","EST","FIN","FRA","GBR","IRL","LTU","LVA","NLD","POL","PRT","SWE"))
 		{
@@ -389,18 +389,18 @@ UNLOCODE %>%
 # load shapefile
 if (target_region == "RCG_NA")
 {
-  shp  = sf::st_read("shapefiles/RCG_NA_FAOareas.shp") %>% filter(F_LEVEL ==
+  shp  = sf::st_read("../../data/shapefiles/RCG_NA_FAOareas.shp") %>% filter(F_LEVEL ==
                                                                     'DIVISION') # for NA maps on DIVISIONS level
 }
 
 if (target_region == "RCG_BA")
 {
-  shp  = sf::st_read("shapefiles/RCG_BA_FAOareas.shp") %>% filter(F_LEVEL ==
+  shp  = sf::st_read("../../data/shapefiles/RCG_BA_FAOareas.shp") %>% filter(F_LEVEL ==
                                                                     'SUBDIVISION') # for BA maps on DIVISIONS level -> WATCH OUT ...28.1/...28.2
 }
 if (target_region == "RCG_NSEA")
 {
-  shp  = sf::st_read("shapefiles/RCG_NSEA_FAOareas.shp") %>%  filter(
+  shp  = sf::st_read("../../data/shapefiles/RCG_NSEA_FAOareas.shp") %>%  filter(
     F_LEVEL == 'DIVISION' |
       F_LEVEL == 'SUBAREA' |
       F_CODE == '27.3.a.20' | F_CODE == '27.3.a.21'
@@ -432,16 +432,16 @@ if(target_region=='RCG_BA'){ # fixed wrong calculation of centroid of 27.3.d.30
 
 if (target_region == "RCG_NA")
 {
-  StatRectshp  = sf::st_read("shapefiles/RCG_NA_ICESrect.shp")
+  StatRectshp  = sf::st_read("../../data/shapefiles/RCG_NA_ICESrect.shp")
 }
 
 if (target_region == "RCG_BA")
 {
-  StatRectshp  = sf::st_read("shapefiles/RCG_BA_ICESrect.shp")# for BA maps on DIVISIONS level -> WATCH OUT ...28.1/...28.2
+  StatRectshp  = sf::st_read("../../data/shapefiles/RCG_BA_ICESrect.shp")# for BA maps on DIVISIONS level -> WATCH OUT ...28.1/...28.2
 }
 if (target_region == "RCG_NSEA")
 {
-  StatRectshp  = sf::st_read("shapefiles/RCG_NSEA_ICESrect.shp")
+  StatRectshp  = sf::st_read("../../data/shapefiles/RCG_NSEA_ICESrect.shp")
 }
 
 StatRectshp %>% mutate(StatisticalRectangle = ICESNAME) -> StatRectshp
@@ -449,7 +449,7 @@ StatRectshp = cbind(StatRectshp,  sf::st_coordinates(sf::st_centroid(StatRectshp
 
 adm_country <- ne_countries(scale = "medium", returnclass = "sf")
 adm_unit  = sf::st_read( # needed for GBT because of GBT, ANG, SCT, WLS,...
-  'shapefiles/countries shp/ne_10m_admin_0_map_units.shp'
+  '../../data/shapefiles/countries shp/ne_10m_admin_0_map_units.shp'
 )
 adm_unit %>% filter(ADMIN=='United Kingdom')-> adm_unit
 adm_country %>%  mutate(LandingCountry = gu_a3) %>%  select(LandingCountry)-> countries 

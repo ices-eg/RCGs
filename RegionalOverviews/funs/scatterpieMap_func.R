@@ -51,7 +51,7 @@ scatterpieMap_func = function(df,
   require(sf)
   require(rnaturalearth)
   
-  source('funs/group_func.R')
+  source('../../funs/group_func.R')
   
   # rename the columns
   var_name = var
