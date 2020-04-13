@@ -1,0 +1,202 @@
+---
+title: "Commercial fishery sampling overview"
+params:
+  
+  Year:
+    input: slider
+    label: 'Year:'
+    max: 2018
+    min: 2018
+    sep: ''
+    step: 1
+    value: 2018
+    
+  Quarter:
+    choices:
+    - All
+    - 1
+    - 2
+    - 3
+    - 4
+    input: select
+    label: 'Quarter:'
+    value: 1
+    
+  Metier:
+    label: "Metier:"
+    value: "All"
+    
+  Country:
+    label: "Country ('All' is fine!): "
+    value: "All"
+     
+
+  Species:
+    label: 'Species:'
+    value: "All"
+
+output:
+  html_document:
+    code_folding: hide
+    fig_caption: yes
+    number_sections: yes
+    theme: flatly
+    toc: yes
+    toc_depth: 3
+    toc_float:
+      collapsed: yes
+      smooth_scroll: yes
+---
+
+
+
+```{r, include=FALSE, warning=F , message=F}
+# assign params to new variables
+year<-params$Year
+metier<-params$Metier
+country<-params$Country
+quarter<-params$Quarter
+species<-params$Species
+```
+
+
+
+```{r, include=FALSE, warning=F , message=F}
+# load packages
+library(cowplot)
+library(readxl)
+library(knitr)
+library(tidyverse)
+library(ggplot2)
+library(sf)
+library(raster)
+library(sp)
+library(stringr)
+library(data.table)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(ggspatial)
+library(chron)
+library(kableExtra)
+library(hrbrthemes)
+library(ggsci)
+library(scales)
+```
+
+
+
+```{r}
+# load data.frame
+load("data/ShinyTest_BigPicture.Rdata")
+```
+
+
+
+```{r}
+#for debugging
+#metier<-'BB_DEF_0_0_0'
+#year<- 2018
+#country<-"All"
+#quarter<- 1
+#species<-"All"
+
+# convert to data.table
+inventory_ca<-as.data.table(inventory_ca)
+
+
+#change filter if you have all
+
+#& FlagCountry==country
+if (country=='All' & metier=='All'){inventory_ca<- inventory_ca[Year==year  & Quarter==quarter ]} #else {inventory_ca<-inventory_ca[Metier==metier & Year==year  & Quarter==quarter & Species==species  & FlagCountry==country]}
+#& Species==species
+#& Metier==metier 
+
+
+
+```
+
+
+
+
+
+
+**Year:** `r year`
+
+**Quarter:** `r quarter`
+
+**Country:** `r country`
+
+**Metier:** `r metier`
+
+**Species:** `r species`
+
+
+
+<br><br><br><br>
+
+
+# Samples collected
+
+```{r}
+if(country=='All'){ca_filtered<-inventory_ca[, .(N_age=sum(N_measured_age,na.rm=T), N_weights = sum(N_measured_weight,na.rm=T), N_maturity=sum(N_measured_maturity,na.rm=T), N_trips_age=sum(N_trips_age,na.rm=T),N_trips_weight=sum(N_trips_weight,na.rm=T),N_trips_maturity=sum(N_trips_maturity,na.rm=T)), by= FlagCountry]
+kable(ca_filtered) %>% kable_styling(bootstrap_options = c("striped","hover"), full_width = F,position = "left")} #else {ca_filtered<-inventory_ca[, .(N_age=sum(N_measured_age,na.rm=T), N_weights = sum(N_measured_weight,na.rm=T), N_maturity=sum(N_measured_maturity,na.rm=T))]
+#kable(ca_filtered)}
+
+
+```
+
+<br><br><br><br>
+
+## An example
+
+```{r}
+if(country=='All'){
+plot1<-ggplot(ca_filtered,aes(x=reorder(FlagCountry,N_age),y=N_age))+geom_bar(stat='identity',color='black',fill='antiquewhite')
+plot1+theme_half_open()+coord_flip()+xlab("Country")}
+```
+
+
+
+<br><br><br><br>
+
+
+
+# Sampling location
+
+```{r}
+m <- ne_countries(scale = "medium", returnclass = "sf")
+
+plot2<-ggplot()+ geom_point(data=subset(inventory_ca, !is.na(lat) & !is.na(lon), select= c(lat,lon,FlagCountry)), aes(x= lon, y=lat, color=FlagCountry))+ geom_sf(data = m,  fill = "antiquewhite") +coord_sf(
+      crs = "+init=epsg:4326",
+      xlim = round(range(inventory_ca$lon,na.rm = T),digits = 3)+c(-.5,+.5),
+      ylim = round(range(inventory_ca$lat,na.rm = T),digits = 3)+c(-.5,+.5),
+      expand = FALSE
+    )+theme_half_open()+theme(
+      text = element_text(color = "#22211d"),
+      plot.background = element_rect(fill = "#ffffff", color = NA),
+      panel.background = element_rect(fill = "aliceblue", color = NA),
+      legend.background = element_rect(fill = "#ffffff", color = NA),
+      panel.border = element_rect(
+        colour = "black",
+        fill = NA,
+        size = 1),axis.text.x = element_text(angle = 90, hjust = 1),
+      panel.grid.major = element_line(
+        color = gray(.8),
+        linetype = 'dashed',
+        size = 0.5
+      ))+scale_color_manual(values=c('#a6cee3',
+'#1f78b4',
+'#b2df8a',
+'#33a02c',
+'#fb9a99',
+'#e31a1c',
+'#fdbf6f',
+'#ff7f00',
+'#cab2d6','#984ea3'))
+
+plot2
+
+```
+
+
+
