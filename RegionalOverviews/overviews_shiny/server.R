@@ -28,7 +28,7 @@ load("data/graph_det.RData")
 inventory_ca$SamplingType <- as.factor(inventory_ca$SamplingType)
 inventory_ca$Quarter <- as.factor(as.character(inventory_ca$Quarter))
 
-setwd("C:/ISSG2/shiny/github_cloned/RCGs/Sampling_overview")
+#setwd("C:/ISSG2/shiny/github_cloned/RCGs/Sampling_overview")
 
 group <- c("SamplingCountry","FlagCountry","LandingCountry","Year",                
            "Quarter","Species","Area","SamplingType",        
