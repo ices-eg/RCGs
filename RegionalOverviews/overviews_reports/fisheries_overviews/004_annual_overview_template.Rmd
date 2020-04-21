@@ -803,10 +803,10 @@ write.csv(cl_stock_csv, paste(table_dir, "landings_per_stock_", min(years_stock)
 
 ```{r notes}
 
-#TODO ----
+#TODO ---- 
 
 
-#Include riverplots - Marta is working on that one
+#Include riverplots - Marta is working on that one  
 #Include fleet reg analysis
 #Save results in csv files - done
 #Include landings per stock - done
