@@ -147,7 +147,8 @@ choroplethMap_func = function(df,
     }
   }
   # Set the plot parameters
-  
+  if (groupBy_name=="StatisticalRectangle"){groupBy_name="Statistical Rectangle"}
+  if (groupBy_name=="AreaMap"){groupBy_name="Area Map"}
   # title
   if (func_name %in% c('sum')) {
     title = paste(func_name,
@@ -310,8 +311,8 @@ choroplethMap_func = function(df,
       title = title,
       x = 'Longitude',
       y = 'Latitude',
-      subtitle = subtitle,
-      caption = caption
+      subtitle = subtitle
+ #     , caption = caption
     ) +
     facet_wrap(~facet, ncol =2)+
     theme_classic() +
