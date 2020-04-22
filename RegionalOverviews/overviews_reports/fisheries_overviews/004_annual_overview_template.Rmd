@@ -117,6 +117,7 @@ source("../../funs/scatterpieMap_func.R")
 source("../../funs/func_riverplotfun.R")
 source("../../funs/FAZ_SEGMENTACAO_COMPRIMENTO_DCF2.R")
 source("../../funs/fun_table.R")
+source("../../funs/func_determine_what_to_inset.R")
 
 param <-
   read.table(
