@@ -26,7 +26,7 @@ rename_var2<-function(var2){
 }
 rename_var<-function(Var){
 
-  if (Var == "LandingWeight_1000ton"){Var="Landings"}
+  if (Var == "LandingWeight_1000ton"){Var="Landings (1000 t)"}
   if (Var == "DaysAtSea"){Var="days at Sea"}
   if (Var == "KWDays_1000x"){Var="KW-Days"}
   if (Var=="TripsNumber") {Var="Number of trips"}
