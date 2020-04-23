@@ -38,7 +38,7 @@ years <- c(2018)
 period <- "2018"
 
 figures <- "yes" #yes / no - all figures outputtet to a folder
-tables <- "yes" #yes / no - all tabales outputtet to a folder
+tables <- "no" #yes / no - all tabales outputtet to a folder
 
 data_dir <-data_dir <- paste("../../data/002_prepared/", target_region, "/", sep = '') # "Q:/dfad/users/kibi/data/RCG/from_share_point/"
 
@@ -66,10 +66,10 @@ library(dplyr)
 library(data.table)
 library(knitr)
 library(stringr)
-library(RCMfunctions) #sharepoint -> RCG Data Group -> R packages
+# library(RCMfunctions) #sharepoint -> RCG Data Group -> R packages
 library(rnaturalearth)
 library(flextable) # R version 3.6.3
-
+library(TeachingDemos)
 ```
 
 ```{r 3_setup_markdown, include = F}
