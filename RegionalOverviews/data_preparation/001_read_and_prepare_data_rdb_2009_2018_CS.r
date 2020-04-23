@@ -52,11 +52,11 @@ source("funs/func_download_data_from_sharepoint.r")
  
  rm(list=ls())
  library(data.table)
-
+ gc()
   
  # read file names
  
-	file_tr <- "data\\001_original\\CS Trip 2009-2018.csv" # should be CS TR Trip 2009-2018
+	file_tr <- "data\\001_original\\CS TR Trip 2009-2018.csv"
 	file_hh <- "data\\001_original\\CS HH Station 2009-2018.csv" 
 	file_sl <- "data\\001_original\\CS SL SpeciesList 2009-2018.csv" 
 	file_hl <- "data\\001_original\\CS HL Length 2009-2018.csv" 
@@ -64,11 +64,16 @@ source("funs/func_download_data_from_sharepoint.r")
 	 
  
 # read CS data
- tr<-fread(file_tr, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL", colClasses=c(Trip  = "character"), nrows=130242)
- hh<-fread(file_hh, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL", colClasses=c(Trip  = "character"), nrows=264268)
- sl<-fread(file_sl, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL", colClasses=c(Trip  = "character"), nrows=1567407)
- hl<-fread(file_hl, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL", colClasses=c(Trip  = "character", SizeCategory = "character"), nrows=9292149)
- ca<-fread(file_ca, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL", colClasses=c(Trip  = "character", SizeCategory = "character", OtolithSide = "character"), nrows=5416104)
+ tr<-fread(file_tr, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL", colClasses=c(Trip  = "character"))
+ #tr<-fread(file_tr, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL", colClasses=c(Trip  = "character"), nrows=130242)
+ hh<-fread(file_hh, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL", colClasses=c(Trip  = "character"))
+ #hh<-fread(file_hh, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL", colClasses=c(Trip  = "character"), nrows=264268)
+ sl<-fread(file_sl, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL", colClasses=c(Trip  = "character", SizeCategory = "character",CatchCategory="character"))
+ #sl<-fread(file_sl, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL", colClasses=c(Trip  = "character"), nrows=1567407)
+ hl<-fread(file_hl, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL", colClasses=c(Trip  = "character", SizeCategory = "character",CatchCategory="character"))
+ #hl<-fread(file_hl, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL", colClasses=c(Trip  = "character", SizeCategory = "character"), nrows=9292149)
+ ca<-fread(file_ca, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL", colClasses=c(Trip  = "character", SizeCategory = "character", OtolithSide = "character"))
+ #ca<-fread(file_ca, stringsAsFactors=FALSE, verbose=FALSE, TRUE, sep=";", na.strings="NULL", colClasses=c(Trip  = "character", SizeCategory = "character", OtolithSide = "character"), nrows=5416104)
  
 
 	# QCA: duplicates
@@ -116,8 +121,8 @@ dir.create(paste("data\\002_prepared\\RCG_NSEA", sep=""),recursive=TRUE, showWar
 # adds a few convenient Ids (should be moved to extraction)
 # ======================== 	
 	
-	dim(sl); sl<-merge(sl, hh[,list(CS_StationId,CS_TripId)], by="CS_StationId", all.x=T); dim(sl)
-	dim(hl); hl<-merge(hl, sl[,list(CS_SpeciesListId,CS_StationId,CS_TripId)], by="CS_SpeciesListId", all.x=T); dim(hl)
+	#dim(sl); sl<-merge(sl, hh[,list(CS_StationId,CS_TripId)], by="CS_StationId", all.x=T); dim(sl)
+	#dim(hl); hl<-merge(hl, sl[,list(CS_SpeciesListId,CS_StationId,CS_TripId)], by="CS_SpeciesListId", all.x=T); dim(hl)
 	
 # ======================== 		
 # adds an additional convenient Id to ca
@@ -181,7 +186,7 @@ dir.create(paste("data\\002_prepared\\RCG_NSEA", sep=""),recursive=TRUE, showWar
 # Set Prep Options 
 # ======================  
  
-target_region <- "RCG_NA" # "RCG_BA", "RCG_NSEA"
+target_region <- "RCG_NSEA" # "RCG_BA", "RCG_NSEA", "RCG_NA"
 year_start <- 2009
 year_end <- 2018
 dir_output_rcg<-paste("data\\002_prepared\\",target_region,sep="")
@@ -219,32 +224,32 @@ dir_output_all<-"data\\002_prepared"
 		
 		target_areas <- c('27.3.b.23','27.3.c.22','27.3.d.24','27.3.d.25','27.3.d.26','27.3.d.27','27.3.d.28','27.3.d.28.1','27.3.d.28.2','27.3.d.29','27.3.d.30','27.3.d.31','27.3.d.32')	
 
-		cl_rcg <- cl[Area %in% target_areas & Year>=year_start & Year<=year_end,]
-			# QCA: should yield 0
-			table(cl[Region=="BS" &  !Area %in% target_areas,"Area"])
-			table(cl[!Region=="BS" &  Area %in% target_areas,"Area"])
-			# QCA: should yield BS 
-			#table(cl_rcg$Region)
-				# corrects
-				#cl_rcg[!Region=="BS",FishingGround:=NA,]	
-				#cl_rcg[!Region=="BS",Region:="BS",]		
+		# cl_rcg <- cl[Area %in% target_areas & Year>=year_start & Year<=year_end,]
+			# # QCA: should yield 0
+			# table(cl[Region=="BS" &  !Area %in% target_areas,"Area"])
+			# table(cl[!Region=="BS" &  Area %in% target_areas,"Area"])
+			# # QCA: should yield BS 
+			# #table(cl_rcg$Region)
+				# # corrects
+				# #cl_rcg[!Region=="BS",FishingGround:=NA,]	
+				# #cl_rcg[!Region=="BS",Region:="BS",]		
 		
-		ce_rcg <- ce[Area %in% target_areas & Year>=year_start & Year<=year_end,]
-			# QCA: should yield 0
-				# ATT: a few records 27.3 and 27.7 in BA?! 
-				table(ce[Region=="BS" &  !Area %in% target_areas,"Area"])	 
-				table(ce[!Region=="BS" &  Area %in% target_areas,"Area"])	 
-			# QCA: should yield BS 
-				#table(ce_rcg$Region)
-				# corrects
-					#ce_rcg[!Region=="BS",FishingGround:=NA,]				
-					#ce_rcg[!Region=="BS",Region:="BS",]	
+		# ce_rcg <- ce[Area %in% target_areas & Year>=year_start & Year<=year_end,]
+			# # QCA: should yield 0
+				# # ATT: a few records 27.3 and 27.7 in BA?! 
+				# table(ce[Region=="BS" &  !Area %in% target_areas,"Area"])	 
+				# table(ce[!Region=="BS" &  Area %in% target_areas,"Area"])	 
+			# # QCA: should yield BS 
+				# #table(ce_rcg$Region)
+				# # corrects
+					# #ce_rcg[!Region=="BS",FishingGround:=NA,]				
+					# #ce_rcg[!Region=="BS",Region:="BS",]	
 		
 		target_trips <- hh[Area %in% target_areas & Year>=year_start & Year<=year_end,unique(CS_TripId),]
 		tr_rcg_all <- tr[CS_TripId %in% target_trips,]
 		hh_rcg_all <- hh[CS_TripId %in% target_trips,]
 		sl_rcg_all <- sl[CS_TripId %in% target_trips,]
-		hh_rcg_all <- hh[CS_TripId %in% target_trips,]
+		hl_rcg_all <- hl[CS_TripId %in% target_trips,]
 		ca_rcg_all <- ca[CS_TripId %in% target_trips,]
 		
 		}
@@ -256,32 +261,32 @@ dir_output_all<-"data\\002_prepared"
 		
 		target_areas_nsea <- c('27.1','27.2','27.2.a','27.2.a.1','27.2.a.2','27.2.b','27.2.b.2','27.3.a','27.3.a.20','27.3.a.21','27.4','27.4.a','27.4.b','27.4.c','27.5.a','27.7.d','27.12','27.14','27.14.a','27.14.b','27.14.b.1','27.14.b.2')
 		
-		cl_rcg <-cl[ (Area %in% target_areas_nsea | grepl(Area, pat="21.") ) & Year>=year_start & Year<=year_end,]
+		# cl_rcg <-cl[ (Area %in% target_areas_nsea | grepl(Area, pat="21.") ) & Year>=year_start & Year<=year_end,]
 		
-			# QCA: should yield 0
-				# ATT: a few records 41, 51 and 57 in NSEA [these have not been included in cl_rcg] 
-				table(cl[Region=="NSEA" & !(Area %in% target_areas_nsea | grepl(Area, pat="21.") ),"Area"])
-				table(cl[!Region=="NSEA" & (Area %in% target_areas_nsea | grepl(Area, pat="21.") ),"Area"])
-			# QCA: should yield NSEA
-				# ATT: a few records (21 - NAFO) not NSEA?!			
-				table(cl_rcg$Region)
-				table(cl_rcg[!Region=="NSEA",Area])
-					# corrects				
-					cl_rcg[!Region=="NSEA" & (Area %in% target_areas_nsea | grepl(Area, pat="21.") ),Region:="NSEA",]
-					table(cl_rcg$Region)
+			# # QCA: should yield 0
+				# # ATT: a few records 41, 51 and 57 in NSEA [these have not been included in cl_rcg] 
+				# table(cl[Region=="NSEA" & !(Area %in% target_areas_nsea | grepl(Area, pat="21.") ),"Area"])
+				# table(cl[!Region=="NSEA" & (Area %in% target_areas_nsea | grepl(Area, pat="21.") ),"Area"])
+			# # QCA: should yield NSEA
+				# # ATT: a few records (21 - NAFO) not NSEA?!			
+				# table(cl_rcg$Region)
+				# table(cl_rcg[!Region=="NSEA",Area])
+					# # corrects				
+					# cl_rcg[!Region=="NSEA" & (Area %in% target_areas_nsea | grepl(Area, pat="21.") ),Region:="NSEA",]
+					# table(cl_rcg$Region)
 			
-		ce_rcg <- ce[ (Area %in% target_areas_nsea | grepl(Area, pat="21.") ) & Year>=year_start & Year<=year_end,]
-			# QCA: should yield 0
-				# ATT: a few records 41, 51 and 57 in NSEA [these have not been included in ce_rcg] 
-				table(ce[Region=="NSEA" & !(Area %in% target_areas_nsea | grepl(Area, pat="21.") ),"Area"])	
-				table(ce[!Region=="NSEA" & (Area %in% target_areas_nsea | grepl(Area, pat="21.") ),"Area"])	
-			# QCA: should yield NSEA
-				# ATT: a few records (21 - NAFO) not NSEA?!			
-				table(ce_rcg$Region)
-				table(ce_rcg[!Region=="NSEA",Area])		
-					# corrects	
-					ce_rcg[!Region=="NSEA" & grepl(Area, pat="21."),Region:="NSEA",]
-					table(ce_rcg$Region)
+		# ce_rcg <- ce[ (Area %in% target_areas_nsea | grepl(Area, pat="21.") ) & Year>=year_start & Year<=year_end,]
+			# # QCA: should yield 0
+				# # ATT: a few records 41, 51 and 57 in NSEA [these have not been included in ce_rcg] 
+				# table(ce[Region=="NSEA" & !(Area %in% target_areas_nsea | grepl(Area, pat="21.") ),"Area"])	
+				# table(ce[!Region=="NSEA" & (Area %in% target_areas_nsea | grepl(Area, pat="21.") ),"Area"])	
+			# # QCA: should yield NSEA
+				# # ATT: a few records (21 - NAFO) not NSEA?!			
+				# table(ce_rcg$Region)
+				# table(ce_rcg[!Region=="NSEA",Area])		
+					# # corrects	
+					# ce_rcg[!Region=="NSEA" & grepl(Area, pat="21."),Region:="NSEA",]
+					# table(ce_rcg$Region)
 	
 		
 		
@@ -289,7 +294,7 @@ dir_output_all<-"data\\002_prepared"
 		tr_rcg_all <- tr[CS_TripId %in% target_trips,]
 		hh_rcg_all <- hh[CS_TripId %in% target_trips,]
 		sl_rcg_all <- sl[CS_TripId %in% target_trips,]
-		hh_rcg_all <- hh[CS_TripId %in% target_trips,]
+		hl_rcg_all <- hl[CS_TripId %in% target_trips,]
 		ca_rcg_all <- ca[CS_TripId %in% target_trips,]
 					# corrects	
 					hh_rcg_all[!Region=="NSEA" & grepl(Area, pat="21."),Region:="NSEA",]
@@ -472,23 +477,27 @@ dir_output_all<-"data\\002_prepared"
 			
 				# and the few remaining (manually...)
 					sl_rcg_all[Species == "Indostomus",ISSCAAP:= 13] # Miscellaneous freshwater fishes
+					sl_rcg_all[Species == "Gasterosteidae",ISSCAAP:= 25] 
 					sl_rcg_all[Species == "Dagetichthys lusitanicus",ISSCAAP:=31]  # Flounders, halibuts, soles
-					sl_rcg_all[Species == "Scorpaeniformes",ISSCAAP:=34] # Miscellaneous demersal fishes
-					sl_rcg_all[Species %in% c("Atelecyclus undecimdentatus","Majidae","Goneplax rhomboides","Macropodia longipes","Monodaeus couchii", "Corystes cassivelaunus"),ISSCAAP:=42] # Crabs, sea-spiders
+					sl_rcg_all[Species %in% c("Scorpaeniformes","Leptoclinus maculatus"), ISSCAAP:=34] # Miscellaneous demersal fishes
+					sl_rcg_all[Species %in% c("Arctozenus"), ISSCAAP:=39] # Miscellaneous marine fishes
+					sl_rcg_all[Species %in% c("Atelecyclus undecimdentatus","Majidae","Goneplax rhomboides","Macropodia longipes","Monodaeus couchii", "Corystes cassivelaunus","Macropodia rostrata"),ISSCAAP:=42] # Crabs, sea-spiders
 					sl_rcg_all[Species == "Caridea",ISSCAAP:=47] # Miscellaneous marine crustaceans
-					sl_rcg_all[Species %in% c("Dardanus arrosor","Paguristes eremita"),ISSCAAP:=44] # King crabs, squat-lobsters
-					sl_rcg_all[Species == "Sergia robusta",ISSCAAP:= 45] # Shrimps, prawns
-					sl_rcg_all[Species %in% c("Ampulla priamus","Neptunea contraria","Ranella olearium","Scaphander lignarius"),ISSCAAP:=52] # Abalones, winkles, conchs
-					sl_rcg_all[Species %in% c("Cidaris cidaris","Ophiothrix fragilis","Marthasterias glacialis"),ISSCAAP:=76] # Sea-urchins and other echinoderms
+					sl_rcg_all[Species %in% c("Dardanus arrosor","Paguristes eremita","Galathea squamifera","Galathea strigosa"),ISSCAAP:=44] # King crabs, squat-lobsters
+					sl_rcg_all[Species %in% c("Sergia robusta","Atlantopandalus propinqvus","Philocheras trispinosus"),ISSCAAP:= 45] # Shrimps, prawns
+					sl_rcg_all[Species %in% c("Euphausiidae"),ISSCAAP:= 46]
+					sl_rcg_all[Species %in% c("Ampulla priamus","Neptunea contraria","Neptunea antiqua","Buccinidae","Ranella olearium","Scaphander lignarius"),ISSCAAP:=52] # Abalones, winkles, conchs
+					sl_rcg_all[Species %in% c("Cidaris cidaris","Ophiothrix fragilis","Marthasterias glacialis","Ophiuridae","Asteriidae","Echinocardium cordatum"),ISSCAAP:=76] # Sea-urchins and other echinoderms
 					sl_rcg_all[Species %in% c("Sepiida","Sepiolidae"),ISSCAAP:=57]  # Squids, cuttlefishes, octopuses
-					sl_rcg_all[Species %in% c("Tealia","Adamsia palliata","Holothuriidae"),ISSCAAP:=77] #Miscellaneous aquatic invertebrates
+					sl_rcg_all[Species %in% c("Tealia","Adamsia palliata","Holothuriidae","Nereididae"),ISSCAAP:=77] #Miscellaneous aquatic invertebrates
 					sl_rcg_all[Species == "Plantae",ISSCAAP:=94] # Miscellaneous aquatic plants
+					sl_rcg_all[Species == "Melanitta nigra",ISSCAAP:=100] # NOT EXISTING
 		
 			# QCA should be zero
 			sum(is.na(sl_rcg_all$ISSCAAP))
 
 				# code for debugging:
-					# unique(cl_rcg[is.na(cl_rcg$ISSCAAP),"Species"]$Species)
+					# unique(sl_rcg_all[is.na(sl_rcg_all$ISSCAAP),"Species"]$Species)
 			
 			
 		# Ammodytes and Norway Pout appear classified as "33" - better assign to "37"
