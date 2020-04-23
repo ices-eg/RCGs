@@ -65,9 +65,9 @@ barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, pro
 			
 	#windows(10,5);
 	#if(grouped==TRUE) par(cex=0.8, mai = graph_par$mai) else  par(cex=0.8, oma = graph_par$oma, mai = graph_par$mai)	
-	if (tapply_type == "length_unique") { t1<-tapply(x[,Var], list(x[,var2],x[,var1]), function(y){length(unique(y))}); y_title = paste("Unique of", Var) }
-	if (tapply_type == "length") { t1<-tapply(x[,Var], list(x[,var2],x[,var1]), length); y_title = paste("count of", Var) }
-	if (tapply_type == "sum") { t1<-tapply(x[,Var], list(x[,var2],x[,var1]), sum, na.rm=T);  y_title = paste("sum of", Var) }
+	if (tapply_type == "length_unique") { t1<-tapply(x[,Var], list(x[,var2],x[,var1]), function(y){length(unique(y))}); y_title = paste("Unique of", rename_var(Var)) }
+	if (tapply_type == "length") { t1<-tapply(x[,Var], list(x[,var2],x[,var1]), length); y_title = paste("count of", rename_var(Var)) }
+	if (tapply_type == "sum") { t1<-tapply(x[,Var], list(x[,var2],x[,var1]), sum, na.rm=T);  y_title = paste("sum of", rename_var(Var)) }
 	t1[is.na(t1)]<-0
 	if(sorted==TRUE) {v1<-names(sort(apply(t1,2,sum), decreasing=T)); t1<-t1[,v1]}
 	if(proportion==TRUE) {t1 <- prop.table(t1,2); y_title = paste("prop of", Var); t1[is.na(t1)]<-0}
@@ -117,7 +117,9 @@ barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, pro
 	  
     windows(9,5)
 	  dev.control("enable")
-	  
+	  var1<-rename_var1(var1)
+	  Var<-rename_var(Var)
+	  var2<-rename_var2(var2)
 	  if(grouped==TRUE) par(cex=0.8, mai = graph_par$mai) else  par(cex=0.8, oma = graph_par$oma, mai = graph_par$mai)	
 	  
 	  legend_par <- str_replace(legend_par, "cex=0.7", "cex=0.7, bty = \"n\"")
@@ -128,9 +130,6 @@ barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, pro
 	  barplot(t1, las=2, legend.text=rownames(t1), col=colour_scale, ylab = "", main = NULL, cex.names = graph_par$cex.x, args.legend = legend_pars)
 	  if(title_root!="") title(main = paste(title_root,":",Var,"by", var1, "and", var2), line = 1.8) else title(main = paste(Var,"by", var1, "and", var2), line = 1.8)
 	  title(ylab=y_title, line = graph_par$ylab_line)
-	  var1<-rename_var1(var1)
-	  Var<-rename_var(Var)
-	  var2<-rename_var2(var2)
 	  if(!type_of_threshold == "NULL")
 	  {
 	    if(type_of_threshold == "cum_percent" & percent_var1==100 & percent_var2==100 & percent_Var==100 & proportion==TRUE ){
