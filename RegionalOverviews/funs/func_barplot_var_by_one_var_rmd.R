@@ -31,6 +31,7 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 		# 2019-05-08: added argument save_plot_to_list (saves plot as second argument of final list)
     # 2020-04-07: added captions K.Krakówka
     # 2020-04-21: added subplot and Nuno's function
+
 		percent_Var <- round(sum(!is.na(x[,Var]))/dim(x)[1]*100,2)
 		percent_var1 <- round(sum(!is.na(x[,var1]))/dim(x)[1]*100,2)
 		source("../../funs/fun_rename.r")
@@ -68,9 +69,9 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 	#print(par("new"))
 	if(grouped==TRUE) par(cex=0.8, mai = graph_par$mai) else  par(cex=0.8, oma = graph_par$oma, mai = graph_par$mai)
 	#print(par("new"))
-	if (tapply_type == "length_unique") { t1<-tapply(x[,Var], list(x[,var1]), function(y){length(unique(y))}); y_title = paste("Unique of", Var) }
-	if (tapply_type == "length") { t1<-tapply(x[,Var], list(x[,var1]), length); y_title = paste("count of", Var) }
-	if (tapply_type == "sum") { t1<-tapply(x[,Var], list(x[,var1]), sum, na.rm=T); y_title = paste("sum of", Var) }
+	if (tapply_type == "length_unique") { t1<-tapply(x[,Var], list(x[,var1]), function(y){length(unique(y))}); y_title = paste("Unique of", rename_var(Var)) }
+	if (tapply_type == "length") { t1<-tapply(x[,Var], list(x[,var1]), length); y_title = paste("count of", rename_var(Var)) }
+	if (tapply_type == "sum") { t1<-tapply(x[,Var], list(x[,var1]), sum, na.rm=T); y_title = paste("sum of", rename_var(Var)) }
 	t1[is.na(t1)]<-0
 	if (sorted==TRUE) {t1<-sort(t1, decreasing=T)}
 
@@ -91,7 +92,8 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 											}
 								}
 					if(nrow(t1)>length(colour_scale)) stop ("check colours")			
-					}		
+			}		
+	
 	# 
 	# #plot.new() ## clean up device
 	# barplot(t1, las=2, col=colour_scale, ylab = "", main = "", cex.names = graph_par$cex.x)
@@ -103,27 +105,29 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 	# 	} else {
 	# 		title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ","all_data", sep=""), cex.main=0.9, line = 0.5)
 	# 			}
+	var1<-rename_var1(var1)
+	Var<-rename_var(Var)
 	if(save_plot_to_list)
 		{
 	  win.metafile()
 	  dev.control("enable")
 	  if(grouped==TRUE) par(cex=0.8, mai = graph_par$mai) else  par(cex=0.8, oma = graph_par$oma, mai = graph_par$mai)
-	  sub_t1 <- determine_what_to_inset(freq = t1, target_ratio=10)
-	  if(!is.null(sub_t1)){
+	  sub_t1 <- determine_what_to_inset(freq = t1, target_ratio = 10)
+	  if(!is.null(sub_t1) & length(sub_t1) > 4){
 	    t2 <- t1[names(t1) %in% sub_t1] 
-	    barplot(t1, las=2, col=colour_scale, ylab = "", main = "", cex.names = graph_par$cex.x)
-	    TeachingDemos::subplot( # match colour with species or one single colour 
-	      barplot(t2, las=2, col=tail(colour_scale, n = length(t2)), ylab = "", main = "", cex.names = 0.7), 
+	    barplot(t1, las=2, col=colour_scale, ylab = "", main = "", cex.names = 0.9)
+	    TeachingDemos::subplot(  
+	      barplot(t2, las=2, col= colour_scale[length(t1[!t1 %in% t2])+1:length(colour_scale)], ylab = "", main = "", cex.names = 0.7), 
 	      x=grconvertX(c(0.25,1), from='npc'),
 	      y=grconvertY(c(0.50,1), from='npc'),
 	      type='fig', pars=list(mar=c(1.5,1.5,.7,0)+0.1)) # Write code without package
 	  }else{
 	    barplot(t1, las=2, col=colour_scale, ylab = "", main = "", cex.names = graph_par$cex.x)
 	  }
+	  
 	  if(title_root!="") title(main = paste(title_root,":",Var,"by", var1), line = 1.8) else title(main = paste(Var,"by", var1), line = 1.8)
 	  title(ylab=y_title, line = graph_par$ylab_line)
-	  var1<-rename_var1(var1)
-	  Var<-rename_var(Var)
+
 	  if(!type_of_threshold == "NULL")
 	  {
 	    title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = 0.5)
