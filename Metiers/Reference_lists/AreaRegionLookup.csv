@@ -1,6 +1,6 @@
 AreaCode,RegionId,Code,Description
 21,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-21.0.A,3,NA                                      ,North Atlantic                                                                                      
+21.0.A,3,NAtl                                      ,North Atlantic                                                                                      
 21.0.A,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
 21.0.B,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
 21.1,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
@@ -47,15 +47,15 @@ AreaCode,RegionId,Code,Description
 21.6.G,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
 21.6.H,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
 27.1,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-27.1,3,NA                                      ,North Atlantic                                                                                      
+27.1,3,NAtl                                      ,North Atlantic                                                                                      
 27.1.a,3,NSEA                                    ,North Sea and Eastern Arctic                                                                        
 27.1.b,3,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-27.10.a,3,NA                                      ,North Atlantic                                                                                      
-27.10.a.1,3,NA                                      ,North Atlantic                                                                                      
-27.10.a.2,3,NA                                      ,North Atlantic                                                                                      
-27.10.b,3,NA                                      ,North Atlantic                                                                                      
-27.10.b.1,3,NA                                      ,North Atlantic                                                                                      
-27.10.b.2,3,NA                                      ,North Atlantic                                                                                      
+27.10.a,3,NAtl                                      ,North Atlantic                                                                                      
+27.10.a.1,3,NAtl                                      ,North Atlantic                                                                                      
+27.10.a.2,3,NAtl                                      ,North Atlantic                                                                                      
+27.10.b,3,NAtl                                      ,North Atlantic                                                                                      
+27.10.b.1,3,NAtl                                      ,North Atlantic                                                                                      
+27.10.b.2,3,NAtl                                      ,North Atlantic                                                                                      
 27.12,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
 27.14,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
 27.14.a,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
@@ -71,19 +71,19 @@ AreaCode,RegionId,Code,Description
 27.3.a,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
 27.3.a.20,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
 27.3.a.21,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-27.3.b.23,1,BS                                      ,Baltic Sea                                                                                          
-27.3.c.22,1,BS                                      ,Baltic Sea                                                                                          
-27.3.d.24,1,BS                                      ,Baltic Sea                                                                                          
-27.3.d.25,1,BS                                      ,Baltic Sea                                                                                          
-27.3.d.26,1,BS                                      ,Baltic Sea                                                                                          
-27.3.d.27,1,BS                                      ,Baltic Sea                                                                                          
-27.3.d.28,1,BS                                      ,Baltic Sea                                                                                          
-27.3.d.28.1,1,BS                                      ,Baltic Sea                                                                                          
-27.3.d.28.2,1,BS                                      ,Baltic Sea                                                                                          
-27.3.d.29,1,BS                                      ,Baltic Sea                                                                                          
-27.3.d.30,1,BS                                      ,Baltic Sea                                                                                          
-27.3.d.31,1,BS                                      ,Baltic Sea                                                                                          
-27.3.d.32,1,BS                                      ,Baltic Sea                                                                                          
+27.3.b.23,1,BALT                                      ,Baltic Sea                                                                                          
+27.3.c.22,1,BALT                                      ,Baltic Sea                                                                                          
+27.3.d.24,1,BALT                                      ,Baltic Sea                                                                                          
+27.3.d.25,1,BALT                                      ,Baltic Sea                                                                                          
+27.3.d.26,1,BALT                                      ,Baltic Sea                                                                                          
+27.3.d.27,1,BALT                                      ,Baltic Sea                                                                                          
+27.3.d.28,1,BALT                                      ,Baltic Sea                                                                                          
+27.3.d.28.1,1,BALT                                      ,Baltic Sea                                                                                          
+27.3.d.28.2,1,BALT                                      ,Baltic Sea                                                                                          
+27.3.d.29,1,BALT                                      ,Baltic Sea                                                                                          
+27.3.d.30,1,BALT                                      ,Baltic Sea                                                                                          
+27.3.d.31,1,BALT                                      ,Baltic Sea                                                                                          
+27.3.d.32,1,BALT                                      ,Baltic Sea                                                                                          
 27.4,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
 27.4.a,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
 27.4.a.e,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
@@ -93,37 +93,37 @@ AreaCode,RegionId,Code,Description
 27.4.b.w,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
 27.4.c,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
 27.5.a,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-27.5.b,3,NA                                      ,North Atlantic                                                                                      
-27.5.b.1,3,NA                                      ,North Atlantic                                                                                      
-27.5.b.2,3,NA                                      ,North Atlantic                                                                                      
-27.6,3,NA                                      ,North Atlantic                                                                                      
-27.6.a,3,NA                                      ,North Atlantic                                                                                      
-27.6.a.n,3,NA                                      ,North Atlantic                                                                                      
-27.6.a.s,3,NA                                      ,North Atlantic                                                                                      
-27.6.b,3,NA                                      ,North Atlantic                                                                                      
-27.7.a,3,NA                                      ,North Atlantic                                                                                      
-27.7.b,3,NA                                      ,North Atlantic                                                                                      
-27.7.c,3,NA                                      ,North Atlantic                                                                                      
+27.5.b,3,NAtl                                      ,North Atlantic                                                                                      
+27.5.b.1,3,NAtl                                      ,North Atlantic                                                                                      
+27.5.b.2,3,NAtl                                      ,North Atlantic                                                                                      
+27.6,3,NAtl                                      ,North Atlantic                                                                                      
+27.6.a,3,NAtl                                      ,North Atlantic                                                                                      
+27.6.a.n,3,NAtl                                      ,North Atlantic                                                                                      
+27.6.a.s,3,NAtl                                      ,North Atlantic                                                                                      
+27.6.b,3,NAtl                                      ,North Atlantic                                                                                      
+27.7.a,3,NAtl                                      ,North Atlantic                                                                                      
+27.7.b,3,NAtl                                      ,North Atlantic                                                                                      
+27.7.c,3,NAtl                                      ,North Atlantic                                                                                      
 27.7.d,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-27.7.e,3,NA                                      ,North Atlantic                                                                                      
-27.7.f,3,NA                                      ,North Atlantic                                                                                      
-27.7.g,3,NA                                      ,North Atlantic                                                                                      
-27.7.h,3,NA                                      ,North Atlantic                                                                                      
-27.7.j,3,NA                                      ,North Atlantic                                                                                      
-27.7.k,3,NA                                      ,North Atlantic                                                                                      
-27.8.a,3,NA                                      ,North Atlantic                                                                                      
-27.8.b,3,NA                                      ,North Atlantic                                                                                      
-27.8.c,3,NA                                      ,North Atlantic                                                                                      
-27.8.d,3,NA                                      ,North Atlantic                                                                                      
-27.8.e,3,NA                                      ,North Atlantic                                                                                      
-27.9,3,NA                                      ,North Atlantic                                                                                      
-27.9.a,3,NA                                      ,North Atlantic                                                                                      
-27.9.b,3,NA                                      ,North Atlantic                                                                                      
-27.9.b.1,3,NA                                      ,North Atlantic                                                                                      
-27.9.b.2,3,NA                                      ,North Atlantic                                                                                      
-27.3.b,1,BS                                      ,Baltic Sea                                                                                          
-27.3.c,1,BS                                      ,Baltic Sea                                                                                          
-27.3.d,1,BS                                      ,Baltic Sea                                                                                          
+27.7.e,3,NAtl                                      ,North Atlantic                                                                                      
+27.7.f,3,NAtl                                      ,North Atlantic                                                                                      
+27.7.g,3,NAtl                                      ,North Atlantic                                                                                      
+27.7.h,3,NAtl                                      ,North Atlantic                                                                                      
+27.7.j,3,NAtl                                      ,North Atlantic                                                                                      
+27.7.k,3,NAtl                                      ,North Atlantic                                                                                      
+27.8.a,3,NAtl                                      ,North Atlantic                                                                                      
+27.8.b,3,NAtl                                      ,North Atlantic                                                                                      
+27.8.c,3,NAtl                                      ,North Atlantic                                                                                      
+27.8.d,3,NAtl                                      ,North Atlantic                                                                                      
+27.8.e,3,NAtl                                      ,North Atlantic                                                                                      
+27.9,3,NAtl                                      ,North Atlantic                                                                                      
+27.9.a,3,NAtl                                      ,North Atlantic                                                                                      
+27.9.b,3,NAtl                                      ,North Atlantic                                                                                      
+27.9.b.1,3,NAtl                                      ,North Atlantic                                                                                      
+27.9.b.2,3,NAtl                                      ,North Atlantic                                                                                      
+27.3.b,1,BALT                                      ,Baltic Sea                                                                                          
+27.3.c,1,BALT                                      ,Baltic Sea                                                                                          
+27.3.d,1,BALT                                      ,Baltic Sea                                                                                          
 31,4,LD,Distant Waters
 34,4,LD,Distant Waters
 34.1,4,LD,Distant Waters
