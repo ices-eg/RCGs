@@ -63,7 +63,22 @@ group <-
 ui <- navbarPage(
   "RCG overview",
   
-  tabPanel("Home/About"),
+#  tabPanel("Home/About", 
+#           titlePanel(title=div(img(src="rcglogo.jpg"))),
+#           sidebarLayout(
+#            sidebarPanel(),
+#              mainPanel(p("Disclaimer")))),
+tabPanel("Home/About", 
+           mainPanel(img(src="rcglogo.jpg"),
+                      p(), 
+                      p(strong("Disclaimer"), align="center"),
+                      p("Tables, plots and graphs presented in this document and overviews are made for the coordination purposes of regional fisheries data collection and are not designed for any other use.", align="center"),
+                      p("Data used for the outputs are extracted from the Regional Database (RDB) and EU Fleet Register. Due to different aggregations and reporting authorities, data can differ to those e.g. used for assessments or technical reports. Member States (MS) are responsible for uploading latest data and the latest year should be viewed as provisional. Data can be resubmitted by a MS for more than one previous year so there might be differences in earlier year reports if countries update back in time. Responsibility for the quality of the data and comparability to other data sources lies with the MS that provided these data.", align="center"),
+                      p(),
+                     p("The respective scripts and calculations used for data displaying are publicly available via the RCG github (https://github.com/ices-eg/RCGs) and subject to change as the work of the group progresses.", align="center")
+                     )
+          ),  
+ 
   tabPanel("Fishery overview"),
   navbarMenu(
     "Sampling overview",
