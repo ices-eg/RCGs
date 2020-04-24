@@ -8,6 +8,7 @@ rename_var1<-function(var1){
   if (var1=="FishingGround") {var1="fishing ground"}
   if (var1=="Catch_group") {var1="catch group"}
   if (var1=="VesselLengthCategory"){var1="Vessel Length Category"}	  
+  if (var1=="Harbour"){var1="Harbours"}	  
 return(var1)
   }
 rename_var2<-function(var2){
