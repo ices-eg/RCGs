@@ -245,8 +245,8 @@ pointsMap_func = function(df,
       title = title,
       x = 'Longitude',
       y = 'Latitude',
-      subtitle = subtitle,
-      caption = caption
+      subtitle = subtitle
+#      ,caption = caption
     ) +
     facet_wrap(~facet)+
     theme_classic() +

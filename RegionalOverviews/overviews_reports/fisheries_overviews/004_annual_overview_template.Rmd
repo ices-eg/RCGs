@@ -32,19 +32,19 @@ output:
 #Paramters
 RDB_download_date <- "xx/04/2019"
 
-target_region <- "RCG_BA"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
+target_region <- "RCG_NA"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
 years <- c(2018)
 
 period <- "2018"
 
 figures <- "yes" #yes / no - all figures outputtet to a folder
-tables <- "yes" #yes / no - all tabales outputtet to a folder
+tables <- "no" #yes / no - all tabales outputtet to a folder
 
-data_dir <-data_dir <- paste("data/002_prepared/", target_region, "/", sep = '') # "Q:/dfad/users/kibi/data/RCG/from_share_point/"
+data_dir <-data_dir <- paste("../../data/002_prepared/", target_region, "/", sep = '') # "Q:/dfad/users/kibi/data/RCG/from_share_point/"
 
 #Folder for figures and tables
-table_dir <- paste("outputs/", target_region, "/tables/", sep = "")
-figur_dir <- paste("outputs/", target_region, "/figures/", sep = "")
+table_dir <- paste("../../outputs/", target_region, "/tables/", sep = "")
+figur_dir <- paste("../../outputs/", target_region, "/figures/", sep = "")
 
 #Landings per stock settings
 
@@ -53,8 +53,8 @@ period_stock <- "2016-2018"
 
 
 #Fleet register		
-Date_0<-20180101
-Date_previous<-20170101
+Date_0<-20190101
+Date_previous<-20180101
 ```
 
 ```{r 2_setup_lib, include = F}
@@ -66,10 +66,10 @@ library(dplyr)
 library(data.table)
 library(knitr)
 library(stringr)
-library(RCMfunctions) #sharepoint -> RCG Data Group -> R packages
+# library(RCMfunctions) #sharepoint -> RCG Data Group -> R packages
 library(rnaturalearth)
 library(flextable) # R version 3.6.3
-
+library(TeachingDemos)
 ```
 
 ```{r 3_setup_markdown, include = F}
@@ -117,6 +117,7 @@ source("../../funs/scatterpieMap_func.R")
 source("../../funs/func_riverplotfun.R")
 source("../../funs/FAZ_SEGMENTACAO_COMPRIMENTO_DCF2.R")
 source("../../funs/fun_table.R")
+source("../../funs/func_determine_what_to_inset.R")
 
 param <-
   read.table(
@@ -278,12 +279,12 @@ Number of vessels by flag country and length class in the EU vessel register (li
 
 		# based on full history
 	
-	dir_data<-"../../data\\fleet_reg\\"
+	dir_data<-"../../data\\fleet_reg\\output\\2019\\"
 		
 	for (ctry in c("BEL","DEU","DNK","ESP","EST","FIN","FRA","GBR","IRL","LTU","LVA","NLD","POL","PRT","SWE"))
 		{
 		print(ctry)
-		fleetreg<-rbind(fleetreg,fread(paste(dir_data, ctry,"_export_20190410_fixed.csv", sep = ""), sep = ";",stringsAsFactors=FALSE, verbose=FALSE))	
+		fleetreg<-rbind(fleetreg,fread(paste(dir_data,ctry,"_export.csv", sep = ""), sep = ";",stringsAsFactors=FALSE, verbose=FALSE))
 		}	
 
 	# subsets data
@@ -300,7 +301,7 @@ Number of vessels by flag country and length class in the EU vessel register (li
 
 		fleetreg$Status_date<-0
 	
-		target_cols<-c("Country_Code","CFR","Event_Code","Event_Start_Date","Event_End_Date","License_Ind","Registration_Nbr","Ext_Marking","Vessel_Name","Port_Code","Port_Name","IRCS_Code","IRCS","Vms_Code","Gear_Main_Code","Gear_Sec_Code","Loa","Lbp","Ton_Ref","Ton_Gt","Ton_Oth","Ton_Gts","Power_Main","Power_Aux","Hull_Material","Com_Year","Com_Month","Com_Day","Segment","Exp_Country","Exp_Type","Public_Aid_Code","Decision_Date","Decision_Seg_Code","Construction_Year","Construction_Place","Status_date")
+		target_cols<-c("Country_Code","CFR","Event_Code","Event_Start_Date","Event_End_Date","License_Ind","Loa","Ton_Gt","Ton_Oth","Ton_Gts","Power_Main","Power_Aux","Status_date")
 	
 		dfy<-as.data.frame(fleetreg[year==Date_0,])
 		dfy$Status_date<-Date_0
@@ -312,19 +313,12 @@ Number of vessels by flag country and length class in the EU vessel register (li
 
 		fleetreg<-as.data.table(rbind(dfy, dfpy))
 	
-	
 	# a few formats and quality checks
 		fleetreg$Power_Main<-as.numeric(fleetreg$Power_Main)
 		fleetreg$Ton_Gt<-as.numeric(fleetreg$Ton_Gt)
-		fleetreg$Ton_Ref<-as.numeric(fleetreg$Ton_Ref)
 		# QCA: should yield 0
-		#tu dac ify
-		
-		sum(is.na(fleetreg$Power_Main))
+   	sum(is.na(fleetreg$Power_Main))
 		sum(is.na(fleetreg$Ton_Gt))
-		fleetreg[is.na(fleetreg$Ton_Gt),"Ton_Gt"]<-fleetreg[is.na(fleetreg$Ton_Gt),"Ton_Ref"]
-		sum(is.na(fleetreg$Ton_Gt))
-		sum(is.na(fleetreg$Ton_Ref))
 
 	# adds Loa classes
 		fleetreg<-FAZ_SEGMENTACAO_COMPRIMENTO_DCF2(dados = as.data.frame(fleetreg), coluna = "Loa")
@@ -342,7 +336,7 @@ Number of vessels by flag country and length class in the EU vessel register (li
 ```{r, results = 'asis'}
   pyear<-as.data.frame.matrix(rbind(res_fleetreg[,,1],apply(res_fleetreg[,,1],2,sum)))
   year<-as.data.frame.matrix(rbind(res_fleetreg[,,2],apply(res_fleetreg[,,2],2,sum)))
-  year_pyear<-as.data.frame.matrix(rbind((res_fleetreg[,,1]-res_fleetreg[,,2]),apply((res_fleetreg[,,1]-res_fleetreg[,,2]),2,sum)))
+  year_pyear<-as.data.frame.matrix(rbind((res_fleetreg[,,2]-res_fleetreg[,,1]),apply((res_fleetreg[,,2]-res_fleetreg[,,1]),2,sum)))
 ft<-fun_table(year,year_pyear)
 ft
 ```
@@ -353,7 +347,7 @@ Power (1000*kW) by flag country and length class in the EU vessel register (lice
 ```{r, results = 'asis'}
   pyear<-as.data.frame.matrix(round(rbind(res_fleetreg_pwr[,,1],apply(res_fleetreg_pwr[,,1],2,sum))/1000,1))
   year<-as.data.frame.matrix(round(rbind(res_fleetreg_pwr[,,2],apply(res_fleetreg_pwr[,,2],2,sum))/1000,1))
-  year_pyear<-as.data.frame.matrix(round(rbind((res_fleetreg_pwr[,,1]-res_fleetreg_pwr[,,2]),apply((res_fleetreg_pwr[,,1]-res_fleetreg_pwr[,,2]),2,sum))/1000,1))
+  year_pyear<-as.data.frame.matrix(round(rbind((res_fleetreg_pwr[,,2]-res_fleetreg_pwr[,,1]),apply((res_fleetreg_pwr[,,2]-res_fleetreg_pwr[,,1]),2,sum))/1000,1))
 ft<-fun_table(year,year_pyear)
 ft
 
@@ -366,7 +360,7 @@ Gross Tonnage(1000*GT) by flag country and length class in the EU vessel registe
 ```{r, results = 'asis'}
   pyear<-as.data.frame.matrix(round(rbind(res_fleetreg_gt[,,1],apply(res_fleetreg_gt[,,1],2,sum))/1000,1))
   year<-as.data.frame.matrix(round(rbind(res_fleetreg_gt[,,2],apply(res_fleetreg_gt[,,2],2,sum))/1000,1))
-  year_pyear<-as.data.frame.matrix(round(rbind((res_fleetreg_gt[,,1]-res_fleetreg_gt[,,2]),apply((res_fleetreg_gt[,,1]-res_fleetreg_gt[,,2]),2,sum))/1000,1))
+  year_pyear<-as.data.frame.matrix(round(rbind((res_fleetreg_gt[,,2]-res_fleetreg_gt[,,1]),apply((res_fleetreg_gt[,,2]-res_fleetreg_gt[,,1]),2,sum))/1000,1))
 ft<-fun_table(year,year_pyear)
 ft
 ```
@@ -541,9 +535,7 @@ for (a in unique(param$Section)) {
             )
           }
     
-         cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',graph_det$Var[i],' by ',graph_det$var1[i],'  \n ',sep='')
-         cat('  \n ') 
-         cat('text baaablaaa bla  \n ')
+cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',' ',res[[3]] ,'\n ',sep='')
         }
         
         cat('  \n ')
@@ -580,9 +572,7 @@ for (a in unique(param$Section)) {
             )
           }
 
-         cat('Figure ',graph_det$Subsubsection[i],'.',i,'. blablabls  \n ',sep='')
-         cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',graph_det$Var[i],' by ',graph_det$var1[i],' and ',graph_det$var2[i],'  \n ',sep='')
-         cat('  \n ') 
+          cat('Figure ',graph_det$Subsubsection[i],'.',i ,'. ',res[[3]],'  \n ',sep='')
         }
         
          cat('  \n')
@@ -623,8 +613,7 @@ for (a in unique(param$Section)) {
             )
           }
 
-         cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',graph_det$func[i],' of ',graph_det$var[i],' and ',graph_det$groupBy[i],'(',graph_det$addToTitle[i],')  \n ',sep='')
-         cat(res[[3]],'  \n ') 
+          cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',res[[3]],'  \n ',sep='')
         }
 
         cat('  \n ')
@@ -670,12 +659,11 @@ for (a in unique(param$Section)) {
             )
           }
 
-       cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',graph_det$func[i],' of ',graph_det$newVarName[i],' by ',graph_det$groupBy[i],'(',graph_det$addToTitle[i],')  \n ',sep='')
-      cat('  \n ') 
-      cat(res[[3]],' \n ')
+        cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',res[[3]],' \n ',sep='')
         }
 
         cat('  \n ')
+
 
         if (graph_det$Graph_type[i] == 5)
         {
@@ -720,13 +708,11 @@ for (a in unique(param$Section)) {
             )
           }
 
-        cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',graph_det$func[i],' of ',graph_det$newVarName[i],' by ',graph_det$groupBy[i],'(',graph_det$addToTitle[i],')  \n ',sep='')
-        cat('  \n ') 
-        cat(res[[3]],'\n ')
+        cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',res[[3]],'\n ',sep='')
         }
 
         cat('  \n ')
-                 
+        
        if(graph_det$Graph_type[i] == 6){
                 res <- riverplotfun(
                  df, 
@@ -734,6 +720,8 @@ for (a in unique(param$Section)) {
                  title=paste(graph_det$var1[i]," (left) to ",graph_det$var2[i]," (right) - ",graph_det$newVarName[i]," - ",graph_det$addToTitle[i],sep=""),
                  value=graph_det$Var[i],
                  save=TRUE,
+                 addToTitle = graph_det$addToTitle[i],
+                 newVarName=graph_det$newVarName[i],
                  filename=paste(figur_dir, graph_det$png_name[i],
                           ".png",
                           sep = ""))
@@ -741,10 +729,7 @@ for (a in unique(param$Section)) {
 cat('![plot of chunk ',graph_det$png_name[i],'](',figur_dir,graph_det$png_name[i],'.png)',sep="")
 cat('  \n ') 
 
-        cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',graph_det$newVarName[i],' by ',graph_det$addToTitle[i],'  \n ',sep="")
-        cat('blabla \n')
-        cat('  \n ') 
-        cat(' 6 \n ')
+         cat('Figure ',graph_det$Subsubsection[i],'.',i,'.', res[[2]],'\n ',sep='')
         }
          cat('  \n ') 
       }
