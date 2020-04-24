@@ -1,3 +1,4 @@
+# The code from this function was temporarly moved to the main script
 # This function is an intermediate step befor applying getMetier function
 assignMetiers <- function(x){
   print("Assigning metiers ...")

@@ -1,5 +1,5 @@
 Country,year,vessel_id,vessel_length,trip_id,haul_id,fishing_day,area,ices_rectangle,gear,mesh,selection,registered_target_assemblage,FAO_species,metier_level_6,measure,KG,EUR
-POL,2018,AAA-1,15,POLAAA1201806100325,,10-06-2018,27.3.d.25,37G5,OTM,10,,,ABZ,,value,2000,2500
+POL,2018,AAA-1,15,POLAAA1201806100325,,10-06-2018,27.3.d.25,37G5,OTM,10,,,HXC,,weight,2000,2500
 POL,2018,AAA-1,15,POLAAA1201806100325,,10-06-2018,27.3.d.25,37G5,OTM,10,,,HER,,weight,500,475
 POL,2018,AAA-1,15,POLAAA1201806100325,,10-06-2018,27.3.d.25,37G5,OTM,10,,,SPR,,weight,1800,1710
 POL,2018,AAA-1,15,POLAAA1201807011230,,02-07-2018,27.3.d.25,37G5,OTB,110,,,COD,,weight,500,

@@ -20,25 +20,59 @@ species.list <- loadSpeciesList(url)
 url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/RDB_ISSG_Metier_list.csv"
 metier.list <- loadMetierList(url)
 
+
+# Preparing input data
+input.data[,EUR:=as.numeric(EUR)]
+input.data[,KG:=as.numeric(KG)]
+input.data[,c("selection_type","selection_mesh"):=data.table(str_split_fixed(selection,"_",2))]
+input.data[,selection_type:=ifelse(selection_type=="",NA,selection_type)]
+input.data[,selection_mesh:=ifelse(selection_mesh=="",NA,selection_mesh)]
+
+# Assign RCG name to the input data
+input.data <- merge(input.data, area.list, all.x = T, by = "area")
+input.data[is.na(RCG) & substr(area,1,2) %in% c("31","34","41","47","51","57","58","87"),RCG:="LD"]
+input.data[is.na(RCG) & substr(area,1,2) == "37",RCG:="MED"]
+
+# Assign species category to the input data
+input.data <- merge(input.data, species.list, all.x = T, by = "FAO_species")
+
+# Processing input data
 #In the variable called sequence.def please include all columns that will constitute a fishing sequence
 #This variable will be used as a key for grouping operations
 sequence.def <- c("Country","year","vessel_id","vessel_length","trip_id","haul_id",
                   "fishing_day","area","ices_rectangle","gear","mesh","selection",
                   "registered_target_assemblage")
+# Calculate group totals for each sequence
+input.data[,":="(seq_group_KG = sum(KG, na.rm = T),
+        seq_group_EUR = sum(EUR, na.rm = T)),
+  by=c(sequence.def,"species_group")]
 
-input.data <- prepareInputData(input.data)
+# Select a measure to determine the dominant group at a sequence level. If at least one species in a sequence has "value" in a measure column then 
+# all species in that sequence get the same measure.
+input.data[,":="(seq_measure = getMeasure(measure)),
+  by=sequence.def]
 
-input.data <- processInputData(input.data, seq.def = sequence.def)
 
-# Assign metier codes
-start_time <- Sys.time()
-result <- assignMetiers(input.data)
-end_time <- Sys.time()
-print(paste0("Metiers assigned in ",end_time-start_time," seconds."))
+# Determine the dominant group for each sequence
+input.data[seq_measure == "weight",":="(seq_dom_group = species_group[which.max(seq_group_KG)]),
+  by=sequence.def]
+input.data[seq_measure == "value",":="(seq_dom_group = species_group[which.max(seq_group_EUR)]),
+  by=sequence.def]
 
+print("Assigning metiers ...")
+input.data$metier_level_6<-NA
+input.data[,metier_level_6:=as.character(pmap(list(RCG,
+                                          year,
+                                          gear, 
+                                          registered_target_assemblage,
+                                          seq_dom_group, 
+                                          mesh, 
+                                          selection_type,
+                                          selection_mesh),
+                                     function(r,y,g,t,d,m,st,sm) getMetier(r,y,g,t,d,m,st,sm)))]
 
 # Analyse vessel pattern
-result <- vesselPattern(result, sequence.def)
+result <- vesselPattern(input.data, sequence.def)
 
 # Save results
 print("Saving results ...")
