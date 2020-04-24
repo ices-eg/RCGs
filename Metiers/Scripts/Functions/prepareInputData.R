@@ -1,3 +1,4 @@
+# The code from this function was temporarly moved to the main script
 prepareInputData <- function(x){
   print("Preparing input data ...")
   x[,EUR:=as.numeric(EUR)]

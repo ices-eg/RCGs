@@ -17,11 +17,11 @@ loadMetierList <- function(url){
   x[mesh == "0", ":="(m_size_from=as.integer(0),
                       m_size_to=as.integer(999))]
   
-  x[metier_level_6 %in% c("OTB_DEF_>=105_1_120", "OTB_DEF_>=105_1_110") & RCG=="BS",
+  x[metier_level_6 %in% c("OTB_DEF_>=105_1_120", "OTB_DEF_>=105_1_110") & RCG=="BALT",
     ":="(m_size_from=105, m_size_to=114)]
-  x[metier_level_6 == "OTB_DEF_>=115_0_0" & RCG=="BS",
+  x[metier_level_6 == "OTB_DEF_>=115_0_0" & RCG=="BALT",
     ":="(m_size_from=115, m_size_to=119)]
-  x[metier_level_6 == "OTB_DEF_>=120_0_0" & RCG=="BS",
+  x[metier_level_6 == "OTB_DEF_>=120_0_0" & RCG=="BALT",
     ":="(m_size_from=120, m_size_to=999)]
   
   return(x)
