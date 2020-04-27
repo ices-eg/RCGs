@@ -9,6 +9,7 @@ library(shinyjs)
 library(leaflet)
 #library(leafem)
 library(ggplot2)
+library(officer)
 
 ##--------------
 ## data
@@ -82,7 +83,7 @@ tabPanel("Home/About",
                       p("Data used for the outputs are extracted from the Regional Database (RDB) and EU Fleet Register. Due to different aggregations and reporting authorities, data can differ to those e.g. used for assessments or technical reports. Member States (MS) are responsible for uploading latest data and the latest year should be viewed as provisional. Data can be resubmitted by a MS for more than one previous year so there might be differences in earlier year reports if countries update back in time. Responsibility for the quality of the data and comparability to other data sources lies with the MS that provided these data.", align="center"),
                       br(),
                      p("The respective scripts and calculations used for data displaying are publicly available via the RCG github (https://github.com/ices-eg/RCGs) and subject to change as the work of the group progresses.", align="center")
-                     )
+                     ,downloadButton("report", "Download Disclaimer"))
           ),  
  
   tabPanel("Fishery overview"),
@@ -107,7 +108,9 @@ tabPanel("Home/About",
                column(8,
                       #uiOutput("render_plot") # func do not like uiOutput
                       plotOutput("plot1"))
-             )),
+             )
+#             ,downloadButton("report", "Generate report")
+             ),
     
     ##--------------
     ## tabPanels "with leaflet"
@@ -170,11 +173,10 @@ tabPanel("Home/About",
                      options = list(plugins = list("remove_button", "drag_drop"))
                    ),
                    selectInput ("N_var2", "Variable", var, multiple = F),
-                   actionButton ("view2", "View")
-                 )
-               )
-               
-             ),
+                   actionButton ("view2", "View"),
+#                   downloadButton("report", "Generate report")
+                 ))
+              ),
              ##--------------
              ## tabPanels "with ggplot"
              ##--------------
@@ -222,10 +224,14 @@ tabPanel("Home/About",
                                plotOutput("plot3", height = "600px")#,
                                #tableOutput("debug3")
                                #verbatimTextOutput("debug3")))
-                        ))
-             )),
-             tabPanel("Stock overview")
+                        )
+#                        ,downloadButton("report", "Generate report")
+                        )
+             )
+#              ,downloadButton("report", "Generate report")
+    ),
              
+            tabPanel("Stock overview")
              
              ##--------------
              ## tabPanels "with functions"

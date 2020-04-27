@@ -10,7 +10,8 @@ library(leaflet)
 #library(leafem)
 library(ggplot2)
 library(stringr)
-
+#library(rmarkdown)
+library(knitr)
 library("sf")
 library(viridis)
 library("rnaturalearth") # map of countries of the entire world
@@ -28,7 +29,7 @@ load("data/graph_det.RData")
 inventory_ca$SamplingType <- as.factor(inventory_ca$SamplingType)
 inventory_ca$Quarter <- as.factor(as.character(inventory_ca$Quarter))
 
-#setwd("C:/ISSG2/shiny/github_cloned/RCGs/Sampling_overview")
+#setwd("C:/Users/Win10 Home x64/Desktop/Arbeitszeug/RCG_ISSG/RCGs/RegionalOverviews/overviews_shiny")
 
 group <- c("SamplingCountry","FlagCountry","LandingCountry","Year",                
            "Quarter","Species","Area","SamplingType",        
@@ -63,10 +64,26 @@ world <- ne_countries(scale = "medium", returnclass = "sf")
 server <- function(input, output, session){
   
   
-  # *********************
-  # Tab "with functions"
-  # *********************
+   # *********************
+   # define the report format of the output 
+   # *********************
    
+   output$report <- downloadHandler(
+      
+      filename = function() {
+         paste('report_', Sys.Date(), '.docx', sep='')
+      },						
+      
+      content = function(file) {
+         x <- read_docx()
+         print(x, target = file)
+      },
+         )
+          
+ # *********************
+ # Tab "with functions"
+ # *********************
+            
    # -----------------------------------
    # Reactive variables 
    # -----------------------------------
