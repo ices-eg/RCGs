@@ -205,7 +205,7 @@ scatterpieMap_func = function(df,
   # subtitle - as the information about used thresholds
   if ((type_of_threshold == 'percent' &
        value_of_threshold == 100) | type_of_threshold == 'none') {
-    subtitle = 'For all data'
+    subtitle = 'All data'
   } else if (type_of_threshold == 'percent') {
     subtitle = paste (
       'Including ',
