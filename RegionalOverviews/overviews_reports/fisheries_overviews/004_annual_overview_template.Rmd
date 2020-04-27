@@ -38,13 +38,13 @@ years <- c(2019)
 period <- "2019"
 
 figures <- "yes" #yes / no - all figures outputtet to a folder
-tables <- "no" #yes / no - all tabales outputtet to a folder
+tables <- "yes" #yes / no - all tabales outputtet to a folder
 
-data_dir <-data_dir <- paste("../../data/002_prepared/", target_region, "/", sep = '') # "Q:/dfad/users/kibi/data/RCG/from_share_point/"
+data_dir <-data_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Data/", target_region, "/", sep = '') # "Q:/dfad/users/kibi/data/RCG/from_share_point/"
 
 #Folder for figures and tables
-table_dir <- paste("../../outputs/", target_region, "/tables/", sep = "")
-figur_dir <- paste("../../outputs/", target_region, "/figures/", sep = "")
+table_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Data/", target_region, "/tables/", sep = "")
+figur_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Data/", target_region, "/figures/", sep = "")
 
 #Landings per stock settings
 
