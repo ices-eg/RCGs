@@ -140,10 +140,15 @@ pointsMap_func = function(df,
   # Take only rows with coordinates
   mdf %>% filter(!is.na(lon) & !is.na(lat)) -> mdf2
   
-  
+
   # Set the plot parameters
+  if (groupBy_name=="StatisticalRectangle"){groupBy_name="Statistical Rectangle"}
+  if (groupBy_name=="AreaMap"){groupBy_name="Area Map"}
+  if (var_name=="TripsNumber"){var_name="Trips Number"}
+  if (newVarName=="TripsNumber"){newVarName="Trips Number"}
   # title
   if (func_name %in% c('sum')) {
+    if (func_name=="sum"){func_name="Sum"}
     title = paste(func_name,
                   ' of ',
                   ifelse(is.na(newVarName), var_name, newVarName),
@@ -185,7 +190,7 @@ pointsMap_func = function(df,
   }
 
   # caption - as the inromation about any missingnes
-  caption = paste(
+  caption = paste(title, '. ', subtitle, '. ',
     ifelse(nrow(missing_entries)>0, ifelse(missing_entries$pr<=0.005 & missing_entries$pr>0,'~0',round(missing_entries$pr, 2)),0),
     '% of ',
     ifelse(is.na(newVarName), var_name, newVarName),
