@@ -135,7 +135,7 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 	    if(type_of_threshold == "cum_percent"){
 	      var1<-rename_var1(var1)
 	      Var<-rename_var(Var)
-	      caption<-paste(Var, ' by ',var1,'. ',var1,' form ',value_of_threshold, '% of the total ',Var,'.',sep='' )} 
+	      caption<-paste(Var, ' by ',var1,'. ',var1,' comprises ',value_of_threshold, '% of the total ',Var,'.',sep='' )} 
 	    else { caption<-paste('caption 1' )}
 	    
 	    if(type_of_threshold == "main"){
