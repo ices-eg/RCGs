@@ -133,7 +133,7 @@ barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, pro
 	  if(!type_of_threshold == "NULL")
 	  {
 	    if(type_of_threshold == "cum_percent" & percent_var1==100 & percent_var2==100 & percent_Var==100 & proportion==TRUE ){
-	      caption<-paste(var1,' and ', var2,' form ',value_of_threshold, '% of the total ',Var,'.' )
+	      caption<-paste(Var,' by ', var1, ' and ', var2,'. ', var1,' and ', var2,' comprises ',value_of_threshold, '% of the total ',Var,'.' )
 	    }
 	    title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; z:",percent_var2,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = .7)
 	    ########

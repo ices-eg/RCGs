@@ -8,6 +8,7 @@ rename_var1<-function(var1){
   if (var1=="FishingGround") {var1="fishing ground"}
   if (var1=="Catch_group") {var1="catch group"}
   if (var1=="VesselLengthCategory"){var1="Vessel Length Category"}	  
+  if (var1=="Harbour"){var1="Harbours"}	  
 return(var1)
   }
 rename_var2<-function(var2){
@@ -28,8 +29,8 @@ rename_var<-function(Var){
 
   if (Var == "LandingWeight_1000ton"){Var="Landings (1000 t)"}
   if (Var == "DaysAtSea"){Var="days at Sea"}
-  if (Var == "KWDays_1000x"){Var="KW-Days"}
+  if (Var == "KWDays_1000x"){Var="KW-Days * 1000"}
   if (Var=="TripsNumber") {Var="Number of trips"}
-  if (Var == "GTDays_1000x"){Var="GT-Days"}
+  if (Var == "GTDays_1000x"){Var="GT-Days * 1000"}
   return(Var)
 }

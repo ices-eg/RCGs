@@ -32,10 +32,10 @@ output:
 #Paramters
 RDB_download_date <- "xx/04/2019"
 
-target_region <- "RCG_NA"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
-years <- c(2018)
+target_region <- "RCG_BA"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
+years <- c(2019)
 
-period <- "2018"
+period <- "2019"
 
 figures <- "yes" #yes / no - all figures outputtet to a folder
 tables <- "no" #yes / no - all tabales outputtet to a folder
@@ -48,8 +48,8 @@ figur_dir <- paste("../../outputs/", target_region, "/figures/", sep = "")
 
 #Landings per stock settings
 
-years_stock <- c(2016, 2017, 2018)
-period_stock <- "2016-2018"
+years_stock <- c(2017, 2018,2019)
+period_stock <- "2017-2019"
 
 
 #Fleet register		
@@ -66,7 +66,7 @@ library(dplyr)
 library(data.table)
 library(knitr)
 library(stringr)
-# library(RCMfunctions) #sharepoint -> RCG Data Group -> R packages
+library(RCMfunctions) #sharepoint -> RCG Data Group -> R packages
 library(rnaturalearth)
 library(flextable) # R version 3.6.3
 library(TeachingDemos)
@@ -215,29 +215,29 @@ date: `r Sys.Date()`
 if (target_region == "RCG_NA")
 {
   load(
-    paste(data_dir, "RDB_RCG_NA_CL_2009_2018_prepared_201905101612.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NA_CL_2009_2019_prepared_202004191807.Rdata", sep = "")
   )
   load(
-    paste(data_dir, "RDB_RCG_NA_CE_2009_2018_prepared_201905101612.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NA_CE_2009_2019_prepared_202004191807.Rdata", sep = "")
   )
 }
 
 if (target_region == "RCG_BA")
 {
   load(
-    paste(data_dir, "RDB_RCG_BA_CL_2009_2018_prepared_201905101612.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_BA_CL_2009_2019_prepared_202004191807.Rdata", sep = "")
   )
   load(
-    paste(data_dir, "RDB_RCG_BA_CE_2009_2018_prepared_201905101612.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_BA_CE_2009_2019_prepared_202004191807.Rdata", sep = "")
   )
 }
 if (target_region == "RCG_NSEA")
 {
   load(
-    paste(data_dir, "RDB_RCG_NSEA_CL_2009_2018_prepared_201905051104.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NSEA_CL_2009_2019_prepared_202004191807.Rdata", sep = "")
   )
   load(
-    paste(data_dir, "RDB_RCG_NSEA_CE_2009_2018_prepared_201905051104.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NSEA_CE_2009_2019_prepared_202004191807.Rdata", sep = "")
     )
 			}	
 
@@ -267,7 +267,7 @@ ce <- droplevels(ce)
 
 
 # Overall fleet evolution (All RCGs)
-## Numer of vessels
+## Number of vessels
 Number of vessels by flag country and length class in the EU vessel register (licence indicator == “Y” in 1st January `r years`. Parentesis: variation relative to `r years-1`.
 
 ```{r table, include=FALSE}
@@ -279,7 +279,7 @@ Number of vessels by flag country and length class in the EU vessel register (li
 
 		# based on full history
 	
-	dir_data<-"../../data\\fleet_reg\\output\\2019\\"
+	dir_data<-paste("../../data\\fleet_reg\\output\\",years,"\\",sep="")
 		
 	for (ctry in c("BEL","DEU","DNK","ESP","EST","FIN","FRA","GBR","IRL","LTU","LVA","NLD","POL","PRT","SWE"))
 		{
