@@ -181,7 +181,7 @@ pointsMap_func = function(df,
       sep = ""
     )
   } else{
-    subtitle = paste('Including top ',
+    subtitle = paste('Displaying top ',
                      value_of_threshold,
                      ' ',
                      groupBy_name,
