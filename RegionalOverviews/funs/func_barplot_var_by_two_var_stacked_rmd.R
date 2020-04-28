@@ -70,7 +70,7 @@ barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, pro
 	if (tapply_type == "sum") { t1<-tapply(x[,Var], list(x[,var2],x[,var1]), sum, na.rm=T);  y_title = paste("sum of", rename_var(Var)) }
 	t1[is.na(t1)]<-0
 	if(sorted==TRUE) {v1<-names(sort(apply(t1,2,sum), decreasing=T)); t1<-t1[,v1]}
-	if(proportion==TRUE) {t1 <- prop.table(t1,2); y_title = paste("prop of", Var); t1[is.na(t1)]<-0}
+	if(proportion==TRUE) {t1 <- prop.table(t1,2); y_title = paste("prop of", rename_var(Var)); t1[is.na(t1)]<-0}
 	
 		# # colour
 		# if(is.na(graph_par$col)) 
@@ -133,7 +133,7 @@ barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, pro
 	  if(!type_of_threshold == "NULL")
 	  {
 	    if(type_of_threshold == "cum_percent" & percent_var1==100 & percent_var2==100 & percent_Var==100 & proportion==TRUE ){
-	      caption<-paste(Var,' by ', var1, ' and ', var2,'. ', var1,' and ', var2,' comprises ',value_of_threshold, '% of the total ',Var,'.' )
+	      caption<-paste(Var,' by ', var1, ' and ', var2,'. ', var1,' and ', var2,' displayed comprise ',value_of_threshold, '% of the total ',Var,'.' )
 	    }
 	    title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; z:",percent_var2,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = .7)
 	    ########
@@ -152,7 +152,7 @@ barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, pro
 	  } else {
 	    title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; z:",percent_var2,"%; ","all_data", sep=""), cex.main=0.9, line = .7)
 	    if(percent_var1==100 & percent_var2==100 & percent_Var==100 & proportion==TRUE ){      
-	      caption<-paste(Var,' by ',var1,' and ', var2, 'for all data')}
+	      caption<-paste(Var,' by ',var1,' and ', var2, '.',sep="")}
 	    else{
 	      if(percent_var1==100 & percent_var2!=100 & percent_Var==100 & proportion==TRUE ){
 	        caption<-paste(Var,' by ', var1,' and ',var2,'. The',var2,' was given for ', percent_var2, '% of observations.',sep='')
