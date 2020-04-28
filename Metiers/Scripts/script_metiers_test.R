@@ -59,6 +59,19 @@ input.data[seq_measure == "weight",":="(seq_dom_group = species_group[which.max(
 input.data[seq_measure == "value",":="(seq_dom_group = species_group[which.max(seq_group_EUR)]),
   by=sequence.def]
 
+# Including DWS rules
+input.data[dws_group=="DWS",seq_DWS_kg:=sum(KG, na.rm = T),
+           by=c(sequence.def, "dws_group")]
+input.data[,seq_total_kg:=sum(KG, na.rm = T),
+           by=sequence.def]
+input.data[,seq_DWS_perc:=ifelse(is.na(seq_DWS_kg),0,seq_DWS_kg/seq_total_kg)]
+input.data[,seq_DWS_perc:=max(seq_DWS_perc),by=sequence.def]
+input.data[seq_DWS_perc>0.08,seq_dom_group:="DWS"]
+
+
+
+
+
 print("Assigning metiers ...")
 input.data$metier_level_6<-NA
 input.data[,metier_level_6:=as.character(pmap(list(RCG,
