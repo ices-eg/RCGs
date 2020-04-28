@@ -748,7 +748,7 @@ cat('  \n ')
 
 Downloaded `r RDB_download_date`
 
-##### Fleet registre
+##### Fleet register
 
 #### Reading the graphs
 ##### Barplots
