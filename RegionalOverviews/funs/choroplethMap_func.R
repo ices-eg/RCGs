@@ -279,7 +279,7 @@ choroplethMap_func = function(df,
             ) +
     scale_fill_viridis_c(
       option = "viridis",
-      trans = "sqrt",
+      #trans = "sqrt",
       na.value = "aliceblue",
       begin = 1,
       end = 0,
