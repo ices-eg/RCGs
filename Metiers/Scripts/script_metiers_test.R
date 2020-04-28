@@ -19,9 +19,12 @@ url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/Metie
 species.list <- loadSpeciesList(url)
 url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/RDB_ISSG_Metier_list.csv"
 metier.list <- loadMetierList(url)
+url <- "./Reference_lists/Code-ERSGearType-v1.1.xlsx"
+gear.list <- loadGearList(url)
+assemblage.list <- unique(c(species.list$species_group, species.list$dws_group))
+assemblage.list <- assemblage.list[!is.na(assemblage.list)]
 
-
-# Preparing input data
+# Prepare input data
 input.data[,EUR:=as.numeric(EUR)]
 input.data[,KG:=as.numeric(KG)]
 input.data[,c("selection_type","selection_mesh"):=data.table(str_split_fixed(selection,"_",2))]
@@ -36,7 +39,7 @@ input.data[is.na(RCG) & substr(area,1,2) == "37",RCG:="MED"]
 # Assign species category to the input data
 input.data <- merge(input.data, species.list, all.x = T, by = "FAO_species")
 
-# Processing input data
+# Process input data
 #In the variable called sequence.def please include all columns that will constitute a fishing sequence
 #This variable will be used as a key for grouping operations
 sequence.def <- c("Country","year","vessel_id","vessel_length","trip_id","haul_id",
@@ -59,20 +62,16 @@ input.data[seq_measure == "weight",":="(seq_dom_group = species_group[which.max(
 input.data[seq_measure == "value",":="(seq_dom_group = species_group[which.max(seq_group_EUR)]),
   by=sequence.def]
 
-# Including DWS rules
+# Include DWS rules
 input.data[dws_group=="DWS",seq_DWS_kg:=sum(KG, na.rm = T),
            by=c(sequence.def, "dws_group")]
 input.data[,seq_total_kg:=sum(KG, na.rm = T),
            by=sequence.def]
-input.data[,seq_DWS_perc:=ifelse(is.na(seq_DWS_kg),0,seq_DWS_kg/seq_total_kg)]
+input.data[,seq_DWS_perc:=ifelse(is.na(seq_DWS_kg),0,seq_DWS_kg/seq_total_kg)*100]
 input.data[,seq_DWS_perc:=max(seq_DWS_perc),by=sequence.def]
-input.data[seq_DWS_perc>0.08,seq_dom_group:="DWS"]
+input.data[seq_DWS_perc>8,seq_dom_group:="DWS"]
 
-
-
-
-
-print("Assigning metiers ...")
+# Assign metier level 6
 input.data$metier_level_6<-NA
 input.data[,metier_level_6:=as.character(pmap(list(RCG,
                                           year,
@@ -84,12 +83,38 @@ input.data[,metier_level_6:=as.character(pmap(list(RCG,
                                           selection_mesh),
                                      function(r,y,g,t,d,m,st,sm) getMetier(r,y,g,t,d,m,st,sm)))]
 
-# Analyse vessel pattern
-result <- vesselPattern(input.data, sequence.def)
+# Analyze vessel patterns
+input.data[,metier_level_5:=paste(gear,ifelse(is.na(registered_target_assemblage),
+                                              seq_dom_group,
+                                              registered_target_assemblage),sep="_")]
+pattern <- unique(input.data[,.SD,.SDcols=c(sequence.def,"metier_level_5")])
+pattern <- pattern[,.(seq_no_lvl5 = .N), by=.(year, vessel_id, metier_level_5)]
+pattern[,seq_perc_lvl5:=seq_no_lvl5/sum(seq_no_lvl5,na.rm = T)*100, by=.(year, vessel_id)]
+pattern<-pattern[!is.na(metier_level_5)]
+input.data <- merge(input.data, pattern,all.x = T , by=c("year", "vessel_id", "metier_level_5"))
+# Specify the percentage threshold of the number of sequences below which 
+# a metier will be considered rare
+rare.threshold <- 13
+input.data[seq_perc_lvl5<rare.threshold, metier_level_5:=NA]
+pattern<-pattern[seq_perc_lvl5>=rare.threshold]
+pattern[,c("gear","target_assemblage"):=data.table(str_split_fixed(metier_level_5,"_",2))]
+pattern<-merge(pattern, gear.list, all.x = T, by.x = "gear", by.y = "gear_code")
+input.data<-merge(input.data, gear.list, all.x = T, by.x = "gear", by.y = "gear_code")
+input.data[is.na(metier_level_5),metier_level_5:=as.character(pmap(list(vessel_id,
+                                                                        year,
+                                                                        gear,
+                                                                        gear_group,
+                                                                        registered_target_assemblage,
+                                                                        seq_dom_group),
+                                              function(v,y,g,gg,rt,d) getMetierLvl5FromPattern(v,y,g,gg,rt,d)))]
+
+
+
+
 
 # Save results
 print("Saving results ...")
-result<-result[order(vessel_id,trip_id,fishing_day,area,ices_rectangle,gear,mesh),
+result<-input.data[order(vessel_id,trip_id,fishing_day,area,ices_rectangle,gear,mesh),
                .(Country,RCG,year,vessel_id,vessel_length,trip_id,haul_id,fishing_day,area,ices_rectangle,gear,mesh,selection,FAO_species,
                  registered_target_assemblage,metier_level_6,KG,EUR,species_group,
                  seq_group_KG,seq_group_EUR,seq_dom_group,metier_level_5, seq_no_lvl5, seq_perc_lvl5)]
