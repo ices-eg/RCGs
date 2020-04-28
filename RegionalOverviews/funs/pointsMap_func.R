@@ -143,7 +143,7 @@ pointsMap_func = function(df,
 
   # Set the plot parameters
   if (groupBy_name=="StatisticalRectangle"){groupBy_name="Statistical Rectangle"}
-  if (groupBy_name=="AreaMap"){groupBy_name="Area Map"}
+  if (groupBy_name=="AreaMap"){groupBy_name="Area"}
   if (var_name=="TripsNumber"){var_name="Trips Number"}
   if (newVarName=="TripsNumber"){newVarName="Trips Number"}
   # title
