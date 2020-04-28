@@ -135,7 +135,7 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 	    if(type_of_threshold == "cum_percent"){
 	      var1<-rename_var1(var1)
 	      Var<-rename_var(Var)
-	      caption<-paste(Var, ' by ',var1,'. ',var1,' comprises ',value_of_threshold, '% of the total ',Var,'.',sep='' )} 
+	      caption<-paste(Var, ' by ',var1,'. ',var1,' displayed comprise ',value_of_threshold, '% of the total ',Var,'.',sep='' )} 
 	    else { caption<-paste('caption 1' )}
 	    
 	    if(type_of_threshold == "main"){
@@ -146,17 +146,15 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 	    
 	  } else {
 	    if (percent_Var==100){
-	      if (tapply_type == "sum"){tapply_type = "Sum"}
 	      title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ","all_data", sep=""), cex.main=0.9, line = 0.5)
 	      var1<-rename_var1(var1)
 	      Var<-rename_var(Var)
-	      caption<-paste(Var,' by ',var1,'for all data')}
+	      caption<-paste(Var,' by ',var1,'.',sep="")}
 	    else{
-	      if (tapply_type == "sum"){tapply_type = "Sum"}
 	      var1<-rename_var1(var1)
 	      Var<-rename_var(Var)
 	      if (Var == "LandingWeight_1000ton"){Var="landings"}
-	      caption<-paste(tapply_type,' of ',Var,' by ',var1,' ( represent ',percent_Var, '% of all ',Var,')')}
+	      caption<-paste(Var,' by ',var1,' ( represent ',percent_Var, '% of all ',Var,')')}
 	  }
 		p <- recordPlot()
 		out<-list(table = data.frame(var1 = rownames(t1), Var = t1, row.names=NULL), plot = p,caption)
