@@ -10,6 +10,7 @@ library(leaflet)
 #library(leafem)
 library(ggplot2)
 library(officer)
+library(shinydashboard)
 
 ##--------------
 ## data
@@ -69,7 +70,7 @@ ui <- navbarPage(
 #           sidebarLayout(
 #            sidebarPanel(),
 #              mainPanel(p("Disclaimer")))),
-tabPanel("Home/About", 
+tabPanel("Home", 
            mainPanel(img(src="rcglogo.jpg"),
                       br(),
                       br(),
@@ -89,7 +90,12 @@ tabPanel("Home/About",
   tabPanel("Fishery overview"),
   navbarMenu(
     "Sampling overview",
-    tabPanel("Data explorer"),
+    tabPanel("Inventory tables",tabsetPanel(
+      
+      type = "tabs", tabPanel("Upload your file",fileInput("file", h3(""),buttonLabel = "Browse",placeholder = "example.Rdata"),p("Upload RDB_All_Regions_YYYY.Rdata, available ", a(href="https://community.ices.dk/ExternalSites/datacollection/Regional%20coordination%20meetings%202017/RCGIntersessionalWork/_layouts/15/start.aspx#/SitePages/HomePage.aspx","here"))),tabPanel("CA inventory",downloadButton(outputId = 'download_filtered_CA',label = "Download the filtered data"), 
+      DT::dataTableOutput("inventorytable_CA")
+      ),tabPanel("CS inventory by stock",downloadButton(outputId = 'download_filtered_CS_by_stock',label = "Download the filtered data"), 
+                 DT::dataTableOutput("inventorytable")),tabPanel("CS inventory by metier"))),
     tabPanel("With functions",
              
              fluidRow(
