@@ -16,8 +16,15 @@ library("sf")
 library(viridis)
 library("rnaturalearth") # map of countries of the entire world
 library("rnaturalearthdata") # Use ne_countries to pull country data
+<<<<<<< HEAD
 library(rgdal)
 library(webshot)
+=======
+library(data.table)
+library(lubridate)
+
+
+>>>>>>> 1b8798ff2af6d56fa3634ad4718eb1f451b5a3ee
 
 ##--------------
 ## data
@@ -79,6 +86,176 @@ server <- function(input, output, session){
       content = function(file) {
          file.copy("www/01_hello.pdf", file)
       }
+<<<<<<< HEAD
+=======
+         )
+
+   #===============#
+   #inventory table#
+   #===============#
+   
+   observeEvent(input$file ,{
+      if ( is.null(input$file)) return(NULL)
+      inFile <- isolate({input$file})
+      file <- inFile$datapath
+      load(file, envir = .GlobalEnv)
+      # modify the CS.Rdata
+      ca<-as.data.table(ca)
+      #ca<-fread(file)
+      ca$Region[ca$Region=="NA"|is.na(ca$Region)]<-'NATL'
+      
+      cainventory<-ca[,.(NoMaturityStage=sum(!is.na(MaturityStage)),NoMaturityStageTrips=length(unique(Trip[!is.na(MaturityStage)])),NoAge=sum(!is.na(Age)),NoAgeTrips=length(unique(Trip[!is.na(Age)])),NoLength=sum(!is.na(LengthClass)),NoLengthTrips=length(unique(Trip[!is.na(LengthClass)])),NoWeight=sum(!is.na(Weight)),NoWeightTrips=length(unique(Trip[!is.na(Weight)]))),by=c("Year","Region","FlagCountry","LandingCountry","Stock","Species","SamplingType","Quarter","CatchCategory","Sex")]
+      
+      # datatable wants factors for filter = 
+      cainventory$FlagCountry<-as.factor(cainventory$FlagCountry)
+      cainventory$LandingCountry<-as.factor(cainventory$LandingCountry)
+      cainventory$Region<-as.factor(cainventory$Region)
+      cainventory$Stock<-as.factor(cainventory$Stock)
+      cainventory$Species<-as.factor(cainventory$Species)
+      cainventory$SamplingType<-as.factor(cainventory$SamplingType)
+      cainventory$Quarter<-as.factor(cainventory$Quarter)
+      cainventory$CatchCategory<-as.factor(cainventory$CatchCategory)
+      cainventory$Sex<-as.factor(cainventory$Sex)
+      
+      #do the master table 
+      hh$StartQuarter <- quarter(ymd(hh$StartDate))
+      #sl<-as.data.table(sl)
+      #tr<-as.data.table(tr)
+      
+      #preparing master table
+      sl_master<-merge(sl, tr[,list(CS_TripId, VesselIdentifier, SamplingCountry, SamplingMethod, VesselLengthCategory)], by="CS_TripId", all.x=T)
+      
+      
+      sl_master <-
+         merge(sl_master,
+               hh[, list(
+                  Region,
+                  CS_TripId,
+                  CS_StationId,
+                  StartDate,
+                  StartQuarter,
+                  FishingTime,
+                  PosStartLatDec,
+                  PosStartLonDec,
+                  PosStopLatDec,
+                  PosStopLonDec,
+                  Area,
+                  FishingGround,
+                  StatisticalRectangle,
+                  FishingActivityCategoryEuropeanLvl5,
+                  FishingActivityCategoryEuropeanLvl6,
+                  Gear
+               )],
+               by = c("CS_TripId", "CS_StationId"),
+               all.x = T)
+      
+      
+      class(sl_master)
+      
+      slinventory<-sl_master[,.(NoLength=sum(NoInSubSample),NoLengthTrips=length(unique(Trip[NoInSubSample>0])),WeigthKg=sum(SubSampleWeight_kg)),by=c("Year","Region","FlagCountry","LandingCountry","Stock","Species","SamplingType","StartQuarter","Area" ,"FishingActivityCategoryEuropeanLvl6", "CatchCategory")][NoLength>0|NoLengthTrips>0,]
+      
+      slinventory$Region[slinventory$Region=="NA"|is.na(slinventory$Region)]<-'NATL'
+      
+      slinventory$FlagCountry<-as.factor(slinventory$FlagCountry)
+      slinventory$LandingCountry<-as.factor(slinventory$LandingCountry)
+      slinventory$Region<-as.factor(slinventory$Region)
+      slinventory$Stock<-as.factor(slinventory$Stock)
+      slinventory$Species<-as.factor(slinventory$Species)
+      slinventory$SamplingType<-as.factor(slinventory$SamplingType)
+      slinventory$StartQuarter<-as.factor(slinventory$StartQuarter)
+      slinventory$Area<-as.factor(slinventory$Area)
+      slinventory$CatchCategory<-as.factor(slinventory$CatchCategory)
+      
+      
+   
+      
+      # output for CA inventory
+      
+      output$inventorytable_CA <- DT::renderDT(DT::datatable({cainventory
+         
+      }
+         
+      , options = list(
+         pageLength = 20,autoWidth=T,scrollX=TRUE
+      ),filter = 'top'
+      ))
+      
+      # output for SL inventory
+      output$inventorytable_SL <- DT::renderDT(DT::datatable({slinventory}
+         
+      , options = list(
+         pageLength = 20,autoWidth=T,scrollX=TRUE
+      ),filter = 'top'
+      ))
+      
+      
+      #download widget
+      output$download_filtered_inventorytable_CA <- 
+         downloadHandler(
+            filename = "ca_inventory_data.csv",
+            content = function(file){
+               write.csv(cainventory[input[["inventorytable_CA_rows_all"]], ],
+                         file)
+            }
+         )
+      #download widget
+      output$download_filtered_inventorytable_SL <- 
+         downloadHandler(
+            filename = "sl_inventory_data.csv",
+            content = function(file){
+               write.csv(ca[input[["inventorytable_SL_rows_all"]], ],
+                         file)
+            }
+         )
+      
+   })
+   
+   
+ # *********************
+ # Tab "with functions"
+ # *********************
+   
+   # -----------------------------------
+   # Reactive variables 
+   # -----------------------------------
+  
+   vars <- reactive({str_remove(group, input$group)})
+   
+   output$listvars <- renderUI({
+      facet <- vars()
+      selectInput ("facet", "Facet", facet,  multiple = F)
+   })
+   
+   # -----------------------------------
+   # Plots
+   # -----------------------------------
+   
+
+   output$plot1<- renderPlot({
+      
+      if (input$view == 0) return(invisible(NULL))
+      isolate(
+         if(input$plottype == "Map"){
+            
+            pointsMap_func (df= inventory_ca,
+                    var= input$var,
+                    groupBy= input$group,
+                    facet = input$facet,
+                    func = 'sum',
+                    points_coord = inventory_ca)
+         }else{
+            if(input$plottype == "Barplot"){
+               
+            barplot_var_by_one_var(x = as.data.frame(inventory_ca),
+                     Var = input$var,
+                     var1 = input$group,
+                     tapply_type = "sum",
+                     type_of_threshold="cum_percent",
+                     value_of_threshold=100,
+                     graph_par = eval(parse(text=graph_det$graph_par[1])))
+            }
+         }
+>>>>>>> 1b8798ff2af6d56fa3634ad4718eb1f451b5a3ee
       )
           
  # # *********************

@@ -157,6 +157,36 @@ tabPanel("Fishery overview"),
 
 navbarMenu(
     "Sampling overview",
+<<<<<<< HEAD
+=======
+    tabPanel("Inventory tables",tabsetPanel(
+      
+      type = "tabs", tabPanel("Upload your file",fileInput("file", h3(""),buttonLabel = "Browse",placeholder = "example.Rdata"),p("Upload RDB_All_Regions_YYYY.Rdata, available ", a(href="https://community.ices.dk/ExternalSites/datacollection/Regional%20coordination%20meetings%202017/RCGIntersessionalWork/_layouts/15/start.aspx#/SitePages/HomePage.aspx","here"))),tabPanel("CA inventory",downloadButton(outputId = 'download_filtered_inventorytable_CA',label = "Download the filtered data"), 
+      DT::dataTableOutput("inventorytable_CA")
+      ),tabPanel("SL inventory",downloadButton(outputId = 'download_filtered_innvetorytable_SL',label = "Download the filtered data"), 
+                 DT::dataTableOutput("inventorytable_SL")))),
+    tabPanel("With functions",
+             
+             fluidRow(
+               br(),
+               br(),
+               column(
+                 4,
+                 selectInput ("var", "Var", var, multiple = F),
+                 selectInput ("group", "GroupBY", group, multiple = F),
+                 conditionalPanel (condition = "input.plottype =='Map'",
+                                   uiOutput("listvars")),
+                 #selectInput ("facet", "Facet", facet,  multiple = F)),
+                 radioButtons ("plottype", "Choose Plot", c("Map", "Barplot")),
+                 actionButton ("view", "View")
+               ),
+               column(8,
+                      #uiOutput("render_plot") # func do not like uiOutput
+                      plotOutput("plot1"))
+             )
+#             ,downloadButton("report", "Generate report")
+             ),
+>>>>>>> 1b8798ff2af6d56fa3634ad4718eb1f451b5a3ee
     
     # -----------------------------------
     # Data explore subtab
