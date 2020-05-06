@@ -16,15 +16,10 @@ library("sf")
 library(viridis)
 library("rnaturalearth") # map of countries of the entire world
 library("rnaturalearthdata") # Use ne_countries to pull country data
-<<<<<<< HEAD
 library(rgdal)
 library(webshot)
-=======
 library(data.table)
 library(lubridate)
-
-
->>>>>>> 1b8798ff2af6d56fa3634ad4718eb1f451b5a3ee
 
 ##--------------
 ## data
@@ -86,8 +81,6 @@ server <- function(input, output, session){
       content = function(file) {
          file.copy("www/01_hello.pdf", file)
       }
-<<<<<<< HEAD
-=======
          )
 
    #===============#
@@ -255,7 +248,6 @@ server <- function(input, output, session){
                      graph_par = eval(parse(text=graph_det$graph_par[1])))
             }
          }
->>>>>>> 1b8798ff2af6d56fa3634ad4718eb1f451b5a3ee
       )
           
  # # *********************

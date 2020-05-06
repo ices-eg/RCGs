@@ -157,8 +157,6 @@ tabPanel("Fishery overview"),
 
 navbarMenu(
     "Sampling overview",
-<<<<<<< HEAD
-=======
     tabPanel("Inventory tables",tabsetPanel(
       
       type = "tabs", tabPanel("Upload your file",fileInput("file", h3(""),buttonLabel = "Browse",placeholder = "example.Rdata"),p("Upload RDB_All_Regions_YYYY.Rdata, available ", a(href="https://community.ices.dk/ExternalSites/datacollection/Regional%20coordination%20meetings%202017/RCGIntersessionalWork/_layouts/15/start.aspx#/SitePages/HomePage.aspx","here"))),tabPanel("CA inventory",downloadButton(outputId = 'download_filtered_inventorytable_CA',label = "Download the filtered data"), 
@@ -186,7 +184,6 @@ navbarMenu(
              )
 #             ,downloadButton("report", "Generate report")
              ),
->>>>>>> 1b8798ff2af6d56fa3634ad4718eb1f451b5a3ee
     
     # -----------------------------------
     # Data explore subtab
