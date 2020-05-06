@@ -24,7 +24,7 @@ getMetierLvl5FromPattern<-function(p.vessel_id, p.year, p.gear, p.gear_group, p.
       return(paste("rare",p.gear,p.target,sep="_"))
     }
     else{
-      return(NA)
+      return(as.character(NA))
     }
   }
 }
