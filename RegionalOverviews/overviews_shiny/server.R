@@ -17,6 +17,7 @@ library(viridis)
 library("rnaturalearth") # map of countries of the entire world
 library("rnaturalearthdata") # Use ne_countries to pull country data
 library(data.table)
+library(lubridate)
 
 
 
@@ -95,28 +96,36 @@ server <- function(input, output, session){
       #ca<-fread(file)
       ca$Region[ca$Region=="NA"|is.na(ca$Region)]<-'NATL'
       
-      cainventory<-ca[,.(NoMaturityStage=sum(!is.na(MaturityStage)),NoMaturityStageTrips=length(unique(Trip[!is.na(MaturityStage)])),NoAge=sum(!is.na(Age)),NoAgeTrips=length(unique(Trip[!is.na(Age)])),NoWeight=sum(!is.na(Weight)),NoWeightTrips=length(unique(Trip[!is.na(Weight)]))),by=c("Year","Region","FlagCountry","Stock","Species","SamplingType","Quarter")]
+      cainventory<-ca[,.(NoMaturityStage=sum(!is.na(MaturityStage)),NoMaturityStageTrips=length(unique(Trip[!is.na(MaturityStage)])),NoAge=sum(!is.na(Age)),NoAgeTrips=length(unique(Trip[!is.na(Age)])),NoLength=sum(!is.na(LengthClass)),NoLengthTrips=length(unique(Trip[!is.na(LengthClass)])),NoWeight=sum(!is.na(Weight)),NoWeightTrips=length(unique(Trip[!is.na(Weight)]))),by=c("Year","Region","FlagCountry","LandingCountry","Stock","Species","SamplingType","Quarter","CatchCategory","Sex")]
       
+      # datatable wants factors for filter = 
       cainventory$FlagCountry<-as.factor(cainventory$FlagCountry)
+      cainventory$LandingCountry<-as.factor(cainventory$LandingCountry)
       cainventory$Region<-as.factor(cainventory$Region)
       cainventory$Stock<-as.factor(cainventory$Stock)
       cainventory$Species<-as.factor(cainventory$Species)
       cainventory$SamplingType<-as.factor(cainventory$SamplingType)
       cainventory$Quarter<-as.factor(cainventory$Quarter)
+      cainventory$CatchCategory<-as.factor(cainventory$CatchCategory)
+      cainventory$Sex<-as.factor(cainventory$Sex)
       
       #do the master table 
-      sl_master <-
-         merge(sl, tr[, list(CS_TripId,
-                                     VesselIdentifier,
-                                     SamplingCountry,
-                                     SamplingMethod,
-                                     VesselLengthCategory)], by = "CS_TripId", all.x = T)
+      hh$StartQuarter <- quarter(ymd(hh$StartDate))
+      #sl<-as.data.table(sl)
+      #tr<-as.data.table(tr)
+      
+      #preparing master table
+      sl_master<-merge(sl, tr[,list(CS_TripId, VesselIdentifier, SamplingCountry, SamplingMethod, VesselLengthCategory)], by="CS_TripId", all.x=T)
+      
+      
       sl_master <-
          merge(sl_master,
                hh[, list(
+                  Region,
                   CS_TripId,
                   CS_StationId,
                   StartDate,
+                  StartQuarter,
                   FishingTime,
                   PosStartLatDec,
                   PosStartLonDec,
@@ -133,37 +142,60 @@ server <- function(input, output, session){
                all.x = T)
       
       
+      class(sl_master)
       
-      #csstock<-slmaster[,.(NoMeasuredLength=function(x)sum(NoAtLengthInSample,na.rm=T),NoMeasuredLengthTrips=length(unique(Trip[!is.na(NoAtLengthInSample)]))),by=c("Year","Region","FlagCountry","LandingCountry","Stock","Species","SamplingType","Quarter","Area" ,"FishingActivityCategoryEuropeanLvl6")]
+      slinventory<-sl_master[,.(NoLength=sum(NoInSubSample),NoLengthTrips=length(unique(Trip[NoInSubSample>0])),WeigthKg=sum(SubSampleWeight_kg)),by=c("Year","Region","FlagCountry","LandingCountry","Stock","Species","SamplingType","StartQuarter","Area" ,"FishingActivityCategoryEuropeanLvl6", "CatchCategory")][NoLength>0|NoLengthTrips>0,]
+      
+      slinventory$Region[slinventory$Region=="NA"|is.na(slinventory$Region)]<-'NATL'
+      
+      slinventory$FlagCountry<-as.factor(slinventory$FlagCountry)
+      slinventory$LandingCountry<-as.factor(slinventory$LandingCountry)
+      slinventory$Region<-as.factor(slinventory$Region)
+      slinventory$Stock<-as.factor(slinventory$Stock)
+      slinventory$Species<-as.factor(slinventory$Species)
+      slinventory$SamplingType<-as.factor(slinventory$SamplingType)
+      slinventory$StartQuarter<-as.factor(slinventory$StartQuarter)
+      slinventory$Area<-as.factor(slinventory$Area)
+      slinventory$CatchCategory<-as.factor(slinventory$CatchCategory)
+      
       
    
       
-      # Plot the data
+      # output for CA inventory
+      
       output$inventorytable_CA <- DT::renderDT(DT::datatable({cainventory
          
-      }, options = list(
-         pageLength = 20,autoWidth=T,scrollX=TRUE
-      ),caption = htmltools::tags$caption(
-         style = 'caption-side: bottom; text-align: center;',
-         'Table: ', htmltools::em('Put here a caption.')),filter = 'top'
-      ))
-      # here CS by Stock
-      output$inventorytable_CS_by_stock <- DT::renderDT(DT::datatable({ca
+      }
          
-      }, options = list(
+      , options = list(
          pageLength = 20,autoWidth=T,scrollX=TRUE
-      ),caption = htmltools::tags$caption(
-         style = 'caption-side: bottom; text-align: center;',
-         'Table: ', htmltools::em('Put here a caption.')),filter = 'top'
+      ),filter = 'top'
+      ))
+      
+      # output for SL inventory
+      output$inventorytable_SL <- DT::renderDT(DT::datatable({slinventory}
+         
+      , options = list(
+         pageLength = 20,autoWidth=T,scrollX=TRUE
+      ),filter = 'top'
       ))
       
       
-      
-      output$download_filtered <- 
+      #download widget
+      output$download_filtered_inventorytable_CA <- 
          downloadHandler(
-            filename = "Filtered Data.csv",
+            filename = "ca_inventory_data.csv",
             content = function(file){
-               write.csv(ca[input[["inventorytable_rows_all"]], ],
+               write.csv(cainventory[input[["inventorytable_CA_rows_all"]], ],
+                         file)
+            }
+         )
+      #download widget
+      output$download_filtered_inventorytable_SL <- 
+         downloadHandler(
+            filename = "sl_inventory_data.csv",
+            content = function(file){
+               write.csv(ca[input[["inventorytable_SL_rows_all"]], ],
                          file)
             }
          )

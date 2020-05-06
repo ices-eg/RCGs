@@ -92,10 +92,10 @@ tabPanel("Home",
     "Sampling overview",
     tabPanel("Inventory tables",tabsetPanel(
       
-      type = "tabs", tabPanel("Upload your file",fileInput("file", h3(""),buttonLabel = "Browse",placeholder = "example.Rdata"),p("Upload RDB_All_Regions_YYYY.Rdata, available ", a(href="https://community.ices.dk/ExternalSites/datacollection/Regional%20coordination%20meetings%202017/RCGIntersessionalWork/_layouts/15/start.aspx#/SitePages/HomePage.aspx","here"))),tabPanel("CA inventory",downloadButton(outputId = 'download_filtered_CA',label = "Download the filtered data"), 
+      type = "tabs", tabPanel("Upload your file",fileInput("file", h3(""),buttonLabel = "Browse",placeholder = "example.Rdata"),p("Upload RDB_All_Regions_YYYY.Rdata, available ", a(href="https://community.ices.dk/ExternalSites/datacollection/Regional%20coordination%20meetings%202017/RCGIntersessionalWork/_layouts/15/start.aspx#/SitePages/HomePage.aspx","here"))),tabPanel("CA inventory",downloadButton(outputId = 'download_filtered_inventorytable_CA',label = "Download the filtered data"), 
       DT::dataTableOutput("inventorytable_CA")
-      ),tabPanel("CS inventory by stock",downloadButton(outputId = 'download_filtered_CS_by_stock',label = "Download the filtered data"), 
-                 DT::dataTableOutput("inventorytable")),tabPanel("CS inventory by metier"))),
+      ),tabPanel("SL inventory",downloadButton(outputId = 'download_filtered_innvetorytable_SL',label = "Download the filtered data"), 
+                 DT::dataTableOutput("inventorytable_SL")))),
     tabPanel("With functions",
              
              fluidRow(
