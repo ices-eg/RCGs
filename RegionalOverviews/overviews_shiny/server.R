@@ -16,6 +16,7 @@ library("sf")
 library(viridis)
 library("rnaturalearth") # map of countries of the entire world
 library("rnaturalearthdata") # Use ne_countries to pull country data
+library(data.table)
 
 
 
@@ -63,7 +64,7 @@ world <- ne_countries(scale = "medium", returnclass = "sf")
 
 server <- function(input, output, session){
   
-  
+   options(shiny.maxRequestSize = 500*1024^2)
    # *********************
    # define the report format of the output 
    # *********************
@@ -77,13 +78,103 @@ server <- function(input, output, session){
       content = function(file) {
          x <- read_docx()
          print(x, target = file)
-      },
+      }
          )
-          
+
+   #===============#
+   #inventory table#
+   #===============#
+   
+   observeEvent(input$file ,{
+      if ( is.null(input$file)) return(NULL)
+      inFile <- isolate({input$file})
+      file <- inFile$datapath
+      load(file, envir = .GlobalEnv)
+      # modify the CS.Rdata
+      ca<-as.data.table(ca)
+      #ca<-fread(file)
+      ca$Region[ca$Region=="NA"|is.na(ca$Region)]<-'NATL'
+      
+      cainventory<-ca[,.(NoMaturityStage=sum(!is.na(MaturityStage)),NoMaturityStageTrips=length(unique(Trip[!is.na(MaturityStage)])),NoAge=sum(!is.na(Age)),NoAgeTrips=length(unique(Trip[!is.na(Age)])),NoWeight=sum(!is.na(Weight)),NoWeightTrips=length(unique(Trip[!is.na(Weight)]))),by=c("Year","Region","FlagCountry","Stock","Species","SamplingType","Quarter")]
+      
+      cainventory$FlagCountry<-as.factor(cainventory$FlagCountry)
+      cainventory$Region<-as.factor(cainventory$Region)
+      cainventory$Stock<-as.factor(cainventory$Stock)
+      cainventory$Species<-as.factor(cainventory$Species)
+      cainventory$SamplingType<-as.factor(cainventory$SamplingType)
+      cainventory$Quarter<-as.factor(cainventory$Quarter)
+      
+      #do the master table 
+      sl_master <-
+         merge(sl, tr[, list(CS_TripId,
+                                     VesselIdentifier,
+                                     SamplingCountry,
+                                     SamplingMethod,
+                                     VesselLengthCategory)], by = "CS_TripId", all.x = T)
+      sl_master <-
+         merge(sl_master,
+               hh[, list(
+                  CS_TripId,
+                  CS_StationId,
+                  StartDate,
+                  FishingTime,
+                  PosStartLatDec,
+                  PosStartLonDec,
+                  PosStopLatDec,
+                  PosStopLonDec,
+                  Area,
+                  FishingGround,
+                  StatisticalRectangle,
+                  FishingActivityCategoryEuropeanLvl5,
+                  FishingActivityCategoryEuropeanLvl6,
+                  Gear
+               )],
+               by = c("CS_TripId", "CS_StationId"),
+               all.x = T)
+      
+      
+      
+      #csstock<-slmaster[,.(NoMeasuredLength=function(x)sum(NoAtLengthInSample,na.rm=T),NoMeasuredLengthTrips=length(unique(Trip[!is.na(NoAtLengthInSample)]))),by=c("Year","Region","FlagCountry","LandingCountry","Stock","Species","SamplingType","Quarter","Area" ,"FishingActivityCategoryEuropeanLvl6")]
+      
+   
+      
+      # Plot the data
+      output$inventorytable_CA <- DT::renderDT(DT::datatable({cainventory
+         
+      }, options = list(
+         pageLength = 20,autoWidth=T,scrollX=TRUE
+      ),caption = htmltools::tags$caption(
+         style = 'caption-side: bottom; text-align: center;',
+         'Table: ', htmltools::em('Put here a caption.')),filter = 'top'
+      ))
+      # here CS by Stock
+      output$inventorytable_CS_by_stock <- DT::renderDT(DT::datatable({ca
+         
+      }, options = list(
+         pageLength = 20,autoWidth=T,scrollX=TRUE
+      ),caption = htmltools::tags$caption(
+         style = 'caption-side: bottom; text-align: center;',
+         'Table: ', htmltools::em('Put here a caption.')),filter = 'top'
+      ))
+      
+      
+      
+      output$download_filtered <- 
+         downloadHandler(
+            filename = "Filtered Data.csv",
+            content = function(file){
+               write.csv(ca[input[["inventorytable_rows_all"]], ],
+                         file)
+            }
+         )
+      
+   })
+   
+   
  # *********************
  # Tab "with functions"
  # *********************
-            
+   
    # -----------------------------------
    # Reactive variables 
    # -----------------------------------
