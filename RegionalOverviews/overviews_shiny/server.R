@@ -16,9 +16,8 @@ library("sf")
 library(viridis)
 library("rnaturalearth") # map of countries of the entire world
 library("rnaturalearthdata") # Use ne_countries to pull country data
-library(data.table)
-
-
+library(rgdal)
+library(webshot)
 
 ##--------------
 ## data
@@ -27,6 +26,8 @@ library(data.table)
 #load("data/ShinyTest_BigPicture.RData")
 load("data/inventory_ca.RData")
 load("data/graph_det.RData")
+shp.data <- readOGR("shp/RCG_NA_ICESrect.shp")
+shp.NA<- spTransform(shp.data, CRS("+proj=longlat +datum=WGS84 +no_defs"))
 inventory_ca$SamplingType <- as.factor(inventory_ca$SamplingType)
 inventory_ca$Quarter <- as.factor(as.character(inventory_ca$Quarter))
 
@@ -64,159 +65,68 @@ world <- ne_countries(scale = "medium", returnclass = "sf")
 
 server <- function(input, output, session){
   
-   options(shiny.maxRequestSize = 500*1024^2)
+  
    # *********************
    # define the report format of the output 
    # *********************
    
    output$report <- downloadHandler(
-      
+
       filename = function() {
-         paste('report_', Sys.Date(), '.docx', sep='')
-      },						
-      
+         paste("disclaimer_", Sys.Date(), ".pdf", sep='')
+      },
+
       content = function(file) {
-         x <- read_docx()
-         print(x, target = file)
+         file.copy("www/01_hello.pdf", file)
       }
-         )
-
-   #===============#
-   #inventory table#
-   #===============#
-   
-   observeEvent(input$file ,{
-      if ( is.null(input$file)) return(NULL)
-      inFile <- isolate({input$file})
-      file <- inFile$datapath
-      load(file, envir = .GlobalEnv)
-      # modify the CS.Rdata
-      ca<-as.data.table(ca)
-      #ca<-fread(file)
-      ca$Region[ca$Region=="NA"|is.na(ca$Region)]<-'NATL'
-      
-      cainventory<-ca[,.(NoMaturityStage=sum(!is.na(MaturityStage)),NoMaturityStageTrips=length(unique(Trip[!is.na(MaturityStage)])),NoAge=sum(!is.na(Age)),NoAgeTrips=length(unique(Trip[!is.na(Age)])),NoWeight=sum(!is.na(Weight)),NoWeightTrips=length(unique(Trip[!is.na(Weight)]))),by=c("Year","Region","FlagCountry","Stock","Species","SamplingType","Quarter")]
-      
-      cainventory$FlagCountry<-as.factor(cainventory$FlagCountry)
-      cainventory$Region<-as.factor(cainventory$Region)
-      cainventory$Stock<-as.factor(cainventory$Stock)
-      cainventory$Species<-as.factor(cainventory$Species)
-      cainventory$SamplingType<-as.factor(cainventory$SamplingType)
-      cainventory$Quarter<-as.factor(cainventory$Quarter)
-      
-      #do the master table 
-      sl_master <-
-         merge(sl, tr[, list(CS_TripId,
-                                     VesselIdentifier,
-                                     SamplingCountry,
-                                     SamplingMethod,
-                                     VesselLengthCategory)], by = "CS_TripId", all.x = T)
-      sl_master <-
-         merge(sl_master,
-               hh[, list(
-                  CS_TripId,
-                  CS_StationId,
-                  StartDate,
-                  FishingTime,
-                  PosStartLatDec,
-                  PosStartLonDec,
-                  PosStopLatDec,
-                  PosStopLonDec,
-                  Area,
-                  FishingGround,
-                  StatisticalRectangle,
-                  FishingActivityCategoryEuropeanLvl5,
-                  FishingActivityCategoryEuropeanLvl6,
-                  Gear
-               )],
-               by = c("CS_TripId", "CS_StationId"),
-               all.x = T)
-      
-      
-      
-      #csstock<-slmaster[,.(NoMeasuredLength=function(x)sum(NoAtLengthInSample,na.rm=T),NoMeasuredLengthTrips=length(unique(Trip[!is.na(NoAtLengthInSample)]))),by=c("Year","Region","FlagCountry","LandingCountry","Stock","Species","SamplingType","Quarter","Area" ,"FishingActivityCategoryEuropeanLvl6")]
-      
-   
-      
-      # Plot the data
-      output$inventorytable_CA <- DT::renderDT(DT::datatable({cainventory
-         
-      }, options = list(
-         pageLength = 20,autoWidth=T,scrollX=TRUE
-      ),caption = htmltools::tags$caption(
-         style = 'caption-side: bottom; text-align: center;',
-         'Table: ', htmltools::em('Put here a caption.')),filter = 'top'
-      ))
-      # here CS by Stock
-      output$inventorytable_CS_by_stock <- DT::renderDT(DT::datatable({ca
-         
-      }, options = list(
-         pageLength = 20,autoWidth=T,scrollX=TRUE
-      ),caption = htmltools::tags$caption(
-         style = 'caption-side: bottom; text-align: center;',
-         'Table: ', htmltools::em('Put here a caption.')),filter = 'top'
-      ))
-      
-      
-      
-      output$download_filtered <- 
-         downloadHandler(
-            filename = "Filtered Data.csv",
-            content = function(file){
-               write.csv(ca[input[["inventorytable_rows_all"]], ],
-                         file)
-            }
-         )
-      
-   })
-   
-   
- # *********************
- # Tab "with functions"
- # *********************
-   
-   # -----------------------------------
-   # Reactive variables 
-   # -----------------------------------
-  
-   vars <- reactive({str_remove(group, input$group)})
-   
-   output$listvars <- renderUI({
-      facet <- vars()
-      selectInput ("facet", "Facet", facet,  multiple = F)
-   })
-   
-   # -----------------------------------
-   # Plots
-   # -----------------------------------
-   
-
-   output$plot1<- renderPlot({
-      
-      if (input$view == 0) return(invisible(NULL))
-      isolate(
-         if(input$plottype == "Map"){
-            
-            pointsMap_func (df= inventory_ca,
-                    var= input$var,
-                    groupBy= input$group,
-                    facet = input$facet,
-                    func = 'sum',
-                    points_coord = inventory_ca)
-         }else{
-            if(input$plottype == "Barplot"){
-               
-            barplot_var_by_one_var(x = as.data.frame(inventory_ca),
-                     Var = input$var,
-                     var1 = input$group,
-                     tapply_type = "sum",
-                     type_of_threshold="cum_percent",
-                     value_of_threshold=100,
-                     graph_par = eval(parse(text=graph_det$graph_par[1])))
-            }
-         }
       )
-   })
+          
+ # # *********************
+ # # Tab "with functions"
+ # # *********************
+ #            
+ #   # -----------------------------------
+ #   # Reactive variables 
+ #   # -----------------------------------
+ #  
+ #   vars <- reactive({str_remove(group, input$group)})
+ #   
+ #   output$listvars <- renderUI({
+ #      facet <- vars()
+ #      selectInput ("facet", "Facet", facet,  multiple = F)
+ #   })
+ #   
+ #   # -----------------------------------
+ #   # Plots
+ #   # -----------------------------------
+ #   
+ # 
+ #   output$plot1<- renderPlot({
+ #      
+ #      if (input$view == 0) return(invisible(NULL))
+ #      isolate(
+ #         if(input$plottype == "Map"){
+ #            
+ #            pointsMap_func (df= inventory_ca,
+ #                    var= input$var,
+ #                    groupBy= input$group,
+ #                    facet = input$facet,
+ #                    func = 'sum',
+ #                    points_coord = inventory_ca)
+ #         }else{
+ #            if(input$plottype == "Barplot"){
+ #               
+ #            barplot_var_by_one_var(x = as.data.frame(inventory_ca),
+ #                     Var = input$var,
+ #                     var1 = input$group,
+ #                     tapply_type = "sum",
+ #                     type_of_threshold="cum_percent",
+ #                     value_of_threshold=100,
+ #                     graph_par = eval(parse(text=graph_det$graph_par[1])))
+ #            }
+ #         }
+ #      )
+ #   })
    
    # ******************
    # Tab "with leaflet"
@@ -285,20 +195,12 @@ server <- function(input, output, session){
    # leaflet map and barplots
    # -----------------------------------
 
-   
- 
-      #input$view2
-      
-      
-output$map <- renderLeaflet({
+      output$map <- renderLeaflet({
             leaflet() %>% addProviderTiles(providers$CartoDB.Positron)  %>% 
                setView(lng = -5,lat =  45.5, zoom = 5)
          })
          
-      
-     
-    
-   
+
    
    # -----------------------------------
    # Add filtered data to map
@@ -309,115 +211,164 @@ output$map <- renderLeaflet({
      pal<-colorNumeric ("viridis", domain = as.numeric(filter_df()$aux))
 
      leafletProxy("map", data = filter_df())%>% 
-       clearMarkers()%>% clearControls() %>% addProviderTiles(providers$CartoDB.Positron) %>% 
+       clearMarkers()%>% clearControls() %>% #addProviderTiles(providers$CartoDB.Positron) %>% 
        addCircleMarkers (color=~pal(aux),
                          stroke=F,
                          radius=~ (sqrt(aux)*2),
                          fillOpacity=0.8)%>%
        addLegend( "bottomleft", pal=pal, values=~aux, title = input$N_var2,opacity = 0.8)
    })
-
-   # ******************
-   # Tab "with ggplot"
-   # ******************
+   
    
    # -----------------------------------
-   # Filtered data
+   # Add ICES Rectangles Shapefile
    # -----------------------------------
    
-   df3 <- reactive({
+    observe({
+       proxy<-leafletProxy("map", data = filter_df())
+       proxy%>%clearShapes()
+       if (input$rec){
+       proxy%>%addPolygons(data = shp.NA, 
+                           color = "#444444", 
+                           weight = 1, 
+                           smoothFactor = 0.5,
+                           opacity = 1.0, 
+                           #fillOpacity = 0.5,
+                           fillColor = "transparent",
+                           highlightOptions = highlightOptions(color = "white", weight = 2,
+                                                               bringToFront = TRUE))
+       }
+    })
+   
+   
+   
+   # -----------------------------------
+   # barplot to panel
+   # -----------------------------------
+   
+   
+   output$plot2 <- renderPlot ({
       
-      data3<-inventory_ca
+      if (input$view2==0) return(invisible(NULL))
       
-      if (!("All" %in% input$country3)){
-         data3 <- data3[data3$LandingCountry %in% input$country3,]
-      }
-      if (!("All" %in% input$species3 )){
-         data3 <- data3[data3$Species %in% input$species3,]
-      }
-      if (!("All" %in% input$samtype3)){
-         data3 <- data3[data3$SamplingType %in% input$samtype3,]
-      }
-      if (!("All" %in% input$quarter3)){
-         data3 <- data3[data3$Quarter %in% input$quarter3,]
-      }
+      #validate(need(input$plottype=="Barplot", message=FALSE))
+      ColorsBAR <- colour_table$colour4
+      names(ColorsBAR) <- colour_table$Country
+      colScaleBAR<-scale_fill_manual(name="LandingCountry", values=ColorsBAR)
       
-      data3 <- data3[, c("LandingCountry", "Quarter",  "Species", "SamplingType", 
-                       "lat", "lon", input$N_var3)]
-      names(data3) <- c("LandingCountry", "Quarter",  "Species", "SamplingType", 
-                       "lat", "lon", "aux")
-      data3
+      ggplot(filter_df(), aes(x=LandingCountry, y=aux, fill=LandingCountry)) +
+         geom_bar(stat="identity")+
+         colScaleBAR +
+         theme_bw()+
+         theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+         labs(y = input$N_var2)
+      
    })
    
-   # --------------------------------------
-   # Data aggregation at location 
-   # filtered data updated with view button
-   # --------------------------------------
+
    
-   filter_df3 <- eventReactive(input$view3, {
-      
-      if(nrow(df3())!=0){
-         
-         dat3<-aggregate (list(aux = df3()$aux),
-                         by = list(lat = df3()$lat, lon = df3()$lon,
-                                   LandingCountry = df3()$LandingCountry,
-                                   Species = df3()$Species,
-                                   SamplingType = df3()$SamplingType,
-                                   Quarter = df3()$Quarter),
-                         FUN = sum) # not sure should be set TRUE
-      }
-      else {
-       dat3 <- df3()
-      }
-       dat3
-  
-   }) 
-   
+
+   # # ******************
+   # # Tab "with ggplot"
+   # # ******************
+   # 
    # # -----------------------------------
-   # # Debugging
+   # # Filtered data
    # # -----------------------------------
    # 
-   # output$debug3 <- renderTable({
-   #   #head(df3(), 5)
-   #   head(filter_df3(), 5)
+   # df3 <- reactive({
+   #    
+   #    data3<-inventory_ca
+   #    
+   #    if (!("All" %in% input$country3)){
+   #       data3 <- data3[data3$LandingCountry %in% input$country3,]
+   #    }
+   #    if (!("All" %in% input$species3 )){
+   #       data3 <- data3[data3$Species %in% input$species3,]
+   #    }
+   #    if (!("All" %in% input$samtype3)){
+   #       data3 <- data3[data3$SamplingType %in% input$samtype3,]
+   #    }
+   #    if (!("All" %in% input$quarter3)){
+   #       data3 <- data3[data3$Quarter %in% input$quarter3,]
+   #    }
+   #    
+   #    data3 <- data3[, c("LandingCountry", "Quarter",  "Species", "SamplingType", 
+   #                     "lat", "lon", input$N_var3)]
+   #    names(data3) <- c("LandingCountry", "Quarter",  "Species", "SamplingType", 
+   #                     "lat", "lon", "aux")
+   #    data3
    # })
-   
-   
-    # output$debug3 <- renderText({
-    #   #head(df3(), 5)
-    #   head(sqrt(as.numeric(input$N_var3))*2, 5)
-    # })
-   
-   # -----------------------------------
-   # Mapa
-   # -----------------------------------
-   
-   # viridis is the default colour/fill scale for ordered factors
-   
-   output$plot3 <- renderPlot ({
-
-      if(nrow(filter_df3())==0) return(invisible(NULL))
-
-      ggplot(data = world) + geom_sf(fill= "antiquewhite") +
-         geom_point(data = filter_df3(), aes(x = lon, y = lat, colour = aux, size = aux)) +
-         scale_colour_viridis() +
-         #facet_grid (SamplingType~LandingCountry)+
-         facet_wrap(~SamplingType)+
-         coord_sf(crs = "+init=epsg:4326", xlim = c(-25, 5), ylim = c(43, 63), expand = FALSE) +
-         xlab("Longitude") + ylab("Latitude") + labs(size=input$N_var3, colour=input$N_var3)+
-         ggtitle("North East Atlantic") +
-         theme(
-            text = element_text(color = "#22211d"),
-            plot.background = element_rect(fill = "#ffffff", color = NA),
-            panel.background = element_rect(fill = "aliceblue", color = NA),
-            legend.background = element_rect(fill = "#ffffff", color = NA),
-            panel.border = element_rect(
-               colour = "black",
-               fill = NA,
-               size = 1.5
-            ),
-            panel.grid.major = element_line(color = gray(.8), linetype ='dashed', size = 0.5)
-         )
-   })
+   # 
+   # # --------------------------------------
+   # # Data aggregation at location 
+   # # filtered data updated with view button
+   # # --------------------------------------
+   # 
+   # filter_df3 <- eventReactive(input$view3, {
+   #    
+   #    if(nrow(df3())!=0){
+   #       
+   #       dat3<-aggregate (list(aux = df3()$aux),
+   #                       by = list(lat = df3()$lat, lon = df3()$lon,
+   #                                 LandingCountry = df3()$LandingCountry,
+   #                                 Species = df3()$Species,
+   #                                 SamplingType = df3()$SamplingType,
+   #                                 Quarter = df3()$Quarter),
+   #                       FUN = sum) # not sure should be set TRUE
+   #    }
+   #    else {
+   #     dat3 <- df3()
+   #    }
+   #     dat3
+   # 
+   # }) 
+   # 
+   # # # -----------------------------------
+   # # # Debugging
+   # # # -----------------------------------
+   # # 
+   # # output$debug3 <- renderTable({
+   # #   #head(df3(), 5)
+   # #   head(filter_df3(), 5)
+   # # })
+   # 
+   # 
+   #  # output$debug3 <- renderText({
+   #  #   #head(df3(), 5)
+   #  #   head(sqrt(as.numeric(input$N_var3))*2, 5)
+   #  # })
+   # 
+   # # -----------------------------------
+   # # Mapa
+   # # -----------------------------------
+   # 
+   # # viridis is the default colour/fill scale for ordered factors
+   # 
+   # output$plot3 <- renderPlot ({
+   # 
+   #    if(nrow(filter_df3())==0) return(invisible(NULL))
+   # 
+   #    ggplot(data = world) + geom_sf(fill= "antiquewhite") +
+   #       geom_point(data = filter_df3(), aes(x = lon, y = lat, colour = aux, size = aux)) +
+   #       scale_colour_viridis() +
+   #       #facet_grid (SamplingType~LandingCountry)+
+   #       facet_wrap(~SamplingType)+
+   #       coord_sf(crs = "+init=epsg:4326", xlim = c(-25, 5), ylim = c(43, 63), expand = FALSE) +
+   #       xlab("Longitude") + ylab("Latitude") + labs(size=input$N_var3, colour=input$N_var3)+
+   #       ggtitle("North East Atlantic") +
+   #       theme(
+   #          text = element_text(color = "#22211d"),
+   #          plot.background = element_rect(fill = "#ffffff", color = NA),
+   #          panel.background = element_rect(fill = "aliceblue", color = NA),
+   #          legend.background = element_rect(fill = "#ffffff", color = NA),
+   #          panel.border = element_rect(
+   #             colour = "black",
+   #             fill = NA,
+   #             size = 1.5
+   #          ),
+   #          panel.grid.major = element_line(color = gray(.8), linetype ='dashed', size = 0.5)
+   #       )
+   # })
 
 } # end of the server
