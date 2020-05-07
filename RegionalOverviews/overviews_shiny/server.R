@@ -16,8 +16,8 @@ library("sf")
 library(viridis)
 library("rnaturalearth") # map of countries of the entire world
 library("rnaturalearthdata") # Use ne_countries to pull country data
-library(data.table)
-library(lubridate)
+library(rgdal)
+library(webshot)
 
 
 
@@ -28,6 +28,8 @@ library(lubridate)
 #load("data/ShinyTest_BigPicture.RData")
 load("data/inventory_ca.RData")
 load("data/graph_det.RData")
+shp.data <- readOGR("shp/RCG_NA_ICESrect.shp")
+shp.NA<- spTransform(shp.data, CRS("+proj=longlat +datum=WGS84 +no_defs"))
 inventory_ca$SamplingType <- as.factor(inventory_ca$SamplingType)
 inventory_ca$Quarter <- as.factor(as.character(inventory_ca$Quarter))
 
@@ -71,16 +73,24 @@ server <- function(input, output, session){
    # *********************
    
    output$report <- downloadHandler(
-      
       filename = function() {
-         paste('report_', Sys.Date(), '.docx', sep='')
-      },						
+         paste("disclaimer_", Sys.Date(), ".pdf", sep='')
+      },
       
       content = function(file) {
-         x <- read_docx()
-         print(x, target = file)
+         file.copy("www/01_hello.pdf", file)
       }
    )
+# old version for a .docx variante            
+#      filename = function() {
+#         paste('report_', Sys.Date(), '.docx', sep='')
+#      },						
+#      
+#      content = function(file) {
+#         x <- read_docx()
+#         print(x, target = file)
+#      }
+#   )
    
    #===============#
    #inventory table#
@@ -349,7 +359,51 @@ server <- function(input, output, session){
          addLegend( "bottomleft", pal=pal, values=~aux, title = input$N_var2,opacity = 0.8)
    })
    
-   # ******************
+   # -----------------------------------
+   # Add ICES Rectangles Shapefile
+   # -----------------------------------
+   
+   observe({
+      proxy<-leafletProxy("map", data = filter_df())
+      proxy%>%clearShapes()
+      if (input$rec){
+         proxy%>%addPolygons(data = shp.NA, 
+                             color = "#444444", 
+                             weight = 1, 
+                             smoothFactor = 0.5,
+                             opacity = 1.0, 
+                             #fillOpacity = 0.5,
+                             fillColor = "transparent",
+                             highlightOptions = highlightOptions(color = "white", weight = 2,
+                                                                 bringToFront = TRUE))
+      }
+   })
+   
+   # -----------------------------------
+   # barplot to panel
+   # -----------------------------------
+   
+   
+   output$plot2 <- renderPlot ({
+      
+      if (input$view2==0) return(invisible(NULL))
+      
+      #validate(need(input$plottype=="Barplot", message=FALSE))
+      ColorsBAR <- colour_table$colour4
+      names(ColorsBAR) <- colour_table$Country
+      colScaleBAR<-scale_fill_manual(name="LandingCountry", values=ColorsBAR)
+      
+      ggplot(filter_df(), aes(x=LandingCountry, y=aux, fill=LandingCountry)) +
+         geom_bar(stat="identity")+
+         colScaleBAR +
+         theme_bw()+
+         theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+         labs(y = input$N_var2)
+      
+   })   
+   
+   
+    # ******************
    # Tab "with ggplot"
    # ******************
    
