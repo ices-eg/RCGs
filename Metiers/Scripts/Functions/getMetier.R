@@ -39,5 +39,8 @@ getMetier<-function(p.rcg, p.year, p.gear, p.reg_target, p.dom_group, p.mesh,
                                           (p.year>=Start_year & p.year<=End_year)),
                                      metier_level_6][1])
   }
+  if(is.na(metier)){
+    metier<-"MIS_MIS_0_0_0"
+  }
   return(metier)
 }
