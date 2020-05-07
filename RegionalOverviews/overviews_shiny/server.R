@@ -31,7 +31,7 @@ library(lubridate)
 #load("data/ShinyTest_BigPicture.RData")
 load("data/inventory_ca.RData")
 load("data/graph_det.RData")
-ices.rect <- read_sf("RCGs/RegionalOverviews/data/shapefiles/ices_rectangles/ices_squares_simple.shp")
+ices.rect <- read_sf("../data/shapefiles/ices_rectangles/ices_squares_simple.shp")
 ices.rect<-as(ices.rect, 'Spatial')
 inventory_ca$SamplingType <- as.factor(inventory_ca$SamplingType)
 inventory_ca$Quarter <- as.factor(as.character(inventory_ca$Quarter))
@@ -370,7 +370,7 @@ server <- function(input, output, session){
       proxy<-leafletProxy("map", data = filter_df())
       proxy%>%clearShapes()
       if (input$rec){
-         proxy%>% addPolygons(data=ices.rect,weight=.4,fillOpacity = .1,color = 'grey',group = 'ices_squares',label = ~paste0(ICESNAME),highlight = highlightOptions(weight = 3, color = "red",
+         proxy%>% addPolygons(data=ices.rect, weight=.4,fillOpacity = .1,color = 'grey',group = 'ices_squares',label = ~paste0(ICESNAME),highlight = highlightOptions(weight = 3, color = "red",
                   bringToFront = TRUE))
       }
    })
