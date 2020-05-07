@@ -214,7 +214,7 @@ ui <- fluidPage(
           left = "auto",
           right = 20,
           top = 60,
-          width = 330,
+          width = 400,
           height = "auto",
           h2("Sampling explorer"),
           selectizeInput (
@@ -252,28 +252,30 @@ ui <- fluidPage(
           selectInput ("N_var2", "Variable", var, multiple = F),
           checkboxInput("rec", "ICES Rectangles"),
           br(),
-          actionButton ("view2", "View")#,
+          actionButton ("view2", "View"), #,
           #downloadButton("report", "Generate report")
+          
+           plotOutput("plot2",height=300)
         )),
       
       # -----------------------------------
       # plot panel
       # -----------------------------------
       
-      absolutePanel(
-        id = "controls",
-        class = "panel panel-default",
-        fixed = TRUE,
-        draggable = TRUE,
-        bottom = 60,
-        left = "auto",
-        right = 20,
-        top = "auto",
-        width = 800,
-        height = "auto",
-        h2("Sampling plot"),
-        plotOutput("plot2")
-      )
+      #absolutePanel(
+       # id = "controls",
+        #class = "panel panel-default",
+        #fixed = TRUE,
+       # draggable = TRUE,
+       # bottom = 60,
+       # left = "auto",
+      #  right = 20,
+      #  top = "auto",
+      #  width = 800,
+      #  height = "auto",
+       # h2("Sampling plot"),
+      #  plotOutput("plot2")
+      #)
     )#,# end interactive mapPanel
     
     # -----------------------------------

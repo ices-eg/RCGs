@@ -18,6 +18,9 @@ library("rnaturalearth") # map of countries of the entire world
 library("rnaturalearthdata") # Use ne_countries to pull country data
 library(rgdal)
 library(webshot)
+library(data.table)
+library(lubridate)
+
 
 
 
@@ -28,8 +31,8 @@ library(webshot)
 #load("data/ShinyTest_BigPicture.RData")
 load("data/inventory_ca.RData")
 load("data/graph_det.RData")
-shp.data <- readOGR("shp/RCG_NA_ICESrect.shp")
-shp.NA<- spTransform(shp.data, CRS("+proj=longlat +datum=WGS84 +no_defs"))
+ices.rect <- read_sf("RCGs/RegionalOverviews/data/shapefiles/ices_rectangles/ices_squares_simple.shp")
+ices.rect<-as(ices.rect, 'Spatial')
 inventory_ca$SamplingType <- as.factor(inventory_ca$SamplingType)
 inventory_ca$Quarter <- as.factor(as.character(inventory_ca$Quarter))
 
@@ -367,15 +370,8 @@ server <- function(input, output, session){
       proxy<-leafletProxy("map", data = filter_df())
       proxy%>%clearShapes()
       if (input$rec){
-         proxy%>%addPolygons(data = shp.NA, 
-                             color = "#444444", 
-                             weight = 1, 
-                             smoothFactor = 0.5,
-                             opacity = 1.0, 
-                             #fillOpacity = 0.5,
-                             fillColor = "transparent",
-                             highlightOptions = highlightOptions(color = "white", weight = 2,
-                                                                 bringToFront = TRUE))
+         proxy%>% addPolygons(data=ices.rect,weight=.4,fillOpacity = .1,color = 'grey',group = 'ices_squares',label = ~paste0(ICESNAME),highlight = highlightOptions(weight = 3, color = "red",
+                  bringToFront = TRUE))
       }
    })
    
