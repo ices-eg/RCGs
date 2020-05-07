@@ -1,5 +1,5 @@
 Id,Code,Description
-1,BALT                                      ,Baltic Sea                                                                                          
-3,NAtl                                 ,North Atlantic                                                                                      
+1,BALT,Baltic Sea                                                                                          
+3,NAtl                                      ,North Atlantic                                                                                      
 2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-4,LD,Distant Waters
+4,LDF,Distant Waters
