@@ -12,48 +12,17 @@ library(ggplot2)
 library(officer)
 library(shinydashboard)
 library(officer)
-library(webshot)
+#library(webshot)
 
 ##--------------
 ## data
 ##--------------
 
 #load("data/ShinyTest_BigPicture.RData")
-load("data/inventory_ca.RData")
-load("data/graph_det.RData")
-inventory_ca$LandingCountry <-
-  as.factor(inventory_ca$LandingCountry)
-inventory_ca$Species <-
-  as.factor(as.character(inventory_ca$Species))
-inventory_ca$SamplingType <- as.factor(inventory_ca$SamplingType)
-inventory_ca$Quarter <-
-  as.factor(as.character(inventory_ca$Quarter))
 
 
-var <-
-  c(
-    "N_measured_age",
-    "N_trips_age",
-    "N_measured_weight",
-    "N_trips_weight",
-    "N_measured_maturity",
-    "N_trips_maturity"
-  )
-group <-
-  c(
-    "SamplingCountry",
-    "FlagCountry",
-    "LandingCountry",
-    "Year",
-    "Quarter",
-    "Species",
-    "Area",
-    "SamplingType",
-    "Metier",
-    "StatisticalRectangle",
-    "lat",
-    "lon"
-  )
+
+
 # facet <- c("SamplingCountry","FlagCountry","LandingCountry","Year",
 #             "Quarter","Species","Area","SamplingType",
 #             "Metier","StatisticalRectangle","lat","lon")
@@ -64,7 +33,8 @@ group <-
 ## ui
 ##--------------
 
-ui <- fluidPage(
+
+ui <- bootstrapPage(tags$style(HTML(" body, pre { font-size: 12pt; } * { font-family: Arial,sans-serif }")),
   # "RCG overview",
   
   #  tabPanel("Home/About", 
@@ -89,32 +59,30 @@ ui <- fluidPage(
   #                      ,downloadButton("report", "Download Disclaimer"))
   #           ),  
   
-  shinyjs::useShinyjs(),
+  #shinyjs::useShinyjs(),
   
   # get window sizes.
-  tags$head(tags$script('var dimension = [0, 0];
-                        $(document).on("shiny:connected", function(e) {
-                        dimension[0] = window.innerWidth;
-                        dimension[1] = window.innerHeight;
-                        Shiny.onInputChange("dimension", dimension);
-                        });
-                        $(window).resize(function(e) {
-                        dimension[0] = window.innerWidth;
-                        dimension[1] = window.innerHeight;
-                        Shiny.onInputChange("dimension", dimension);
-                        });
-                        ')),
-  
-  #get RCG logo on the right
-  tagList(
-    tags$head(tags$script(type="text/javascript", src = "code.js")),
-    
+  # tags$head(tags$script('var dimension = [0, 0];
+  #                       $(document).on("shiny:connected", function(e) {
+  #                       dimension[0] = window.innerWidth;
+  #                       dimension[1] = window.innerHeight;
+  #                       Shiny.onInputChange("dimension", dimension);
+  #                       });
+  #                       $(window).resize(function(e) {
+  #                       dimension[0] = window.innerWidth;
+  #                       dimension[1] = window.innerHeight;
+  #                       Shiny.onInputChange("dimension", dimension);
+  #                       });
+  #                       ')),
+  # 
+  # #get RCG logo on the right
+  # tagList(
+  #   tags$head(tags$script(type="text/javascript", src = "code.js")),
+  #   
     #navBarPage
-    navbarPage( id = "tabs",
-                windowTitle= tags$head(
-                  tags$link(rel = "icon", type = "image/png", href = "minilogoRCG.png"),
-                  tags$title("RCGs Shiny")
-                ),
+    navbarPage(theme = shinytheme("cosmo"), collapsible = TRUE,
+                id = "tabs",
+                
                 
                 # Main title        
                 title = "RCG Overview Tool",
@@ -126,7 +94,7 @@ ui <- fluidPage(
                 # Home tab
                 # -----------------------------------
                 
-                tabPanel("Home/About", 
+                tabPanel("Home", 
                          fluidRow(
                            column(12, 
                                   #br(),
@@ -142,14 +110,14 @@ ui <- fluidPage(
                                   br(),
                                   includeHTML ("data/DescriptionDisclaimer.txt"),
                                   br(),
-                                  downloadButton("report", "Download Disclaimer")))
+                                  downloadButton("report", "Download Disclaimer",class = 'centerAlign')))
                 ),   
 
 # -----------------------------------
 # Fisheries overview tab
 # -----------------------------------
   
-  tabPanel("Fishery overview"),
+  tabPanel("Input data",align='center',br(),add_busy_bar(color = "red", height = "8px"),p("Upload RDB_All_Regions_YYYY.Rdata, available ", a(href="https://community.ices.dk/ExternalSites/datacollection/Regional%20coordination%20meetings%202017/RCGIntersessionalWork/_layouts/15/start.aspx#/SitePages/HomePage.aspx","here"),align="center"),fileInput("file", h3(""),buttonLabel = "Browse",placeholder = "example.Rdata"), p("It might take a while, here a cup of coffe c[_]",align="center")),
 
 # -----------------------------------
 # Sampling overview tab
@@ -163,31 +131,11 @@ ui <- fluidPage(
     # -----------------------------------
         tabPanel("Inventory tables",tabsetPanel(
       
-      type = "tabs", tabPanel("Upload your file",fileInput("file", h3(""),buttonLabel = "Browse",placeholder = "example.Rdata"),p("Upload RDB_All_Regions_YYYY.Rdata, available ", a(href="https://community.ices.dk/ExternalSites/datacollection/Regional%20coordination%20meetings%202017/RCGIntersessionalWork/_layouts/15/start.aspx#/SitePages/HomePage.aspx","here"))),tabPanel("CA inventory",downloadButton(outputId = 'download_filtered_inventorytable_CA',label = "Download the filtered data"), 
+      type = "tabs",tabPanel("CA inventory",align='center',br(),downloadButton(outputId = 'download_filtered_inventorytable_CA',label = "Download the filtered dataset"), br(),
                                                                                                                                                                                                                                                                                                                                                                                       DT::dataTableOutput("inventorytable_CA")
-      ),tabPanel("SL inventory",downloadButton(outputId = 'download_filtered_innvetorytable_SL',label = "Download the filtered data"), 
+      ),tabPanel("SL inventory",align='center',br(),downloadButton(outputId = 'download_filtered_innvetorytable_SL',label = "Download the filtered dataset"), br(),
                  DT::dataTableOutput("inventorytable_SL")))),
-    tabPanel("With functions",
-             
-             fluidRow(
-               br(),
-               br(),
-               column(
-                 4,
-                 selectInput ("var", "Var", var, multiple = F),
-                 selectInput ("group", "GroupBY", group, multiple = F),
-                 conditionalPanel (condition = "input.plottype =='Map'",
-                                   uiOutput("listvars")),
-                 #selectInput ("facet", "Facet", facet,  multiple = F)),
-                 radioButtons ("plottype", "Choose Plot", c("Map", "Barplot")),
-                 actionButton ("view", "View")
-               ),
-               column(8,
-                      #uiOutput("render_plot") # func do not like uiOutput
-                      plotOutput("plot1"))
-             )
-             #             ,downloadButton("report", "Generate report")
-    ),
+
     
 
     # -----------------------------------
@@ -205,6 +153,7 @@ ui <- fluidPage(
         # -----------------------------------
         # user Panel
         # -----------------------------------
+        
         absolutePanel(
           id = "controls",
           class = "panel panel-default",
@@ -217,46 +166,15 @@ ui <- fluidPage(
           width = 400,
           height = "auto",
           h2("Sampling explorer"),
-          selectizeInput (
-            "country",
-            "Country",
-            c("All", levels(inventory_ca$LandingCountry)),
-            multiple = TRUE,
-            selected = "All",
-            options = list(plugins = list("remove_button", "drag_drop"))
-          ),
-          selectizeInput (
-            "species",
-            "Species",
-            c("All", levels(inventory_ca$Species)),
-            multiple = TRUE,
-            selected = "All",
-            options = list(plugins = list("remove_button", "drag_drop"))
-          ),
-          selectizeInput (
-            "samtype",
-            "Sampling Type",
-            c("All", levels(inventory_ca$SamplingType)),
-            multiple = TRUE,
-            selected = "All",
-            options = list(plugins = list("remove_button", "drag_drop"))
-          ),
-          selectizeInput (
-            "quarter",
-            "Quarter",
-            c("All", levels(inventory_ca$Quarter)),
-            multiple = TRUE,
-            selected = "All",
-            options = list(plugins = list("remove_button", "drag_drop"))
-          ),
+          uiOutput("countryui"),uiOutput("speciesui"),uiOutput("samptypeui"),uiOutput("quarterui"),
           selectInput ("N_var2", "Variable", var, multiple = F),
           checkboxInput("rec", "ICES Rectangles"),
           br(),
           actionButton ("view2", "View"), #,
-          #downloadButton("report", "Generate report")
+          downloadButton("down", "Generate report"),
           
            plotOutput("plot2",height=300)
-        )),
+        )))
       
       # -----------------------------------
       # plot panel
@@ -276,7 +194,7 @@ ui <- fluidPage(
        # h2("Sampling plot"),
       #  plotOutput("plot2")
       #)
-    )#,# end interactive mapPanel
+    #,# end interactive mapPanel
     
     # -----------------------------------
     # Generate report subtab
@@ -285,7 +203,7 @@ ui <- fluidPage(
     # tabPanel("Download report",
     #     downloadButton("report", "Generate report")
     #     )# end of the 
-    ), # end navMENU
+    ) # end navMENU
 
     ##--------------
     ## tabPanels "with leaflet"
@@ -356,62 +274,13 @@ ui <- fluidPage(
     ##--------------
     ## tabPanels "with ggplot"
     ##--------------
-    
-    tabPanel("With ggplot",
-             fluidRow(
-               column(
-                 4,
-                 selectizeInput (
-                   "country3",
-                   "Country",
-                   choices = c("All", levels(inventory_ca$LandingCountry)),
-                   multiple = TRUE,
-                   selected = "All",
-                   options = list(plugins = list("remove_button", "drag_drop"))
-                 ),
-                 selectizeInput (
-                   "species3",
-                   "Species",
-                   c("All", levels(inventory_ca$Species)),
-                   multiple = TRUE,
-                   selected = "All",
-                   options = list(plugins = list("remove_button", "drag_drop"))
-                 ),
-                 selectizeInput (
-                   "samtype3",
-                   "Sampling Type",
-                   c("All", levels(inventory_ca$SamplingType)),
-                   multiple = TRUE,
-                   selected = "All",
-                   options = list(plugins = list("remove_button", "drag_drop"))
-                 ),
-                 selectizeInput (
-                   "quarter3",
-                   "Quarter",
-                   c("All", levels(inventory_ca$Quarter)),
-                   multiple = TRUE,
-                   selected = "All",
-                   options = list(plugins = list("remove_button", "drag_drop"))
-                 ),
-                 selectInput ("N_var3", "Variable", var, multiple = F),
-                 actionButton ("view3", "View")
-               ),
-               column(8,
-                      plotOutput("plot3", height = "600px")#,
-                      #tableOutput("debug3")
-                      #verbatimTextOutput("debug3")))
-               )
-               #                        ,downloadButton("report", "Generate report")
-             )
-    )
     #              ,downloadButton("report", "Generate report")
-  ),
+  )
   
 # -----------------------------------
 # Stock overview tab
 # -----------------------------------
 
-tabPanel("Stock overview")
 
 ##--------------
 ## tabPanels "with functions"
@@ -419,4 +288,4 @@ tabPanel("Stock overview")
 
 )# end of the taglist          
 #)# end Navbarpage             
-)# end of fluidPage
+# end of fluidPage
