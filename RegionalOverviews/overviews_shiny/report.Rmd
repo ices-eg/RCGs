@@ -1,0 +1,60 @@
+---
+title: "Dynamic report"
+output: html_document
+params:
+  c: NA
+  s: NA
+  t: NA
+  q: NA
+  v: NA
+  f: NA
+  p: NA
+  data: NA
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width=12, fig.height=8)
+```
+
+**Data exploratory**
+
++ User selection from CA table
+
+```{r}
+params$c
+params$s
+params$t
+params$q
+params$v
+```
+
+**Summary**
+
+```{r}
+summary(params$data)
+```
+
+**Map**
+
+```{r}
+leaflet(params$data, height=900, width=900) %>% 
+  addProviderTiles(providers$CartoDB.Positron)%>% 
+  setView(lng = -5,lat =  50, zoom = 5)%>%
+  addCircleMarkers(color=~params$p(aux),
+                     stroke=F,
+                     radius=~ (sqrt(aux)*2),
+                     fillOpacity=0.8)%>%
+  addLegend( "bottomleft", pal=params$p, values=~aux, title = params$v,opacity = 0.8)
+  
+```
+
+**Barplot**
+
+```{r}
+      ggplot(params$data, aes(x=LandingCountry, y=aux, fill=LandingCountry)) +
+         geom_bar(stat="identity")+
+         params$f +
+         theme_bw()+
+         theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+         labs(y = params$v)
+```
