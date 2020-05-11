@@ -117,7 +117,7 @@ ui <- bootstrapPage(tags$style(HTML(" body, pre { font-size: 12pt; } * { font-fa
 # Fisheries overview tab
 # -----------------------------------
   
-  tabPanel("Input data",align='center',br(),add_busy_bar(color = "red", height = "8px"),p("Upload RDB_All_Regions_YYYY.Rdata, available ", a(href="https://community.ices.dk/ExternalSites/datacollection/Regional%20coordination%20meetings%202017/RCGIntersessionalWork/_layouts/15/start.aspx#/SitePages/HomePage.aspx","here"),align="center"),fileInput("file", h3(""),buttonLabel = "Browse",placeholder = "example.Rdata"), p("It might take a while, here a cup of coffe c[_]",align="center")),
+  tabPanel("Input data",align='center',br(),add_busy_bar(color = "red", height = "8px"),p("Upload RDB_All_Regions_YYYY.Rdata, available ", a(href="https://community.ices.dk/ExternalSites/datacollection/Regional%20coordination%20meetings%202017/RCGIntersessionalWork/_layouts/15/start.aspx#/SitePages/HomePage.aspx","here"),align="center"),fileInput("file", h3(""),buttonLabel = "Browse",placeholder = "example.Rdata"), p("It might take a while",align="center")),
 
 # -----------------------------------
 # Sampling overview tab
