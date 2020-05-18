@@ -79,6 +79,13 @@ server <- function(input, output, session){
    #===============#
    #inventory table#
    #===============#
+ 
+   
+   # observe({
+   #    
+   #    hideTab(inputId="tabs", target="Sampling overview")
+   #    
+   # })
    
    data_list<-reactive({
       
@@ -86,8 +93,8 @@ server <- function(input, output, session){
       
       req(input$file)
       
-      
       load(input$file$datapath, envir = .GlobalEnv)
+      
       # modify the CS.Rdata
       ca<-as.data.table(ca)
       #ca<-fread(file)
@@ -295,46 +302,112 @@ server <- function(input, output, session){
    # Tab "with leaflet"
    # ******************
    
-   
+      output$absolute <- renderUI({
+         req(input$file)
+         absolutePanel(
+            id = "controls",
+            class = "panel panel-default",
+            fixed = TRUE,
+            draggable = TRUE,
+            bottom = "auto",
+            left = "auto",
+            right = 20,
+            top = 100,
+            width = 450,
+            height = "auto",
+            h2("Sampling explorer"),
+            # uiOutput("countryui"),uiOutput("speciesui"),uiOutput("samptypeui"),uiOutput("quarterui"),
+            selectizeInput(
+               "country",
+               "Country",
+               choices =
+                  c("All", levels(data_list()[[3]]$LandingCountry)),
+               multiple = TRUE,
+               selected = "All",
+               options = list(plugins = list("remove_button", "drag_drop"))
+            ),
+            selectizeInput(
+               "species",
+               "Species",
+               choices =
+                  c("All", levels(data_list()[[3]]$Species)),
+               multiple = TRUE,
+               selected = "All",
+               options = list(plugins = list("remove_button", "drag_drop"))
+            ),
+            selectizeInput(
+               "samtype",
+               "Sampling Type",
+               choices =
+                  c("All", levels(data_list()[[3]]$SamplingType)),
+               multiple = TRUE,
+               selected = "All",
+               options = list(plugins = list("remove_button", "drag_drop"))
+            ),
+            selectizeInput(
+               "quarter",
+               "Quarter",
+               choices =
+                  c("All", levels(data_list()[[3]]$Quarter)),
+               multiple = TRUE,
+               selected = "All",
+               options = list(plugins = list("remove_button", "drag_drop"))
+            ),
+            
+            selectInput ("N_var2", "Variable", var, multiple = F),
+            checkboxInput("rec", "ICES Rectangles"),
+            br(),
+            actionButton ("view2", "View"),
+            downloadButton("down", "Generate report"),
+            br(),
+            hr(),
+            br(),
+            br(),
+            plotOutput("plot2", height = 300)
+         )
+         
+         
+         
+      })
    # output ca_map
-   output$countryui<-renderUI({selectizeInput(
-      "country",
-      "Country",choices=
-      c("All", levels(data_list()[[3]]$LandingCountry)),
-      multiple = TRUE,
-      selected = "All",
-      options = list(plugins = list("remove_button", "drag_drop"))
-   )})
-
-   output$speciesui<-renderUI({
-selectizeInput(
-   "species",
-   "Species",choices=
-   c("All", levels(data_list()[[3]]$Species)),
-   multiple = TRUE,
-   selected = "All",
-   options = list(plugins = list("remove_button", "drag_drop"))
-)})
-
-  output$samptypeui<-renderUI({
-selectizeInput(
-   "samtype",
-   "Sampling Type",choices=
-   c("All", levels(data_list()[[3]]$SamplingType)),
-   multiple = TRUE,
-   selected = "All",
-   options = list(plugins = list("remove_button", "drag_drop"))
-)})
-  
-  output$quarterui<- renderUI({
-selectizeInput(
-   "quarter",
-   "Quarter",choices=
-   c("All", levels(data_list()[[3]]$Quarter)),
-   multiple = TRUE,
-   selected = "All",
-   options = list(plugins = list("remove_button", "drag_drop"))
-)})
+#    output$countryui<-renderUI({selectizeInput(
+#       "country",
+#       "Country",choices=
+#       c("All", levels(data_list()[[3]]$LandingCountry)),
+#       multiple = TRUE,
+#       selected = "All",
+#       options = list(plugins = list("remove_button", "drag_drop"))
+#    )})
+# 
+#    output$speciesui<-renderUI({
+# selectizeInput(
+#    "species",
+#    "Species",choices=
+#    c("All", levels(data_list()[[3]]$Species)),
+#    multiple = TRUE,
+#    selected = "All",
+#    options = list(plugins = list("remove_button", "drag_drop"))
+# )})
+# 
+#   output$samptypeui<-renderUI({
+# selectizeInput(
+#    "samtype",
+#    "Sampling Type",choices=
+#    c("All", levels(data_list()[[3]]$SamplingType)),
+#    multiple = TRUE,
+#    selected = "All",
+#    options = list(plugins = list("remove_button", "drag_drop"))
+# )})
+#   
+#   output$quarterui<- renderUI({
+# selectizeInput(
+#    "quarter",
+#    "Quarter",choices=
+#    c("All", levels(data_list()[[3]]$Quarter)),
+#    multiple = TRUE,
+#    selected = "All",
+#    options = list(plugins = list("remove_button", "drag_drop"))
+# )})
 
 
    
@@ -377,11 +450,11 @@ selectizeInput(
    filter_df <- eventReactive(input$view2, {
       if(nrow(df())!=0){
          dat<-aggregate(list(aux = df()$aux),
-                         by = list(lat = df()$lat, lon = df()$lon,
-                                   LandingCountry = df()$LandingCountry,
-                                   Species = df()$Species,
-                                   SamplingType = df()$SamplingType,
-                                   Quarter = df()$Quarter),
+                         by = list(lat = df()$lat, lon = df()$lon),
+                                   # LandingCountry = df()$LandingCountry,
+                                   # Species = df()$Species,
+                                   # SamplingType = df()$SamplingType,
+                                   # Quarter = df()$Quarter),
                          FUN = sum)
       }
       else {
@@ -395,7 +468,7 @@ selectizeInput(
    # -----------------------------------
    
    # output$debug <- renderTable({
-   #   #head(df(), 5)
+   # #head(df(), 5)
    #   head(filter_df(), 5)
    # })
    
@@ -416,7 +489,7 @@ selectizeInput(
   
   output$down <- downloadHandler(
      # For PDF output, change this to "report.pdf"
-     filename = "report.html",
+     filename = paste("report",Sys.time(),".html",sep=''),
      
      content = function(file) {
         # Copy the report file to a temporary directory before processing it, in
@@ -425,13 +498,13 @@ selectizeInput(
         tempReport <- file.path(tempdir(), "report.Rmd")
         
         file.copy("report.Rmd", tempReport, overwrite = TRUE)
-        
+        # 
         
         
         # Set up parameters to pass to Rmd document
         params <- list(c = input$country, s = input$species,
                        t = input$samtype, q = input$quarter,
-                       v = input$N_var2, data = filter_df(),
+                       v = input$N_var2, data1 = df(),data2 = filter_df(),
                        f = colScaleBAR,
                        p = pal.rmd())
         
@@ -471,9 +544,9 @@ selectizeInput(
       
       leafletProxy("map", data = filter_df())%>% 
          clearMarkers()%>% clearControls() %>% addProviderTiles(providers$CartoDB.Positron) %>% 
-         addCircleMarkers (color=~pal(aux),
+         addCircleMarkers(color=~pal(aux),
                            stroke=F,
-                           radius=~ (sqrt(aux)*2),
+                           radius=~ (sqrt(sqrt(aux))+0.6),
                            fillOpacity=0.8)%>%
          addLegend( "bottomleft", pal=pal, values=~aux, title = input$N_var2,opacity = 0.8)
    })
@@ -497,22 +570,26 @@ selectizeInput(
    
    
    output$plot2 <- renderPlot ({
-
-      if (input$view2==0) return(invisible(NULL))
-
+      #input$view2
+     if (input$view2==0) return()
+   
       #validate(need(input$plottype=="Barplot", message=FALSE))
       ColorsBAR <- colour_table$colour4
       names(ColorsBAR) <- colour_table$Country
       colScaleBAR<-scale_fill_manual(name="LandingCountry", values=ColorsBAR)
-
-      ggplot(filter_df(), aes(x=LandingCountry, y=aux, fill=LandingCountry)) +
+     isolate({ ggplot(df(), aes(x=LandingCountry, y=aux, fill=LandingCountry)) +
          geom_bar(stat="identity")+
          colScaleBAR +
          theme_bw()+
          theme(axis.text.x = element_text(angle = 90, hjust = 1))+
          labs(y = input$N_var2)
-
+     
+       
+      })
+     
    })
+   
+
    
    
     # ******************

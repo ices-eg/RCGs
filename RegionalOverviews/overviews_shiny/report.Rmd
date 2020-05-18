@@ -9,40 +9,44 @@ params:
   v: NA
   f: NA
   p: NA
-  data: NA
+  data1: NA
+  data2: NA
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, fig.width=12, fig.height=8)
+knitr::opts_chunk$set(fig.width=12, fig.height=8, comment = NA, error = F,warning = F, message = F)
 ```
 
 **Data exploratory**
 
 + User selection from CA table
 
-```{r}
-params$c
-params$s
-params$t
-params$q
-params$v
+```{r, include=F}
+Country<-params$c
+Species<-params$s
+Sampling.type<-params$t
+Quarter<-params$q
+Variable.selected<-params$v
 ```
 
-**Summary**
-
 ```{r}
-summary(params$data)
+Country
+Species
+Sampling.type
+Quarter
+Variable.selected
+
 ```
 
 **Map**
 
-```{r}
-leaflet(params$data, height=900, width=900) %>% 
+```{r, echo=F}
+leaflet(params$data2, height=800, width=900) %>% 
   addProviderTiles(providers$CartoDB.Positron)%>% 
   setView(lng = -5,lat =  50, zoom = 5)%>%
   addCircleMarkers(color=~params$p(aux),
                      stroke=F,
-                     radius=~ (sqrt(aux)*2),
+                     radius=~ (sqrt(sqrt(aux))+0.6),
                      fillOpacity=0.8)%>%
   addLegend( "bottomleft", pal=params$p, values=~aux, title = params$v,opacity = 0.8)
   
@@ -50,8 +54,8 @@ leaflet(params$data, height=900, width=900) %>%
 
 **Barplot**
 
-```{r}
-      ggplot(params$data, aes(x=LandingCountry, y=aux, fill=LandingCountry)) +
+```{r, echo=F}
+      ggplot(params$data1, aes(x=LandingCountry, y=aux, fill=LandingCountry)) +
          geom_bar(stat="identity")+
          params$f +
          theme_bw()+
