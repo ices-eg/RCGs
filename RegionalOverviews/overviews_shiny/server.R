@@ -489,7 +489,7 @@ server <- function(input, output, session){
   
   output$down <- downloadHandler(
      # For PDF output, change this to "report.pdf"
-     filename = paste("report",Sys.time(),".html",sep=''),
+     filename = paste("report",Sys.Date(),".html",sep=''),
      
      content = function(file) {
         # Copy the report file to a temporary directory before processing it, in
