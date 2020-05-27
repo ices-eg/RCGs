@@ -21,8 +21,8 @@ library(rmarkdown)
 library(lubridate)
 library(data.table)
 library(mapplots)
-library(shinybusy)
-#library(shinyWidgets)
+# library(shinybusy)
+library(shinyWidgets)
 
 ##--------------
 ## data

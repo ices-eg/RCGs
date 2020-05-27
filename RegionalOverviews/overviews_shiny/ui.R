@@ -35,6 +35,7 @@ library(officer)
 
 
 ui <- bootstrapPage(tags$style(HTML(" body, pre { font-size: 12pt; } * { font-family: Arial,sans-serif }")),
+                    tags$style(".shiny-file-input-progress {display: none}"),tags$head(tags$style(HTML(".selectize-input {width: 700px;}"))),
   # "RCG overview",
   
   #  tabPanel("Home/About", 
@@ -117,7 +118,7 @@ ui <- bootstrapPage(tags$style(HTML(" body, pre { font-size: 12pt; } * { font-fa
 # Fisheries overview tab
 # -----------------------------------
   
-  tabPanel("Input data",align='center',br(),add_busy_bar(color = "red", height = "8px"),p("Upload RDB_All_Regions_YYYY.Rdata, available ", a(href="https://community.ices.dk/ExternalSites/datacollection/Regional%20coordination%20meetings%202017/RCGIntersessionalWork/_layouts/15/start.aspx#/SitePages/HomePage.aspx","here"),align="center"),fileInput("file", h3(""),buttonLabel = "Browse",placeholder = "example.Rdata"), p("It might take a while",align="center")),
+  tabPanel("Input data",align='center',br(),p("Upload RDB_All_Regions_YYYY.Rdata, available ", a(href="https://community.ices.dk/ExternalSites/datacollection/Regional%20coordination%20meetings%202017/RCGIntersessionalWork/_layouts/15/start.aspx#/SitePages/HomePage.aspx","here"),align="center"),fileInput("file", h3(""),buttonLabel = "Browse",placeholder = "example.Rdata"), p("It might take a while",align="center")),
 
 # -----------------------------------
 # Sampling overview tab
@@ -129,12 +130,26 @@ ui <- bootstrapPage(tags$style(HTML(" body, pre { font-size: 12pt; } * { font-fa
     # -----------------------------------
     # Data explore subtab
     # -----------------------------------
-        tabPanel("Inventory tables",tabsetPanel(
-      
-      type = "tabs",tabPanel("CA inventory",align='center',br(),downloadButton(outputId = 'download_filtered_inventorytable_CA',label = "Download the filtered dataset"), br(),
-                                                                                                                                                                                                                                                                                                                                                                                      DT::dataTableOutput("inventorytable_CA")
-      ),tabPanel("SL inventory",align='center',br(),downloadButton(outputId = 'download_filtered_innvetorytable_SL',label = "Download the filtered dataset"), br(),
-                 DT::dataTableOutput("inventorytable_SL")))),
+    tabPanel("Inventory tables",
+             tabsetPanel(
+               type = "tabs",
+               tabPanel(
+                 "CA inventory",
+                 align = 'center',
+                 br(),
+                 downloadButton(outputId = 'download_filtered_inventorytable_CA', label = "Download the filtered dataset"),
+                 br(),
+                 addSpinner(DT::dataTableOutput("inventorytable_CA"), spin = "circle", color = "grey")
+               ),
+               tabPanel(
+                 "SL inventory",
+                 align = 'center',
+                 br(),
+                 downloadButton(outputId = 'download_filtered_invetorytable_SL', label = "Download the filtered dataset"),
+                 br(),
+                 addSpinner(DT::dataTableOutput("inventorytable_SL"), spin = "circle", color = "grey")
+               )
+             )),
 
     
 
@@ -153,128 +168,32 @@ ui <- bootstrapPage(tags$style(HTML(" body, pre { font-size: 12pt; } * { font-fa
         # -----------------------------------
         # user Panel
         # -----------------------------------
-        
-        absolutePanel(
-          id = "controls",
-          class = "panel panel-default",
-          fixed = TRUE,
-          draggable = TRUE,
-          bottom = "auto",
-          left = "auto",
-          right = 20,
-          top = 60,
-          width = 400,
-          height = "auto",
-          h2("Sampling explorer"),
-          uiOutput("countryui"),uiOutput("speciesui"),uiOutput("samptypeui"),uiOutput("quarterui"),
-          selectInput ("N_var2", "Variable", var, multiple = F),
-          checkboxInput("rec", "ICES Rectangles"),
-          br(),
-          actionButton ("view2", "View"), #,
-          downloadButton("down", "Generate report"),
-          
-           plotOutput("plot2",height=300)
-        )))
-      
-      # -----------------------------------
-      # plot panel
-      # -----------------------------------
-      
-      #absolutePanel(
-       # id = "controls",
-        #class = "panel panel-default",
-        #fixed = TRUE,
-       # draggable = TRUE,
-       # bottom = 60,
-       # left = "auto",
-      #  right = 20,
-      #  top = "auto",
-      #  width = 800,
-      #  height = "auto",
-       # h2("Sampling plot"),
-      #  plotOutput("plot2")
-      #)
-    #,# end interactive mapPanel
-    
-    # -----------------------------------
-    # Generate report subtab
-    # -----------------------------------
-    # 
-    # tabPanel("Download report",
-    #     downloadButton("report", "Generate report")
-    #     )# end of the 
+       uiOutput("absolute"),
+        # absolutePanel(
+        #   id = "controls",
+        #   class = "panel panel-default",
+        #   fixed = TRUE,
+        #   draggable = TRUE,
+        #   bottom = "auto",
+        #   left = "auto",
+        #   right = 20,
+        #   top = 60,
+        #   width = 400,
+        #   height = "auto",
+        #   h2("Sampling explorer"),
+        #   uiOutput("countryui"),uiOutput("speciesui"),uiOutput("samptypeui"),uiOutput("quarterui"),
+        #   selectInput ("N_var2", "Variable", var, multiple = F),
+        #   checkboxInput("rec", "ICES Rectangles"),
+        #   br(),
+        #   actionButton ("view2", "View"),
+        #   downloadButton("down", "Generate report"),
+        #   br(),
+        #   plotOutput("plot2",height=300)
+        # )
+        ))
     ) # end navMENU
 
-    ##--------------
-    ## tabPanels "with leaflet"
-    ##--------------
     
-#    tabPanel(
-#      "Interactive map",
-#      div(
-#        class = "outer",
-#        
-#        tags$head(# Include our custom CSS
-#          includeCSS("styles.css")),
-#        # If not using custom CSS, set height of leafletOutput to a number instead of percent
-#        leafletOutput("map", width = "100%", height = "100%"),
-#        
-#        # Shiny versions prior to 0.11 should use class = "modal" instea#d.
-#        absolutePanel(
-#          id = "controls",
-#          class = "panel panel-default",
-#          fixed = TRUE,
-#          draggable = TRUE,
-#          bottom = "auto",
-#          left = "auto",
-#          right = 20,
-#          top = 60,
-#          width = 330,
-#          height = "auto",
-#          h2("Sampling explorer"),
-#          selectizeInput (
-#            "country",
-#            "Country",
-#            c("All", levels(inventory_ca$LandingCountry)),
-#            multiple = TRUE,
-#            selected = "All",
-#            options = list(plugins = list("remove_button", "drag_drop"))
-#          ),
-#          selectizeInput (
-#            "species",
-#            "Species",
-#            c("All", levels(inventory_ca$Species)),
-#            multiple = TRUE,
-#            selected = "All",
-#            options = list(plugins = list("remove_button", "drag_drop"))
-#          ),
-#          selectizeInput (
-#            "samtype",
-#            "Sampling Type",
-#            c("All", levels(inventory_ca$SamplingType)),
-#            multiple = TRUE,
-#            selected = "All",
-#            options = list(plugins = list("remove_button", "drag_drop"))
-#          ),
-#          selectizeInput (
-#            "quarter",
-#            "Quarter",
-#            c("All", levels(inventory_ca$Quarter)),
-#            multiple = TRUE,
-#            selected = "All",
-#            options = list(plugins = list("remove_button", "drag_drop"))
-#          ),
-#          selectInput ("N_var2", "Variable", var, multiple = F),
-#          actionButton ("view2", "View"),
-#          #                   downloadButton("report", "Generate report")
-#        ))
-#    ),
-
-    
-    ##--------------
-    ## tabPanels "with ggplot"
-    ##--------------
-    #              ,downloadButton("report", "Generate report")
   )
   
 # -----------------------------------
