@@ -15,7 +15,7 @@ input.data <- loadInputData(data.file)
 # Load reference lists
 url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/AreaRegionLookup.csv"
 area.list <- loadAreaList(url)
-url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/Metier%20Subgroup%20Species%202019%2004.xlsx"
+url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/Metier%20Subgroup%20Species%202020.xlsx"
 species.list <- loadSpeciesList(url)
 url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/RDB_ISSG_Metier_list.csv"
 metier.list <- loadMetierList(url)
@@ -33,7 +33,7 @@ input.data[,selection_mesh:=ifelse(selection_mesh=="",NA,selection_mesh)]
 
 # Assign RCG name to the input data
 input.data <- merge(input.data, area.list, all.x = T, by = "area")
-input.data[is.na(RCG) & substr(area,1,2) %in% c("31","34","41","47","51","57","58","87"),RCG:="LD"]
+input.data[is.na(RCG) & substr(area,1,2) %in% c("31","34","41","47","51","57","58","87"),RCG:="LDF"]
 input.data[is.na(RCG) & substr(area,1,2) == "37",RCG:="MED"]
 
 # Assign species category to the input data
