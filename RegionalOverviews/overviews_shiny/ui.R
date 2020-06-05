@@ -1,18 +1,18 @@
 ##--------------
 ## libraries
 ##--------------
-
-library(shinythemes)
-library(shinyBS)
-library(shinyTime)
-library(shinyjs)
-library(leaflet)
-#library(leafem)
-library(ggplot2)
-library(officer)
-library(shinydashboard)
-library(officer)
-#library(webshot)
+# 
+# library(shinythemes)
+# library(shinyBS)
+# library(shinyTime)
+# library(shinyjs)
+# library(leaflet)
+# #library(leafem)
+# library(ggplot2)
+# library(officer)
+# library(shinydashboard)
+# library(officer)
+# #library(webshot)
 
 ##--------------
 ## data
