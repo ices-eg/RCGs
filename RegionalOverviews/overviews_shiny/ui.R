@@ -1,18 +1,18 @@
 ##--------------
 ## libraries
 ##--------------
-
-library(shinythemes)
-library(shinyBS)
-library(shinyTime)
-library(shinyjs)
-library(leaflet)
-#library(leafem)
-library(ggplot2)
-library(officer)
-library(shinydashboard)
-library(officer)
-#library(webshot)
+# 
+# library(shinythemes)
+# library(shinyBS)
+# library(shinyTime)
+# library(shinyjs)
+# library(leaflet)
+# #library(leafem)
+# library(ggplot2)
+# library(officer)
+# library(shinydashboard)
+# library(officer)
+# #library(webshot)
 
 ##--------------
 ## data
@@ -168,7 +168,7 @@ ui <- bootstrapPage(tags$style(HTML(" body, pre { font-size: 12pt; } * { font-fa
         # -----------------------------------
         # user Panel
         # -----------------------------------
-       uiOutput("absolute"),
+       uiOutput("absolute")#,
         # absolutePanel(
         #   id = "controls",
         #   class = "panel panel-default",
@@ -190,10 +190,17 @@ ui <- bootstrapPage(tags$style(HTML(" body, pre { font-size: 12pt; } * { font-fa
         #   br(),
         #   plotOutput("plot2",height=300)
         # )
-        ))
-    ) # end navMENU
-
+        )),
     
+    # -----------------------------------
+    # Static map subtab
+    # -----------------------------------
+    
+    tabPanel(
+      "Static map",
+      uiOutput("static")
+    )
+    ) # end navMENU
   )
   
 # -----------------------------------

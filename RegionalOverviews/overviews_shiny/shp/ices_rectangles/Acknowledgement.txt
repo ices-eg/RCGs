@@ -1,0 +1,5 @@
+This ICES rectangle shape file layer has been created by the Danish Institute for Fisheries Research (DIFRES). ICES is allowed to distribute the theme free of charge for non-commercial purposes. Please acknowledge DIFRES when using the map.
+
+ICES
+29 November 2006
+Hans Mose Jensen
