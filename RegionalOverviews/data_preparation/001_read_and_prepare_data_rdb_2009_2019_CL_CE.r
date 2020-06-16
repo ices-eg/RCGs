@@ -13,11 +13,16 @@
 				# all its data will be in rcg_all from BA and NSEA
 				# only the data from hauls in BA will be in rcg (BA), only the data from hauls in NA will be in rcg (NA). If you merge the two you get the full trip present in rcg_all.
 
-	# 2020-04-17: created from 2009_2018 version
-	# 2020-04-17: updated a few catch groups
+	# 2020-04-17: createdfrom 2009_2019 version
 	# 2020-04-19: added a quality check
 	# 2020-04-25: added a tweak on Sweden (27.3.d.28->27.3.d.28.2)
 	# 2020-04-25: started adding stockNew var [not yet implemented]
+	# 2020-05-04: added restrict_to_SSF_data [requested by SSF subgroup]
+	# 2020-06-07: updated ASFIS_WoRMS_updt
+	# 2020-06-16: updated Sepiidae ISSCAAP
+	# 2020-06-16: fixes to species Catch_group "small-pelagic" (Perciformed, Sphyraena, Pomatomus, etc)
+	# 2020-06-16: fixes to species Scomber japonicus in PRT records
+	# 2020-06-16: fixed variable name "stock" to "Stock"
 
 # ========================
 # downloads data from sharepoint
@@ -44,8 +49,8 @@ source("funs/func_download_data_from_sharepoint.r")
 	# file_ce <- "data/001_original/2020/20200417/CE Effort.zip" 
 	# unzip("data/001_original/2020/20200417/CL Landing.zip",exdir="data/001_original/2020/20200417")
 	# unzip("data/001_original/2020/20200417/CE Effort.zip",exdir="data/001_original/2020/20200417")
-	file_cl <- "data/001_original/2020/20200417/CL Landing.csv"
-	file_ce <- "data/001_original/2020/20200417/CE Effort.csv" 
+	file_cl <- "data/001_original/2020/20200610/CL Landing.csv"
+	file_ce <- "data/001_original/2020/20200610/CE Effort.csv" 
  
  
 # read data
@@ -73,12 +78,15 @@ dir.create(paste("data/002_prepared/2020/RCG_NSEA", sep=""),recursive=TRUE, show
 # ====================== 
 # Set Prep Options 
 # ======================  
- 
-target_region <- "RCG_BA" # "RCG_NA", "RCG_BA"; RCG_NSEA
+
+restrict_to_SSF_data <- FALSE
+target_region <- "RCG_NA" # "RCG_NA", "RCG_BA"; RCG_NSEA
 year_start <- 2009
 year_end <- 2019
-dir_output_rcg<-paste("data/002_prepared/2020/",target_region,sep="")
-dir_output_all<-"data/002_prepared/2020"
+time_tag<-format(Sys.time(), "%Y%m%d")
+#time_tag<-202006160931
+dir_output_rcg<-paste("data/002_prepared/2020/",time_tag,"/",target_region,sep=""); dir.create(dir_output_rcg, recursive=T)
+dir_output_all<-paste("data/002_prepared/2020",time_tag, sep="/"); dir.create(dir_output_all, recursive=T)
 
 
 # ======================
@@ -244,7 +252,8 @@ dir_output_all<-"data/002_prepared/2020"
 	ce_rcg[,HarbourDesc:=iconv(HarbourDesc, from="UTF-8", to="")]
 	ce_rcg[,HarbourDesc:=toupper(HarbourDesc)]
 
-
+	# renames stock->Stock [move to extraction - email sent to henrik 2020-06-16]
+	colnames(cl)[colnames(cl)=="stock"]<-"Stock"
 		
 # ========================	
 # Creates additional variables
@@ -368,8 +377,7 @@ dir_output_all<-"data/002_prepared/2020"
 	# 2019-03-27: email sent to fishpi2 wp2+3 participants on permissions to use the package
 	# 2019-04-02: so far no answer - to allow review of code an updated version of fishPiCodes::ASFIS_WoRMS table (ASFIS_WoRMS_updt.csv) will be kept on the data sharepoint of the RCG subgroup (acessible only to Subgroup members)
 	
-	ASFIS_WoRMS_updt <- read.table (file="ASFIS_WoRMS_updt.csv", header=T, sep=";", stringsAsFactors=FALSE) # on the data sharepoint of the RCG subgroup
-
+	ASFIS_WoRMS_updt <- read.table (file="ASFIS_WoRMS_updt_20200607.csv", header=T, sep=";", stringsAsFactors=FALSE) # on the data sharepoint of the RCG subgroup
 
 		# =====================
 		# CL [note: at the moment this is only being run on cl_rcg, not on the larger cl]
@@ -411,6 +419,7 @@ dir_output_all<-"data/002_prepared/2020"
 			cl_rcg[Species == "Venerupis philippinarum",ISSCAAP:=56] # Clams, cockles, arkshells
 			cl_rcg[Species == "Arcopagia crassa",ISSCAAP:=56] # Clams, cockles, arkshells
 			cl_rcg[Species == "Loligo forbesii",ISSCAAP:=57] # Squids, cuttlefishes, octopuses
+			cl_rcg[Species == "Sepiidae",ISSCAAP:=57] # Squids, cuttlefishes, octopuses
 			cl_rcg[Species == "Sepiida",ISSCAAP:=57] # Squids, cuttlefishes, octopuses
 			cl_rcg[Species == "Echinidae",ISSCAAP:=76] # Sea-urchins and other echinoderms
 			cl_rcg[Species == "Laminaria",ISSCAAP:=91] # Brown seaweeds
@@ -429,7 +438,8 @@ dir_output_all<-"data/002_prepared/2020"
 		
 		# Actinopterygii 39
 			cl_rcg[grepl(Species, pat= "Actinopterygii"),ISSCAAP:=39]
-		
+		# Perciformes passed to 39 
+			cl_rcg[grepl(Species, pat= "Perciformes"),ISSCAAP:=39]
 
 		# Adds RCG Catch_group
 			aux_spp_categ<-read.table("001_Inputs_Species_Categ/Table_Species_Categ.txt", header=T, sep="\t")
@@ -445,8 +455,23 @@ dir_output_all<-"data/002_prepared/2020"
 			cl_rcg[grepl(Species, pat="Lophi"),Species:="Lophiidae"]
 			
 			cl_rcg[Species == "Myxine glutinosa",Catch_group:="other"]
+			cl_rcg[grepl(Species, pat= "Scombridae"),Catch_group:="other"]
 			cl_rcg[Species == "Lichia amia",Catch_group:="large pelagic"]
 			cl_rcg[Species == "Acipenser sturio",Catch_group:="diadromous"]
+			cl_rcg[Species == "Coryphaena hippurus",Catch_group:="large pelagic"]
+			cl_rcg[Species == "Pomatomus saltatrix",Catch_group:="large pelagic"]
+			cl_rcg[Species == "Seriola lalandi",Catch_group:="large pelagic"]
+			cl_rcg[Species == "Seriola dumerili",Catch_group:="large pelagic"]
+			cl_rcg[Species == "Brama brama",Catch_group:="large pelagic"]
+			cl_rcg[Species == "Sphyraena viridensis",Catch_group:="large pelagic"]
+			cl_rcg[Species == "Sphyraena sphyraena",Catch_group:="large pelagic"]
+			cl_rcg[Species == "Sphyraena",Catch_group:="large pelagic"]
+			cl_rcg[Species == "Trachipterus arcticus",Catch_group:="large pelagic"]
+			cl_rcg[Species == "Lampris guttatus",Catch_group:="large pelagic"]
+			cl_rcg[Species == "Mola mola",Catch_group:="large pelagic"]
+			cl_rcg[Species == "Mola",Catch_group:="large pelagic"]
+			cl_rcg[Species == "Naucrates ductor",Catch_group:="demersal"]
+		
 			
 			# give it a check (see if it makes sense)
 			 # check demersal
@@ -513,6 +538,18 @@ dir_output_all<-"data/002_prepared/2020"
 	ce_rcg[,GTDays:=as.numeric(GTDays)]
 	ce_rcg[,KWDays_1000x:=as.numeric(KWDays_1000x)]
 	ce_rcg[,GTDays_1000x:=as.numeric(GTDays_1000x)]
+
+if (restrict_to_SSF_data==TRUE)
+	{
+	cl<-cl[VesselLengthCategory %in% c("<10","10-<12"),]
+	cl<-cl[,VesselLengthCategory:=factor(VesselLengthCategory, levels=c("<10","10-<12"))]
+	cl_rcg<-cl_rcg[VesselLengthCategory %in% c("<10","10-<12"),]
+	cl_rcg[,VesselLengthCategory:=factor(VesselLengthCategory, levels=c("<10","10-<12"))]
+	ce<-ce[VesselLengthCategory %in% c("<10","10-<12"),]
+	ce[,VesselLengthCategory:=factor(VesselLengthCategory, levels=c("<10","10-<12"))]
+	ce_rcg<-ce_rcg[VesselLengthCategory %in% c("<10","10-<12"),]
+	ce_rcg[,VesselLengthCategory:=factor(VesselLengthCategory, levels=c("<10","10-<12"))]
+	}
 
 
 	# region specific	
@@ -591,6 +628,15 @@ dir_output_all<-"data/002_prepared/2020"
 	# update: TripsNumber == 999 are TripsNumber = 0
 	ce[TripsNumber==999 & FlagCountry=="IRL",TripsNumber:=0,]
 	ce_rcg[TripsNumber==999 & FlagCountry=="IRL",TripsNumber:=0,]
+
+
+# ================	
+# data update: PRT [authorization email 2020-06-16]
+# ================	
+	# update "Scomber japonicus" is the old name of "Scomber colias"
+	cl_rcg[Species=="Scomber japonicus" & FlagCountry=="PRT","SpeciesAphiaID"]<-151174
+	cl_rcg[Species=="Scomber japonicus" & FlagCountry=="PRT","SpeciesDesc"]<-"Atlantic chub mackerel"
+	cl_rcg[Species=="Scomber japonicus" & FlagCountry=="PRT","Species"]<-"Scomber colias"
 
 # ================
 # quick and dirty check
@@ -689,14 +735,20 @@ dir_output_all<-"data/002_prepared/2020"
 	file_info_cl<-file.info(file_cl)
 	file_info_ce<-file.info(file_ce)
 
-	time_tag<-format(Sys.time(), "%Y%m%d%H%M")
-	#time_tag<-202004191807
 
+if (restrict_to_SSF_data==FALSE)
+	{
 	save(cl_rcg, file_info_cl, file = paste(dir_output_rcg, paste("\\RDB",target_region,"CL", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
 	save(ce_rcg, file_info_ce, file = paste(dir_output_rcg, paste("\\RDB",target_region,"CE", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
-	
 	save(cl, file_info_cl, file = paste(dir_output_all, paste("\\RDB","All_Regions","CL", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
 	save(ce, file_info_ce, file = paste(dir_output_all, paste("\\RDB","All_Regions","CE", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
+	} else  {
+	print(1)
+	save(cl_rcg, file_info_cl, file = paste(dir_output_rcg, paste("\\RDB",target_region,"CL_SSF", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
+	save(ce_rcg, file_info_ce, file = paste(dir_output_rcg, paste("\\RDB",target_region,"CE_SSF", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
+	save(cl, file_info_cl, file = paste(dir_output_all, paste("\\RDB","All_Regions","CL_SSF", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
+	save(ce, file_info_ce, file = paste(dir_output_all, paste("\\RDB","All_Regions","CE_SSF", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))	
+	}
 
-fwrite(cl_rcg, file = "test.csv")
+
 	
