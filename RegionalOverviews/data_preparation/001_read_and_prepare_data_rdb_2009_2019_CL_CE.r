@@ -23,6 +23,7 @@
 	# 2020-06-16: fixes to species Catch_group "small-pelagic" (Perciformed, Sphyraena, Pomatomus, etc)
 	# 2020-06-16: fixes to species Scomber japonicus in PRT records
 	# 2020-06-16: fixed variable name "stock" to "Stock"
+	# 2020-06-16: fixes to species Scomber japonicus in ESP records
 
 # ========================
 # downloads data from sharepoint
@@ -637,6 +638,25 @@ if (restrict_to_SSF_data==TRUE)
 	cl_rcg[Species=="Scomber japonicus" & FlagCountry=="PRT","SpeciesAphiaID"]<-151174
 	cl_rcg[Species=="Scomber japonicus" & FlagCountry=="PRT","SpeciesDesc"]<-"Atlantic chub mackerel"
 	cl_rcg[Species=="Scomber japonicus" & FlagCountry=="PRT","Species"]<-"Scomber colias"
+
+	cl[Species=="Scomber japonicus" & FlagCountry=="PRT","SpeciesAphiaID"]<-151174
+	cl[Species=="Scomber japonicus" & FlagCountry=="PRT","SpeciesDesc"]<-"Atlantic chub mackerel"
+	cl[Species=="Scomber japonicus" & FlagCountry=="PRT","Species"]<-"Scomber colias"
+
+	
+# ================	
+# data update: ESP [authorization email 2020-06-16]
+# ================	
+	# update "Scomber japonicus" is the old name of "Scomber colias"
+	cl_rcg[Species=="Scomber japonicus" & FlagCountry=="ESP","SpeciesAphiaID"]<-151174
+	cl_rcg[Species=="Scomber japonicus" & FlagCountry=="ESP","SpeciesDesc"]<-"Atlantic chub mackerel"
+	cl_rcg[Species=="Scomber japonicus" & FlagCountry=="ESP","Species"]<-"Scomber colias"	
+	
+	cl[Species=="Scomber japonicus" & FlagCountry=="ESP","SpeciesAphiaID"]<-151174
+	cl[Species=="Scomber japonicus" & FlagCountry=="ESP","SpeciesDesc"]<-"Atlantic chub mackerel"
+	cl[Species=="Scomber japonicus" & FlagCountry=="ESP","Species"]<-"Scomber colias"	
+
+
 
 # ================
 # quick and dirty check
