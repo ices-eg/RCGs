@@ -525,7 +525,8 @@ for (a in unique(param$Section)) {
             value_of_threshold = graph_det$value_of_threshold[i],
             sorted = graph_det$sorted[i],
             graph_par = eval(parse(text = graph_det$graph_par[i])),
-            save_plot_to_list = T
+            save_plot_to_list = T,
+            filter=graph_det$Filter[i]
           )
           
          subchunkify(res[[2]], pngtxt_name, graph_det$height[i], graph_det$width[i])

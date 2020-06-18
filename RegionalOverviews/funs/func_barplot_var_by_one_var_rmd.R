@@ -1,4 +1,4 @@
-barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold, value_of_threshold, sorted = FALSE, graph_par=list(oma = c(1,1,1,1), mai = c(1,1,.5,.5), ylab_line = 4, cex.x = 1, col=NA), grouped = FALSE, title_root="", save_plot_to_list=TRUE)
+barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold, value_of_threshold, sorted = FALSE, graph_par=list(oma = c(1,1,1,1), mai = c(1,1,.5,.5), ylab_line = 4, cex.x = 1, col=NA), grouped = FALSE, title_root="", save_plot_to_list=TRUE,filter)
 	{
 	#
 	# prepares a barplot of Var per var1
@@ -127,7 +127,37 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 	  
 	  if(title_root!="") title(main = paste(title_root,":",Var,"by", var1), line = 1.8) else title(main = paste(Var,"by", var1), line = 1.8)
 	  title(ylab=y_title, line = graph_par$ylab_line)
-
+	  if (filter=='small pelagic'){
+	    #small start
+	    if(!type_of_threshold == "NULL")
+	    {
+	      title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = 0.5)
+	      
+	      if(type_of_threshold == "cum_percent"){
+	        var1<-rename_var1(var1)
+	        Var<-rename_var(Var)
+	        caption<-paste(Var,' of ',filter, ' by ',var1,'. ',var1,' displayed comprise ',value_of_threshold, '% of the total ',Var,'.',sep='' )} 
+	      else { caption<-paste('caption 1' )}
+	      
+	      if(type_of_threshold == "main"){
+	        var1<-rename_var1(var1)
+	        Var<-rename_var(Var)
+	        caption<-paste(Var,' of ',filter, ' by ',value_of_threshold, ' main ', var1,' ( represent ',percent_var1, '% of all ',var1,')',sep='')
+	      }
+	      
+	    } else {
+	      if (percent_Var==100){
+	        title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ","all_data", sep=""), cex.main=0.9, line = 0.5)
+	        var1<-rename_var1(var1)
+	        Var<-rename_var(Var)
+	        caption<-paste(Var,' of ',filter, ' by ',var1,'.',sep="")}
+	      else{
+	        var1<-rename_var1(var1)
+	        Var<-rename_var(Var)
+	        if (Var == "LandingWeight_1000ton"){Var="landings"}
+	        caption<-paste(Var,' of ',filter, ' by ',var1,' ( represent ',percent_Var, '% of all ',Var,')')}}
+	    #small end
+	  }else{
 	  if(!type_of_threshold == "NULL")
 	  {
 	    title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = 0.5)
@@ -155,7 +185,7 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 	      Var<-rename_var(Var)
 	      if (Var == "LandingWeight_1000ton"){Var="landings"}
 	      caption<-paste(Var,' by ',var1,' ( represent ',percent_Var, '% of all ',Var,')')}
-	  }
+	  }}
 		p <- recordPlot()
 		out<-list(table = data.frame(var1 = rownames(t1), Var = t1, row.names=NULL), plot = p,caption)
 		dev.off()
