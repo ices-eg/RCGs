@@ -1,4 +1,4 @@
-barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, proportion, type_of_threshold, value_of_threshold, sorted = FALSE, graph_par=list(oma = c(1,1,1,1), mai = c(1,1,.5,.5), ylab_line = 4, cex.x = 1, col=NA), legend_par, grouped=FALSE, title_root="", save_plot_to_list=TRUE)
+barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, proportion, type_of_threshold, value_of_threshold, sorted = FALSE, graph_par=list(oma = c(1,1,1,1), mai = c(1,1,.5,.5), ylab_line = 4, cex.x = 1, col=NA), legend_par, grouped=FALSE, title_root="", save_plot_to_list=TRUE, filter)
 	{
 	# Prepares a barplot of Var per var1 (with var 2 stacked)
 	# Nuno Prista, SLU, Sweden
@@ -23,7 +23,7 @@ barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, pro
 		# 2019-05-08: changed output to list with values "table" and "plot"
 		# 2019-05-08: added argument save_plot_to_list (saves plot as second argument of final list)
     # 2020-04-07: added captions K.Krakówka
-	
+    # 2020-06-18: added catch groups 
   source("../../funs/fun_rename.r")
   
 		percent_Var <- round(sum(!is.na(x[,Var]))/dim(x)[1]*100,2)
@@ -130,6 +130,42 @@ barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, pro
 	  barplot(t1, las=2, legend.text=rownames(t1), col=colour_scale, ylab = "", main = NULL, cex.names = graph_par$cex.x, args.legend = legend_pars)
 	  if(title_root!="") title(main = paste(title_root,":",Var,"by", var1, "and", var2), line = 1.8) else title(main = paste(Var,"by", var1, "and", var2), line = 1.8)
 	  title(ylab=y_title, line = graph_par$ylab_line)
+	  if(filter=="small pelagic" || filter=="flatfish"|| filter=="demersal"){
+	    #catch group
+	    if(!type_of_threshold == "NULL")
+	    {
+	      if(type_of_threshold == "cum_percent" & percent_var1==100 & percent_var2==100 & percent_Var==100 & proportion==TRUE ){
+	        caption<-paste(Var, ' of ',filter,' by ', var1, ' and ', var2,'. ', var1,' and ', var2,' displayed comprise ',value_of_threshold, '% of the total ',Var,'.' )
+	      }
+	      title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; z:",percent_var2,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = .7)
+	      ########
+	      if(type_of_threshold == "main" & percent_var1==100 & percent_var2==100 & percent_Var==100 & proportion==TRUE ){
+	        caption<-paste(Var, ' of ',filter,' by ',value_of_threshold, 'main', var1,' and ', var2,'.')
+	      }
+	      if(type_of_threshold == "main" & percent_var1!=100 & percent_var2==100 & percent_Var==100 & proportion==TRUE ){
+	        var1<-rename_var1(var1)
+	        Var<-rename_var(Var)
+	        var2<-rename_var2(var2)
+	        caption<-paste(Var, ' of ',filter,' by ',value_of_threshold, 'main', var1,'( represent ',percent_var1, '% of all ',var1,') and ', var2,'.')
+	      }
+	      title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; z:",percent_var2,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = .7)
+	      
+	      ##########
+	    } else {
+	      title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; z:",percent_var2,"%; ","all_data", sep=""), cex.main=0.9, line = .7)
+	      if(percent_var1==100 & percent_var2==100 & percent_Var==100 & proportion==TRUE ){      
+	        caption<-paste(Var, ' of ',filter,' by ',var1,' and ', var2, '.',sep="")}
+	      else{
+	        if(percent_var1==100 & percent_var2!=100 & percent_Var==100 & proportion==TRUE ){
+	          caption<-paste(Var, ' of ',filter,' by ', var1,' and ',var2,'. The',var2,' was given for ', percent_var2, '% of observations.',sep='')
+	        }
+	        else{
+	          caption<-paste(Var, ' of ',filter,' by ', var1,' and ',var2,'. The',var1,' was given for ', percent_var1, '% of observations.', sep='')
+	        }
+	      }
+	    }
+	    #catch end
+	  }else{
 	  if(!type_of_threshold == "NULL")
 	  {
 	    if(type_of_threshold == "cum_percent" & percent_var1==100 & percent_var2==100 & percent_Var==100 & proportion==TRUE ){
@@ -161,7 +197,7 @@ barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, pro
 	        caption<-paste(Var,' by ', var1,' and ',var2,'. The',var1,' was given for ', percent_var1, '% of observations.', sep='')
 	      }
 	    }
-	  }
+	  }}
 	  p <- recordPlot()
 	  out<-list(table = data.frame(var1 = rownames(t1), Var = t1, row.names=NULL), plot = p, caption=caption)
 	  dev.off()
