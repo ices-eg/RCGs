@@ -40,11 +40,19 @@ period <- "2019"
 figures <- "yes" #yes / no - all figures outputtet to a folder
 tables <- "yes" #yes / no - all tabales outputtet to a folder
 
-data_dir <-data_dir <- paste("../../data/002_prepared/", target_region, "/", sep = '') # "Q:/dfad/users/kibi/data/RCG/from_share_point/"
+#data_dir <-data_dir <- paste("../../data/002_prepared/", target_region, "/", sep = '') # "Q:/dfad/users/kibi/data/RCG/from_share_point/"
+data_dir <-data_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Data/", target_region, "/", sep = '') # 
 
 #Folder for figures and tables
-table_dir <- paste("../../outputs/", target_region, "/tables/", sep = "")
-figur_dir <- paste("../../outputs/", target_region, "/figures/", sep = "")
+# table_dir <- paste("../../outputs/", target_region, "/tables/", sep = "")
+# figur_dir <- paste("../../outputs/", target_region, "/figures/", sep = "")
+table_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Outputs/", target_region, "/tables/", sep = "")
+figur_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Outputs/", target_region, "/figures/", sep = "")
+
+# for SSF
+#table_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Outputs/SSF_", target_region, "/tables/", sep = "")
+#figur_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Outputs/SSF_", target_region, "/figures/", sep = "")
+
 
 #Landings per stock settings
 
@@ -193,11 +201,11 @@ subchunkify <- function(g, chunk_name = chunk_name, fig_height=7, fig_width=5) {
 ```{r title, include = F}
 
 if (target_region == "RCG_NA") {
-  front_title <- paste("Annual overview North Atlantic, ",  period, "  \n ","![](../../data/logo.png)", sep = "")
+  front_title <- paste("RDB Catch and Effort Overview North Atlantic, ",  period, "  \n ","![](../../data/logo.png)", sep = "")
 } else if (target_region == "RCG_BA") {
-  front_title <- paste("Annual overview Baltic, ",  period, "  \n ","![](../../data/logo.png)", sep = "")
+  front_title <- paste("RDB Catch and Effort Overview Baltic, ",  period, "  \n ","![](../../data/logo.png)", sep = "")
 } else if (target_region == "RCG_NSEA") {
-  front_title <- paste("Annual overview North Sea and Eastern Arctic, ",  period, "  \n ","![](../../data/logo.png)", sep = "")
+  front_title <- paste("RDB Catch and Effort Overview North Sea and Eastern Arctic, ",  period, "  \n ","![](../../data/logo.png)", sep = "")
 }
 
 ```
@@ -215,29 +223,29 @@ date: `r Sys.Date()`
 if (target_region == "RCG_NA")
 {
   load(
-    paste(data_dir, "RDB_RCG_NA_CL_2009_2019_prepared_202004191807.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NA_CL_2009_2019_prepared_20200616.Rdata", sep = "")
   )
   load(
-    paste(data_dir, "RDB_RCG_NA_CE_2009_2019_prepared_202004191807.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NA_CE_2009_2019_prepared_20200616.Rdata", sep = "")
   )
 }
 
 if (target_region == "RCG_BA")
 {
   load(
-    paste(data_dir, "RDB_RCG_BA_CL_2009_2019_prepared_202004191807.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_BA_CL_2009_2019_prepared_20200616.Rdata", sep = "")
   )
   load(
-    paste(data_dir, "RDB_RCG_BA_CE_2009_2019_prepared_202004191807.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_BA_CE_2009_2019_prepared_20200616.Rdata", sep = "")
   )
 }
 if (target_region == "RCG_NSEA")
 {
   load(
-    paste(data_dir, "RDB_RCG_NSEA_CL_2009_2019_prepared_202004191807.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NSEA_CL_2009_2019_prepared_20200616.Rdata", sep = "")
   )
   load(
-    paste(data_dir, "RDB_RCG_NSEA_CE_2009_2019_prepared_202004191807.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NSEA_CE_2009_2019_prepared_20200616.Rdata", sep = "")
     )
 			}	
 
