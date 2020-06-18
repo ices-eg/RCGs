@@ -146,7 +146,7 @@ barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, pro
 	        var1<-rename_var1(var1)
 	        Var<-rename_var(Var)
 	        var2<-rename_var2(var2)
-	        caption<-paste(Var, ' of ',filter,' by ',value_of_threshold, 'main', var1,'( represent ',percent_var1, '% of all ',var1,') and ', var2,'.')
+	        caption<-paste(Var, ' of ',filter,' in the ',value_of_threshold, 'main', var1,'(',percent_var1, '% of rows entering analysis had known ',var1,') and ', var2,'.')
 	      }
 	      title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; z:",percent_var2,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = .7)
 	      
@@ -180,7 +180,7 @@ barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, pro
 	      var1<-rename_var1(var1)
 	      Var<-rename_var(Var)
 	      var2<-rename_var2(var2)
-	      caption<-paste(Var,' by ',value_of_threshold, 'main', var1,'( represent ',percent_var1, '% of all ',var1,') and ', var2,'.')
+	      caption<-paste(Var,' in the ',value_of_threshold, 'main', var1,'(',percent_var1, '% of rows entering analysis had known ',var1,') and ', var2,'.')
 	    }
 	    title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; z:",percent_var2,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = .7)
 	    

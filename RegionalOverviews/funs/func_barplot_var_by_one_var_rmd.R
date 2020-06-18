@@ -143,7 +143,7 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 	      if(type_of_threshold == "main"){
 	        var1<-rename_var1(var1)
 	        Var<-rename_var(Var)
-	        caption<-paste(Var,' of ',filter, ' by ',value_of_threshold, ' main ', var1,' ( represent ',percent_var1, '% of all ',var1,')',sep='')
+	        caption<-paste(Var,' of ',filter, ' in the ',value_of_threshold, ' main ', var1,' (',percent_var1, '% of rows entering analysis had known ',var1,').',sep='')
 	      }
 	      
 	    } else {
@@ -172,7 +172,7 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 	    if(type_of_threshold == "main"){
 	      var1<-rename_var1(var1)
 	      Var<-rename_var(Var)
-	      caption<-paste(Var,' by ',value_of_threshold, ' main ', var1,' ( represent ',percent_var1, '% of all ',var1,')',sep='')
+	      caption<-paste(Var,' in the ',value_of_threshold, ' main ', var1,' ( ',percent_var1, '% of rows entering analysis had known ',var1,').',sep='')
 	    }
 	    
 	  } else {
