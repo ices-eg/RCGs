@@ -38,16 +38,13 @@ years <- c(2019)
 period <- "2019"
 
 figures <- "yes" #yes / no - all figures outputtet to a folder
-tables <- "yes" #yes / no - all tabales outputtet to a folder
+tables <- "yes" #yes / no - all tables outputtet to a folder
 
-#data_dir <-data_dir <- paste("../../data/002_prepared/", target_region, "/", sep = '') # "Q:/dfad/users/kibi/data/RCG/from_share_point/"
-data_dir <-data_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Data/", target_region, "/", sep = '') # 
+data_dir <-data_dir <- paste("../../data/002_prepared/", target_region, "/", sep = '') # "Q:/dfad/users/kibi/data/RCG/from_share_point/"
 
 #Folder for figures and tables
-# table_dir <- paste("../../outputs/", target_region, "/tables/", sep = "")
-# figur_dir <- paste("../../outputs/", target_region, "/figures/", sep = "")
-table_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Outputs/", target_region, "/tables/", sep = "")
-figur_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Outputs/", target_region, "/figures/", sep = "")
+table_dir <- paste("../../outputs/", target_region, "/tables/", sep = "")
+figur_dir <- paste("../../outputs/", target_region, "/figures/", sep = "")
 
 # for SSF
 #table_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Outputs/SSF_", target_region, "/tables/", sep = "")
@@ -564,7 +561,8 @@ cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',' ',res[[3]] ,'\n ',sep='')
             sorted = graph_det$sorted[i],
             graph_par = eval(parse(text = graph_det$graph_par[i])),
             legend_par = graph_det$legend_par[i],
-            save_plot_to_list = T
+            save_plot_to_list = T,
+            filter=graph_det$Filter[i]
           )
           
           subchunkify(res[[2]], pngtxt_name, graph_det$height[i], graph_det$width[i])

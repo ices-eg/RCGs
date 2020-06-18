@@ -31,6 +31,7 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 		# 2019-05-08: added argument save_plot_to_list (saves plot as second argument of final list)
     # 2020-04-07: added captions K.Krakówka
     # 2020-04-21: added subplot and Nuno's function
+    # 2020-06-18: added catch groups 
 
 		percent_Var <- round(sum(!is.na(x[,Var]))/dim(x)[1]*100,2)
 		percent_var1 <- round(sum(!is.na(x[,var1]))/dim(x)[1]*100,2)
@@ -127,8 +128,8 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 	  
 	  if(title_root!="") title(main = paste(title_root,":",Var,"by", var1), line = 1.8) else title(main = paste(Var,"by", var1), line = 1.8)
 	  title(ylab=y_title, line = graph_par$ylab_line)
-	  if (filter=='small pelagic'){
-	    #small start
+	  if (filter=='small pelagic'|| filter=="flatfish"|| filter=="demersal"){
+	    #catch start
 	    if(!type_of_threshold == "NULL")
 	    {
 	      title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = 0.5)
@@ -156,7 +157,7 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 	        Var<-rename_var(Var)
 	        if (Var == "LandingWeight_1000ton"){Var="landings"}
 	        caption<-paste(Var,' of ',filter, ' by ',var1,' ( represent ',percent_Var, '% of all ',Var,')')}}
-	    #small end
+	    #catch end
 	  }else{
 	  if(!type_of_threshold == "NULL")
 	  {
