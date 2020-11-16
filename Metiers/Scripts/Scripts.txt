@@ -1,3 +1,0 @@
-Intersessional Sub-Group on Metier Issues 2019
-
-ToR 6: Make a script for a standard procedure for assigning metiers based on a common data format, taking into account the recommendations made at the Metier workshop.
