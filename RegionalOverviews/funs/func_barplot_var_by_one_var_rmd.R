@@ -35,7 +35,7 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 
 		percent_Var <- round(sum(!is.na(x[,Var]))/dim(x)[1]*100,2)
 		percent_var1 <- round(sum(!is.na(x[,var1]))/dim(x)[1]*100,2)
-		source("../../funs/fun_rename.r")
+		source("../../RCGs/RegionalOverviews/funs/fun_rename.r")
 	# subset to threshold
 		if(is.na(type_of_threshold)) stop("check type_of_threshold")
 		if(!type_of_threshold == "NULL")
