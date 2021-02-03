@@ -70,7 +70,7 @@ data_list<-reactive({
   
   #class(sl_master)
   
-  slinventory<-sl_master[,.(NoLength=sum(NoInSubSample),NoLengthTrips=length(unique(Trip[NoInSubSample>0])),WeigthKg=sum(SubSampleWeight_kg)),by=c("Year","Region","FlagCountry","LandingCountry","Stock","Species","SamplingType","StartQuarter","Area" ,"FishingActivityCategoryEuropeanLvl6", "CatchCategory")][NoLength>0|NoLengthTrips>0,]
+  slinventory<-sl_master[,.(NoLength=sum(NoInSubSample),NoLengthTrips=length(unique(Trip[NoInSubSample>0])),WeigthKg=sum(SubSampleWeight_kg)),by=c("Year","Region","FlagCountry","LandingCountry","Stock","Species","SamplingType","StartQuarter","Area" ,"FishingActivityCategoryEuropeanLvl6", "CatchCategory","VesselLengthCategory")][NoLength>0|NoLengthTrips>0,]
   
   slinventory$Region[slinventory$Region=="NA"|is.na(slinventory$Region)]<-'NATL'
   
