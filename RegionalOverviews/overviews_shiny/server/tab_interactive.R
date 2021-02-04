@@ -199,7 +199,7 @@ output$down <- downloadHandler(
     # can happen when deployed).
     tempReport <- file.path(tempdir(), "report.Rmd")
     
-    file.copy("report.Rmd", tempReport, overwrite = TRUE)
+    file.copy("markdown/report.Rmd", tempReport, overwrite = TRUE)
     # 
     
     
