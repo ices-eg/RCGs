@@ -107,7 +107,8 @@ shinyUI(bootstrapPage(tags$style(HTML(" body, pre { font-size: 12pt; } * { font-
     # -----------------------------------
     
     tabPanel(
-      "Interactive plots"
+      "Interactive plots", 
+        uiOutput("summary")
     )
   )# end navMENU
 
