@@ -70,7 +70,7 @@ data_list<-reactive({
   
   #class(sl_master)
   
-  slinventory<-sl_master[,.(NoLength=sum(NoInSubSample),NoLengthTrips=length(unique(Trip[NoInSubSample>0])),WeigthKg=sum(SubSampleWeight_kg)),by=c("Year","Region","FlagCountry","LandingCountry","Stock","Species","SamplingType","StartQuarter","Area" ,"FishingActivityCategoryEuropeanLvl6", "CatchCategory","VesselLengthCategory")][NoLength>0|NoLengthTrips>0,]
+  slinventory<-sl_master[,.(NoLength=sum(NoInSubSample),NoLengthTrips=length(unique(Trip[NoInSubSample>0])),WeigthKg=sum(SubSampleWeight_kg)),by=c("Year","Region","FlagCountry","LandingCountry","Stock","Species","SamplingType","StartQuarter","FishingGround","Area" ,"FishingActivityCategoryEuropeanLvl6", "CatchCategory","VesselLengthCategory")][NoLength>0|NoLengthTrips>0,]
   
   slinventory$Region[slinventory$Region=="NA"|is.na(slinventory$Region)]<-'NATL'
   
@@ -81,6 +81,7 @@ data_list<-reactive({
   slinventory$Species<-as.factor(slinventory$Species)
   slinventory$SamplingType<-as.factor(slinventory$SamplingType)
   slinventory$StartQuarter<-as.factor(slinventory$StartQuarter)
+  slinventory$FishingGround<-as.factor(slinventory$FishingGround)
   slinventory$Area<-as.factor(slinventory$Area)
   slinventory$CatchCategory<-as.factor(slinventory$CatchCategory)
   
