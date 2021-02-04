@@ -18,6 +18,10 @@
 #"Quarter","Species","Area","SamplingType",        
 # "Metier","StatisticalRectangle","lat","lon") 
 
+# facet <- c("SamplingCountry","FlagCountry","LandingCountry","Year",
+#             "Quarter","Species","Area","SamplingType",
+#             "Metier","StatisticalRectangle","lat","lon")
+
 ##--------------
 ## Fix a color for each country
 ##--------------
