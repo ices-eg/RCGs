@@ -87,25 +87,24 @@ dfp <- reactive({
 
 
 output$sumplot <- renderPlot ({
-  #input$view2
-  if (input$view4==0) return()
 
-  #validate(need(input$plottype=="Barplot", message=FALSE))
+  if (input$view4==0) return()
+  
   # ColorsBAR <- colour_table$colour4
   # names(ColorsBAR) <- colour_table$Country
   # colScaleBAR<-scale_fill_manual(name="LandingCountry", values=ColorsBAR)
   isolate({ ggplot(dfp(), aes(x=auxX, y=auxY, fill=auxX)) +
       geom_bar(stat="identity")+
       #colScaleBAR +
+      labs(y = input$N_varY, x = input$N_varX, fill = input$N_varX)+
       theme_bw()+
-      theme(axis.text.x = element_text(angle = 90, hjust = 1))+
-      labs(y = input$N_varY)+
-      labs(x = input$N_varX)+
-   theme(axis.text=element_text(size=12),
-         axis.title=element_text(size=14,face="bold"))
+      theme(axis.text.x = element_text(angle = 90, hjust = 1),
+            axis.text=element_text(size=12),
+            axis.title=element_text(size=14,face="bold"))
   })
 })
 
+# for log
 # output$bugtable <- renderTable ({
 # 
 #   if (input$view4==0) return()
