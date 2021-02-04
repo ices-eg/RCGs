@@ -1,8 +1,3 @@
-library(shiny)
-library(shinyWidgets)
-library(shinyjs)
-library(plotly)
-library(leaflet)
 
 
 shinyServer(function(input, output, session) {
