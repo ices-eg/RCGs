@@ -76,6 +76,29 @@ ggplot(data=DAS_country_OTB, aes(Year, DaysAtSea, colour=FlagCountry)) +
 
 
 ```
+### Days at sea Gillnet fisheries
+```{r echo=FALSE, message=FALSE}
+
+
+DAS_country <- CE_years %>%
+    group_by(Year, FlagCountry, FishingActivityLvl5) %>%
+    summarise(DaysAtSea=sum(DaysAtSea))
+
+DAS_country_G <- DAS_country[DAS_country$FishingActivityLvl5 %like% "G",]
+
+ggplot(data=DAS_country_G, aes(Year, DaysAtSea, colour=FlagCountry)) +
+  geom_line() +
+  theme_bw() +
+  facet_wrap(~FishingActivityLvl5)+
+  labs(title=paste("Days at sea by country Gillnet fisheries -", RCG), x="year", y="Days at sea")+
+  theme(axis.text.x = element_text(size=8), plot.title=element_text(size=8), axis.title = element_text(size=8))
+
+
+
+```
+
+## {-}
+
 
 
 **Text describing figures 2
