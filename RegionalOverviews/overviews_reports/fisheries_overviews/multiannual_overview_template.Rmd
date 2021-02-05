@@ -76,7 +76,9 @@ ggplot(data=DAS_country_OTB, aes(Year, DaysAtSea, colour=FlagCountry)) +
 
 
 ```
+
 ### Days at sea Gillnet fisheries
+
 ```{r echo=FALSE, message=FALSE}
 
 
