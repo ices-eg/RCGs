@@ -1,0 +1,312 @@
+---
+title: "Rscript_Diagram"
+author: "Karolina"
+date: "12/10/2020"
+output:
+  word_document: default
+  pdf_document: default
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, tidy.opts=list(width.cutoff=60), tidy=TRUE)
+```
+
+
+```{r libraries}
+library(stringr)
+library(data.table)
+library(openxlsx)
+library(purrr)
+library(flextable)
+library(DiagrammeR)
+# library(webshot)
+# library(htmlwidgets)
+```
+
+
+```{r cars, results = FALSE}
+# Import all functions
+for(f in list.files(path="../Scripts/Functions", full.names = T)){
+  source(f)
+}
+
+# Load the input data
+data.file <- "../Metier_data_format_Example_test_input.csv"
+input.data <- loadInputData(data.file)
+
+```
+
+
+```{r refList, results = FALSE}
+# Load reference lists
+url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/AreaRegionLookup.csv"
+area.list <- loadAreaList(url)
+url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/Metier%20Subgroup%20Species%202020.xlsx"
+species.list <- loadSpeciesList(url)
+url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/RDB_ISSG_Metier_list.csv"
+metier.list <- loadMetierList(url)
+url <- "../Reference_lists/Code-ERSGearType-v1.1.xlsx"
+gear.list <- loadGearList(url)
+assemblage.list <- unique(c(species.list$species_group, species.list$dws_group))
+assemblage.list <- assemblage.list[!is.na(assemblage.list)]
+```
+
+# R script 
+
+The script developed to assign metiers based on several variables is called script_metiers_test.R. 
+
+## Prerequisites 
+
+The packages required to run the script are, 
+
+* stringr
+* data.table
+* openxlsx
+* purr
+
+as well as auxiliary information described in sections XXX and a set of functions developed to facilitate the readability of the script. These functions are descripted below in detail. 
+
+* loadInputData.R : reads the Input file provided it's in csv format
+* loadAreaList.R : reads the [RCG area file](https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/AreaRegionLookup.csv) from the Github repository 
+* loadSpeciesList.R : reads the [RCG species file](https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/Metier%20Subgroup%20Species%202020.xlsx) from the Github repository
+* loadMetierList.R : reads the [RCG metier file](https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/RDB_ISSG_Metier_list.csv) from the Github repository
+* loadGearList.R : reads the Gear file from ?? (why not repo)
+* getMeasure.R : Determines the if the sequence factor is weight or value.
+* getMetier.R : Assigns the metier level 6.
+* getMetierLvl5FromPattern.R : Assignes metier level 5
+
+## Data 
+
+The data used as an input should be a csv file format as described in detail in section 2 of the report (Input format for transversal data). The first X rows of the example data set are shown below for clarity. 
+
+**Remove if not in pdf output or add as annex**
+
+```{r inputdataTab}
+input.data$year <- as.character(input.data$year)
+ft <- flextable(head(input.data)) %>%
+  theme_alafoli() %>% autofit() %>% fit_to_width(8)%>%line_spacing(space = 1, part = "all") %>% padding(padding = 1, part = "all")
+ft
+```
+
+
+
+## Code
+
+
+```{r prepInput1}
+# Prepare input data
+input.data[,EUR:=as.numeric(EUR)]
+input.data[,KG:=as.numeric(KG)]
+```
+
+First the selection column is split between the selectivity device code, if any, and the selectivity device mesh size. 
+
+```{r prepInput2, echo = TRUE}
+input.data[,c("selection_type","selection_mesh"):=data.table(str_split_fixed(selection,"_",2))]
+input.data[,selection_type:=ifelse(selection_type=="",NA,selection_type)]
+input.data[,selection_mesh:=ifelse(selection_mesh=="",NA,selection_mesh)]
+```
+
+```{r prepInputTab}
+flextable(subset(input.data, !is.na(selection)), col_keys = c("selection", "selection_type", "selection_mesh")) %>%
+  theme_alafoli() %>% autofit()%>%line_spacing(space = 1, part = "all") %>% padding(padding = 1, part = "all")
+```
+
+The RCG area is assigned based on the area (Subarea, Division, SubDivision) that was provided in the input data. 
+
+```{r mergeRCGarea, echo = TRUE}
+input.data <- merge(input.data, area.list, all.x = T, by = "area")
+input.data[is.na(RCG) & substr(area,1,2) %in% c("31","34","41","47","51","57","58","87"),RCG:="LDF"]
+input.data[is.na(RCG) & substr(area,1,2) == "37",RCG:="MED"]
+```
+
+```{r mergeRCGareaTab}
+flextable(unique(input.data[, c("area", "RCG", "Description")]), col_keys = c("area", "RCG", "Description")) %>%
+  theme_alafoli() %>% autofit()%>%line_spacing(space = 1, part = "all") %>% padding(padding = 1, part = "all")
+```
+
+Next the target assemblage is assigned, depending on the species, and it's indicated if they belong to the Deep Water Species (DWS) group.
+
+```{r mergeSpecies, echo = TRUE}
+input.data <- merge(input.data, species.list, all.x = T, by = "FAO_species")
+```
+
+```{r mergeSpeciesTab} 
+flextable(unique(input.data[, c("FAO_species", "species_group", "dws_group")]), col_keys = c("FAO_species", "species_group", "dws_group")) %>%
+  theme_alafoli() %>% autofit()%>%line_spacing(space = 1, part = "all") %>% padding(padding = 1, part = "all")
+```
+
+A set of variables is necessary to define the level the metier is assigned to and calculate the total weight and value of this group. The default sequence is shown below, however it can be changed to reflect national groupings.   
+
+```{r sequence, echo = TRUE}
+sequence.def <- c("Country","year","vessel_id","vessel_length","trip_id","haul_id",
+                  "fishing_day","area","ices_rectangle","gear","mesh","selection",
+                  "registered_target_assemblage")
+
+# Calculate group totals for each sequence
+input.data[,":="(seq_group_KG = sum(KG, na.rm = T),
+        seq_group_EUR = sum(EUR, na.rm = T)),
+  by=c(sequence.def,"species_group")]
+```
+
+
+Below you can see the calculated totals in the example dataset with the default sequence. 
+
+```{r sequenceTab}
+seq_sum <- input.data[, .(seq_group_KG = sum(KG, na.rm = T),
+        seq_group_EUR = sum(EUR, na.rm = T)),
+  by=c(sequence.def,"species_group")]
+sequence.def1 <- c(sequence.def, "species_group", "seq_group_KG", "seq_group_EUR")
+flextable(seq_sum, col_keys = sequence.def1) %>%
+  theme_alafoli() %>% autofit() %>% fit_to_width(8)%>%line_spacing(space = 1, part = "all") %>% padding(padding = 1, part = "all")
+```
+
+The function getMeasure.R is used to determine the dominant factor (weight or value) for each sequence as stated in the measure column. If at least one species in the sequence has value, the reference measure becomes the value.  
+
+```{r measure,echo = TRUE}
+input.data[,":="(seq_measure = getMeasure(measure)),
+  by=sequence.def]
+```
+
+
+```{r measureTab}
+flextable(head(input.data), col_keys = c("FAO_species", "area", "measure", "RCG", "species_group", "seq_group_KG", "seq_group_EUR")) %>%
+  theme_alafoli() %>% autofit() %>% fit_to_width(8)  %>% color(j = c("measure", "seq_group_KG"), i = ~ measure == "weight", part = "body" , color = "red") %>%  color(j = c("measure", "seq_group_EUR"), i = ~ measure == "value", part = "body" , color = "blue")%>%line_spacing(space = 1, part = "all") %>% padding(padding = 1, part = "all")
+```
+
+Next, the target assemblage is assigned based on the highest weight or value of each sequence. 
+
+```{r dominantGroup, echo = TRUE}
+input.data[seq_measure == "weight",":="(seq_dom_group = species_group[which.max(seq_group_KG)]),
+  by=sequence.def]
+input.data[seq_measure == "value",":="(seq_dom_group = species_group[which.max(seq_group_EUR)]),
+  by=sequence.def]
+```
+
+```{r domTab}
+flextable(head(input.data), col_keys = c("FAO_species", "area", "measure", "RCG", "species_group", "seq_group_KG", "seq_group_EUR", "seq_dom_group")) %>%
+  theme_alafoli() %>% autofit() %>% fit_to_width(7.5) %>% bold(j = c("species_group", "seq_dom_group"), bold = TRUE, part = "all") %>%line_spacing(space = 1, part = "all") %>% padding(padding = 1, part = "all")
+```
+
+The DWS rule is applied; when more than 8% of the species in the sequence are deep water, it is assigned in the DWS group. 
+
+
+```{r rulesDWS, echo = TRUE}
+input.data[dws_group=="DWS",seq_DWS_kg:=sum(KG, na.rm = T),
+           by=c(sequence.def, "dws_group")]
+input.data[,seq_total_kg:=sum(KG, na.rm = T),
+           by=sequence.def]
+input.data[,seq_DWS_perc:=ifelse(is.na(seq_DWS_kg),0,seq_DWS_kg/seq_total_kg)*100]
+input.data[,seq_DWS_perc:=max(seq_DWS_perc),by=sequence.def]
+input.data[seq_DWS_perc>8,seq_dom_group:="DWS"]
+```
+
+```{r rulesDWStab}
+flextable(subset(input.data, input.data$seq_DWS_perc > 0), col_keys = c("FAO_species", "area", "measure", "RCG", "species_group", "seq_group_KG", "seq_DWS_perc", "seq_dom_group")) %>%
+  theme_alafoli() %>% autofit() %>% fit_to_width(8)  %>%line_spacing(space = 1, part = "all") %>% padding(padding = 1, part = "all")
+```
+  
+
+
+The function getMetier.R first checks if the user has provided a target assemblage and gives it priority over the calculated dominant assemblage. Then it conditionally assigns the **metier level 6** in a stepwise procedure: 
+
+- The metier is assigned based on the RCG, year, gear, target assemblage, dominant target assemblage, mesh size, selectivity device and the mesh size of the selectivity device. The metiers with 0 or >0 mesh size are disregarded.
+- If the metier is not assigned, the next step is to disregard the selectivity device code and mesh size and try to assign a metier again. The metiers with 0 or >0 mesh size are also disregarded.
+- If the metier is not assigned at this step, the function examines the 0 and >0 mesh sizes and assigns the metier.
+- If the metier at this step is still NA, then the MIS_MIS_0_0_0 metier is assigned.
+
+
+```{r metierLVL6, echo = TRUE}
+input.data$metier_level_6<-NA
+input.data[,metier_level_6:=as.character(pmap(list(RCG,
+                                          year,
+                                          gear, 
+                                          registered_target_assemblage,
+                                          seq_dom_group, 
+                                          mesh, 
+                                          selection_type,
+                                          selection_mesh),
+                                     function(r,y,g,t,d,m,st,sm) getMetier(r,y,g,t,d,m,st,sm)))]
+```
+
+
+```{r metierLVL6Tab}
+flextable(head(input.data), col_keys = c("RCG", "year", "gear", "registered_target_asseblage", "seq_dom_group", "mesh", "selection_type", "selection_mesh", "metier_level_6")) %>%
+  theme_alafoli() %>% autofit() %>% fit_to_width(8)  %>% line_spacing(space = 1, part = "all") %>% padding(padding = 1, part = "all")
+```
+
+The metier vessel pattern is used to assign **metier level 5**.  The code below identifies the main metiers used by a vessel by taking into account the combination of gear and target assemblage. The column seq_no_lvl5 shows the number of times the metier level 5 was used by the respective vessel in the same year. The percentage (seq_perc_lvl5 column) is used to assign the dominant metier level 5 for each vessel. 
+
+
+```{r metierLVL5, echo = TRUE}
+input.data[,metier_level_5:=paste(gear,ifelse(is.na(registered_target_assemblage),
+                                              seq_dom_group,
+                                              registered_target_assemblage),sep="_")]
+pattern <- unique(input.data[,.SD,.SDcols=c(sequence.def,"metier_level_5")])
+pattern <- pattern[,.(seq_no_lvl5 = .N), by=.(year, vessel_id, metier_level_5)]
+pattern[,seq_perc_lvl5:=seq_no_lvl5/sum(seq_no_lvl5,na.rm = T)*100, by=.(year, vessel_id)]
+pattern<-pattern[!is.na(metier_level_5)]
+input.data <- merge(input.data, pattern,all.x = T , by=c("year", "vessel_id", "metier_level_5"))
+```
+
+
+
+```{r metierLVL5Tab}
+flextable(pattern) %>%
+  theme_alafoli() %>% autofit() %>% fit_to_width(8)  %>% line_spacing(space = 1, part = "all") %>% padding(padding = 1, part = "all")
+```
+
+If a “rare” metier is assigned based on one different catch composition or a mis-assigned métier code, it will be set to one of the main métiers of the vessel belonging to this pattern. The percentage threshold for defining rare metiers can be set in the script. The default is 13, meaning that if there is less than 13 percent of the sequences that has a level 5 allocated, it is considered rare and will get the suffix “rare_” in the column “metier_level_5”. If possible, the script will suggest another major metier used by the vessel to be used instead. If it is different from the méetier code assigned it will have the suffix “pattern_”.
+
+```{r metierLVL5_fun, echo= TRUE}
+rare.threshold <- 13
+input.data[seq_perc_lvl5<rare.threshold, metier_level_5:=NA]
+pattern<-pattern[seq_perc_lvl5>=rare.threshold]
+pattern[,c("gear","target_assemblage"):=data.table(str_split_fixed(metier_level_5,"_",2))]
+pattern<-merge(pattern, gear.list, all.x = T, by.x = "gear", by.y = "gear_code")
+input.data<-merge(input.data, gear.list, all.x = T, by.x = "gear", by.y = "gear_code")
+input.data[is.na(metier_level_5),metier_level_5:=
+             as.character(pmap(list(vessel_id,
+                                    year,
+                                    gear,
+                                    gear_group,
+                                    registered_target_assemblage,
+                                    seq_dom_group),
+                               function(v,y,g,gg,rt,d) getMetierLvl5FromPattern(v,y,g,gg,rt,d)))]
+```
+
+
+
+
+```{r metierLVL5_funTab}
+flextable(head(input.data), col_keys = c("vessel_id", "year", "gear", "registered_target_asseblage", "seq_dom_group", "metier_level_5")) %>%
+  theme_alafoli() %>% autofit() %>% fit_to_width(8)  %>% line_spacing(space = 1, part = "all") %>% padding(padding = 1, part = "all")
+```
+
+
+## Diagram (test)
+
+
+```{r diagramTest}
+
+p <- grViz("digraph {
+  graph [layout = dot, rankdir = TB]
+  
+  node [shape = rectangle]        
+  rec1 [label = 'Input Data']
+  rec2 [label = 'RCG area']
+  rec3 [label =  'Target Assemblage']
+  rec4 [label = 'Define sequence']
+  
+  # edge definitions with the node IDs
+  rec1 -> rec2 -> rec3 -> rec4
+  }", 
+  height = 500)
+htmlwidgets::saveWidget(p, paste0(getwd(), "/p.html"))
+webshot::webshot("p.html", "p.png")
+```
+
+
+
