@@ -77,29 +77,6 @@ ggplot(data=DAS_country_OTB, aes(Year, DaysAtSea, colour=FlagCountry)) +
 
 ```
 
-### Days at sea Gillnet fisheries
-```{r echo=FALSE, message=FALSE}
-
-
-DAS_country <- CE_years %>%
-    group_by(Year, FlagCountry, FishingActivityLvl5) %>%
-    summarise(DaysAtSea=sum(DaysAtSea))
-
-DAS_country_G <- DAS_country[DAS_country$FishingActivityLvl5 %like% "G",]
-
-ggplot(data=DAS_country_G, aes(Year, DaysAtSea, colour=FlagCountry)) +
-  geom_line() +
-  theme_bw() +
-  facet_wrap(~FishingActivityLvl5)+
-  labs(title=paste("Days at sea by country Gillnet fisheries -", RCG), x="year", y="Days at sea")+
-  theme(axis.text.x = element_text(size=8), plot.title=element_text(size=8), axis.title = element_text(size=8))
-
-
-
-```
-
-## {-}
-
 
 **Text describing figures 2
 
@@ -121,6 +98,7 @@ ggplot(data=Landings_country_OTB, aes(Year, LandingWeight_ton, colour=FlagCountr
   theme(axis.text.x = element_text(size=8), plot.title=element_text(size=8), axis.title = element_text(size=8))
 
 
+
 ```
 
 ### Landings Gillnet fisheries
@@ -139,6 +117,8 @@ ggplot(data=Landings_country_G, aes(Year, LandingWeight_ton, colour=FlagCountry)
   labs(title=paste("Landings by country Gillnet -", RCG), x="year", y="Landings (ton)")+
   theme(axis.text.x = element_text(size=8), plot.title=element_text(size=8), axis.title = element_text(size=8))
 
+
+
 ```
 ## {-}
 
@@ -149,9 +129,6 @@ ggplot(data=Landings_country_G, aes(Year, LandingWeight_ton, colour=FlagCountry)
 ## Figures 3: Landings {.tabset}
 ### Landing by country of main species  
 ```{r echo=FALSE, message=FALSE}
-
-
-Landings_year_country <- cl %>% group_by(Year, Species, Quarter, FishingGround, FlagCountry) %>% summarise(LadingWeight_art_ton = sum(LandingWeight_ton), .groups = "drop" ) 
 
 cl$yqtr<- paste(cl$Year, cl$Quarter, sep = "/")
 
@@ -211,61 +188,73 @@ ggplot(data=Landings_yc_mainSpp_v2, aes(Species, LadingWeight_art_ton, colour=Ye
 ### Landing of main species by country - DEU
 ```{r echo=FALSE, message=FALSE}
 
-#unique(Landings_year_country$FlagCountry )
 
-DEU <- subset(Landings_yc_mainSpp_v2, FlagCountry == 'DEU')
-DNK <- subset(Landings_yc_mainSpp_v2, FlagCountry == 'DNK')
-EST <- subset(Landings_yc_mainSpp_v2, FlagCountry == 'EST')
-FIN <- subset(Landings_yc_mainSpp_v2, FlagCountry == 'FIN')
-LTU <- subset(Landings_yc_mainSpp_v2, FlagCountry == 'LTU')
-LVA <- subset(Landings_yc_mainSpp_v2, FlagCountry == 'LVA')
-POL <- subset(Landings_yc_mainSpp_v2, FlagCountry == 'POL')
-SWE <- subset(Landings_yc_mainSpp_v2, FlagCountry == 'SWE')
+Landings_year_country <- cl %>% group_by(Year, Species, Quarter, FishingGround, FlagCountry) %>% summarise(LandingWeight_ton = sum(LandingWeight_ton), .groups = "drop" ) 
 
 
+country_landing <- Landings_year_country %>% 
+  filter(Species %in% c("Actinopterygii" ,"Ammodytes","Clupea harengus", "Coregonus albula","Gadus morhua","Merlangius merlangus","Mytilus edulis", "Osmerus eperlanus","Perca fluviatilis", "Platichthys flesus","Pleuronectes platessa","Sprattus sprattus","Neogobius melanostomus","Abramis brama")) %>% 
+  group_by(Year, FlagCountry, Species) %>% summarise(LandingWeight_t = sum(LandingWeight_ton) )
 
-ggplot(data=DEU, aes(Species, LadingWeight_art_ton)) +
-  geom_point() +
+
+DEU <- subset(country_landing, FlagCountry == 'DEU')
+DNK <- subset(country_landing, FlagCountry == 'DNK')
+EST <- subset(country_landing, FlagCountry == 'EST')
+FIN <- subset(country_landing, FlagCountry == 'FIN')
+LTU <- subset(country_landing, FlagCountry == 'LTU')
+LVA <- subset(country_landing, FlagCountry == 'LVA')
+POL <- subset(country_landing, FlagCountry == 'POL')
+SWE <- subset(country_landing, FlagCountry == 'SWE')
+
+
+ggplot(data=DEU, aes(Species, LandingWeight_t)) +
+  geom_col() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   facet_wrap(~ FlagCountry + Year)+
-  labs(title=paste("Landings by year & country - main species"), x="year", y="Landings (ton)")+
+  labs(title=paste("Landings by year & country - main species"), x="Species", y="Landings (ton)")+
   theme(axis.text.x = element_text(size=8), plot.title=element_text(size=8), axis.title = element_text(size=8))
+
 
 ```
 
 ### Landing of main species by country - DNK
 ```{r echo=FALSE, message=FALSE}
 
-ggplot(data=DNK, aes(Species, LadingWeight_art_ton)) +
-  geom_point() +
+
+ggplot(data=DNK, aes(Species, LandingWeight_t)) +
+  geom_col() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   facet_wrap(~ FlagCountry + Year)+
-  labs(title=paste("Landings by year & country - main species"), x="year", y="Landings (ton)")+
+  labs(title=paste("Landings by year & country - main species"), x="Species", y="Landings (ton)")+
   theme(axis.text.x = element_text(size=8), plot.title=element_text(size=8), axis.title = element_text(size=8))
+
 
 ```
 
 ### Landing of main species by country - EST
 ```{r echo=FALSE, message=FALSE}
 
-ggplot(data=EST, aes(Species, LadingWeight_art_ton)) +
-  geom_point() +
+
+ggplot(data=EST, aes(Species, LandingWeight_t)) +
+  geom_col() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   facet_wrap(~ FlagCountry + Year)+
-  labs(title=paste("Landings by year & country - main species"), x="year", y="Landings (ton)")+
+  labs(title=paste("Landings by year & country - main species"), x="Species", y="Landings (ton)")+
   theme(axis.text.x = element_text(size=8), plot.title=element_text(size=8), axis.title = element_text(size=8))
+
 
 ```
 
 ### Landing of main species by country - LTU
 ```{r echo=FALSE, message=FALSE}
 
-ggplot(data=LTU, aes(Species, LadingWeight_art_ton)) +
-  geom_point() +
+ggplot(data=LTU, aes(Species, LandingWeight_t)) +
+  geom_col() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   facet_wrap(~ FlagCountry + Year)+
-  labs(title=paste("Landings by year & country - main species"), x="year", y="Landings (ton)")+
+  labs(title=paste("Landings by year & country - main species"), x="Species", y="Landings (ton)")+
   theme(axis.text.x = element_text(size=8), plot.title=element_text(size=8), axis.title = element_text(size=8))
+
 
 ```
 
@@ -273,24 +262,26 @@ ggplot(data=LTU, aes(Species, LadingWeight_art_ton)) +
 ### Landing of main species by country - LVA
 ```{r echo=FALSE, message=FALSE}
 
-ggplot(data=LVA, aes(Species, LadingWeight_art_ton)) +
-  geom_point() +
+ggplot(data=LVA, aes(Species, LandingWeight_t)) +
+  geom_col() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   facet_wrap(~ FlagCountry + Year)+
-  labs(title=paste("Landings by year & country - main species"), x="year", y="Landings (ton)")+
+  labs(title=paste("Landings by year & country - main species"), x="Species", y="Landings (ton)")+
   theme(axis.text.x = element_text(size=8), plot.title=element_text(size=8), axis.title = element_text(size=8))
+
 
 ```
 
 ### Landing of main species by country - POL
 ```{r echo=FALSE, message=FALSE}
 
-ggplot(data=POL, aes(Species, LadingWeight_art_ton)) +
-  geom_point() +
+ggplot(data=POL, aes(Species, LandingWeight_t)) +
+  geom_col() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   facet_wrap(~ FlagCountry + Year)+
-  labs(title=paste("Landings by year & country - main species"), x="year", y="Landings (ton)")+
+  labs(title=paste("Landings by year & country - main species"), x="Species", y="Landings (ton)")+
   theme(axis.text.x = element_text(size=8), plot.title=element_text(size=8), axis.title = element_text(size=8))
+
 
 ```
 
@@ -299,12 +290,13 @@ ggplot(data=POL, aes(Species, LadingWeight_art_ton)) +
 ### Landing of main species by country - SWE
 ```{r echo=FALSE, message=FALSE}
 
-ggplot(data=SWE, aes(Species, LadingWeight_art_ton)) +
-  geom_point() +
+ggplot(data=SWE, aes(Species, LandingWeight_t)) +
+  geom_col() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   facet_wrap(~ FlagCountry + Year)+
-  labs(title=paste("Landings by year & country - main species"), x="year", y="Landings (ton)")+
+  labs(title=paste("Landings by year & country - main species"), x="Species", y="Landings (ton)")+
   theme(axis.text.x = element_text(size=8), plot.title=element_text(size=8), axis.title = element_text(size=8))
+
 
 ```
 ## {-}
@@ -316,7 +308,10 @@ ggplot(data=SWE, aes(Species, LadingWeight_art_ton)) +
 ### Landing of main species  
 ```{r echo=FALSE, message=FALSE}
 
-ggplot(data=Landings_yc_mainSpp_v2, aes(Year, LadingWeight_art_ton, colour=Species)) +
+Landings_year_country_species <- country_landing %>% group_by(Year, Species) %>% summarise(LandingWeight_t = sum(LandingWeight_t))
+
+
+ggplot(data=Landings_year_country_species, aes(Year, LandingWeight_t, colour=Species)) +
   geom_point() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   facet_wrap(~ Species)+
