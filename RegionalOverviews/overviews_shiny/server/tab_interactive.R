@@ -49,9 +49,9 @@ output$absolute <- renderUI({
       "Country",
       choices = c(""),
       # c("All", levels(data_list()[[3]]$LandingCountry)),
-      multiple = TRUE#,
+      multiple = TRUE,
       #selected = "All",
-      #options = list(plugins = list("remove_button", "drag_drop"))
+      options = list(plugins = list("remove_button", "drag_drop"))
     ),
     selectizeInput(
       "species",
@@ -149,9 +149,9 @@ df <- reactive({
   data<-data_list()[[3]]
   data<-as.data.frame(data)
   
-  if (!("All" %in% input$country)){
+  #if (!("All" %in% input$country)){
     data <- data[data$LandingCountry %in% input$country,]
-  }
+  #}
   if (!("All" %in% input$species )){
     data <- data[data$Species %in% input$species,]
   }
