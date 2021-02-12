@@ -103,6 +103,7 @@ data_list<-reactive({
   ca_map$SamplingType<-as.factor(ca_map$SamplingType)
   ca_map$Quarter<-as.factor(ca_map$Quarter)
   ca_map$LandingCountry<-as.factor(ca_map$LandingCountry)
+  ca_map$Region<-as.factor(ca_map$Region)
   ca_map$Species<-as.factor(ca_map$Species)
   
   list1<-vector(mode = "list")
