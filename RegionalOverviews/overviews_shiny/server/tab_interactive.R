@@ -4,6 +4,23 @@
 # Tab "with leaflet"
 # ******************
 
+dd <- reactive({
+  
+  data<-data_list()[[3]]
+  data<-as.data.frame(data)
+  
+  if (!("All" %in% input$region)){
+    data <- data[data$Region == input$region,]
+  }
+  data
+})
+  
+
+observe({
+  # Updating selectize input
+  updateSelectInput(session, "country", choices = unique(dd()$LandingCountry)) 
+})
+
 output$absolute <- renderUI({
   req(input$file)
   absolutePanel(
@@ -19,14 +36,22 @@ output$absolute <- renderUI({
     height = "auto",
     h2("Sampling explorer"),
     # uiOutput("countryui"),uiOutput("speciesui"),uiOutput("samptypeui"),uiOutput("quarterui"),
+    selectInput(
+      "region",
+      "Region",
+      choices =
+        c("All", levels(data_list()[[3]]$Region)),
+      multiple = F,
+      selected = "All"
+    ),
     selectizeInput(
       "country",
       "Country",
-      choices =
-        c("All", levels(data_list()[[3]]$LandingCountry)),
-      multiple = TRUE,
-      selected = "All",
-      options = list(plugins = list("remove_button", "drag_drop"))
+      choices = c(""),
+      # c("All", levels(data_list()[[3]]$LandingCountry)),
+      multiple = TRUE#,
+      #selected = "All",
+      #options = list(plugins = list("remove_button", "drag_drop"))
     ),
     selectizeInput(
       "species",
@@ -66,11 +91,11 @@ output$absolute <- renderUI({
     br(),
     br(),
     plotOutput("plot2", height = 300)
+    #, tableOutput("debug")
   )
-  
-  
-  
 })
+
+
 # output ca_map
 #    output$countryui<-renderUI({selectizeInput(
 #       "country",
@@ -169,10 +194,10 @@ filter_df <- eventReactive(input$view2, {
 # Debugging
 # -----------------------------------
 
-# output$debug <- renderTable({
-# #head(df(), 5)
-#   head(filter_df(), 5)
-# })
+ # output$debug <- renderTable({
+ # #head(df(), 5)
+ #   head(data_list()[[3]])
+ # })
 
 
 # -----------------------------------
