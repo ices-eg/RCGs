@@ -39,7 +39,10 @@ output$summary <- renderUI({
                                               "CatchCategory")),
                   selectInput ("N_varY", "Y axis",
                                 choices = c("NoLength", "NoLengthTrips"), multiple = F), 
-                  actionButton ("view4", "View")), 
+                  hr(),
+                  div(style="display: inline-block;vertical-align:top;", actionButton ("view4", "View")),
+                  div(style="display: inline-block;vertical-align:top;",downloadButton ("down4", "Download plot"))
+                  ),
            column(8, 
                   plotOutput("sumplot", height = "600px", width = "1000px"),
                   # for logs
@@ -130,3 +133,31 @@ output$sumplot <- renderPlot ({
 # 
 #   head(dfp())
 # })
+
+
+# -----------------------------------
+# Download plot 
+# -----------------------------------
+
+
+output$down4 <- downloadHandler(
+  
+  filename ="interactive_plot.png",
+  
+  content = function(interactive.plot){
+    png(interactive.plot)  
+    
+    if (input$view4==0) return()
+    
+    interactive.plot <-ggplot(dfp(), aes(x=auxX, y=auxY, fill=auxG)) +
+                            geom_bar(position = "stack", stat="identity")+
+                            #scale_fill_manual(safe_colorblind_palette) +
+                            labs(y = input$N_varY, x = input$N_varX, fill = input$groupX)+
+                            theme_bw()+
+                            theme(axis.text.x = element_text(angle = 90, hjust = 1),
+                            axis.text=element_text(size=12),
+                            axis.title=element_text(size=14,face="bold"))
+    print(interactive.plot)
+    dev.off()
+  }
+)
