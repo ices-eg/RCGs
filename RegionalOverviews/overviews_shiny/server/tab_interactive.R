@@ -18,7 +18,7 @@ dd <- reactive({
 
 observe({
   # Updating selectize input
-  updateSelectInput(session, "country", choices = unique(dd()$LandingCountry)) 
+  updateSelectInput(session, "country", choices = unique(dd()$LandingCountry), selected = sort(unique(dd()$LandingCountry))[1]) 
 })
 
 output$absolute <- renderUI({
