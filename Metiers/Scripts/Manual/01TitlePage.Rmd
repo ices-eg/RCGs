@@ -1,0 +1,24 @@
+\pagenumbering{gobble}
+
+\topskip0pt
+\vspace*{\fill}
+
+
+\begin{flushright}
+
+\Huge
+\bf{Manual for assigning metiers to transversal data}
+
+\vspace{0.5 cm}
+\normalsize
+Method developed by RCG ISSG on Metier issues
+
+\vspace{3 cm}
+Date
+
+\end{flushright}
+
+\vspace*{\fill}
+
+
+

@@ -1,0 +1,11 @@
+# Input format for transversal data
+
+The script developed for assigning métier codes to transversal data reads a “.csv” file with the input data format described below.
+
+```{r inputdatatable, echo = FALSE}
+inpdat <- read.csv(file = "./InputDataTable.csv", stringsAsFactors = FALSE)
+colnames(inpdat) <- c("Column Name", "Description", "Format", "Example")
+knitr::kable(inpdat, booktabs = TRUE)
+```
+
+An example of the input data format can be found here: https://github.com/ices-eg/RCGs/blob/master/Metiers/Metier_data_format_Example_test_input.csv

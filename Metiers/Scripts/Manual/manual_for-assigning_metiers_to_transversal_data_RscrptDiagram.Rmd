@@ -3,14 +3,16 @@ title: "Rscript_Diagram"
 author: "Karolina"
 date: "12/10/2020"
 output:
-  word_document: default
-  pdf_document: default
+  word_document:
+    reference_docx: manual_for-assigning_metiers_to_transversal_data_RscrptDiagram.docx
 ---
 
 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, tidy.opts=list(width.cutoff=60), tidy=TRUE)
+# Need to set the root directory because the working directory is forced for each chunk to the directory of the rmd
+knitr::opts_knit$set(root.dir = "C:/Users/molla004/OneDrive - Wageningen University & Research/Git/hub/RCGs/Metiers")
 ```
 
 
@@ -28,14 +30,14 @@ library(DiagrammeR)
 
 ```{r cars, results = FALSE}
 # Import all functions
-for(f in list.files(path="../Scripts/Functions", full.names = T)){
+for(f in list.files(path="./Scripts/Functions", full.names = T)){
   source(f)
 }
 
 # Load the input data
-data.file <- "../Metier_data_format_Example_test_input.csv"
+data.file <-"./Metier_data_format_Example_test_input.csv"
 input.data <- loadInputData(data.file)
-
+read.csv(file = data.file)
 ```
 
 
@@ -47,7 +49,7 @@ url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/Metie
 species.list <- loadSpeciesList(url)
 url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/RDB_ISSG_Metier_list.csv"
 metier.list <- loadMetierList(url)
-url <- "../Reference_lists/Code-ERSGearType-v1.1.xlsx"
+url <- "./Reference_lists/Code-ERSGearType-v1.1.xlsx"
 gear.list <- loadGearList(url)
 assemblage.list <- unique(c(species.list$species_group, species.list$dws_group))
 assemblage.list <- assemblage.list[!is.na(assemblage.list)]
@@ -286,24 +288,31 @@ flextable(head(input.data), col_keys = c("vessel_id", "year", "gear", "registere
 ```
 
 
-## Diagram (test)
+## Workflow diagramm
 
 
-```{r diagramTest}
+```{r diagramTest, eval=FALSE, include=FALSE}
 
 p <- grViz("digraph {
-  graph [layout = dot, rankdir = TB]
+  graph [layout = dot, overlap = TRUE, rankdir = TB]
   
-  node [shape = rectangle]        
-  rec1 [label = 'Input Data']
-  rec2 [label = 'RCG area']
-  rec3 [label =  'Target Assemblage']
-  rec4 [label = 'Define sequence']
+  node [group = a, shape = rectangle]        
+  rec1 [label = 'Read Input Data']
+  rec2 [label = 'Join with Reference List']
+  rec5 [label = 'Define Fishing Sequence']
+  rec6 [label = 'Select Measure (kg|euro)']
+  rec7 [label = 'If % DWS > 8 then DWS']
   
-  # edge definitions with the node IDs
-  rec1 -> rec2 -> rec3 -> rec4
-  }", 
-  height = 500)
+  rec1 -> rec2 -> rec5 -> rec6 -> rec7
+  
+  node [group = b, shape = rectangle]
+  rec3 [label = 'Target Assemblage Species Group']
+  rec4 [label = 'RCG']
+
+  rec3 -> rec2 
+  rec4 -> rec2 
+
+  }")
 htmlwidgets::saveWidget(p, paste0(getwd(), "/p.html"))
 webshot::webshot("p.html", "p.png")
 ```
