@@ -1,18 +1,48 @@
 # ******************
 # Tab "with ggplot"
 # ******************
+
+
+dg <- reactive({
+  
+  data<-data_list()[[3]]
+  data<-as.data.frame(data)
+  
+  if (!("All" %in% input$regiong)){
+    data <- data[data$Region == input$regiong,]
+  }
+  data
+})
+
+
+observe({
+  # Updating selectize input
+  updateSelectInput(session, "countryg", choices = unique(dg()$LandingCountry), selected = sort(unique(dg()$LandingCountry))[1]) 
+})
+
+
 output$static <- renderUI({
   req(input$file)
   
   fluidRow(
-    column(4, 
+    br(), br(),
+    column(4,    
+           selectInput(
+                "regiong",
+                "Region",
+                choices =
+                c("All", levels(data_list()[[3]]$Region)),
+              multiple = F,
+            selected = "All"
+            ), 
            selectizeInput (
              "countryg", 
              "Country",
              choices =
-               c("All", levels(data_list()[[3]]$LandingCountry)),
+                c(""),
+               #c("All", levels(data_list()[[3]]$LandingCountry)),
              multiple = TRUE,
-             selected = "All",
+             #selected = "All",
              options = list(plugins = list("remove_button", "drag_drop"))
            ),
            selectizeInput(
@@ -47,9 +77,11 @@ output$static <- renderUI({
            selectInput ("facetx", "Facet by", facetvar, multiple = F),
            #selectInput ("facety", "Facet.y", facetvar, multiple = F),
            hr(),
-           actionButton ("view3", "View")
+           div(style="display: inline-block;vertical-align:top;",actionButton ("view3", "View")), 
+           div(style="display: inline-block;vertical-align:top;",downloadButton ("down3", "Download plot"))
     ), 
     column(8, 
+           br(),br(),
            plotOutput("plot3", height = "700px", width = "900px")#,
            #tableOutput("debug3")
            #verbatimTextOutput("debug3")
@@ -66,9 +98,9 @@ df3 <- reactive({
   data3<-data_list()[[3]]
   data3<-as.data.frame(data3)
   
-  if (!("All" %in% input$countryg)){
+  #if (!("All" %in% input$countryg)){
     data3 <- data3[data3$LandingCountry %in% input$countryg,]
-  }
+  #}
   if (!("All" %in% input$speciesg )){
     data3 <- data3[data3$Species %in% input$speciesg,]
   }
@@ -147,8 +179,9 @@ output$plot3 <- renderPlot ({
       facet_wrap(~facet)+
       coord_sf(crs = "+init=epsg:4326", xlim = c(-25, 5), ylim = c(43, 63), expand = FALSE) +
       xlab("Longitude") + ylab("Latitude") + labs(size=input$N_var3, colour=input$N_var3)+
-      #ggtitle("North East Atlantic") +
+      ggtitle(paste("Region:",input$regiong,"-Species:", input$speciesg, "-Sampling type:",input$samtypeg,"-Quarter:", input$quarterg, sep = "")) +
       theme(
+        plot.title = element_text(size =20,hjust = 0.5),
         text = element_text(color = "#22211d"),
         plot.background = element_rect(fill = "#ffffff", color = NA),
         panel.background = element_rect(fill = "aliceblue", color = NA),
@@ -163,3 +196,42 @@ output$plot3 <- renderPlot ({
   })
 })
 
+
+# -----------------------------------
+# Download plot 
+# -----------------------------------
+
+
+output$down3 <- downloadHandler(
+ 
+   filename ="static_plot.png",
+  
+  content = function(static.plot){
+    png(static.plot)  
+    
+    if(nrow(filter_df3())==0) return(invisible(NULL))
+    
+    static.plot <-ggplot(data = world) + geom_sf(fill= "antiquewhite") +
+              geom_point(data = filter_df3(), aes(x = lon, y = lat, colour = aux, size = aux)) +
+              scale_colour_viridis(guide ="legend") + 
+              #facet_grid (SamplingType~LandingCountry)+
+              facet_wrap(~facet)+
+              coord_sf(crs = "+init=epsg:4326", xlim = c(-25, 5), ylim = c(43, 63), expand = FALSE) +
+              xlab("Longitude") + ylab("Latitude") + labs(size=input$N_var3, colour=input$N_var3)+
+              ggtitle(paste("Region:",input$regiong,"-Species:", input$speciesg, "-Sampling type:",input$samtypeg,"-Quarter:", input$quarterg, sep = "")) +
+              theme(
+                  plot.title = element_text(size =20,hjust = 0.5),
+                  text = element_text(color = "#22211d"),
+                  plot.background = element_rect(fill = "#ffffff", color = NA),
+                  panel.background = element_rect(fill = "aliceblue", color = NA),
+                  legend.background = element_rect(fill = "#ffffff", color = NA),
+                  panel.border = element_rect(
+                  colour = "black",
+                  fill = NA,
+                  size = 1.5),
+                  panel.grid.major = element_line(color = gray(.8), linetype ='dashed', size = 0.5)
+                  )
+    print(static.plot)
+    dev.off()
+  }
+)

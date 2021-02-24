@@ -65,7 +65,8 @@ world <- ne_countries(scale = "medium", returnclass = "sf")
 ##--------------
 
 facetvar <-
-  c("LandingCountry", 
+  c("LandingCountry",
+    #"FlagCountry",
     "Species", 
     "SamplingType", 
     "Quarter")
