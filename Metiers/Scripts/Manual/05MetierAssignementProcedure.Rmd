@@ -1,0 +1,33 @@
+# Métier assignment procedure
+
+
+An R-script was developed and tested in 2019 for assigning métiers in the Baltic Sea, which has been further developed in 2020 to cover more areas and details. The R-script is available at https://github.com/ices-eg/RCGs/blob/master/Metiers/Scripts/script_metiers_test.R and functions are available at https://github.com/ices-eg/RCGs/tree/master/Metiers/Scripts/Functions.
+
+
+**Assigning “metier_level_6”**
+
+The script loads the transversal data in the format described in Section 2, the reference lists described in Section 3, and assigns the RCG name to the input data and the species target assemblage group.
+It is possible to define the sequence, which is the level that the métier is assigned to. The default is by following columns: Country, year, vessel id, vessel length, trip id, haul id, fishing day, area, ices rectangle, gear, mesh size, selection panel an registered target species assemblage
+The sequence can be changed to the preferred level.
+The species target assemblage group is determined for each sequence. If there is more than 8% deep water species, it is assigned to the DWS target species assemblage group.
+The level 6 métier code is assigned to the “column metier_level_6” by combining the information of the RCG, year, gear, target assemblage, mesh size, selection panel type and selection panel mesh size, with the métier list.
+
+
+**National corrections**
+
+It is the idea that the script can be used as the core method to assign the métiers, but that countries could add national corrections. These can include, for example,  corrections of a species grouping if the species is fished within another métier nationally or corrections of gear codes (e.g. grouping or recoding imprecise gear codes (GN, TB)).
+It is encouraged that the countries upload their script with national corrections to GitHub under https://github.com/ices-eg/RCGs/tree/master/Metiers/Documentation_by_MS along with the documentation of the methods and for other countries to use same methods in their scripts if relevant, e.g. for defining selection panels etc. The lines with national corrections can be marked with #Country code. The scripts uploaded don't need to be final, they can be updated as they improve.
+
+
+**Script looking at vessel patterns for assigning métiers**
+
+
+A function in the métier allocation script has been developed that takes the vessel pattern into account. This function will output a level 5 métier code in the column “metier_level_5”.
+This script identifies the main métiers used by a vessel using a stepwise procedure that is described in Section 5. 
+
+
+**Results**
+
+
+The resulting file, which is the input data with results added is saved as a “.csv” file. It is possible to specify the path.
+The results are also summed up and saved in an excel file that gives an overview of the métiers allocated.

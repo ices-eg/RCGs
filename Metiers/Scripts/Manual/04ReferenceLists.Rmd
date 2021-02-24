@@ -1,0 +1,38 @@
+# Reference lists
+
+## Métier list
+ 
+The R-script downloads the métier list from https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/RDB_ISSG_Metier_list.csv. It is also available in excel format.
+The list has information on RCG (BALT/LDF/MBS/NAtl/NSEA) and the métier code (Metier_level6). In some cases, there is a start and end year for the métier code due to legislation, and they are marked in the “start_year” and “end_year” columns.
+The column “old_code” is a reference to the codes used in the previous métier list from the RDB. If they are marked with red in the excel file, the code has changed in the new métier list. The column “Use_by_country_in_RDB” lists the countries that have uploaded data with the métiers in the RDB for the 2009-2017 periods, and in the column “Total_n_trips_RDB_2009t2017”, presents the sum of the total number of trips with the old codes uploaded to the RDB for 2009 to 2019.  
+
+## Species list
+The R-script uses the species list from https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/Metier%20Subgroup%20Species%202020.xlsx
+The list is based on the FAO ASFIS species list with the FAO species codes in column A and associated information in columns B to G. The columns H to T reflect the work on grouping the species codes in the métier group, the R data package, the RCM 2007 and what has been done within countries. Columns U, V and W contains the latest proposal on species groups at three levels and is used by the R-script.
+Grouping 1 in column V groups the species into Crustaceans (CRU), Molluscs (MOL), Finfish (FIF), Seaweeds (SWD) and Miscellaneous (MIS)
+Grouping 2 in column W splits the finfish category up into Anadromous (ANA), Catadromous (CAT), Demersal (DEF), Small pelagic fish (SPF), Large pelagic fish (LPF) and Freshwater species (FWS). Also Cephalopods (CEP) are separated from other molluscs.
+Grouping 3 - DWS identifies deep water species from the regulation (EC) 2016/2336.
+The Groupings 2 and 3 are used by the script, but if a country needs to group species differently, it can be done at the national level by including the changes in the R-script.
+ 
+## Area list
+The script downloads the area list from https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/AreaRegionLookup.csv.
+This list includes areas on the levels Area, SubArea, Division and SubDivision. It links the area codes to the RCG code that is used in the métier list.
+
+## 	Gear list
+The R-script downloads the area list from https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/ Code-ERSGearType-v1.1.xlsx.
+
+##	Selection panels
+The last part of the metier codes define the selection panels. They are often _0_0 in the last part of the metier code. Selection panel codes have been defined in some of the métiers and can be written in the input data format in the “selection” column.
+
+The first number define the type of selection panel: 
+
+
+Code number	Selection panel type
+
+
+0	No selection device
+1	Selction panel
+2	Grid
+3 	T90
+4	There is both selection device and escape window. Specify the smallest mesh size.
+
