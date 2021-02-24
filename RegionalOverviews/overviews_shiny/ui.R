@@ -3,7 +3,8 @@
 shinyUI(bootstrapPage(tags$style(HTML(" body, pre { font-size: 12pt; } * { font-family: Arial,sans-serif }")),
                     tags$style(".shiny-file-input-progress {display: none}"),
                     tags$head(tags$style(HTML(".selectize-input {width: 700px;}"))),
-
+                    add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20) ),
+                
     #navBarPage
     navbarPage(theme = shinytheme("cosmo"), collapsible = TRUE,
                 id = "tabs",
@@ -63,7 +64,7 @@ shinyUI(bootstrapPage(tags$style(HTML(" body, pre { font-size: 12pt; } * { font-
                  br(),
                  downloadButton(outputId = 'download_filtered_inventorytable_CA', label = "Download the filtered dataset"),
                  br(),
-                 addSpinner(DT::dataTableOutput("inventorytable_CA"), spin = "circle", color = "grey")
+                 DT::dataTableOutput("inventorytable_CA")
                ),
                tabPanel(
                  "SL inventory",
@@ -71,7 +72,7 @@ shinyUI(bootstrapPage(tags$style(HTML(" body, pre { font-size: 12pt; } * { font-
                  br(),
                  downloadButton(outputId = 'download_filtered_invetorytable_SL', label = "Download the filtered dataset"),
                  br(),
-                 addSpinner(DT::dataTableOutput("inventorytable_SL"), spin = "circle", color = "grey")
+                 DT::dataTableOutput("inventorytable_SL")
                )
              )),
 
