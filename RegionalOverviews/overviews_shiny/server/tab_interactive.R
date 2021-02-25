@@ -34,7 +34,7 @@ output$absolute <- renderUI({
     top = 100,
     width = 450,
     height = "auto",
-    h2("Sampling explorer"),
+    h2("Sampling explorer", align = "center"),
     # uiOutput("countryui"),uiOutput("speciesui"),uiOutput("samptypeui"),uiOutput("quarterui"),
     selectInput(
       "region",
