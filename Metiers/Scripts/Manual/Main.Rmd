@@ -35,13 +35,11 @@ linkcolor: 'black'
 
 \newpage
 
-\blandscape
 
 ```{r child = '03InputFormatForTransversalData.Rmd'}
 
 ```
 
-\elandscape
 
 
 ```{r child = '04ReferenceLists.Rmd'}
