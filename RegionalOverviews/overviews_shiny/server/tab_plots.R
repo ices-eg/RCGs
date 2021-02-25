@@ -12,28 +12,41 @@ output$summary <- renderUI({
            br(),
            column(4,
                   p("Barplot"),
-                  selectizeInput("speciesp","Species",
-                    choices =c("All", levels(data_list()[[2]]$Species)),
-                    multiple = TRUE,
-                    selected = "All",
-                    options = list(plugins = list("remove_button", "drag_drop"))
-                  ),
                   selectizeInput("fishgroundp","Fishing Ground",
                                  choices =c("All", levels(data_list()[[2]]$FishingGround)),
                                  multiple = TRUE,
                                  selected = "All",
-                                 options = list(plugins = list("remove_button", "drag_drop"))
-                  ),
+                                 options = list(plugins = list("remove_button", "drag_drop"))),
+                  selectizeInput("speciesp","Species",
+                                 choices =c("All", levels(data_list()[[2]]$Species)),
+                                 multiple = TRUE,
+                                 selected = "All",
+                                 options = list(plugins = list("remove_button", "drag_drop"))),
+                  selectizeInput( "samtypep", "Sampling Type",
+                    choices = c("All", levels(data_list()[[3]]$SamplingType)),
+                    multiple = TRUE,
+                    selected = "All",
+                    options = list(plugins = list("remove_button", "drag_drop"))),
                   selectInput ("N_varX", "X axis", 
-                                choices = c("LandingCountry", "Area", "FishingActivityCategoryEuropeanLvl6"), 
+                                choices = c("LandingCountry", "FlagCountry","Area", "FishingActivityCategoryEuropeanLvl6"), 
                                   multiple = F),
+                  prettyRadioButtons("groupX", label = "Group X", 
+                                  choices = c("None", 
+                                              "LandingCountry",
+                                              "FlagCountry",
+                                              "Area", 
+                                              "FishingActivityCategoryEuropeanLvl6", 
+                                              "CatchCategory")),
                   selectInput ("N_varY", "Y axis",
                                 choices = c("NoLength", "NoLengthTrips"), multiple = F), 
-                  actionButton ("view4", "View")), 
+                  hr(),
+                  div(style="display: inline-block;vertical-align:top;", actionButton ("view4", "View")),
+                  div(style="display: inline-block;vertical-align:top;",downloadButton ("down4", "Download plot"))
+                  ),
            column(8, 
                   plotOutput("sumplot", height = "600px", width = "1000px"),
-                  # for bugs
-                  tableOutput(("bugtable")))
+                  # for logs
+                  tableOutput("bugtable"))
            )
            ),
        
@@ -63,18 +76,28 @@ dfp <- reactive({
   data<-data_list()[[2]] #SL
   data<-as.data.frame(data)
   
-  if (!("All" %in% input$speciesp )){
-    data <- data[data$Species %in% input$speciesp,]
-  }
-  
+
   if (!("All" %in% input$fishgroundp )){
     data <- data[data$FishingGround %in% input$fishgroundp,]
   }
+  if (!("All" %in% input$speciesp )){
+    data <- data[data$Species %in% input$speciesp,]
+  }
+  if (!("All" %in% input$samtypep)){
+    data <- data[data$SamplingType %in% input$samtypep,]
+  }
   
-  data <- data[, c("Species","FishingGround", input$N_varX, input$N_varY)]
+  if (input$groupX != "None" ) {
+    data <- data[, c("Species","FishingGround", "SamplingType", input$N_varX, input$N_varY, input$groupX)]
+    names(data) <- c("Species","FishingGround", "SamplingType","auxX", "auxY", "auxG")
+  }
   
-  names(data) <- c("Species","FishingGround", "auxX", "auxY")
+  if (input$groupX == "None" ) {
+    data <- data[, c("Species","FishingGround", "SamplingType", input$N_varX, input$N_varY, input$N_varX)]
+    names(data) <- c("Species","FishingGround", "SamplingType","auxX", "auxY", "auxG")
+  }
   
+
   data
 
 })
@@ -89,14 +112,13 @@ dfp <- reactive({
 output$sumplot <- renderPlot ({
 
   if (input$view4==0) return()
-  
-  # ColorsBAR <- colour_table$colour4
-  # names(ColorsBAR) <- colour_table$Country
-  # colScaleBAR<-scale_fill_manual(name="LandingCountry", values=ColorsBAR)
-  isolate({ ggplot(dfp(), aes(x=auxX, y=auxY, fill=auxX)) +
-      geom_bar(stat="identity")+
-      #colScaleBAR +
-      labs(y = input$N_varY, x = input$N_varX, fill = input$N_varX)+
+
+  #safe_colorblind_palette <- colour_table$colour1
+
+  isolate({ ggplot(dfp(), aes(x=auxX, y=auxY, fill=auxG)) +
+      geom_bar(position = "stack", stat="identity")+
+      #scale_fill_manual(safe_colorblind_palette) +
+      labs(y = input$N_varY, x = input$N_varX, fill = input$groupX)+
       theme_bw()+
       theme(axis.text.x = element_text(angle = 90, hjust = 1),
             axis.text=element_text(size=12),
@@ -104,10 +126,38 @@ output$sumplot <- renderPlot ({
   })
 })
 
-# for log
+# # for log
 # output$bugtable <- renderTable ({
 # 
 #   if (input$view4==0) return()
 # 
 #   head(dfp())
 # })
+
+
+# -----------------------------------
+# Download plot 
+# -----------------------------------
+
+
+output$down4 <- downloadHandler(
+  
+  filename ="interactive_plot.png",
+  
+  content = function(interactive.plot){
+    png(interactive.plot)  
+    
+    if (input$view4==0) return()
+    
+    interactive.plot <-ggplot(dfp(), aes(x=auxX, y=auxY, fill=auxG)) +
+                            geom_bar(position = "stack", stat="identity")+
+                            #scale_fill_manual(safe_colorblind_palette) +
+                            labs(y = input$N_varY, x = input$N_varX, fill = input$groupX)+
+                            theme_bw()+
+                            theme(axis.text.x = element_text(angle = 90, hjust = 1),
+                            axis.text=element_text(size=12),
+                            axis.title=element_text(size=14,face="bold"))
+    print(interactive.plot)
+    dev.off()
+  }
+)

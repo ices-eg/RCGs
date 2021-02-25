@@ -4,6 +4,23 @@
 # Tab "with leaflet"
 # ******************
 
+dd <- reactive({
+  
+  data<-data_list()[[3]]
+  data<-as.data.frame(data)
+  
+  if (!("All" %in% input$region)){
+    data <- data[data$Region == input$region,]
+  }
+  data
+})
+  
+
+observe({
+  # Updating selectize input
+  updateSelectInput(session, "country", choices = unique(dd()$LandingCountry), selected = sort(unique(dd()$LandingCountry))[1]) 
+})
+
 output$absolute <- renderUI({
   req(input$file)
   absolutePanel(
@@ -17,15 +34,23 @@ output$absolute <- renderUI({
     top = 100,
     width = 450,
     height = "auto",
-    h2("Sampling explorer"),
+    h2("Sampling explorer", align = "center"),
     # uiOutput("countryui"),uiOutput("speciesui"),uiOutput("samptypeui"),uiOutput("quarterui"),
+    selectInput(
+      "region",
+      "Region",
+      choices =
+        c("All", levels(data_list()[[3]]$Region)),
+      multiple = F,
+      selected = "All"
+    ),
     selectizeInput(
       "country",
       "Country",
-      choices =
-        c("All", levels(data_list()[[3]]$LandingCountry)),
+      choices = c(""),
+      # c("All", levels(data_list()[[3]]$LandingCountry)),
       multiple = TRUE,
-      selected = "All",
+      #selected = "All",
       options = list(plugins = list("remove_button", "drag_drop"))
     ),
     selectizeInput(
@@ -66,11 +91,11 @@ output$absolute <- renderUI({
     br(),
     br(),
     plotOutput("plot2", height = 300)
+    #, tableOutput("debug")
   )
-  
-  
-  
 })
+
+
 # output ca_map
 #    output$countryui<-renderUI({selectizeInput(
 #       "country",
@@ -124,9 +149,9 @@ df <- reactive({
   data<-data_list()[[3]]
   data<-as.data.frame(data)
   
-  if (!("All" %in% input$country)){
+  #if (!("All" %in% input$country)){
     data <- data[data$LandingCountry %in% input$country,]
-  }
+  #}
   if (!("All" %in% input$species )){
     data <- data[data$Species %in% input$species,]
   }
@@ -169,10 +194,10 @@ filter_df <- eventReactive(input$view2, {
 # Debugging
 # -----------------------------------
 
-# output$debug <- renderTable({
-# #head(df(), 5)
-#   head(filter_df(), 5)
-# })
+ # output$debug <- renderTable({
+ # #head(df(), 5)
+ #   head(data_list()[[3]])
+ # })
 
 
 # -----------------------------------

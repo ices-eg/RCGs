@@ -21,7 +21,7 @@ library(rmarkdown)
 library(lubridate)
 library(data.table)
 library(mapplots)
-# library(shinybusy)
+library(shinybusy)
 library(shinyWidgets)
 library(ggrepel) # requiered by shinyappsio
 library(dplyr)
@@ -65,7 +65,8 @@ world <- ne_countries(scale = "medium", returnclass = "sf")
 ##--------------
 
 facetvar <-
-  c("LandingCountry", 
+  c("LandingCountry",
+    #"FlagCountry",
     "Species", 
     "SamplingType", 
     "Quarter")
