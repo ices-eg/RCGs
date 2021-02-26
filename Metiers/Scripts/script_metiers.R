@@ -9,7 +9,7 @@ for(f in list.files(path="./Scripts/Functions", full.names = T)){
 }
 
 # Load the input data
-data.file <- "Metier_data_format_Example_test_input.csv"
+data.file <- "data_input_example.csv"
 input.data <- loadInputData(data.file)
 
 # Load reference lists
@@ -19,7 +19,7 @@ url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/Metie
 species.list <- loadSpeciesList(url)
 url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/RDB_ISSG_Metier_list.csv"
 metier.list <- loadMetierList(url)
-url <- "./Reference_lists/Code-ERSGearType-v1.1.xlsx"
+url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/Code-ERSGearType-v1.1.xlsx"
 gear.list <- loadGearList(url)
 assemblage.list <- unique(c(species.list$species_group, species.list$dws_group))
 assemblage.list <- assemblage.list[!is.na(assemblage.list)]
@@ -31,10 +31,8 @@ input.data[,c("selection_type","selection_mesh"):=data.table(str_split_fixed(sel
 input.data[,selection_type:=ifelse(selection_type=="",NA,selection_type)]
 input.data[,selection_mesh:=ifelse(selection_mesh=="",NA,selection_mesh)]
 
-# Assign RCG name to the input data
+# Assign RCG names to the input data
 input.data <- merge(input.data, area.list, all.x = T, by = "area")
-input.data[is.na(RCG) & substr(area,1,2) %in% c("31","34","41","47","51","57","58","87"),RCG:="LDF"]
-input.data[is.na(RCG) & substr(area,1,2) == "37",RCG:="MED"]
 
 # Assign species category to the input data
 input.data <- merge(input.data, species.list, all.x = T, by = "FAO_species")
@@ -62,7 +60,7 @@ input.data[seq_measure == "weight",":="(seq_dom_group = species_group[which.max(
 input.data[seq_measure == "value",":="(seq_dom_group = species_group[which.max(seq_group_EUR)]),
   by=sequence.def]
 
-# Include DWS rules
+# Apply DWS rules
 input.data[dws_group=="DWS",seq_DWS_kg:=sum(KG, na.rm = T),
            by=c(sequence.def, "dws_group")]
 input.data[,seq_total_kg:=sum(KG, na.rm = T),
@@ -82,6 +80,13 @@ input.data[,metier_level_6:=as.character(pmap(list(RCG,
                                           selection_type,
                                           selection_mesh),
                                      function(r,y,g,t,d,m,st,sm) getMetier(r,y,g,t,d,m,st,sm)))]
+
+
+
+
+
+
+
 
 # Analyze vessel patterns
 input.data[,metier_level_5:=paste(gear,ifelse(is.na(registered_target_assemblage),
