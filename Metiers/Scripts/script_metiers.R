@@ -2,6 +2,7 @@ library(stringr)
 library(data.table)
 library(openxlsx)
 library(purrr)
+library(lubridate)
 
 # Import all functions
 for(f in list.files(path="./Scripts/Functions", full.names = T)){
@@ -81,9 +82,22 @@ input.data[,metier_level_6:=as.character(pmap(list(RCG,
                                           selection_mesh),
                                      function(r,y,g,t,d,m,st,sm) getMetier(r,y,g,t,d,m,st,sm)))]
 
+# Missing metiers
+input.data[,":="(month=month(dmy(fishing_day)),
+                           quarter=quarter(dmy(fishing_day)))]
+input.data[,vessel_length_group:=cut(vessel_length,breaks=c(0,10,12,18,24,40,Inf),right=F)]
+input.data.sequances <- unique(input.data[metier_level_6!="MIS_MIS_0_0_0",.SD,
+                                          .SDcols=c(sequence.def,
+                                                    "seq_dom_group","metier_level_6",
+                                                    "gear_FR","month","quarter",
+                                                    "vessel_length_group")])
 
-
-
+input.data[metier_level_6=="MIS_MIS_0_0_0",
+           metier_level_6:=as.character(pmap(list(vessel_id,month,area,seq_dom_group,
+                                                  quarter,year,vessel_length_group,
+                                                  gear_FR),
+                                              function(v,m,a,sg,q,y,vg,gfr) 
+                                                getMissingMetier(v,m,a,sg,q,y,vg,gfr)))]
 
 
 
@@ -114,9 +128,6 @@ input.data[is.na(metier_level_5),metier_level_5:=as.character(pmap(list(vessel_i
                                               function(v,y,g,gg,rt,d) getMetierLvl5FromPattern(v,y,g,gg,rt,d)))]
 
 
-
-
-
 # Save results
 print("Saving results ...")
 result<-input.data[order(vessel_id,trip_id,fishing_day,area,ices_rectangle,gear,mesh),
@@ -132,28 +143,6 @@ write.xlsx(file = "metier_results_summary.xlsx",result[,.(n_count=.N,
 
 
 
-
-# Determine the dominant species (by weight), its group and percentage in the total catch for each sequence
-# (sequence = trip_id+haul_id(if available) +fishing_day+area+ices_rectangle+gear+mesh+selection)
-# Information on dominant species can be used to identify the mesh size in case it is missing.
-# Function for mesh size determination will be developed. Should the function use national reference lists of mesh sizes corresponding to target species?
-#input.data<-input.data[,":="(seq_dom_species_KG = FAO_species[which.max(KG)],
-#                               seq_dom_species_group = species_group[which.max(KG)],
-#                               seq_dom_species_perc_KG = round(max(KG)/sum(KG)*100,1)),
-#            by=.(Country,year,vessel_id,vessel_length,trip_id,haul_id,fishing_day,area,
-#                 ices_rectangle,gear,mesh,selection,registered_target_assemblage)][order(vessel_id,trip_id,fishing_day,area,ices_rectangle,gear,mesh)]
-
-# Identify sequences where the group of the dominant species differs from the dominant group.
-# The results of this step do not affect further calculations. It highlights the above-mentioned situations, that may indicate an input data error.
-# input.data[,group.mismatch:=ifelse(seq_dom_species_group!=seq_dom_group,1,0)]
-
-# Save results
-#input.data<-input.data[order(vessel_id,trip_id,fishing_day,area,ices_rectangle,gear,mesh),
-#                       .(Country,year,vessel_id,vessel_length,trip_id,haul_id,fishing_day,area,ices_rectangle,gear,mesh,selection,FAO_species,
-#                         registered_target_assemblage,metier_level_6,KG,EUR,species_group,seq_dom_species_KG,seq_dom_species_group,
-#                         seq_dom_species_perc_KG,seq_group_KG,seq_group_EUR,seq_dom_group,group.mismatch)]
-
-#table(input.data[,.(metier=ifelse(is.na(metier_level_6),0,1))])
 
 
 
