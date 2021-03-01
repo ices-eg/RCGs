@@ -52,7 +52,7 @@ h1 {
   background-color: white !important;
 }
 
-.banner {
+.homeimage {
 
 	background-image: url('sea.jpg');
 	height: 350px;
@@ -61,30 +61,9 @@ h1 {
 	background-size: cover;
 	background-repeat: no-repeat;
 }
-.hometitle {
-	color: #000000;
-	text-align: center;
-	padding-right: -100px;
-	padding-top: 80px;
-	padding-bottom: 60px;
-	letter-spacing: 1px;
-	margin-top: 0px;
-    font-size: 40px;
-}
-.homesection {
-	color: #ffffff;
-	text-shadow: 1px 1px #000000;
-	text-align: center;
-	padding-top: 15px;
-	padding-bottom: 15px;
-	padding-right: 50px;
-	padding-left: 50px;
-	font-weight: lighter;
-	line-height: 100%;
 
-}
-.homesubsection {
-	color: #003299;
+.hometitle {
+	color: #ffffff;
 	text-shadow: 1px 1px #000000;
 	text-align: center;
 	padding-top: 15px;
