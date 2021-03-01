@@ -2,6 +2,9 @@
 # Tab "with ggplot"
 # ******************
 
+# -------------------------
+# Updating selectize input == country 
+# -------------------------
 
 dg <- reactive({
   
@@ -11,14 +14,40 @@ dg <- reactive({
   if (!("All" %in% input$regiong)){
     data <- data[data$Region == input$regiong,]
   }
+  data<-data%>%left_join(spptable)
   data
 })
 
 
 observe({
   # Updating selectize input
-  updateSelectInput(session, "countryg", choices = unique(dg()$LandingCountry), selected = sort(unique(dg()$LandingCountry))[1]) 
+  #updateSelectInput(session, "countryg", choices = unique(dg()$LandingCountry), selected = sort(unique(dg()$LandingCountry))[1]) 
+  updateSelectInput(session, "countryg", choices = c("All",as.character(unique(dg()$LandingCountry))), selected = "All")
 })
+
+
+# -------------------------
+# Updating selectize input == species
+# -------------------------
+
+gars <- reactive ({
+  
+  data <- dg()
+  
+  if (!("All" %in% input$countryg)){
+    data <- data[data$LandingCountry %in% input$countryg,]
+  }
+  
+  data <- data[, input$sppNamechoiceg]
+  data
+})
+
+
+observe({
+  # Updating selectize input
+  updateSelectInput(session, "speciesg", choices =c("All", as.character(unique(gars()))), selected = "All") 
+})
+
 
 
 output$static <- renderUI({
@@ -45,13 +74,22 @@ output$static <- renderUI({
              #selected = "All",
              options = list(plugins = list("remove_button", "drag_drop"))
            ),
+           radioButtons(
+             "sppNamechoiceg",
+             "Species",
+             choices = c("LatinName",
+                         "EnglishName",
+                         "Alpha3ID", 
+                         "WoRMSAphiaID"
+             )
+           ),
            selectizeInput(
              "speciesg",
              "Species",
-             choices =
-               c("All", levels(data_list()[[3]]$Species)),
+             choices = c(""),
+              #c("All", levels(data_list()[[3]]$Species)),
              multiple = TRUE,
-             selected = "All",
+             #selected = "All",
              options = list(plugins = list("remove_button", "drag_drop"))
            ),
            selectizeInput(
@@ -97,13 +135,28 @@ df3 <- reactive({
   
   data3<-data_list()[[3]]
   data3<-as.data.frame(data3)
+  data3<-data3%>%left_join(spptable)
   
-  #if (!("All" %in% input$countryg)){
-    data3 <- data3[data3$LandingCountry %in% input$countryg,]
-  #}
-  if (!("All" %in% input$speciesg )){
-    data3 <- data3[data3$Species %in% input$speciesg,]
+  if (!("All" %in% input$regiong)){
+    data3 <- data3[data3$Region == input$regiong,]
   }
+  if (!("All" %in% input$countryg)){
+    data3 <- data3[data3$LandingCountry %in% input$countryg,]
+  }
+  if (!("All" %in% input$speciesg)){
+  if(input$sppNamechoiceg == "LatinName"){
+    data3 <- data3[data3$Species %in% input$speciesg,]
+  }else{
+  if(input$sppNamechoiceg == "EnglishName"){
+    data3 <- data3[data3$EnglishName %in% input$speciesg,]
+  }else{
+  if(input$sppNamechoiceg == "Alpha3ID"){
+    data3 <- dat3[data3$Alpha3ID %in% input$speciesg,]
+  }else{
+  if(input$sppNamechoiceg == "WoRMSAphiaID"){
+    data3 <- data3[data3$WoRMSAphiaID %in% input$speciesg,]
+    }
+  }}}}
   if (!("All" %in% input$samtypeg)){
     data3 <- data3[data3$SamplingType %in% input$samtypeg,]
   }
