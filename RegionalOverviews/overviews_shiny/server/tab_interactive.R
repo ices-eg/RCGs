@@ -18,6 +18,7 @@ dd <- reactive({
     data <- data[data$Region == input$region,]
   }
   data<-data%>%left_join(ssptable)
+  data
 })
 
 
@@ -32,7 +33,13 @@ observe({
 # -------------------------
 
 vars <- reactive ({
+  
   data <- dd()
+  
+  if (!("All" %in% input$country)){
+    data <- data[data$LandingCountry %in% input$country,]
+  }
+
   data <- data[, input$sspNamechoice]
   data
 })
@@ -204,11 +211,13 @@ filter_df <- eventReactive(input$view2, {
 # Debugging
 # -----------------------------------
 
- output$debug <- renderTable({
- head(df(), 5)
- #head(data_list()[[3]])
- #vars()
- })
+ # output$debug <- renderTable({
+ # #head(filter_df(), 5)
+ #  dat <-data_list()[[3]]
+ #  unique(dat[dat$LandingCountry== "ESP",]$Species)
+ #  #unique(vars()$LandingCountry)
+ # 
+ # })
 
 
 # -----------------------------------
