@@ -1,48 +1,80 @@
 
 
-shinyUI(bootstrapPage(tags$style(HTML(" body, pre { font-size: 12pt; } * { font-family: Arial,sans-serif }")),
-                    tags$style(".shiny-file-input-progress {display: none}"),
-                    tags$head(tags$style(HTML(".selectize-input {width: 700px;}"))),
+shinyUI(
+  # bootstrapPage(tags$style(HTML(" body, pre { font-size: 12pt; } * { font-family: Arial,sans-serif }")),
+  #                   tags$style(".shiny-file-input-progress {display: none}"),
+  #                   tags$head(tags$style(HTML(".selectize-input {width: 700px;}"))),
 
     #navBarPage
-    navbarPage(theme = shinytheme("cosmo"), collapsible = TRUE,
-                id = "tabs",
-                
-                
-                # Main title        
-                title = "RCG Overview Tool",
-                #theme = shinytheme("sandstone"),
-                #inverse = T,
-                
+    navbarPage(
+               theme = "style.css",
+               collapsible = TRUE,
+               id = "navbar",
+               useShinyjs(),
+               fluid = TRUE,
+               #inverse = TRUE,
+               #title = "RCG Overview Tool",
+               windowTitle= tags$head(
+                 tags$link(rel = "icon", type = "image/png", href = "minilogoRCG.png"),
+                 tags$title("RCGshiny")
+               ),
+               position = "fixed-top",
+               header = tags$style(
+                  ".navbar-right { float: right !important;}",
+                  "body {padding-top: 55px;}"),
+               
+
                 # tabs
                 # -----------------------------------
                 # Home tab
                 # -----------------------------------
                 
-                tabPanel("Home", 
+                tabPanel(id ="tabHome", title = introBox(icon("home")),
+                         #includeHTML('www/home.html')
+                         # fluidRow(
+                         #   column(12,
+                         #          #br(),
+                         #          #HTML('<center><img src="rcglogo.jpg"></center>'),
+                         #          #br(),
+                         #          br(),
+                         #          p(strong("Welcome to the RDB Overview Tool of the RCG groups"), style = "font-size:30px", align="center"),
+                         #          br(),
+                         #          br(),
+                         #          HTML('<center><img src="start_fancy.png"></center>'),
+                         #          br(),
+                         #          br(),
+                         #          includeHTML ("data/DescriptionDisclaimer.txt"),
+                         #          br(),
+                         #          downloadButton("report", "Download Disclaimer",class = 'centerAlign'))
+                         #   )
                          fluidRow(
-                           column(12, 
-                                  #br(),
-                                  #HTML('<center><img src="rcglogo.jpg"></center>'),
-                                  #br(),
-                                  br(),
-                                  p(strong("Welcome to the RDB Overview Tool of the RCG groups"), style = "font-size:30px", align="center"),
-                                  br(), 
-                                  br(),
-                                  br(),
-                                  HTML('<center><img src="start_fancy.png"></center>'),
-                                  br(),
-                                  br(),
-                                  includeHTML ("data/DescriptionDisclaimer.txt"),
-                                  br(),
-                                  downloadButton("report", "Download Disclaimer",class = 'centerAlign')))
+                           column(12,align="center",
+                                  img( src="RCGs_logo.png")
+                           )),
+                         br(), br(), br(),
+                         fluidRow(
+                           column(12,align="center",
+                                  includeHTML('www/home.html') 
+                           )),
+                         br(), br(), br(),
+                         fluidRow(
+                           column(12, align="center",
+                                  div(style="display: inline-block;",class= "image", img(id="inputID", src="input_logo_4.png", height=300, style="cursor:pointer;")),
+                                  div(style="display: inline-block;",class= "image", img(id ="inventID", src="inventory_logo_4.png", height=300, style="cursor:pointer;")),
+                                  div(style="display: inline-block;",class= "image", img(id ="mapIntID", src="mapInt_logo_4.png", height=300, style="cursor:pointer;")),
+                                  div(style="display: inline-block;",class= "image", img(id ="mapStatID", src="mapStat_logo_4.png", height=300,style="cursor:pointer;")),
+                                  div(style="display: inline-block;",class= "image", img(id ="plotID", src="plots_logo_4.png", height=300,style="cursor:pointer;"))
+
+                         )
+                         )
+                         
                 ),   
 
 # -----------------------------------
 # Fisheries overview tab
 # -----------------------------------
   
-  tabPanel("Input data",align='center',br(),p("Upload RDB_All_Regions_YYYY.Rdata, available ", a(href="https://community.ices.dk/ExternalSites/datacollection/Regional%20coordination%20meetings%202017/RCGIntersessionalWork/_layouts/15/start.aspx#/SitePages/HomePage.aspx","here"),align="center"),fileInput("file", h3(""),buttonLabel = "Browse",placeholder = "example.Rdata"), p("It might take a while",align="center")),
+  tabPanel(id = "tabInput", "Input data",align='center',br(),p("Upload RDB_All_Regions_YYYY.Rdata, available ", a(href="https://community.ices.dk/ExternalSites/datacollection/Regional%20coordination%20meetings%202017/RCGIntersessionalWork/_layouts/15/start.aspx#/SitePages/HomePage.aspx","here"),align="center"),fileInput("file", h3(""),buttonLabel = "Browse",placeholder = "example.Rdata"), p("It might take a while",align="center")),
 
 # -----------------------------------
 # Sampling overview tab
@@ -54,7 +86,7 @@ shinyUI(bootstrapPage(tags$style(HTML(" body, pre { font-size: 12pt; } * { font-
     # -----------------------------------
     # Data explore subtab
     # -----------------------------------
-    tabPanel("Inventory tables",
+    tabPanel(id="tabInventory", "Inventory tables",
              tabsetPanel(
                type = "tabs",
                tabPanel(
@@ -117,5 +149,5 @@ shinyUI(bootstrapPage(tags$style(HTML(" body, pre { font-size: 12pt; } * { font-
 # -----------------------------------
 
     ) # end Navbarpage
-  )# end of bootstrapPage      
+  #)# end of bootstrapPage      
 )# end of ui
