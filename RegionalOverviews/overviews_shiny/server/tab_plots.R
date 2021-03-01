@@ -1,4 +1,33 @@
 
+
+
+# -------------------------
+# Updating selectize input == country 
+# -------------------------
+
+pars <- reactive({
+  
+  data<-data_list()[[2]]
+  data<-as.data.frame(data)
+  data<-data%>%left_join(spptable)
+  
+  if (!("All" %in% input$fishgroundp)){
+    data <- data[data$FishingGround %in% input$fishgroundp,]
+  }
+  
+  data <- data[, input$sppNamechoicep]
+  data
+})
+
+
+observe({
+  # Updating selectize input
+  #updateSelectInput(session, "countryg", choices = unique(dg()$LandingCountry), selected = sort(unique(dg()$LandingCountry))[1]) 
+  updateSelectInput(session, "speciesp", choices = c("All",as.character(unique(pars()))), selected = "All")
+})
+
+
+
 output$summary <- renderUI({
   
   tabsetPanel(type = "tabs",
@@ -17,10 +46,20 @@ output$summary <- renderUI({
                                  multiple = TRUE,
                                  selected = "All",
                                  options = list(plugins = list("remove_button", "drag_drop"))),
+                  radioButtons(
+                    "sppNamechoicep",
+                    "Species",
+                    choices = c("LatinName",
+                                "EnglishName",
+                                "Alpha3ID", 
+                                "WoRMSAphiaID"
+                    )
+                  ),
                   selectizeInput("speciesp","Species",
-                                 choices =c("All", levels(data_list()[[2]]$Species)),
+                                 choices = c(""),
+                                 #choices =c("All", levels(data_list()[[2]]$Species)),
                                  multiple = TRUE,
-                                 selected = "All",
+                                 #selected = "All",
                                  options = list(plugins = list("remove_button", "drag_drop"))),
                   selectizeInput( "samtypep", "Sampling Type",
                     choices = c("All", levels(data_list()[[3]]$SamplingType)),
@@ -75,14 +114,30 @@ dfp <- reactive({
   
   data<-data_list()[[2]] #SL
   data<-as.data.frame(data)
+  data<-data%>%left_join(spptable)
   
 
   if (!("All" %in% input$fishgroundp )){
     data <- data[data$FishingGround %in% input$fishgroundp,]
   }
-  if (!("All" %in% input$speciesp )){
-    data <- data[data$Species %in% input$speciesp,]
-  }
+  if (!("All" %in% input$speciesp)){
+    if(input$sppNamechoicep == "LatinName"){
+      data <- data[data$Species %in% input$speciesp,]
+    }else{
+    if(input$sppNamechoicep == "EnglishName"){
+      data <- data[data$EnglishName %in% input$speciesp,]
+    }else{
+    if(input$sppNamechoicep == "Alpha3ID"){
+      data <- data[data$Alpha3ID %in% input$speciesp,]
+    }else{
+    if(input$sppNamechoicep == "WoRMSAphiaID"){
+      data <- data[data$WoRMSAphiaID %in% input$speciesp,]
+    }
+    }}}}
+  
+  # if (!("All" %in% input$speciesp )){
+  #   data <- data[data$Species %in% input$speciesp,]
+  # }
   if (!("All" %in% input$samtypep)){
     data <- data[data$SamplingType %in% input$samtypep,]
   }
@@ -97,7 +152,6 @@ dfp <- reactive({
     names(data) <- c("Species","FishingGround", "SamplingType","auxX", "auxY", "auxG")
   }
   
-
   data
 
 })
