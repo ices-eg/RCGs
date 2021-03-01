@@ -17,7 +17,7 @@ dd <- reactive({
   if (!("All" %in% input$region)){
     data <- data[data$Region == input$region,]
   }
-  data<-data%>%left_join(ssptable)
+  data<-data%>%left_join(spptable)
   data
 })
 
@@ -40,7 +40,7 @@ vars <- reactive ({
     data <- data[data$LandingCountry %in% input$country,]
   }
 
-  data <- data[, input$sspNamechoice]
+  data <- data[, input$sppNamechoice]
   data
 })
 
@@ -88,7 +88,7 @@ output$absolute <- renderUI({
       options = list(plugins = list("remove_button", "drag_drop"))
     ),
     radioButtons(
-      "sspNamechoice",
+      "sppNamechoice",
       "Species",
       choices = c("LatinName",
                   "EnglishName",
@@ -148,7 +148,7 @@ df <- reactive({
   
   data<-data_list()[[3]]
   data<-as.data.frame(data)
-  data<-data%>%left_join(ssptable)
+  data<-data%>%left_join(spptable)
   
   if (!("All" %in% input$region)){
     data <- data[data$Region == input$region,]
@@ -158,16 +158,16 @@ df <- reactive({
   }
   if (!("All" %in% input$species)){
     
-    if(input$sspNamechoice == "LatinName"){
+    if(input$sppNamechoice == "LatinName"){
       data <- data[data$Species %in% input$species,]
     }else{
-    if(input$sspNamechoice == "EnglishName"){
+    if(input$sppNamechoice == "EnglishName"){
       data <- data[data$EnglishName %in% input$species,]
     }else{
-    if(input$sspNamechoice == "Alpha3ID"){
+    if(input$sppNamechoice == "Alpha3ID"){
       data <- data[data$Alpha3ID %in% input$species,]
     }else{
-    if(input$sspNamechoice == "WoRMSAphiaID"){
+    if(input$sppNamechoice == "WoRMSAphiaID"){
       data <- data[data$WoRMSAphiaID %in% input$species,]
     }
     }}}}
