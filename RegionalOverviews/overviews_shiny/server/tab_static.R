@@ -151,7 +151,7 @@ df3 <- reactive({
     data3 <- data3[data3$EnglishName %in% input$speciesg,]
   }else{
   if(input$sppNamechoiceg == "Alpha3ID"){
-    data3 <- dat3[data3$Alpha3ID %in% input$speciesg,]
+    data3 <- data3[data3$Alpha3ID %in% input$speciesg,]
   }else{
   if(input$sppNamechoiceg == "WoRMSAphiaID"){
     data3 <- data3[data3$WoRMSAphiaID %in% input$speciesg,]
