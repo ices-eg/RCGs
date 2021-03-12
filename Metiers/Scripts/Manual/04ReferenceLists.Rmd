@@ -3,36 +3,62 @@
 ## Métier list
  
 The R-script downloads the métier list from https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/RDB_ISSG_Metier_list.csv. It is also available in excel format.
-The list has information on RCG (BALT/LDF/MBS/NAtl/NSEA) and the métier code (Metier_level6). In some cases, there is a start and end year for the métier code due to legislation, and they are marked in the “start_year” and “end_year” columns.
-The column “old_code” is a reference to the codes used in the previous métier list from the RDB. If they are marked with red in the excel file, the code has changed in the new métier list. The column “Use_by_country_in_RDB” lists the countries that have uploaded data with the métiers in the RDB for the 2009-2017 periods, and in the column “Total_n_trips_RDB_2009t2017”, presents the sum of the total number of trips with the old codes uploaded to the RDB for 2009 to 2019.  
+
+
+The métiers reference list at DCF level6 (see “Metier_level6” column), to be considered by the algorithm, has been established by RCG (see “RCG” column): Baltic (BALT), Long Distance Fisheries (LDF), Mediterranean and Black Sea (MBS), North Atlantic (NAtl) and North Sea and Eastern Arctic (NSEA). In some cases, the reference métier codes are dated especially when the reference métier code is allowed only during a fixed time period (see columns “Start_year” and “End-year”). This could be due to legislation.
+
+
+The column “old_code” is a reference to the correspondent codes used in the previous métier list from the RDB. If they are marked with red in the excel file, the code has changed in the new métier list. The column “Use_by_country_in_RDB” lists the countries that have uploaded data with the considered métiers in the RDB for the 2009-2017 periods and  the column “Total_n_trips_RDB_2009t2017” present the sum of the total number of trips with the old codes uploaded to the RDB for 2009 to 2017.
+
 
 ## Species list
-The R-script uses the species list from https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/Metier%20Subgroup%20Species%202020.xlsx
-The list is based on the FAO ASFIS species list with the FAO species codes in column A and associated information in columns B to G. The columns H to T reflect the work on grouping the species codes in the métier group, the R data package, the RCM 2007 and what has been done within countries. Columns U, V and W contains the latest proposal on species groups at three levels and is used by the R-script.
-Grouping 1 in column V groups the species into Crustaceans (CRU), Molluscs (MOL), Finfish (FIF), Seaweeds (SWD) and Miscellaneous (MIS)
-Grouping 2 in column W splits the finfish category up into Anadromous (ANA), Catadromous (CAT), Demersal (DEF), Small pelagic fish (SPF), Large pelagic fish (LPF) and Freshwater species (FWS). Also Cephalopods (CEP) are separated from other molluscs.
+The R-script dowloads the species list from https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/Metier%20Subgroup%20Species%202020.xlsx
+
+
+The species list is a subset from the ASFIS list of species maintained by FAO (http://www.fao.org/fishery/collection/asfis/en) and include, as far as possible, all the commercial species landed in the RCG fishing areas. FAO species code for the commercial species considered is specified in column A and for each of them some complementary information are available in columns B to G (e.g. “Scientific name”, Taxocode”, “ISSCAAP description”, …). The columns H to T reflect the different ways on grouping the species codes in target assemblage of species  groups developed for different purposes: R data package, fishPi EU project, RCM 2007, DWS regulation and what has been done/referenced within countries. In the end, columns U, V and W contain the latest proposal on species groups at three different levels of aggregation. **These aggregations are used by the R-script:**
+
+
+Grouping 1 in column U aggregate the commercial species into the following target assemblage of species: Crustaceans (CRU), Molluscs (MOL), Finfishes (FIF), Seaweeds (SWD) and Miscellaneous (MIS).
+
+Grouping 2 in column V disaggregate the finfishes category into the following target assemblage of species: Anadromous species (ANA), Catadromous species (CAT), Demersal fish (DEF), Small pelagic fish (SPF), Large pelagic fish (LPF) and Freshwater species (FWS). It disaggregates also the molluscs category into the following target assemblage of species: Cephalopods (CEP) and Other molluscs (MOL).
+
 Grouping 3 - DWS identifies deep water species from the regulation (EC) 2016/2336.
-The Groupings 2 and 3 are used by the script, but if a country needs to group species differently, it can be done at the national level by including the changes in the R-script.
+
+Groupings 2 and 3 constitute the reference basis used by the script and the algorithm to aggregate commercial species into target assemblage of species. Nevertheless and if needed, countries are free to group species differently at national level by including the changes in the R-script.
+
  
 ## Area list
-The script downloads the area list from https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/AreaRegionLookup.csv.
-This list includes areas on the levels Area, SubArea, Division and SubDivision. It links the area codes to the RCG code that is used in the métier list.
 
-## 	Gear list
-The R-script downloads the area list from https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/ Code-ERSGearType-v1.1.xlsx.
+The R-script downloads the area list from https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/AreaRegionLookup.csv.
+
+Area, SubArea, Division, SubDivision and Unit FAO level (http://www.fao.org/fishery/area/search/en) fishing area codes are listed in the reference list with their links to the RCG code (same code  used in the métier reference list). All the FAO fishing areas possible codification at the different levels are listed except the FAO fishing areas codes at “SubArea level” (e.g. 27.5) or at “Area level” (e.g. 27) which encompass several RCGs. Therefore, for FAO area 27 it is promoted to provide, as a minimum level, FAO area at “Division level” in the input data.
+
+
+##	Gear list
+
+The R-script downloads the gearlist from https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/ Code-ERSGearType-v1.1.xlsx.
+
+ISSCFG FAO fishing gear classification codes (http://www.fao.org/cwp-on-fishery-statistics/handbook/capture-fisheries-statistics/fishing-gear-classification/en/) are detailed in column A and for each of them: 1) a description of the code is provided in column B and 2) in column C an aggregation by group of fishing gears (e.g. seine nets) is proposed; such aggregation is possibly used in some specific steps of the algorithm.
+
 
 ##	Selection panels
-The last part of the metier codes define the selection panels. They are often _0_0 in the last part of the metier code. Selection panel codes have been defined in some of the métiers and can be written in the input data format in the “selection” column.
 
-The first number define the type of selection panel: 
+The last part of the metier codes define the selection panels. When no selection devices are used then “_0_0” codification should be used in the last part of the metier code. For métiers where selection devices are used, following selection panel codes number have been referenced. They have to be filled in the input data format in the “selection” column with, in the second part of the codification, the precision of their mesh size. For the situation when there is both a selection device and escape window (selection panel code number = 4) then the smallest mesh size should be specified in the second part of the codification.
 
-
-Code number	Selection panel type
+Following selection panel code number have been referenced for the different type of selection panel: 
 
 
-0	No selection device
-1	Selction panel
-2	Grid
-3 	T90
-4	There is both selection device and escape window. Specify the smallest mesh size.
+Code number  | Selection panel type
+------------- | -------------
+0  | No selection device
+1  | Selection panel
+2	| Grid
+3 | T90
+4	| For the situation when there is both a selection device and escape window.
+
+	
+
+
+
+
 
