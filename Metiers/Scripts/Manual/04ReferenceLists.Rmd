@@ -47,6 +47,8 @@ The last part of the metier codes define the selection panels. When no selection
 
 Following selection panel code number have been referenced for the different type of selection panel: 
 
+\newpage
+
 
 Code number  | Selection panel type
 ------------- | -------------

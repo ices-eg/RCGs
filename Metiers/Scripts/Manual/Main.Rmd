@@ -60,4 +60,14 @@ linkcolor: 'black'
 
 ```
 
+\newpage
 
+```{r child = '08Annex.Rmd'}
+
+```
+
+\newpage
+
+```{r child = '09ContactPersons.Rmd'}
+
+```
