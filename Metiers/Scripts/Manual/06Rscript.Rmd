@@ -13,6 +13,7 @@ library(openxlsx)
 library(purrr)
 library(knitr)
 library(kableExtra)
+library(lubridate)
 ```
 
 
@@ -37,7 +38,7 @@ url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/Metie
 species.list <- loadSpeciesList(url)
 url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/RDB_ISSG_Metier_list.csv"
 metier.list <- loadMetierList(url)
-url <- "./Reference_lists/Code-ERSGearType-v1.1.xlsx"
+url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/Code-ERSGearType-v1.1.xlsx"
 gear.list <- loadGearList(url)
 assemblage.list <- unique(c(species.list$species_group, species.list$dws_group))
 assemblage.list <- assemblage.list[!is.na(assemblage.list)]
@@ -55,6 +56,7 @@ The packages required to run the script are (they can be downloaded from the CRA
 * data.table
 * openxlsx
 * purr
+* lubridate
 
 as well as auxiliary information described in sections XXX and a set of functions developed to facilitate the readability of the script. These functions are descripted below in detail. 
 
@@ -65,6 +67,7 @@ as well as auxiliary information described in sections XXX and a set of function
 * loadGearList.R : reads the [RCG gear file](https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/Code-ERSGearType-v1.1.xlsx)
 * getMeasure.R : determines the if the sequence factor is weight or value.
 * getMetier.R : assigns the metier level 6
+* getMissingMetier.R : 
 * getMetierLvl5FromPattern.R : assigns metier level 5
 
 ## Data 
@@ -90,16 +93,16 @@ kable(input.data, format = "latex", booktabs = TRUE, align=rep('c', 18), linesep
 ## Code
 
 
-```{r prepInput1}
-# Prepare input data
-input.data[,EUR:=as.numeric(EUR)]
-input.data[,KG:=as.numeric(KG)]
-```
 
 The first step of the R-script splits the “selection” column information, if any, between the selectivity device code *(e.g. 1)* and the selectivity device mesh size *(e.g. 120)*.
 
 
-```{r prepInput2, echo = TRUE}
+```{r prepInput1, echo = TRUE}
+# Prepare input data
+input.data[,EUR:=as.numeric(EUR)]
+
+input.data[,KG:=as.numeric(KG)]
+
 input.data[,c("selection_type","selection_mesh"):=data.table(str_split_fixed(selection,"_",2))]
 
 input.data[,selection_type:=ifelse(selection_type=="",NA,selection_type)]
@@ -115,9 +118,8 @@ kable(subset(input.data[,c("selection", "selection_type", "selection_mesh")], !i
 Then the R-script assigns a RCG area code based on the “area” column information provided in the input data and the area reference list. 
 
 ```{r mergeRCGarea, echo = TRUE}
+# Assign RCG names to the input data
 input.data <- merge(input.data, area.list, all.x = T, by = "area")
-input.data[is.na(RCG) & substr(area,1,2) %in% c("31","34","41","47","51","57","58","87"),RCG:="LDF"]
-input.data[is.na(RCG) & substr(area,1,2) == "37",RCG:="MED"]
 ```
 
 ```{r mergeRCGareaTab}
@@ -128,6 +130,7 @@ kable(unique(input.data[, c("area", "RCG", "Description")]), format = "latex", b
 The next step of the R-script is to assign the target assemblage group of species associated with the species landed with information provided in the “FAO_species' column and the species reference list. The possible belonging of the species to the Deep Water Species (DWS) group is also calculated.
 
 ```{r mergeSpecies, echo = TRUE}
+# Assign species category to the input data
 input.data <- merge(input.data, species.list, all.x = T, by = "FAO_species")
 ```
 
@@ -139,6 +142,9 @@ kable(unique(input.data[, c("FAO_species", "species_group", "dws_group")]), form
 A set of variables *(combination)* are necessary to define the fishing sequence level at which the métier will be calculated and assigned.  Total tonnage landings in weight and in value is also calculated by target assemblage group of species and fishing sequence. The default fishing sequence is shown below, however it can be changed to reflect the national combination of variables, that is up to the country to consider.
 
 ```{r sequence, echo = TRUE}
+# Process input data
+#In the variable called sequence.def please include all columns that will constitute a fishing sequence
+#This variable will be used as a key for grouping operations
 sequence.def <- c("Country","year","vessel_id","vessel_length","trip_id","haul_id",
                   "fishing_day","area","ices_rectangle","gear","mesh","selection",
                   "registered_target_assemblage")
@@ -169,6 +175,8 @@ kable(seq_sum, format = "latex", booktabs = TRUE, align=rep('c', 18), linesep = 
 The function “getMeasure.R” is then used to determine by fishing sequence the dominant factor *(weight or value)*, as stated in the measure column, to be considered to define the principal target assemblage group of species for the fishing sequence considered. If at least one species in the fishing sequence presents the modality “value”, then the reference measure becomes the value for the whole fishing sequence.
 
 ```{r measure, echo = TRUE}
+# Select a measure to determine the dominant group at a sequence level. If at least one species in a sequence has "value" in a measure column then 
+# all species in that sequence get the same measure.
 input.data[,":="(seq_measure = getMeasure(measure)),  by=sequence.def]
 ```
 
@@ -194,35 +202,35 @@ kable(head(input.data[, c("FAO_species", "area", "measure", "RCG", "species_grou
 The next step of the R-script assigned by fishing sequence the principal/main target assemblage group of species based on the highest tonnage total landings in weight or in value observed by fishing sequence. It means that the “species group” column information could then differ from “seq_dom_group” for the fishing sequences where more than one “species_group” has been landed when only one unique “seq_dom_group” will be assigned to the whole fishing sequence.
 
 ```{r dominantGroup, echo = TRUE}
+# Determine the dominant group for each sequence
 input.data[seq_measure == "weight",":="(seq_dom_group = species_group[which.max(seq_group_KG)]),
   by=sequence.def]
+
 input.data[seq_measure == "value",":="(seq_dom_group = species_group[which.max(seq_group_EUR)]),
   by=sequence.def]
 ```
 
-```{r domTab}
-# flextable(head(input.data), col_keys = c("FAO_species", "area", "measure", "RCG", "species_group", "seq_group_KG", "seq_group_EUR", "seq_dom_group")) %>%
-#   theme_alafoli() %>% autofit() %>% fit_to_width(7.5) %>% bold(j = c("species_group", "seq_dom_group"), bold = TRUE, part = "all") %>%line_spacing(space = 1, part = "all") %>% padding(padding = 1, part = "all")
-```
 
 The DWS rule is also applied when more than 8% of the species landed in weight, in the fishing sequence considered, belong to the deep water species group. In this case,  the DWS target species assemblage group is assigned to the whole fishing sequence as the dominant/principal target assemblage group of species in the  *“seq_dom_group”* column.
 
 
 ```{r rulesDWS, echo = TRUE}
+# Apply DWS rules
 input.data[dws_group=="DWS",seq_DWS_kg:=sum(KG, na.rm = T),
            by=c(sequence.def, "dws_group")]
+
 input.data[,seq_total_kg:=sum(KG, na.rm = T),
            by=sequence.def]
+
 input.data[,seq_DWS_perc:=ifelse(is.na(seq_DWS_kg),0,seq_DWS_kg/seq_total_kg)*100]
+
 input.data[,seq_DWS_perc:=max(seq_DWS_perc),by=sequence.def]
+
 input.data[seq_DWS_perc>8,seq_dom_group:="DWS"]
 ```
 
 ```{r rulesDWStab}
 kable(subset(input.data[, c("FAO_species", "area", "measure", "RCG", "species_group", "seq_group_KG", "seq_DWS_perc", "seq_dom_group")], input.data$seq_DWS_perc >0), format = "latex", booktabs = TRUE, linesep = "\\addlinespace", align=rep('c', 8))
-
-# flextable(subset(input.data, input.data$seq_DWS_perc > 0), col_keys = c("FAO_species", "area", "measure", "RCG", "species_group", "seq_group_KG", "seq_DWS_perc", "seq_dom_group")) %>%
-#   theme_alafoli() %>% autofit() %>% fit_to_width(8)  %>%line_spacing(space = 1, part = "all") %>% padding(padding = 1, part = "all")
 ```
   
 
@@ -238,7 +246,9 @@ Then, the R-script conditionally assigns the **métier level 6** following a ste
 
 
 ```{r metierLVL6, echo = TRUE}
+# Assign metier level 6
 input.data$metier_level_6<-NA
+
 input.data[,metier_level_6:=as.character(pmap(list(RCG,
                                           year,
                                           gear, 
@@ -259,17 +269,47 @@ kable(head(input.data[, c("RCG", "year", "gear", "registered_target_assemblage",
 #   theme_alafoli() %>% autofit() %>% fit_to_width(8)  %>% line_spacing(space = 1, part = "all") %>% padding(padding = 1, part = "all")
 ```
 
+NEED TO ADD TEXT HERE
+
+```{r missingMetier, echo = TRUE}
+# Missing metiers
+input.data[,":="(month=month(dmy(fishing_day)),
+                           quarter=quarter(dmy(fishing_day)))]
+input.data[,vessel_length_group:=cut(vessel_length,breaks=c(0,10,12,18,24,40,Inf),right=F)]
+input.data.sequances <- unique(input.data[metier_level_6!="MIS_MIS_0_0_0",.SD,
+                                          .SDcols=c(sequence.def,
+                                                    "seq_dom_group","metier_level_6",
+                                                    "gear_FR","month","quarter",
+                                                    "vessel_length_group")])
+
+input.data[metier_level_6=="MIS_MIS_0_0_0",
+           metier_level_6:=as.character(pmap(list(vessel_id,month,area,seq_dom_group,
+                                                  quarter,year,vessel_length_group,
+                                                  gear_FR),
+                                              function(v,m,a,sg,q,y,vg,gfr) 
+                                                getMissingMetier(v,m,a,sg,q,y,vg,gfr)))]
+```
+
+
+
 The metier vessel pattern is used to assign **metier level 5**.  The code below identifies the main metiers used by a vessel by taking into account the combination of gear and target assemblage. The column seq_no_lvl5 shows the number of times the metier level 5 was used by the respective vessel in the same year. The percentage (seq_perc_lvl5 column) is used to assign the dominant metier level 5 for each vessel. 
 
 
+
 ```{r metierLVL5, echo = TRUE}
+# Analyze vessel patterns
 input.data[,metier_level_5:=paste(gear,ifelse(is.na(registered_target_assemblage),
                                               seq_dom_group,
                                               registered_target_assemblage),sep="_")]
+
 pattern <- unique(input.data[,.SD,.SDcols=c(sequence.def,"metier_level_5")])
+
 pattern <- pattern[,.(seq_no_lvl5 = .N), by=.(year, vessel_id, metier_level_5)]
+
 pattern[,seq_perc_lvl5:=seq_no_lvl5/sum(seq_no_lvl5,na.rm = T)*100, by=.(year, vessel_id)]
+
 pattern<-pattern[!is.na(metier_level_5)]
+
 input.data <- merge(input.data, pattern,all.x = T , by=c("year", "vessel_id", "metier_level_5"))
 ```
 
@@ -284,7 +324,9 @@ kable(pattern, format = "latex", booktabs = TRUE, linesep = "\\addlinespace", al
 
 If a “rare” metier is assigned based on one different catch composition or a mis-assigned métier code, it will be set to one of the main métiers of the vessel belonging to this pattern. The percentage threshold for defining rare metiers can be set in the script. The default is 13, meaning that if there is less than 13 percent of the sequences that has a level 5 allocated, it is considered rare and will get the suffix “rare_” in the column “metier_level_5”. If possible, the script will suggest another major metier used by the vessel to be used instead. If it is different from the méetier code assigned it will have the suffix “pattern_”.
 
-```{r metierLVL5_fun, echo= TRUE}
+```{r metierDWS, echo= TRUE}
+# Specify the percentage threshold of the number of sequences below which 
+# a metier will be considered rare
 rare.threshold <- 13
 input.data[seq_perc_lvl5<rare.threshold, metier_level_5:=NA]
 pattern<-pattern[seq_perc_lvl5>=rare.threshold]
@@ -304,7 +346,7 @@ input.data[is.na(metier_level_5),metier_level_5:=
 
 
 
-```{r metierLVL5_funTab}
+```{r metierDWS_funTab}
 kable(head(input.data[, c("vessel_id", "year", "gear", "registered_target_assemblage", "seq_dom_group", "metier_level_5")]), format = "latex", booktabs = TRUE, linesep = "\\addlinespace", align=rep('c', 6)) %>%
   kable_styling(position = "center")
   
