@@ -6,28 +6,35 @@ An R-script was developed and tested in 2019 for assigning métiers in the Balti
 
 **Assigning “metier_level_6”**
 
-The script loads the transversal data in the format described in Section 2, the reference lists described in Section 3, and assigns the RCG name to the input data and the species target assemblage group.
-It is possible to define the sequence, which is the level that the métier is assigned to. The default is by following columns: Country, year, vessel id, vessel length, trip id, haul id, fishing day, area, ices rectangle, gear, mesh size, selection panel an registered target species assemblage
-The sequence can be changed to the preferred level.
-The species target assemblage group is determined for each sequence. If there is more than 8% deep water species, it is assigned to the DWS target species assemblage group.
-The level 6 métier code is assigned to the “column metier_level_6” by combining the information of the RCG, year, gear, target assemblage, mesh size, selection panel type and selection panel mesh size, with the métier list.
+The script loads the input transversal data in the format described in Section 2, the reference lists described in Section 3, and assigns a RCG code based on the fishing area detailed in the input data *(see “area” column)* and a target assemblage group of species based on the specie landed detailed in the input data *(see “FAO_species” column)* to each row of the input data.
+The default fishing sequence, constituting the level at which the metier level6 will be calculated and assigned, is defined by the following columns: *“Country, year, vessel id, vessel length, trip id, haul id, fishing day, area, ices rectangle, gear, mesh size, selection panel & registered target species assemblage”.*
+
+Nevertheless, countries are free to define the level of fishing sequence they want to consider nationally. For example, countries could take the decision to not consider fishing “ices rectangle area” when defining the level of fishing sequence at which they want to calculate and assign metier level 6. Therefore they could consider only the following columns: *“Country, year, vessel id, vessel length, trip id, haul id, fishing day, gear, mesh size, selection panel & registered target species assemblage”.*
+
+The principal target assemblage group of species is then calculated by fishing sequence at the level defined before. The principal target assemblage group of species is determined based on the maximum *(regarding all the target assemblage group of species landed for the fishing sequence considered)* total tonnage of landing calculated by fishing sequence in weight *(if all the “measure” column for the fishing sequence considered is filled out with “weight” modality)* otherwise in value. Specific algorithm allocates the DWS target species assemblage group as principal target assemblage group of species if deep water species represent more than 8% *(according to the Deep Water Regulation (EU) 2016/2336)* of the total tonnage landed in weight. 
+
+Then the combination of the RCG code, the year, the gear, the principal target assemblage group of species calculated before and the mesh size is merged to the métier reference list. The correspondent codification, if available, is therefore assigned to the fishing sequence considered and is detailed in the column *“Metier_level_6”*. In the case there is no correspondence with the métier reference list, then no métier level6 is assigned at this step to the fishing sequence and the column *“Metier_level_6”* is left blank or empty. 
+
 
 
 **National corrections**
 
-It is the idea that the script can be used as the core method to assign the métiers, but that countries could add national corrections. These can include, for example,  corrections of a species grouping if the species is fished within another métier nationally or corrections of gear codes (e.g. grouping or recoding imprecise gear codes (GN, TB)).
-It is encouraged that the countries upload their script with national corrections to GitHub under https://github.com/ices-eg/RCGs/tree/master/Metiers/Documentation_by_MS along with the documentation of the methods and for other countries to use same methods in their scripts if relevant, e.g. for defining selection panels etc. The lines with national corrections can be marked with #Country code. The scripts uploaded don't need to be final, they can be updated as they improve.
+The R-script has been developed in order to improve normalization between countries to assign métier level6 to their national transversal data. It meets a need identified during the 2018 DCF métier workshop which emphasizes the necessity to standardize and harmonize the methods to assign métiers to transversal data between countries. It seeks to be used as the core method shared between countries to assign métiers to fishing sequences. Nevertheless , countries could have some national specificities which have to be taken into account when assigning métiers. These national corrections could be added into the R-script *(for example: corrections of a species grouping if the species are fished within another métier nationally or corrections of gear codes (e.g. grouping or recoding imprecise gear codes (GN, TB)).*
+
+Countries are encouraged to upload their script with national corrections to GitHub under https://github.com/ices-eg/RCGs/tree/master/Metiers/Documentation_by_MS along with the documentation of the methods. Other countries could then use similar methods in their scripts if relevant, e.g. for defining selection panels etc. The lines with national corrections should be marked with *Country code*. The scripts uploaded don't need to be final, they can be updated as they improve.
+
 
 
 **Script looking at vessel patterns for assigning métiers**
 
 
-A function in the métier allocation script has been developed that takes the vessel pattern into account. This function will output a level 5 métier code in the column “metier_level_5”.
-This script identifies the main métiers used by a vessel using a stepwise procedure that is described in Section 5. 
+A function in the métier allocation R-script enables to refine the métiers firstly assigned by the general algorithm to take into account the “vessel patterns” i.e. dominant/main metiers used by vessels. This new step contributes to 1) limit the multiplication of métiers calculated *(focus on the yearxvessel’ main metiers avoiding “rare” métiers firstly assigned by the general algorithm), 2)* enables the metier calculation when gear is missing, inaccurate/imprecise (e.g. TB, FIX, GN) or wrong *(e.g. typing error, reporting error, …) and 3)* enables the metier calculation for fishing sequences without any catches *(“zero catches” fishing sequences).* This function will output a revised level 5 métier code in the column “metier_level_5” and this information could be used to assign a reviewed level 6 métier to the fishing sequence *(up to the end-user)*.
+
+The stepwise procedure developed  is described in detail in Section 5. 
+
 
 
 **Results**
 
 
-The resulting file, which is the input data with results added is saved as a “.csv” file. It is possible to specify the path.
-The results are also summed up and saved in an excel file that gives an overview of the métiers allocated.
+The resulting file, which is the input data with algorithm’ outputs *(i.e. outputs resulting from the implementation of the algorithm)* added *(e.g. “Metier_level6”)* is saved as a “.csv” file into a path which has to be specified. The results are also summed up and saved in an excel file that gives an overview of the métiers allocated.

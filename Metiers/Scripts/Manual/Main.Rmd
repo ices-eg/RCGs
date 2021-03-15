@@ -5,15 +5,12 @@ header-includes:
 - \newcommand{\elandscape}{\end{landscape}}
 output: 
   pdf_document:
+    number_sections: true
   toc: true
-  number_sections: true
-  includes:
-    in_header: latex/header.tex
-    before_body: latex/before_body.tex
-    after_body: latex/after_body.tex
 urlcolor: blue
 linkcolor: 'black'
 ---
+
 
 \pagenumbering{gobble}
 
@@ -62,4 +59,14 @@ linkcolor: 'black'
 
 ```
 
+\newpage
 
+```{r child = '08Annex.Rmd'}
+
+```
+
+\newpage
+
+```{r child = '09ContactPersons.Rmd'}
+
+```
