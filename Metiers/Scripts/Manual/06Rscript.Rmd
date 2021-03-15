@@ -46,11 +46,11 @@ assemblage.list <- assemblage.list[!is.na(assemblage.list)]
 
 # R script 
 
-The script developed to assign metiers based on several variables is called script_metiers_test.R. 
+The script developed to assign metiers based on several variables is called "script_metiers.R". 
 
 ## Prerequisites 
 
-The packages required to run the script are (they can be downloaded from the CRAN, https://cran.r-project.org/web/packages/available_packages_by_name.html), 
+The packages required to run the script are *(they can be downloaded from the CRAN, https://cran.r-project.org/web/packages/available_packages_by_name.html)*, 
 
 * stringr
 * data.table
@@ -58,17 +58,17 @@ The packages required to run the script are (they can be downloaded from the CRA
 * purr
 * lubridate
 
-as well as auxiliary information described in sections XXX and a set of functions developed to facilitate the readability of the script. These functions are descripted below in detail. 
+as well as auxiliary information described in section 3 and a set of functions developed to facilitate the readability of the script. These functions are descripted below in detail. 
 
 * loadInputData.R : reads the Input file provided it's in csv format
 * loadAreaList.R : reads the [RCG area file](https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/AreaRegionLookup.csv) from the Github repository 
 * loadSpeciesList.R : reads the [RCG species file](https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/Metier%20Subgroup%20Species%202020.xlsx) from the Github repository
 * loadMetierList.R : reads the [RCG metier file](https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/RDB_ISSG_Metier_list.csv) from the Github repository
 * loadGearList.R : reads the [RCG gear file](https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/Code-ERSGearType-v1.1.xlsx)
-* getMeasure.R : determines if the sequence factor is weight or value.
+* getMeasure.R : determines if the fishing sequence factor is weight or value to calculate the principal target assemblage of species
 * getMetier.R : assigns the metier level 6
 * getMissingMetier.R : 
-* getMetierLvl5FromPattern.R : assigns metier level 5
+* getMetierLvl5FromPattern.R : use vessels patterns to possibly refine the métiers level 6 firstly assigned by the general algorithm, assigning a reviewed métier level 5
 
 ## Data 
 
@@ -91,7 +91,6 @@ kable(input.data, format = "latex", booktabs = TRUE, align=rep('c', 18), linesep
 
 
 ## Code
-
 
 
 The first step of the R-script splits the “selection” column information, if any, between the selectivity device code *(e.g. 1)* and the selectivity device mesh size *(e.g. 120)*.
