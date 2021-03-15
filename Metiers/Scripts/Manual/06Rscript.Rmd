@@ -65,7 +65,7 @@ as well as auxiliary information described in sections XXX and a set of function
 * loadSpeciesList.R : reads the [RCG species file](https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/Metier%20Subgroup%20Species%202020.xlsx) from the Github repository
 * loadMetierList.R : reads the [RCG metier file](https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/RDB_ISSG_Metier_list.csv) from the Github repository
 * loadGearList.R : reads the [RCG gear file](https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/Code-ERSGearType-v1.1.xlsx)
-* getMeasure.R : determines the if the sequence factor is weight or value.
+* getMeasure.R : determines if the sequence factor is weight or value.
 * getMetier.R : assigns the metier level 6
 * getMissingMetier.R : 
 * getMetierLvl5FromPattern.R : assigns metier level 5
@@ -182,18 +182,6 @@ input.data[,":="(seq_measure = getMeasure(measure)),  by=sequence.def]
 
 
 ```{r measureTab}
-# NOT working. Can't escape the underscore
-# library(dplyr)
-# formain <- input.data %>%
-#   mutate(
-#     measure = cell_spec(measure, "latex",color = ifelse(measure == "weight", "red", "blue")),
-#     seq_group_KG = cell_spec(seq_group_KG, "latex", color = ifelse(measure == "weight", "red", "black")),
-#     seq_group_EUR = cell_spec(seq_group_EUR, "latex", color = ifelse(measure == "value", "blue", "black")))
-# formain <- formain[, c("FAO_species", "area", "measure", "RCG", "species_group", "seq_group_KG", "seq_group_EUR")]
-# names(formain) <- gsub("_", "\\_", names(formain))
-# 
-# kable(head(formain), format = "latex", booktabs = TRUE, linesep = "\\addlinespace", escape = FALSE) 
-
 kable(head(input.data[, c("FAO_species", "area", "measure", "RCG", "species_group", "seq_group_KG", "seq_group_EUR")]), format = "latex", booktabs = TRUE, linesep = "\\addlinespace", align=rep('c', 7))%>%
   column_spec(c(3, 6, 7), bold = TRUE) 
   
@@ -264,9 +252,6 @@ input.data[,metier_level_6:=as.character(pmap(list(RCG,
 ```{r metierLVL6Tab}
 kable(head(input.data[, c("RCG", "year", "gear", "registered_target_assemblage", "seq_dom_group", "mesh", "selection_type", "selection_mesh", "metier_level_6")]), format = "latex", booktabs = TRUE, linesep = "\\addlinespace", align=rep('c', 9)) %>%
   kable_styling(latex_options = "scale_down")
-
-# flextable(head(input.data), col_keys = c("RCG", "year", "gear", "registered_target_asseblage", "seq_dom_group", "mesh", "selection_type", "selection_mesh", "metier_level_6")) %>%
-#   theme_alafoli() %>% autofit() %>% fit_to_width(8)  %>% line_spacing(space = 1, part = "all") %>% padding(padding = 1, part = "all")
 ```
 
 NEED TO ADD TEXT HERE
@@ -350,8 +335,6 @@ input.data[is.na(metier_level_5),metier_level_5:=
 kable(head(input.data[, c("vessel_id", "year", "gear", "registered_target_assemblage", "seq_dom_group", "metier_level_5")]), format = "latex", booktabs = TRUE, linesep = "\\addlinespace", align=rep('c', 6)) %>%
   kable_styling(position = "center")
   
-# flextable(head(input.data), col_keys = c("vessel_id", "year", "gear", "registered_target_asseblage", "seq_dom_group", "metier_level_5")) %>%
-#   theme_alafoli() %>% autofit() %>% fit_to_width(8)  %>% line_spacing(space = 1, part = "all") %>% padding(padding = 1, part = "all")
 ```
 
 

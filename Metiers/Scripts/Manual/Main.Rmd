@@ -7,7 +7,6 @@ output:
   pdf_document:
     number_sections: true
   toc: true
-   
 urlcolor: blue
 linkcolor: 'black'
 ---
