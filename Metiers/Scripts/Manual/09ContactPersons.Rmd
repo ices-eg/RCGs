@@ -1,6 +1,6 @@
 # Contact Information {-}
 
-*Contact persons:
+**Contact persons**
 
 Questions regarding code lists: Josefine Egekvist (jsv@aqua.dtu.dk)
 

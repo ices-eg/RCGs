@@ -64,7 +64,7 @@ as well as auxiliary information described in section 3 and a set of functions d
 * loadAreaList.R : reads the [RCG area file](https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/AreaRegionLookup.csv) from the Github repository 
 * loadSpeciesList.R : reads the [RCG species file](https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/Metier%20Subgroup%20Species%202020.xlsx) from the Github repository
 * loadMetierList.R : reads the [RCG metier file](https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/RDB_ISSG_Metier_list.csv) from the Github repository
-* loadGearList.R : reads the [RCG gear file](https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/Code-ERSGearType-v1.1.xlsx)
+* loadGearList.R : reads the [RCG gear file](https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/Code-ERSGearType-v1.1.xlsx) from the Github repository
 * getMeasure.R : determines if the fishing sequence factor is weight or value to calculate the principal target assemblage of species
 * getMetier.R : assigns the metier level 6
 * getMissingMetier.R : 
@@ -123,7 +123,7 @@ input.data <- merge(input.data, area.list, all.x = T, by = "area")
 
 ```{r mergeRCGareaTab}
 kable(unique(input.data[, c("area", "RCG", "Description")]), format = "latex", booktabs = TRUE) %>%
-  kable_styling(position = "center")
+  kable_styling(position = "center", latex_options = "hold_position")
 ```
 
 The next step of the R-script is to assign the target assemblage group of species associated with the species landed with information provided in the “FAO_species' column and the species reference list. The possible belonging of the species to the Deep Water Species (DWS) group is also calculated.
@@ -217,7 +217,8 @@ input.data[seq_DWS_perc>8,seq_dom_group:="DWS"]
 ```
 
 ```{r rulesDWStab}
-kable(subset(input.data[, c("FAO_species", "area", "measure", "RCG", "species_group", "seq_group_KG", "seq_DWS_perc", "seq_dom_group")], input.data$seq_DWS_perc >0), format = "latex", booktabs = TRUE, linesep = "\\addlinespace", align=rep('c', 8))
+kable(subset(input.data[, c("FAO_species", "area", "measure", "RCG", "species_group", "seq_group_KG", "seq_DWS_perc", "seq_dom_group")], input.data$seq_DWS_perc >0), format = "latex", booktabs = TRUE, linesep = "\\addlinespace", align=rep('c', 8))%>%
+  kable_styling(latex_options = "scale_down")
 ```
   
 
@@ -302,8 +303,6 @@ input.data <- merge(input.data, pattern,all.x = T , by=c("year", "vessel_id", "m
 ```{r metierLVL5Tab}
 kable(pattern, format = "latex", booktabs = TRUE, linesep = "\\addlinespace", align=rep('c', 5)) %>%
   kable_styling(position = "center")
-# flextable(pattern) %>%
-#   theme_alafoli() %>% autofit() %>% fit_to_width(8)  %>% line_spacing(space = 1, part = "all") %>% padding(padding = 1, part = "all")
 ```
 
 If a “rare” metier is assigned based on one different catch composition or a mis-assigned métier code, it will be set to one of the main métiers of the vessel belonging to this pattern. The percentage threshold for defining rare metiers can be set in the script. The default is 13, meaning that if there is less than 13 percent of the sequences that has a level 5 allocated, it is considered rare and will get the suffix “rare_” in the column “metier_level_5”. If possible, the script will suggest another major metier used by the vessel to be used instead. If it is different from the méetier code assigned it will have the suffix “pattern_”.
