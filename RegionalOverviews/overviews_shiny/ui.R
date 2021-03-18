@@ -100,7 +100,6 @@ shinyUI(
                  #addSpinner(DT::dataTableOutput("inventorytable_CA"), spin = "circle", color = "grey")
                  DT::dataTableOutput("inventorytable_CA"),
                  add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
-                 
                ),
                tabPanel(
                  "SL inventory",
@@ -111,7 +110,6 @@ shinyUI(
                  #addSpinner(DT::dataTableOutput("inventorytable_SL"), spin = "circle", color = "grey")
                  DT::dataTableOutput("inventorytable_SL"),
                  add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
-                 
                )
              )),
 
@@ -132,7 +130,6 @@ shinyUI(
         # -----------------------------------
        uiOutput("absolute"),
        add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
-       
         )),
     
     # -----------------------------------
@@ -143,7 +140,6 @@ shinyUI(
       "Static map",
       uiOutput("static"),
       add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
-      
     ),
     
     # -----------------------------------
@@ -153,7 +149,7 @@ shinyUI(
     tabPanel(
       "Interactive plots", 
         uiOutput("summary"),
-      add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
+        add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
       
     )
   )# end navMENU
