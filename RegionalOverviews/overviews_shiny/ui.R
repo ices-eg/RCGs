@@ -75,7 +75,9 @@ shinyUI(
 # Fisheries overview tab
 # -----------------------------------
   
-  tabPanel(id = "tabInput", "Input data",align='center',br(),p("Upload RDB_All_Regions_YYYY.Rdata, available ", a(href="https://community.ices.dk/ExternalSites/datacollection/Regional%20coordination%20meetings%202017/RCGIntersessionalWork/_layouts/15/start.aspx#/SitePages/HomePage.aspx","here"),align="center"),fileInput("file", h3(""),buttonLabel = "Browse",placeholder = "example.Rdata"), p("It might take a while",align="center")),
+  tabPanel(id = "tabInput", "Input data",align='center',br(),p("Upload RDB_All_Regions_YYYY.Rdata, available ", a(href="https://community.ices.dk/ExternalSites/datacollection/Regional%20coordination%20meetings%202017/RCGIntersessionalWork/_layouts/15/start.aspx#/SitePages/HomePage.aspx","here"),align="center"),fileInput("file", h3(""),buttonLabel = "Browse",placeholder = "example.Rdata"), p("It might take a while",align="center"),
+           add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
+  ),
 
 # -----------------------------------
 # Sampling overview tab
@@ -96,7 +98,9 @@ shinyUI(
                  br(),
                  downloadButton(outputId = 'download_filtered_inventorytable_CA', label = "Download the filtered dataset"),
                  br(),
-                 addSpinner(DT::dataTableOutput("inventorytable_CA"), spin = "circle", color = "grey")
+                 #addSpinner(DT::dataTableOutput("inventorytable_CA"), spin = "circle", color = "grey")
+                 DT::dataTableOutput("inventorytable_CA"),
+                 add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
                ),
                tabPanel(
                  "SL inventory",
@@ -104,7 +108,9 @@ shinyUI(
                  br(),
                  downloadButton(outputId = 'download_filtered_invetorytable_SL', label = "Download the filtered dataset"),
                  br(),
-                 addSpinner(DT::dataTableOutput("inventorytable_SL"), spin = "circle", color = "grey")
+                 #addSpinner(DT::dataTableOutput("inventorytable_SL"), spin = "circle", color = "grey")
+                 DT::dataTableOutput("inventorytable_SL"),
+                 add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
                )
              )),
 
@@ -124,6 +130,7 @@ shinyUI(
         # user Panel
         # -----------------------------------
        uiOutput("absolute"),
+       add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
         )),
     
     # -----------------------------------
@@ -132,7 +139,8 @@ shinyUI(
     
     tabPanel(
       "Static map",
-      uiOutput("static")
+      uiOutput("static"),
+      add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
     ),
     
     # -----------------------------------
@@ -141,7 +149,9 @@ shinyUI(
     
     tabPanel(
       "Interactive plots", 
-        uiOutput("summary")
+        uiOutput("summary"),
+        add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
+      
     )
   )# end navMENU
 
