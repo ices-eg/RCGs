@@ -51,12 +51,12 @@ shinyUI(
                            column(12,align="center",
                                   img( src="RCGs_logo.png", height=150)
                            )),
-                         br(), br(), br(),
+                         br(), 
                          fluidRow(
                            column(12,align="center",
                                   includeHTML('www/home.html') 
                            )),
-                         br(), br(), br(),
+                         br(), 
                          fluidRow(
                            column(12, align="center",
                                   div(style="display: inline-block;",class= "image", img(id="inputID", src="input_logo_4.png", height=300, style="cursor:pointer;")),
