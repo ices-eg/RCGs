@@ -4,6 +4,7 @@ shinyUI(
   # bootstrapPage(tags$style(HTML(" body, pre { font-size: 12pt; } * { font-family: Arial,sans-serif }")),
   #                   tags$style(".shiny-file-input-progress {display: none}"),
   #                   tags$head(tags$style(HTML(".selectize-input {width: 700px;}"))),
+  
 
     #navBarPage
     navbarPage(
