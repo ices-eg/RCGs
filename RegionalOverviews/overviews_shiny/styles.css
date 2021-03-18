@@ -19,6 +19,10 @@ body, label, input, button, select {
 }
 h1, h2, h3, h4 { font-weight: 400; }
 
+h1 {
+  font-size: 60px;
+}
+
 #controls {
   /* Appearance */
   background-color: white;
@@ -46,4 +50,31 @@ h1, h2, h3, h4 { font-weight: 400; }
 /* If not using map tiles, show a white background */
 .leaflet-container {
   background-color: white !important;
+}
+
+.homeimage {
+
+	background-image: url('sea.jpg');
+	height: 350px;
+	width: inherit;
+
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+.hometitle {
+	color: #ffffff;
+	text-shadow: 1px 1px #000000;
+	text-align: center;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	padding-right: 50px;
+	padding-left: 50px;
+	font-weight: lighter;
+	line-height: 100%;
+
+}
+
+.image:hover {
+opacity: 0.8;
 }
