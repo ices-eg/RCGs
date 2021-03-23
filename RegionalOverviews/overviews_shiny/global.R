@@ -26,6 +26,7 @@ library(shinyWidgets)
 library(ggrepel) # requiered by shinyappsio
 library(dplyr)
 library(rgeos) # requiered by shinyappsio
+library(rintrojs)
 
 ##--------------
 ## data
@@ -100,6 +101,13 @@ var <-
     #"lat",
     #"lon"
   #)
+
+##--------------
+## switch to different species nomenclature
+##--------------
+
+spptable <- read.csv("data/jointable.csv", sep= ";")
+
 
 #setwd("C:/Users/Win10 Home x64/Desktop/Arbeitszeug/RCG_ISSG/RCGs/RegionalOverviews/overviews_shiny")
 # 

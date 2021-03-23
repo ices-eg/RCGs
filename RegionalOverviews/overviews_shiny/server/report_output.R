@@ -8,7 +8,7 @@ output$report <- downloadHandler(
   },
   
   content = function(file) {
-    file.copy("www/01_hello.pdf", file)
+    file.copy("www/Disclaimer.pdf", file)
   }
 )
 # old version for a .docx variante            

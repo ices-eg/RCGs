@@ -4,6 +4,11 @@
 # Tab "with leaflet"
 # ******************
 
+
+# -------------------------
+# Updating selectize input == country 
+# -------------------------
+
 dd <- reactive({
   
   data<-data_list()[[3]]
@@ -12,14 +17,43 @@ dd <- reactive({
   if (!("All" %in% input$region)){
     data <- data[data$Region == input$region,]
   }
+  data<-data%>%left_join(spptable)
   data
 })
+
+
+observe({
+  #updateSelectInput(session, "country", choices = unique(dd()$LandingCountry), selected = sort(unique(dd()$LandingCountry))[1]) 
+  updateSelectInput(session, "country", choices = c("All",as.character(unique(dd()$LandingCountry))), selected = "All") 
   
+  })
+
+# -------------------------
+# Updating selectize input == species
+# -------------------------
+
+vars <- reactive ({
+  
+  data <- dd()
+  
+  if (!("All" %in% input$country)){
+    data <- data[data$LandingCountry %in% input$country,]
+  }
+
+  data <- data[, input$sppNamechoice]
+  data
+})
+
 
 observe({
   # Updating selectize input
-  updateSelectInput(session, "country", choices = unique(dd()$LandingCountry), selected = sort(unique(dd()$LandingCountry))[1]) 
+  updateSelectInput(session, "species", choices =c("All", as.character(unique(vars()))), selected = "All") 
 })
+
+
+# -------------------------
+# AbsolutePanel uiOutput
+# -------------------------
 
 output$absolute <- renderUI({
   req(input$file)
@@ -53,13 +87,23 @@ output$absolute <- renderUI({
       #selected = "All",
       options = list(plugins = list("remove_button", "drag_drop"))
     ),
+    radioButtons(
+      "sppNamechoice",
+      "Species",
+      choices = c("LatinName",
+                  "EnglishName",
+                  "Alpha3ID", 
+                  "WoRMSAphiaID"
+                  ),
+      inline= TRUE
+    ),
     selectizeInput(
       "species",
-      "Species",
-      choices =
-        c("All", levels(data_list()[[3]]$Species)),
+      " ",
+      choices = c(""),
+      #  c("All", levels(data_list()[[3]]$Species)),
       multiple = TRUE,
-      selected = "All",
+      #selected = "All",
       options = list(plugins = list("remove_button", "drag_drop"))
     ),
     selectizeInput(
@@ -91,53 +135,9 @@ output$absolute <- renderUI({
     br(),
     br(),
     plotOutput("plot2", height = 300)
-    #, tableOutput("debug")
+    , tableOutput("debug")
   )
 })
-
-
-# output ca_map
-#    output$countryui<-renderUI({selectizeInput(
-#       "country",
-#       "Country",choices=
-#       c("All", levels(data_list()[[3]]$LandingCountry)),
-#       multiple = TRUE,
-#       selected = "All",
-#       options = list(plugins = list("remove_button", "drag_drop"))
-#    )})
-# 
-#    output$speciesui<-renderUI({
-# selectizeInput(
-#    "species",
-#    "Species",choices=
-#    c("All", levels(data_list()[[3]]$Species)),
-#    multiple = TRUE,
-#    selected = "All",
-#    options = list(plugins = list("remove_button", "drag_drop"))
-# )})
-# 
-#   output$samptypeui<-renderUI({
-# selectizeInput(
-#    "samtype",
-#    "Sampling Type",choices=
-#    c("All", levels(data_list()[[3]]$SamplingType)),
-#    multiple = TRUE,
-#    selected = "All",
-#    options = list(plugins = list("remove_button", "drag_drop"))
-# )})
-#   
-#   output$quarterui<- renderUI({
-# selectizeInput(
-#    "quarter",
-#    "Quarter",choices=
-#    c("All", levels(data_list()[[3]]$Quarter)),
-#    multiple = TRUE,
-#    selected = "All",
-#    options = list(plugins = list("remove_button", "drag_drop"))
-# )})
-
-
-
 
 
 # -----------------------------------
@@ -148,13 +148,30 @@ df <- reactive({
   
   data<-data_list()[[3]]
   data<-as.data.frame(data)
+  data<-data%>%left_join(spptable)
   
-  #if (!("All" %in% input$country)){
-    data <- data[data$LandingCountry %in% input$country,]
-  #}
-  if (!("All" %in% input$species )){
-    data <- data[data$Species %in% input$species,]
+  if (!("All" %in% input$region)){
+    data <- data[data$Region == input$region,]
   }
+  if (!("All" %in% input$country)){
+    data <- data[data$LandingCountry %in% input$country,]
+  }
+  if (!("All" %in% input$species)){
+    
+    if(input$sppNamechoice == "LatinName"){
+      data <- data[data$Species %in% input$species,]
+    }else{
+    if(input$sppNamechoice == "EnglishName"){
+      data <- data[data$EnglishName %in% input$species,]
+    }else{
+    if(input$sppNamechoice == "Alpha3ID"){
+      data <- data[data$Alpha3ID %in% input$species,]
+    }else{
+    if(input$sppNamechoice == "WoRMSAphiaID"){
+      data <- data[data$WoRMSAphiaID %in% input$species,]
+    }
+    }}}}
+  
   if (!("All" %in% input$samtype)){
     data <- data[data$SamplingType %in% input$samtype,]
   }
@@ -195,8 +212,11 @@ filter_df <- eventReactive(input$view2, {
 # -----------------------------------
 
  # output$debug <- renderTable({
- # #head(df(), 5)
- #   head(data_list()[[3]])
+ # #head(filter_df(), 5)
+ #  dat <-data_list()[[3]]
+ #  unique(dat[dat$LandingCountry== "ESP",]$Species)
+ #  #unique(vars()$LandingCountry)
+ # 
  # })
 
 
