@@ -78,3 +78,4 @@ h1 {
 .image:hover {
 opacity: 0.8;
 }
+.shiny-file-input-progress {display: none}
