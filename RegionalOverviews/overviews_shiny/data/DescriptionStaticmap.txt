@@ -1,0 +1,11 @@
+﻿<b>Sampling Type:</b> 
+<li><b> D </b> : lorem ipsum dolor sit amet consectetur adipiscing elit.</li>
+<li><b> M </b> : lorem ipsum dolor sit amet consectetur adipiscing elit.</li>
+<li><b> S </b> : lorem ipsum dolor sit amet consectetur adipiscing elit.</li>
+<li><b> V </b> : lorem ipsum dolor sit amet consectetur adipiscing elit.</li>
+<p>
+<b>Variable:</b> 
+<li><b> NoAge </b> : lorem ipsum dolor sit amet consectetur adipiscing elit.</li>
+<li><b> NoAgeTrips </b> : lorem ipsum dolor sit amet consectetur adipiscing elit.</li>
+<li><b> NoWeight </b> : lorem ipsum dolor sit amet consectetur adipiscing elit.</li>
+<li><b> NoWeightTrips </b> : lorem ipsum dolor sit amet consectetur adipiscing elit.</li>
