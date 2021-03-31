@@ -49,7 +49,7 @@ shinyUI(
                          #   )
                          fluidRow(
                            column(12,align="center",
-                                  img( src="RCGs_logo.png", height=150)
+                                  img( src="RCGs_logo2.png", height=150)
                            )),
                          br(), 
                          fluidRow(
