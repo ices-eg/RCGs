@@ -49,7 +49,7 @@ shinyUI(
                          #   )
                          fluidRow(
                            column(12,align="center",
-                                  img( src="RCGs_logo2.png", height=150)
+                                  img( src="RCGs_logo2.png", height=100)
                            )),
                          br(), 
                          fluidRow(
@@ -59,11 +59,11 @@ shinyUI(
                          br(), 
                          fluidRow(
                            column(12, align="center",
-                                  div(style="display: inline-block;",class= "image", img(id="inputID", src="input_logo_4.png", height=300, style="cursor:pointer;")),
-                                  div(style="display: inline-block;",class= "image", img(id ="inventID", src="inventory_logo_4.png", height=300, style="cursor:pointer;")),
-                                  div(style="display: inline-block;",class= "image", img(id ="mapIntID", src="mapInt_logo_4.png", height=300, style="cursor:pointer;")),
-                                  div(style="display: inline-block;",class= "image", img(id ="mapStatID", src="mapStat_logo_4.png", height=300,style="cursor:pointer;")),
-                                  div(style="display: inline-block;",class= "image", img(id ="plotID", src="plots_logo_4.png", height=300,style="cursor:pointer;"))
+                                  div(style="display: inline-block;",class= "image", img(id="inputID", src="input_logo_4.png", height=250, style="cursor:pointer;margin-right:40px;")),
+                                  div(style="display: inline-block;",class= "image", img(id ="inventID", src="inventory_logo_4.png", height=250, style="cursor:pointer;margin-right:40px;")),
+                                  div(style="display: inline-block;",class= "image", img(id ="mapIntID", src="mapInt_logo_4.png", height=250, style="cursor:pointer;margin-right:40px;")),
+                                  div(style="display: inline-block;",class= "image", img(id ="mapStatID", src="mapStat_logo_4.png", height=250,style="cursor:pointer;margin-right:40px;")),
+                                  div(style="display: inline-block;",class= "image", img(id ="plotID", src="plots_logo_4.png", height=250,style="cursor:pointer;"))
 
                          )
                          )
