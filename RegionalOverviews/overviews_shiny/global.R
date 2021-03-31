@@ -21,7 +21,7 @@ library(rmarkdown)
 library(lubridate)
 library(data.table)
 library(mapplots)
-# library(shinybusy)
+library(shinybusy)
 library(shinyWidgets)
 library(ggrepel) # requiered by shinyappsio
 library(dplyr)
