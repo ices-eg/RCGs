@@ -371,3 +371,24 @@ ggplot(data=landings_sp_sum, aes(x=Year, y=Landing_ton, fill=FlagCountry)) +
 
 ## {-}
 
+**Text describing stocks
+
+## Stock {.tabset}
+### Stock|Country|Metier|Landings
+```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
+
+print('table')
+
+```
+### Stock|Country|Metier|Landings
+```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
+print('graph')
+
+```
+
+### Stock|Country|Metier|Effort
+```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
+print('graph')
+
+```
+## {-}
