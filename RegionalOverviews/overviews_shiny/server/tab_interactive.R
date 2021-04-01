@@ -324,7 +324,9 @@ output$plot2 <- renderPlot ({
   ColorsBAR <- colour_table$colour4
   names(ColorsBAR) <- colour_table$Country
   colScaleBAR<-scale_fill_manual(name="LandingCountry", values=ColorsBAR)
-  isolate({ ggplot(df(), aes(x=LandingCountry, y=aux, fill=LandingCountry)) +
+  isolate({
+    if(nrow(df())==0) return({shinyalert("Oops!", "No data for this selection", type = "error")})
+    ggplot(df(), aes(x=LandingCountry, y=aux, fill=LandingCountry)) +
       geom_bar(stat="identity")+
       colScaleBAR +
       theme_bw()+

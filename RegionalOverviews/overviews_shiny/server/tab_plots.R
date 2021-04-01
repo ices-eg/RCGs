@@ -169,7 +169,9 @@ output$sumplot <- renderPlot ({
 
   #safe_colorblind_palette <- colour_table$colour1
 
-  isolate({ ggplot(dfp(), aes(x=auxX, y=auxY, fill=auxG)) +
+  isolate({ 
+    if(nrow(dfp())==0) return({shinyalert("Oops!", "No data for this selection", type = "error")})
+    ggplot(dfp(), aes(x=auxX, y=auxY, fill=auxG)) +
       geom_bar(position = "stack", stat="identity")+
       #scale_fill_manual(safe_colorblind_palette) +
       labs(y = input$N_varY, x = input$N_varX, fill = input$groupX)+
