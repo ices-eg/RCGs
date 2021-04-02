@@ -205,8 +205,8 @@ filter_df3 <- eventReactive(input$view3, {
 # # -----------------------------------
 # 
 # output$debug3 <- renderTable({
-#   #head(df3(), 5)
-#   head(filter_df3(), 5)
+#   range(filter_df3()[filter_df3()$lat & filter_df3()$lon,]$lon)+ c(-1, 1)
+#   #head(filter_df3(), 5)
 # })
 
 
@@ -218,6 +218,8 @@ filter_df3 <- eventReactive(input$view3, {
 # -----------------------------------
 # Mapa
 # -----------------------------------
+
+#Reactives 
 
 # viridis is the default colour/fill scale for ordered factors
 
@@ -234,9 +236,12 @@ output$plot3 <- renderPlot ({
       scale_colour_viridis(guide ="legend") + 
       #facet_grid (SamplingType~LandingCountry)+
       facet_wrap(~facet)+
-      coord_sf(crs = "+init=epsg:4326", xlim = c(-25, 5), ylim = c(43, 63), expand = FALSE) +
+      coord_sf(crs = "+init=epsg:4326", 
+               xlim = range(filter_df3()[filter_df3()$lat & filter_df3()$lon,]$lon)+ c(-1, 1), 
+               ylim = range(filter_df3()[filter_df3()$lat & filter_df3()$lon,]$lat) + c(-0.5,+0.5), 
+               expand = FALSE) +
       xlab("Longitude") + ylab("Latitude") + labs(size=input$N_var3, colour=input$N_var3)+
-      ggtitle(paste("Region:",input$regiong,"-Species:", input$speciesg, "-Sampling type:",input$samtypeg,"-Quarter:", input$quarterg, sep = "")) +
+      ggtitle(paste("Region:",input$regiong,"- Species:", input$speciesg, "- Sampling type:",input$samtypeg,"- Quarter:", input$quarterg, sep = " ")) +
       theme(
         plot.title = element_text(size =20,hjust = 0.5),
         text = element_text(color = "#22211d"),
