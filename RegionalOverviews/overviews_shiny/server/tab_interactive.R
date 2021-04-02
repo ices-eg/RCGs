@@ -139,7 +139,27 @@ output$absolute <- renderUI({
   )
 })
 
-
+# Pop up box in interactive map 
+observeEvent(input$view2, {
+  if(input$N_var2 %in% "NoAge"){
+    shinyalert("", "The selected variable is numbers at age", closeOnClickOutside = TRUE, animation = FALSE, size = "xs")
+  }else if(input$N_var2 %in% "NoAgeTrips"){
+    shinyalert("", "The selected variable is the number of trips with age samples", closeOnClickOutside = TRUE, animation = FALSE, size = "xs")
+  }else if(input$N_var2 %in% "NoWeight"){
+    shinyalert("", "The selected variable is weight at age", closeOnClickOutside = TRUE, animation = FALSE, size = "xs") 
+  }else if(input$N_var2 %in% "NoWeightTrips"){
+    shinyalert("", "The selected variable is the number of trips the weight at age was recorded", closeOnClickOutside = TRUE, animation = FALSE, size = "xs")
+  }else if(input$N_var2 %in% "NoMaturityStage"){
+    shinyalert("", "Number of maturity stage readings", closeOnClickOutside = TRUE, animation = FALSE, size = "xs")
+  }else if(input$N_var2 %in% "NoMaturityStageTrips"){
+    shinyalert("", "Number of trips the maturity stage was recorded", closeOnClickOutside = TRUE, animation = FALSE, size = "xs")
+  }else if(input$N_var2 %in% "NoLength"){
+    shinyalert("", "The selected variable is numbers at length", closeOnClickOutside = TRUE, animation = FALSE, size = "xs")
+  }else{
+    shinyalert("", "The selected variable is the number of trips with length samples", closeOnClickOutside = TRUE, animation = FALSE, size = "xs")
+  }
+  
+})
 # -----------------------------------
 # Filtered data
 # -----------------------------------

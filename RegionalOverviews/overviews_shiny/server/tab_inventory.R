@@ -85,8 +85,48 @@ data_list<-reactive({
   slinventory$Area<-as.factor(slinventory$Area)
   slinventory$CatchCategory<-as.factor(slinventory$CatchCategory)
   
-  ca_map<-ca
+  # ca_map<-ca
   
+  
+  # add length 
+  hl_master<-
+    merge(hl,
+          sl_master[, list(
+            Region,
+            CS_TripId,
+            CS_StationId,
+            CS_SpeciesListId,
+            StartDate,
+            StartQuarter,
+            FishingTime,
+            PosStartLatDec,
+            PosStartLonDec,
+            PosStopLatDec,
+            PosStopLonDec,
+            Area,
+            FishingGround,
+            StatisticalRectangle,
+            FishingActivityCategoryEuropeanLvl5,
+            FishingActivityCategoryEuropeanLvl6,
+            Gear
+          )],
+          by = c("CS_TripId", "CS_StationId", "CS_SpeciesListId"),
+          all.x = T)
+  
+  cahl <- mutate(ca,
+                 CS_LengthId = NA,
+                 CS_SpeciesListId = NA,
+                 CS_StatioId = NA,
+                 IndividualSex = NA,
+                 SubSamplingCategory = NA,
+                 NoAtLengthInSample = NA,
+                 NoAtLengthInCatch = NA,
+                 NoAtLengthInSample_ThousandIndiv = NA,
+                 NoAtLengthInSample_MillionIndiv = NA) 
+  
+  hl_master <- rename(hl_master, Stock = stock)
+  
+  ca_map <- rbind(cahl, hl_master, fill = TRUE)
   #ca_map<-as.data.table(ca_map)
   
   ca_map<-ca_map[!(is.na(StatisticalRectangle)|StatisticalRectangle=='99u9'),]
@@ -97,7 +137,9 @@ data_list<-reactive({
   # 
   ca_map$lon <- ices.rect(ca_map$StatisticalRectangle)$lon
   # 
-  ca_map<-ca_map[,.(NoMaturityStage=sum(!is.na(MaturityStage)),NoMaturityStageTrips=length(unique(Trip[!is.na(MaturityStage)])),NoAge=sum(!is.na(Age)),NoAgeTrips=length(unique(Trip[!is.na(Age)])),NoLength=sum(!is.na(LengthClass)),NoLengthTrips=length(unique(Trip[!is.na(LengthClass)])),NoWeight=sum(!is.na(Weight)),NoWeightTrips=length(unique(Trip[!is.na(Weight)]))),by=c("Region","LandingCountry","Species","SamplingType","Quarter","CatchCategory","lat","lon")]
+  # ca_map<-ca_map[,.(NoMaturityStage=sum(!is.na(MaturityStage)),NoMaturityStageTrips=length(unique(Trip[!is.na(MaturityStage)])),NoAge=sum(!is.na(Age)),NoAgeTrips=length(unique(Trip[!is.na(Age)])),NoLength=sum(!is.na(LengthClass)),NoLengthTrips=length(unique(Trip[!is.na(LengthClass)])),NoWeight=sum(!is.na(Weight)),NoWeightTrips=length(unique(Trip[!is.na(Weight)]))),by=c("Region","LandingCountry","Species","SamplingType","Quarter","CatchCategory","lat","lon")]
+  
+  ca_map <- ca_map[,.(NoMaturityStage=sum(!is.na(MaturityStage)),NoMaturityStageTrips=length(unique(Trip[!is.na(MaturityStage)])),NoAge=sum(!is.na(Age)),NoAgeTrips=length(unique(Trip[!is.na(Age)])), NoWeight=sum(!is.na(Weight)),NoWeightTrips=length(unique(Trip[!is.na(Weight)])), NoLength = sum(!is.na(NoAtLengthInSample)), NoLengthTrips = length(unique(Trip[!is.na(NoAtLengthInSample)]))),by=c("Region","LandingCountry","Species","SamplingType","Quarter","CatchCategory","lat","lon")]
   # 
   
   ca_map$SamplingType<-as.factor(ca_map$SamplingType)

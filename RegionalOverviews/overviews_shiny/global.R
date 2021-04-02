@@ -80,6 +80,8 @@ var <-
  c(
     "NoAge",
     "NoAgeTrips",
+    "NoLength",
+    "NoLengthTrips",
     "NoWeight",
     "NoWeightTrips",
     "NoMaturityStage",
