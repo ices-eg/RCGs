@@ -8,5 +8,5 @@ loadAreaList <- function(url){
     x<-x[!duplicated(x$area)]
     print("Warning! Duplicated area codes were found and were removed.")
   }
-  return(x)
+  return(x[,.(area,RCG)])
 }

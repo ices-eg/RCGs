@@ -4,6 +4,9 @@ library(openxlsx)
 library(purrr)
 library(lubridate)
 
+rm(list=ls())
+gc()
+
 # Import all functions
 for(f in list.files(path="./Scripts/Functions", full.names = T)){
   source(f)
@@ -38,11 +41,14 @@ input.data <- merge(input.data, area.list, all.x = T, by = "area")
 # Assign species category to the input data
 input.data <- merge(input.data, species.list, all.x = T, by = "FAO_species")
 
+# Assign gear group and re-coded gear name to the input data
+input.data<-merge(input.data, gear.list, all.x = T, by.x = "gear", by.y = "gear_code")
+
 # Process input data
 #In the variable called sequence.def please include all columns that will constitute a fishing sequence
 #This variable will be used as a key for grouping operations
 sequence.def <- c("Country","year","vessel_id","vessel_length","trip_id","haul_id",
-                  "fishing_day","area","ices_rectangle","gear","mesh","selection",
+                  "fishing_day","area","ices_rectangle","gear_level6","mesh","selection",
                   "registered_target_assemblage")
 # Calculate group totals for each sequence
 input.data[,":="(seq_group_KG = sum(KG, na.rm = T),
