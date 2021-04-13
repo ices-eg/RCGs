@@ -5,7 +5,7 @@ getMetier<-function(p.rcg, p.year, p.gear, p.reg_target, p.dom_group, p.mesh,
   p.target <- ifelse(is.na(p.reg_target),p.dom_group,p.reg_target)
   #First step - assign metier based on rcg, gear, target assemblage, mesh size, selection dev.
   #Ignore >0 metiers, they will be included at the end when no other metier was assigned
-  metier<-as.character(metier.list[!mesh %chin% c("0", ">0") & RCG==p.rcg & 
+  metier<-metier.list[!mesh %chin% c("0", ">0") & RCG==p.rcg & 
                                      gear==p.gear & 
                                      target==p.target & 
                                      #data.table::between(p.mesh,m_size_from,m_size_to) &
@@ -15,11 +15,11 @@ getMetier<-function(p.rcg, p.year, p.gear, p.reg_target, p.dom_group, p.mesh,
                                         (p.year<=End_year & is.na(Start_year)) | 
                                         (p.year>=Start_year & is.na(End_year)) |
                                         (p.year>=Start_year & p.year<=End_year)),
-                                   metier_level_6][1])
+                                   .(metier_level_6,metier_level_5)]
   #Second step - if metier is not assigned then try without the info on selection dev.
   #Still ignore >0 metiers
-  if(is.na(metier)){
-    metier<-as.character(metier.list[!mesh %chin% c("0", ">0") & RCG==p.rcg &
+  if(nrow(metier)==0){
+    metier<-metier.list[!mesh %chin% c("0", ">0") & RCG==p.rcg &
                                        gear==p.gear &
                                        target==p.target &
                                        #data.table::between(p.mesh,m_size_from,m_size_to) &
@@ -28,21 +28,21 @@ getMetier<-function(p.rcg, p.year, p.gear, p.reg_target, p.dom_group, p.mesh,
                                           (p.year<=End_year & is.na(Start_year)) |
                                           (p.year>=Start_year & is.na(End_year)) |
                                           (p.year>=Start_year & p.year<=End_year)),
-                                     metier_level_6][1])
+                                     .(metier_level_6,metier_level_5)]
   }
   #Third step - if metier is not assigned then try to assign a metier with >0 mesh size range
-  if(is.na(metier)){
-    metier<-as.character(metier.list[mesh %chin% c("0", ">0") & RCG==p.rcg &
+  if(nrow(metier)==0){
+    metier<-metier.list[mesh %chin% c("0", ">0") & RCG==p.rcg &
                                        gear==p.gear &
                                        target==p.target &
                                        ((is.na(Start_year) & is.na(End_year)) |
                                           (p.year<=End_year & is.na(Start_year)) |
                                           (p.year>=Start_year & is.na(End_year)) |
                                           (p.year>=Start_year & p.year<=End_year)),
-                                     metier_level_6][1])
+                        .(metier_level_6,metier_level_5)]
   }
-  if(is.na(metier)){
-    metier<-"MIS_MIS_0_0_0"
+  if(nrow(metier)==0){
+    metier<-data.table(metier_level_6="MIS_MIS_0_0_0",metier_level_5="MIS_MIS")
   }
-  return(metier)
+  return(metier[1])
 }

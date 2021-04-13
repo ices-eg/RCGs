@@ -11,11 +11,12 @@ gc()
 for(f in list.files(path="./Scripts/Functions", full.names = T)){
   source(f)
 }
+rm(f)
 
 # Load the input data
 data.file <- "data_input_example.csv"
 input.data <- loadInputData(data.file)
-
+rm(data.file)
 # Load reference lists
 url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/AreaRegionLookup.csv"
 area.list <- loadAreaList(url)
@@ -27,7 +28,7 @@ url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/Code-
 gear.list <- loadGearList(url)
 assemblage.list <- unique(c(species.list$species_group, species.list$dws_group))
 assemblage.list <- assemblage.list[!is.na(assemblage.list)]
-
+rm(url)
 # Prepare input data
 input.data[,EUR:=as.numeric(EUR)]
 input.data[,KG:=as.numeric(KG)]
@@ -60,13 +61,12 @@ input.data[,":="(seq_group_KG = sum(KG, na.rm = T),
 input.data[,":="(seq_measure = getMeasure(measure)),
   by=sequence.def]
 
-
 # Determine the dominant group for each sequence
 input.data[seq_measure == "weight",":="(seq_dom_group = species_group[which.max(seq_group_KG)]),
   by=sequence.def]
 input.data[seq_measure == "value",":="(seq_dom_group = species_group[which.max(seq_group_EUR)]),
   by=sequence.def]
-
+input.data[,":="(seq_group_KG=NULL,seq_group_EUR=NULL,seq_measure=NULL)]
 # Apply DWS rules
 input.data[dws_group=="DWS",seq_DWS_kg:=sum(KG, na.rm = T),
            by=c(sequence.def, "dws_group")]
@@ -74,72 +74,122 @@ input.data[,seq_total_kg:=sum(KG, na.rm = T),
            by=sequence.def]
 input.data[,seq_DWS_perc:=ifelse(is.na(seq_DWS_kg),0,seq_DWS_kg/seq_total_kg)*100]
 input.data[,seq_DWS_perc:=max(seq_DWS_perc),by=sequence.def]
-input.data[seq_DWS_perc>8,seq_dom_group:="DWS"]
-
+input.data[,DWS_gear_applicable:=grepl(RCG,DWS_for_RCG),by=.(RCG)]
+input.data[seq_DWS_perc>8 & DWS_gear_applicable,seq_dom_group:="DWS"]
+input.data[,":="(dws_group=NULL,DWS_for_RCG=NULL,seq_DWS_kg=NULL,seq_total_kg=NULL,seq_DWS_perc=NULL,
+                 DWS_gear_applicable=NULL)]
 # Assign metier level 6
 input.data$metier_level_6<-NA
-input.data[,metier_level_6:=as.character(pmap(list(RCG,
+input.data$metier_level_5<-NA
+input.data[,c("metier_level_6","metier_level_5"):=pmap_dfr(list(RCG,
                                           year,
-                                          gear, 
+                                          gear_level6, 
                                           registered_target_assemblage,
                                           seq_dom_group, 
                                           mesh, 
                                           selection_type,
-                                          selection_mesh),
-                                     function(r,y,g,t,d,m,st,sm) getMetier(r,y,g,t,d,m,st,sm)))]
-
-# Missing metiers
+                                          selection_mesh), getMetier)]
+# Missing metier. Step 1: Search levels based on a dominant group of species
 input.data[,":="(month=month(dmy(fishing_day)),
-                           quarter=quarter(dmy(fishing_day)))]
+                 quarter=quarter(dmy(fishing_day)))]
+step.levels<-list(c("vessel_id","month","area","seq_dom_group","gear_group"),
+                  c("vessel_id","month","area","seq_dom_group"),
+                  c("vessel_id","quarter","area","seq_dom_group","gear_group"),
+                  c("vessel_id","quarter","area","seq_dom_group"),
+                  c("vessel_id","year","area","seq_dom_group","gear_group"),
+                  c("vessel_id","year","area","seq_dom_group"),
+                  c("vessel_id","month","seq_dom_group","gear_group"),
+                  c("vessel_id","month","seq_dom_group"),
+                  c("vessel_id","quarter","seq_dom_group","gear_group"),
+                  c("vessel_id","quarter","seq_dom_group"),
+                  c("vessel_id","year","seq_dom_group","gear_group"),
+                  c("vessel_id","year","seq_dom_group"))
+for(level in step.levels){
+  if(nrow(input.data[metier_level_6=="MIS_MIS_0_0_0"])>0){
+    input.data <- missingMetiersByLevel(input.data,level,sequence.def)
+  } else {break}
+}
+# Missing metier. Step 2: Search levels based on gear/gear group
+step.levels<-list(c("vessel_id","month","area","gear_level6"),
+                  c("vessel_id","quarter","area","gear_level6"),
+                  c("vessel_id","year","area","gear_level6"),
+                  c("vessel_id","month","gear_level6"),
+                  c("vessel_id","quarter","gear_level6"),
+                  c("vessel_id","year","gear_level6"),
+                  c("vessel_id","month","area","gear_group"),
+                  c("vessel_id","quarter","area","gear_group"),
+                  c("vessel_id","year","area","gear_group"),
+                  c("vessel_id","month","gear_group"),
+                  c("vessel_id","quarter","gear_group"),
+                  c("vessel_id","year","gear_group"))
+for(level in step.levels){
+  if(nrow(input.data[metier_level_6=="MIS_MIS_0_0_0"])>0){
+    input.data <- missingMetiersByLevel(input.data,level,sequence.def)
+  } else {break}
+}
+# Missing metier. Step 3: Search levels based on fleet register gear, vessel length group
+# and species group
 input.data[,vessel_length_group:=cut(vessel_length,breaks=c(0,10,12,18,24,40,Inf),right=F)]
-input.data.sequances <- unique(input.data[metier_level_6!="MIS_MIS_0_0_0",.SD,
-                                          .SDcols=c(sequence.def,
-                                                    "seq_dom_group","metier_level_6",
-                                                    "gear_FR","month","quarter",
-                                                    "vessel_length_group")])
-
-input.data[metier_level_6=="MIS_MIS_0_0_0",
-           metier_level_6:=as.character(pmap(list(vessel_id,month,area,seq_dom_group,
-                                                  quarter,year,vessel_length_group,
-                                                  gear_FR),
-                                              function(v,m,a,sg,q,y,vg,gfr) 
-                                                getMissingMetier(v,m,a,sg,q,y,vg,gfr)))]
-
-
-
+step.levels<-list(c("month","vessel_length_group","gear_FR","area","seq_dom_group"),
+                  c("month","gear_FR","area","seq_dom_group"),
+                  c("quarter","vessel_length_group","gear_FR","area","seq_dom_group"),
+                  c("quarter","gear_FR","area","seq_dom_group"),
+                  c("year","vessel_length_group","gear_FR","area","seq_dom_group"),
+                  c("year","gear_FR","area","seq_dom_group"),
+                  c("month","vessel_length_group","gear_FR","seq_dom_group"),
+                  c("month","gear_FR","seq_dom_group"),
+                  c("quarter","vessel_length_group","gear_FR","seq_dom_group"),
+                  c("quarter","gear_FR","seq_dom_group"),
+                  c("year","vessel_length_group","gear_FR","seq_dom_group"),
+                  c("year","gear_FR","seq_dom_group"))
+for(level in step.levels){
+  if(nrow(input.data[metier_level_6=="MIS_MIS_0_0_0"])>0){
+    input.data <- missingMetiersByLevel(input.data,level,sequence.def)
+  } else {break}
+}
+# Missing metier. Step 4: Search levels based on fleet register gear, vessel length group
+step.levels<-list(c("month","vessel_length_group","gear_FR","area","gear_level6"),
+                  c("month","gear_FR","area","gear_level6"),
+                  c("quarter","vessel_length_group","gear_FR","area","gear_level6"),
+                  c("quarter","gear_FR","area","gear_level6"),
+                  c("year","vessel_length_group","gear_FR","area","gear_level6"),
+                  c("year","gear_FR","area","gear_level6"),
+                  c("month","vessel_length_group","gear_FR","gear_level6"),
+                  c("month","gear_FR","gear_level6"),
+                  c("quarter","vessel_length_group","gear_FR","gear_level6"),
+                  c("quarter","gear_FR","gear_level6"),
+                  c("year","vessel_length_group","gear_FR","gear_level6"),
+                  c("year","gear_FR","gear_level6"),
+                  c("month","vessel_length_group","gear_FR","area","gear_group"),
+                  c("month","gear_FR","area","gear_group"),
+                  c("quarter","vessel_length_group","gear_FR","area","gear_group"),
+                  c("quarter","gear_FR","area","gear_group"),
+                  c("year","vessel_length_group","gear_FR","area","gear_group"),
+                  c("year","gear_FR","area","gear_group"),
+                  c("month","vessel_length_group","gear_FR","gear_group"),
+                  c("month","gear_FR","gear_group"),
+                  c("quarter","vessel_length_group","gear_FR","gear_group"),
+                  c("quarter","gear_FR","gear_group"),
+                  c("year","vessel_length_group","gear_FR","gear_group"),
+                  c("year","gear_FR","gear_group"))
+for(level in step.levels){
+  if(nrow(input.data[metier_level_6=="MIS_MIS_0_0_0"])>0){
+    input.data <- missingMetiersByLevel(input.data,level,sequence.def)
+  } else {break}
+}
 
 # Analyze vessel patterns
-input.data[,metier_level_5:=paste(gear,ifelse(is.na(registered_target_assemblage),
-                                              seq_dom_group,
-                                              registered_target_assemblage),sep="_")]
-pattern <- unique(input.data[,.SD,.SDcols=c(sequence.def,"metier_level_5")])
-pattern <- pattern[,.(seq_no_lvl5 = .N), by=.(year, vessel_id, metier_level_5)]
-pattern[,seq_perc_lvl5:=seq_no_lvl5/sum(seq_no_lvl5,na.rm = T)*100, by=.(year, vessel_id)]
-pattern<-pattern[!is.na(metier_level_5)]
-input.data <- merge(input.data, pattern,all.x = T , by=c("year", "vessel_id", "metier_level_5"))
 # Specify the percentage threshold of the number of sequences below which 
 # a metier will be considered rare
-rare.threshold <- 13
-input.data[seq_perc_lvl5<rare.threshold, metier_level_5:=NA]
-pattern<-pattern[seq_perc_lvl5>=rare.threshold]
-pattern[,c("gear","target_assemblage"):=data.table(str_split_fixed(metier_level_5,"_",2))]
-pattern<-merge(pattern, gear.list, all.x = T, by.x = "gear", by.y = "gear_code")
-input.data<-merge(input.data, gear.list, all.x = T, by.x = "gear", by.y = "gear_code")
-input.data[is.na(metier_level_5),metier_level_5:=as.character(pmap(list(vessel_id,
-                                                                        year,
-                                                                        gear,
-                                                                        gear_group,
-                                                                        registered_target_assemblage,
-                                                                        seq_dom_group),
-                                              function(v,y,g,gg,rt,d) getMetierLvl5FromPattern(v,y,g,gg,rt,d)))]
-
+rare.threshold <- 15
+input.data<-vesselPatterns(input.data,sequence.def,rare.threshold,gear.list)
 
 # Save results
 print("Saving results ...")
 result<-input.data[order(vessel_id,trip_id,fishing_day,area,ices_rectangle,gear,mesh),
-               .(Country,RCG,year,vessel_id,vessel_length,trip_id,haul_id,fishing_day,area,ices_rectangle,gear,mesh,selection,FAO_species,
-                 registered_target_assemblage,metier_level_6,KG,EUR,species_group,
-                 seq_group_KG,seq_group_EUR,seq_dom_group,metier_level_5, seq_no_lvl5, seq_perc_lvl5)]
+               .(Country,RCG,year,vessel_id,vessel_length,trip_id,haul_id,fishing_day,area,ices_rectangle,gear,gear_FR,mesh,selection,FAO_species,
+                 registered_target_assemblage,metier_level_6,mis_met_level,mis_met_number_of_seq,KG,EUR,
+                 metier_level_5,metier_level_5_status,metier_level_5_pattern)]
 write.csv(result,"metier_results.csv", na = "")
 write.xlsx(file = "metier_results_summary.xlsx",result[,.(n_count=.N,
                                                           KG_sum=sum(KG, na.rm=T),
