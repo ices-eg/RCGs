@@ -17,6 +17,10 @@ rm(f)
 data.file <- "data_input_example.csv"
 input.data <- loadInputData(data.file)
 rm(data.file)
+
+# Validate input data
+input.data <- validateInputData(input.data)
+
 # Load reference lists
 url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/AreaRegionLookup.csv"
 area.list <- loadAreaList(url)
