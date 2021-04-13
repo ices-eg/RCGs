@@ -186,14 +186,56 @@ for(level in step.levels){
 # Specify the percentage threshold of the number of sequences below which 
 # a metier will be considered rare
 rare.threshold <- 15
-input.data<-vesselPatterns(input.data,sequence.def,rare.threshold,gear.list)
+# Version 1 of the vessel pattern algorithm
+# input.data <- vesselPatterns(input.data,sequence.def,rare.threshold,gear.list)
+# Version 2 of the vessel pattern algorithm
+input.data<-rareMetiersLvl5(input.data,sequence.def,rare.threshold)
+# Vessel patterns. Step 1.
+step.levels<-list(c("vessel_id","month","area","seq_dom_group","gear_group"),
+                  c("vessel_id","month","area","seq_dom_group"),
+                  c("vessel_id","quarter","area","seq_dom_group","gear_group"),
+                  c("vessel_id","quarter","area","seq_dom_group"),
+                  c("vessel_id","year","area","seq_dom_group","gear_group"),
+                  c("vessel_id","year","area","seq_dom_group"),
+                  c("vessel_id","month","seq_dom_group","gear_group"),
+                  c("vessel_id","month","seq_dom_group"),
+                  c("vessel_id","quarter","seq_dom_group","gear_group"),
+                  c("vessel_id","quarter","seq_dom_group"),
+                  c("vessel_id","year","seq_dom_group","gear_group"),
+                  c("vessel_id","year","seq_dom_group"))
+for(level in step.levels){
+  if(nrow(input.data[metier_level_5_status=="rare" & is.na(metier_level_5_pattern)])>0){
+    input.data <- vesselPatternsByLevel(input.data,level,sequence.def)
+  } else {break}
+}
+# Vessel patter. Step 2.
+step.levels<-list(c("vessel_id","month","area","gear_level6"),
+                  c("vessel_id","quarter","area","gear_level6"),
+                  c("vessel_id","year","area","gear_level6"),
+                  c("vessel_id","month","gear_level6"),
+                  c("vessel_id","quarter","gear_level6"),
+                  c("vessel_id","year","gear_level6"),
+                  c("vessel_id","month","area","gear_group"),
+                  c("vessel_id","quarter","area","gear_group"),
+                  c("vessel_id","year","area","gear_group"),
+                  c("vessel_id","month","gear_group"),
+                  c("vessel_id","quarter","gear_group"),
+                  c("vessel_id","year","gear_group"))
+for(level in step.levels){
+  if(nrow(input.data[metier_level_5_status=="rare" & is.na(metier_level_5_pattern)])>0){
+    input.data <- vesselPatternsByLevel(input.data,level,sequence.def)
+  } else {break}
+}
+
+
 
 # Save results
 print("Saving results ...")
 result<-input.data[order(vessel_id,trip_id,fishing_day,area,ices_rectangle,gear,mesh),
                .(Country,RCG,year,vessel_id,vessel_length,trip_id,haul_id,fishing_day,area,ices_rectangle,gear,gear_FR,mesh,selection,FAO_species,
-                 registered_target_assemblage,metier_level_6,mis_met_level,mis_met_number_of_seq,KG,EUR,
-                 metier_level_5,metier_level_5_status,metier_level_5_pattern)]
+                 registered_target_assemblage,KG,EUR,metier_level_6,mis_met_level,mis_met_number_of_seq,
+                 metier_level_5,metier_level_5_status,metier_level_5_pattern,
+                 ves_pat_level,ves_pat_number_of_seq)]
 write.csv(result,"metier_results.csv", na = "")
 write.xlsx(file = "metier_results_summary.xlsx",result[,.(n_count=.N,
                                                           KG_sum=sum(KG, na.rm=T),
