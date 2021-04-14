@@ -208,7 +208,7 @@ for(level in step.levels){
     input.data <- vesselPatternsByLevel(input.data,level,sequence.def)
   } else {break}
 }
-# Vessel patter. Step 2.
+# Vessel patterns. Step 2.
 step.levels<-list(c("vessel_id","month","area","gear_level6"),
                   c("vessel_id","quarter","area","gear_level6"),
                   c("vessel_id","year","area","gear_level6"),
@@ -227,15 +227,27 @@ for(level in step.levels){
   } else {break}
 }
 
-
+# Metier level 6 assignment to metier level 5 which was assigned from pattern.
+step.levels<-list(c("vessel_id","month","area","metier_level_5"),
+                  c("vessel_id","quarter","area","metier_level_5"),
+                  c("vessel_id","year","area","metier_level_5"),
+                  c("vessel_id","month","metier_level_5"),
+                  c("vessel_id","quarter","metier_level_5"),
+                  c("vessel_id","year","metier_level_5"))
+for(level in step.levels){
+  if(nrow(input.data[metier_level_5_status=="rare" & is.na(metier_level_5_pattern)])>0){
+    input.data <- metiersLvl6ForLvl5pattern(input.data,level,sequence.def)
+  } else {break}
+}
 
 # Save results
 print("Saving results ...")
 result<-input.data[order(vessel_id,trip_id,fishing_day,area,ices_rectangle,gear,mesh),
                .(Country,RCG,year,vessel_id,vessel_length,trip_id,haul_id,fishing_day,area,ices_rectangle,gear,gear_FR,mesh,selection,FAO_species,
                  registered_target_assemblage,KG,EUR,metier_level_6,mis_met_level,mis_met_number_of_seq,
-                 metier_level_5,metier_level_5_status,metier_level_5_pattern,
-                 ves_pat_level,ves_pat_number_of_seq)]
+                 metier_level_5,metier_level_5_status,
+                 metier_level_5_pattern,ves_pat_level,ves_pat_number_of_seq,
+                 metier_level_6_pattern,ves_pat_met6_level,ves_pat_met6_number_of_seq)]
 write.csv(result,"metier_results.csv", na = "")
 write.xlsx(file = "metier_results_summary.xlsx",result[,.(n_count=.N,
                                                           KG_sum=sum(KG, na.rm=T),
