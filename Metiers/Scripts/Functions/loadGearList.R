@@ -1,5 +1,5 @@
 loadGearList <- function(url){
-  print("Loading gear list ...")
+  message("Loading gear list ...")
   x <- data.table(read.xlsx(url, sheet = "formatted"))
   x[,Group:=tolower(Group)]
   setnames(x, old = c("Code","Group","GEAR.Level6"), 

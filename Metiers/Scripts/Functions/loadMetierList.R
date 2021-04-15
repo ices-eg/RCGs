@@ -1,5 +1,5 @@
 loadMetierList <- function(url){
-  print("Loading metier list ...")
+  message("Loading metier list ...")
   x <- data.table(read.csv(url, sep = ",", stringsAsFactors = F, na.strings = ""))
   setnames(x, old = c("Metier_level6","Metier_level5"), 
            new = c("metier_level_6","metier_level_5"))

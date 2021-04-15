@@ -1,4 +1,5 @@
 validateInputData <- function(input.data){
+  message("Validation of input data...")
   valid.colnames<-c("Country","year","vessel_id","vessel_length","trip_id",
                     "haul_id","fishing_day","area","ices_rectangle","gear",
                     "gear_FR","mesh","selection","registered_target_assemblage",
