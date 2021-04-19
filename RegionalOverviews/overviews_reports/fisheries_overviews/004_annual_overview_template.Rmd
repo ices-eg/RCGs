@@ -56,13 +56,13 @@ figur_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Outputs/", ta
 
 #Landings per stock settings
 
-years_stock <- c(2017, 2018,2019)
-period_stock <- "2017-2019"
+years_stock <- c(2018, 2019,2020)
 
 
 #Fleet register		
 Date_0<-20190101
 Date_previous<-20180101
+Date_previous<-20190101
 ```
 
 ```{r 2_setup_lib, include = F}
