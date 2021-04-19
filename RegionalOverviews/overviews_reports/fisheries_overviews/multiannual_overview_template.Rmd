@@ -18,6 +18,8 @@ library(kableExtra)
 library(ggplot2)
 library(data.table)
 library(directlabels)
+library(flextable)
+source("../../funs/fun_theme_flextable.r")
 #Choose RCG. Options: BA, NA, NSEA
 RCG <- "BA"
 years <- c(2015,2016,2017,2018,2019)
@@ -110,24 +112,25 @@ Landings_country$gear <- substr(Landings_country$FishingActivityLvl5,1,3)
 ### Number of vessels
 Number of vessels by flag country in the EU vessel register.
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
-		res_fleetreg<-table(fleetreg$Status_date, fleetreg$Country_Code)
-print(res_fleetreg)
+res_fleetreg<-table(fleetreg$Status_date, fleetreg$Country_Code)
+theme(res_fleetreg)
+ft
 
 ```
 ### Power
 Power (`1000`*kW) by flag country in the EU vessel register
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 res_fleetreg_pwr<-tapply(fleetreg$Power_Main, list(fleetreg$Country_Code, fleetreg$Status_date), sum)
-res_fleetreg_pwr<-t(res_fleetreg_pwr)
-print(res_fleetreg_pwr)
+theme(res_fleetreg_pwr)
+ft
 
 ```
 ### Gross tonnage
 Gross Tonnage (`1000`*GT) by flag country in the EU vessel register.
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
-res_fleetreg_gt<-tapply(fleetreg$Ton_Gt, list(fleetreg$Country_Code, fleetreg$Status_date), sum)
-res_fleetreg_gt<-t(res_fleetreg_gt)
-print(res_fleetreg_gt)
+res_fleetreg_gt <- tapply(fleetreg$Ton_Gt, list(fleetreg$Country_Code, fleetreg$Status_date), sum)
+theme(res_fleetreg_gt)
+ft
 
 ```
 ##{-}
