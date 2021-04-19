@@ -223,7 +223,7 @@ output$plot3 <- renderPlot ({
   
   isolate({
     
-    if(nrow(filter_df3())==0) return(invisible(NULL))
+    if(nrow(filter_df3())==0) return({shinyalert("Oops!", "No data for this selection", type = "error")})
     
     ggplot(data = world) + geom_sf(fill= "antiquewhite") +
       geom_point(data = filter_df3(), aes(x = lon, y = lat, colour = aux, size = aux)) +
