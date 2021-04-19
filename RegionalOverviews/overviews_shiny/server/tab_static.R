@@ -206,14 +206,16 @@ filter_df3 <- eventReactive(input$view3, {
 # 
 # output$debug3 <- renderTable({
 #   range(filter_df3()[filter_df3()$lat & filter_df3()$lon,]$lon)+ c(-1, 1)
-#   #head(filter_df3(), 5)
-# })
+ #   head(filter_df3(), 5)
+ # })
 
 
 # output$debug3 <- renderText({
 #   #head(df3(), 5)
 #   head(sqrt(as.numeric(input$N_var3))*2, 5)
 # })
+
+
 
 # -----------------------------------
 # Mapa
@@ -229,7 +231,7 @@ output$plot3 <- renderPlot ({
   
   isolate({
     
-    if(nrow(filter_df3())==0) return(invisible(NULL))
+    if(nrow(filter_df3())==0 | sum(filter_df3()$aux == 0)) return(invisible(NULL))
     
     ggplot(data = world) + geom_sf(fill= "antiquewhite") +
       geom_point(data = filter_df3(), aes(x = lon, y = lat, colour = aux, size = aux)) +
@@ -255,6 +257,7 @@ output$plot3 <- renderPlot ({
         ),
         panel.grid.major = element_line(color = gray(.8), linetype ='dashed', size = 0.5)
       )
+  
   })
 })
 
