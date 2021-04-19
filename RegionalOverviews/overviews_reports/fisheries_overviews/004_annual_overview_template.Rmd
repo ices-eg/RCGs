@@ -33,7 +33,7 @@ output:
 RDB_download_date <- "xx/04/2019"
 
 target_region <- "RCG_BA"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
-years <- c(2019)
+years <- c(2020)
 
 period <- "2019"
 
@@ -57,11 +57,11 @@ figur_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Outputs/", ta
 #Landings per stock settings
 
 years_stock <- c(2018, 2019,2020)
+period_stock <- "2018-2020"
 
 
 #Fleet register		
-Date_0<-20190101
-Date_previous<-20180101
+Date_0<-20200101
 Date_previous<-20190101
 ```
 
