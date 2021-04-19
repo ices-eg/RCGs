@@ -63,7 +63,8 @@ shinyUI(
                                   div(style="display: inline-block;",class= "image", img(id ="inventID", src="inventory_logo_4.png", height=250, style="cursor:pointer;margin-right:40px;")),
                                   div(style="display: inline-block;",class= "image", img(id ="mapIntID", src="mapInt_logo_4.png", height=250, style="cursor:pointer;margin-right:40px;")),
                                   div(style="display: inline-block;",class= "image", img(id ="mapStatID", src="mapStat_logo_4.png", height=250,style="cursor:pointer;margin-right:40px;")),
-                                  div(style="display: inline-block;",class= "image", img(id ="plotID", src="plots_logo_4.png", height=250,style="cursor:pointer;"))
+                                  div(style="display: inline-block;",class= "image", img(id ="plotID", src="plots_logo_4.png", height=250,style="cursor:pointer;margin-right:40px;")),
+                                  div(style="display: inline-block;",class= "image", img(id ="sampvslandID", src="sampvsland_logo_4.png", height=250,style="cursor:pointer;"))
 
                          )
                          )
