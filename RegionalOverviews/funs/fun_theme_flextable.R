@@ -1,5 +1,7 @@
 theme_flextable <-function(data){
-  data %>%
+  library(dplyr)
+  library(flextable)
+data %>%
   t() %>%    
   head() %>%
   as.data.frame() %>% 
@@ -16,3 +18,6 @@ theme_flextable <-function(data){
   align(align = "center", part = "all")->ft
   return(ft)
 }
+# Katarzyna Krakówka
+# NMFRI
+# kkrakowka@mir.gdynia.pl
