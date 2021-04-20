@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-```{r ReadData, echo=FALSE, message=FALSE}
+```{r ReadData, echo=FALSE, message=FALSE, warning=FALSE}
 library(dplyr)
 library(knitr)
 library(tidyr)
@@ -18,11 +18,17 @@ library(kableExtra)
 library(ggplot2)
 library(data.table)
 library(directlabels)
+library(flextable)
+source("../../funs/fun_theme_flextable.r")
 #Choose RCG. Options: BA, NA, NSEA
-RCG <- "NSEA"
+RCG <- "BA"
 years <- c(2015,2016,2017,2018,2019)
-load(paste("Q:\\mynd\\RDB\\RDB_fisheries_overviews\\RDB_RCG_",RCG,"_CE_2009_2019_prepared_20200616.Rdata", sep=""))
-load(paste("Q:\\mynd\\RDB\\RDB_fisheries_overviews\\RDB_RCG_",RCG,"_CL_2009_2019_prepared_20200616.Rdata", sep=""))
+year <- 2020 # fleet register
+data_dir <- paste("../../data/002_prepared/RCG_", RCG, "/", sep = '')
+load(paste(data_dir,"RDB_RCG_",RCG,"_CE_2009_2019_prepared_20200616.Rdata", sep=""))
+load(paste(data_dir,"RDB_RCG_",RCG,"_CL_2009_2019_prepared_20200616.Rdata", sep=""))
+# load(paste("Q:\\mynd\\RDB\\RDB_fisheries_overviews\\RDB_RCG_",RCG,"_CE_2009_2019_prepared_20200616.Rdata", sep=""))
+# load(paste("Q:\\mynd\\RDB\\RDB_fisheries_overviews\\RDB_RCG_",RCG,"_CL_2009_2019_prepared_20200616.Rdata", sep=""))
 CE_years <- ce_rcg[ce_rcg$Year %in% years,]
 CL_years <- cl_rcg[cl_rcg$Year %in% years,]
 
@@ -36,14 +42,109 @@ Landings_country <- CL_years %>%
   summarise(LandingWeight_ton=sum(LandingWeight_ton))
 Landings_country$gear <- substr(Landings_country$FishingActivityLvl5,1,3)
 
+#fleet register
+# functions and packages
+	require(data.table)
+
+	fleetreg<-data.table()
+
+		# based on full history
+	
+	dir<-paste("D:\\RCGs\\RegionalOverviews\\data\\fleet_reg\\output\\",year,"\\",sep="")
+		
+	for (ctry in c("BEL","DEU","DNK","ESP","EST","FIN","FRA","GBR","IRL","LTU","LVA","NLD","POL","PRT","SWE"))
+		{
+		print(ctry)
+		fleetreg<-rbind(fleetreg,fread(paste(dir,ctry,"_export.csv", sep = ""), sep = ";",stringsAsFactors=FALSE, verbose=FALSE))
+		}	
+
+	# subsets data
+		fleetreg<-fleetreg[License_Ind=="Y",]
+			# creates status date date and combines data
+		fleetreg$V2020<-0
+		fleetreg$V2019<-0
+		fleetreg$V2018<-0
+		fleetreg$V2017<-0
+		fleetreg$V2016<-0
+
+		fleetreg[Event_Start_Date<=20200101 & Event_End_Date>=20200101,V2020:=20200101,]
+		fleetreg[Event_Start_Date<=20190101 & Event_End_Date>=20190101,V2019:=20190101,]		
+		fleetreg[Event_Start_Date<=20180101 & Event_End_Date>=20180101,V2018:=20180101,]
+		fleetreg[Event_Start_Date<=20170101 & Event_End_Date>=20170101,V2017:=20170101,]
+		fleetreg[Event_Start_Date<=20160101 & Event_End_Date>=20160101,V2016:=20160101,]
+	
+		fleetreg$Status_date<-0
+	
+		target_cols<-c("Country_Code","CFR","Event_Code","Event_Start_Date","Event_End_Date","License_Ind","Loa","Ton_Gt","Ton_Oth","Ton_Gts","Power_Main","Power_Aux","Status_date")
+	
+		df2020<-as.data.frame(fleetreg[V2020==20200101,])
+		df2020$Status_date<-2020
+		df2020<-df2020[target_cols]
+		
+		df2019<-as.data.frame(fleetreg[V2019==20190101,])
+		df2019$Status_date<-2019
+		df2019<-df2019[target_cols]
+		
+		df2018<-as.data.frame(fleetreg[V2018==20180101,])
+		df2018$Status_date<-2018
+		df2018<-df2018[target_cols]
+			
+		df2017<-as.data.frame(fleetreg[V2017==20170101,])
+		df2017$Status_date<-2017
+		df2017<-df2017[target_cols]
+
+		df2016<-as.data.frame(fleetreg[V2016==20160101,])
+		df2016$Status_date<-2016
+		df2016<-df2016[target_cols]
+		
+		fleetreg<-as.data.table(rbind(df2020, df2019, df2018, df2017, df2016))
+			# a few formats and quality checks
+		fleetreg$Power_Main<-as.numeric(fleetreg$Power_Main)
+		fleetreg$Ton_Gt<-as.numeric(fleetreg$Ton_Gt)
+		# QCA: should yield 0
+   	sum(is.na(fleetreg$Power_Main))
+		sum(is.na(fleetreg$Ton_Gt))
+		
 ```
 
 
 **RCG Multiannual overviews**
 
+##	Overall fleet evolution (All RCGs){.tabset}
+### Number of vessels
+Number of vessels by flag country in the EU vessel register.
+```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
+res_fleetreg<-tapply(fleetreg$Country_Code,list(fleetreg$Country_Code,fleetreg$Status_date),length)
+ft<-theme_flextable(res_fleetreg)
+ft
+
+```
+
+### Power
+Power (`1000`kW) by flag country in the EU vessel register.
+```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
+res_fleetreg_pwr<-tapply(fleetreg$Power_Main, list(fleetreg$Country_Code, fleetreg$Status_date), sum)
+ft<-theme_flextable(res_fleetreg_pwr)
+ft
+```
+
+
+
+
+### Gross tonnage
+Gross Tonnage (`1000`GT) by flag country in the EU vessel register.
+```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
+res_fleetreg_gt <- tapply(fleetreg$Ton_Gt, list(fleetreg$Country_Code, fleetreg$Status_date), sum)
+ft<-theme_flextable(res_fleetreg_gt)
+ft
+```
+
+
+##{-}
+
 **CE and CL data Data**
 
-Text describing the input data....
+**Text describing the input data....
 
 **Text describing figures 1**
 
@@ -424,7 +525,6 @@ ggplot(data=landings_sp_sum, aes(x=Year, y=Landing_ton, fill=FlagCountry)) +
 ## Stock {.tabset}
 ### Stock|Country|Metier|Landings
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
-
 print('table')
 
 ```
