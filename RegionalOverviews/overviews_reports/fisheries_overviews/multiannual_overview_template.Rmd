@@ -19,6 +19,7 @@ library(ggplot2)
 library(data.table)
 library(directlabels)
 library(flextable)
+library(scales)
 source("../../funs/fun_theme_flextable.r")
 #Choose RCG. Options: BA, NA, NSEA
 RCG <- "BA"
@@ -523,14 +524,57 @@ ggplot(data=landings_sp_sum, aes(x=Year, y=Landing_ton, fill=FlagCountry)) +
 **Text describing stocks
 
 ## Stock {.tabset}
-### Stock|Country|Metier|Landings
+### Stock|Country|Landings|Percent
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
-print('table')
+Def_stock_KK<-read.delim("D:/rcgs_dane/aux_stocks.txt")
+Def_stock_KK$ID<- paste(Def_stock_KK$area, Def_stock_KK$AphiaID, sep='')
+CL_years$SpeciesAphiaID<-as.character(CL_years$SpeciesAphiaID)
+CL_years$ID <- paste(CL_years$Area, CL_years$SpeciesAphiaID, sep='')
+laczony<-left_join(CL_years,Def_stock_KK, by='ID', all.x=TRUE)
+laczony$new_stock<-ifelse(is.na(laczony$Code),laczony$stock,laczony$Code)
+#if still new_stock is na ->catch_group
+laczony$new_stockplus<-ifelse(is.na(laczony$new_stock),paste(laczony$Catch_group,laczony$Area, sep=''),laczony$new_stock)
+# laczony$new_stockplus<-as.factor(laczony$new_stockplus)
+cos<-laczony[,c('Year','FlagCountry','OfficialLandingCatchWeight','new_stock','new_stockplus')]#OfficialLandingValue OfficialLandingCatchWeight
+cos%>%
+  group_by(Year,FlagCountry,new_stockplus)%>%
+  summarise(Landing=sum(OfficialLandingCatchWeight, na.rm = T))->moje
+moje%>%
+  group_by(Year,FlagCountry)%>%
+  summarise(total=sum(Landing, na.rm = T))->mojee
+
+result<-merge(moje,mojee)  
+result$percent<-result$Landing/result$total
+result$percent<-label_percent()(result$percent)
+
+top5 = result %>% group_by(Year,FlagCountry) %>% top_n(5,Landing) # to table
+flextable(top5)
 
 ```
-### Stock|Country|Metier|Landings
+
+### Stock|Country|Landings
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
-print('graph')
+top9_stock <- moje %>%
+  group_by(new_stockplus) %>%
+  summarise(lan_stock=sum(Landing)) %>%
+  arrange(desc(lan_stock)) %>%
+  top_n(9)
+
+top9_stock$Top9stock <- "X"
+landings_stock <- left_join(moje,top9_stock,by="new_stockplus")
+landings_stock$topstock <- ifelse(is.na(landings_stock$Top9stock),"Not_top",landings_stock$new_stockplus)
+
+landings_stock_sum <- landings_stock %>%
+  group_by(Year,FlagCountry, topstock) %>%
+  summarise(Landing_s=sum(Landing))
+
+ggplot(data=landings_stock_sum, aes(x=Year, y=Landing_s, fill=FlagCountry)) +
+  geom_bar(position="fill", stat="identity") +
+  theme_bw() +
+  facet_wrap(~topstock)+
+  labs(title=paste("Landings by top 9 stocks -", RCG), x="year", y="Landings ")+
+  theme(axis.text.x = element_text(size=8), plot.title=element_text(size=8), axis.title = element_text(size=8),
+        axis.text.x.bottom  = element_text(angle = 90))
 
 ```
 
