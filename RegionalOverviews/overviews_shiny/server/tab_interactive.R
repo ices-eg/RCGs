@@ -125,7 +125,7 @@ output$absolute <- renderUI({
       options = list(plugins = list("remove_button", "drag_drop"))
     ),
     
-    selectInput ("N_var2", "Variable", var, multiple = F),
+    popify(selectInput ("N_var2", "Variable", var, multiple = F), ""),
     checkboxInput("rec", "ICES Rectangles"),
     br(),
     actionButton ("view2", "View"),
@@ -140,26 +140,27 @@ output$absolute <- renderUI({
 })
 
 # Pop up box in interactive map 
-observeEvent(input$view2, {
-  if(input$N_var2 %in% "NoAge"){
-    shinyalert("", "The selected variable is numbers at age", closeOnClickOutside = TRUE, animation = FALSE, size = "xs")
-  }else if(input$N_var2 %in% "NoAgeTrips"){
-    shinyalert("", "The selected variable is the number of trips with age samples", closeOnClickOutside = TRUE, animation = FALSE, size = "xs")
-  }else if(input$N_var2 %in% "NoWeight"){
-    shinyalert("", "The selected variable is weight at age", closeOnClickOutside = TRUE, animation = FALSE, size = "xs") 
-  }else if(input$N_var2 %in% "NoWeightTrips"){
-    shinyalert("", "The selected variable is the number of trips the weight at age was recorded", closeOnClickOutside = TRUE, animation = FALSE, size = "xs")
-  }else if(input$N_var2 %in% "NoMaturityStage"){
-    shinyalert("", "Number of maturity stage readings", closeOnClickOutside = TRUE, animation = FALSE, size = "xs")
-  }else if(input$N_var2 %in% "NoMaturityStageTrips"){
-    shinyalert("", "Number of trips the maturity stage was recorded", closeOnClickOutside = TRUE, animation = FALSE, size = "xs")
-  }else if(input$N_var2 %in% "NoLength"){
-    shinyalert("", "The selected variable is numbers at length", closeOnClickOutside = TRUE, animation = FALSE, size = "xs")
-  }else{
-    shinyalert("", "The selected variable is the number of trips with length samples", closeOnClickOutside = TRUE, animation = FALSE, size = "xs")
-  }
-  
-})
+observeEvent(input$N_var2, {
+    if(input$N_var2 %in% "NoAge"){
+      addPopover(session, "N_var2", "Numbers at age", trigger = "hover" , placement = "right")
+      }else if(input$N_var2 %in% "NoAgeTrips"){
+        addPopover(session, "N_var2", "Numbers of trips with age samples", trigger = "hover" , placement = "right")
+      }else if(input$N_var2 %in% "NoWeight"){
+        addPopover(session, "N_var2", "Total weight of samples", trigger = "hover" , placement = "right")
+      }else if(input$N_var2 %in% "NoWeightTrips"){
+        addPopover(session, "N_var2", "Numbers of trips with recorded weight", trigger = "hover" , placement = "right")
+      }else if(input$N_var2 %in% "NoMaturityStage"){
+        addPopover(session, "N_var2", "Numbers of samples with recorded maturity stage", trigger = "hover" , placement = "right")
+      }else if(input$N_var2 %in% "NoMaturityStageTrips"){
+        addPopover(session, "N_var2", "Numbers of trips with recorded maturity stage", trigger = "hover" , placement = "right")
+      }else if(input$N_var2 %in% "NoLength"){
+        addPopover(session, "N_var2", "Numbers at length", trigger = "hover" , placement = "right")
+      }else{
+        addPopover(session, "N_var2", "Numbers of trips with length samples", trigger = "hover" , placement = "right")
+}})
+
+
+
 # -----------------------------------
 # Filtered data
 # -----------------------------------

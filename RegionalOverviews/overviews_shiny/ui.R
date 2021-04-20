@@ -150,7 +150,6 @@ shinyUI(
     
     tabPanel(
       "Interactive plots", 
-       useShinyalert(),
         uiOutput("summary"),
         add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
       
