@@ -8,7 +8,7 @@ data %>%
   add_rownames() %>% 
   flextable() %>%
   theme_box() %>%
-  fontsize(part = "all", size = 6) %>%
+  fontsize(part = "all", size = 11) %>%
   bold(part="header") %>%
   bold(j=1) %>%
   bg(part="header",bg="#F3F9FF") %>%
