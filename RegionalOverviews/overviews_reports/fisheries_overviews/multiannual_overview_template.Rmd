@@ -1,12 +1,28 @@
+
+```{r title, include = F}
+RCG <- "NA" # RCG_NA, RCG_BA or RCG_NSEA
+years <- c(2015,2016,2017,2018,2019)
+
+
+if (RCG == "NA") {
+  front_title <- paste("RDB Catch and Effort Overview North Atlantic ",  "  \n ","![](../../overviews_shiny/www/RCGs_logo2.png)", sep = "")
+} else if (RCG == "BA") {
+  front_title <- paste("RDB Catch and Effort Overview Baltic ", "  \n ","![](../../overviews_shiny/www/RCGs_logo2.png)", sep = "")
+} else if (RCG == "NSEA") {
+  front_title <- paste("RDB Catch and Effort Overview North Sea and Eastern Arctic ", "  \n ","![](../../overviews_shiny/www/RCGs_logo2.png)", sep = "")
+}
+
+```
+
 ---
-title: "Multiannual overview template"
+title: `r logo`
 author: "RCG ISSG Regional overviews"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
 
 
@@ -21,8 +37,8 @@ library(directlabels)
 library(flextable)
 source("../../funs/fun_theme_flextable.r")
 #Choose RCG. Options: BA, NA, NSEA
-RCG <- "BA"
-years <- c(2015,2016,2017,2018,2019)
+#RCG <- "BA"
+#years <- c(2015,2016,2017,2018,2019)
 year <- 2020 # fleet register
 data_dir <- paste("../../data/002_prepared/RCG_", RCG, "/", sep = '')
 load(paste(data_dir,"RDB_RCG_",RCG,"_CE_2009_2019_prepared_20200616.Rdata", sep=""))
@@ -121,18 +137,16 @@ ft
 ```
 
 ### Power
-Power (`1000`kW) by flag country in the EU vessel register.
+Power (`1000*`kW) by flag country in the EU vessel register.
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 res_fleetreg_pwr<-tapply(fleetreg$Power_Main, list(fleetreg$Country_Code, fleetreg$Status_date), sum)
 ft<-theme_flextable(res_fleetreg_pwr)
-ft
 ```
 
 
 
-
 ### Gross tonnage
-Gross Tonnage (`1000`GT) by flag country in the EU vessel register.
+Gross Tonnage (`1000*`GT) by flag country in the EU vessel register.
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 res_fleetreg_gt <- tapply(fleetreg$Ton_Gt, list(fleetreg$Country_Code, fleetreg$Status_date), sum)
 ft<-theme_flextable(res_fleetreg_gt)
@@ -421,7 +435,7 @@ ggplot(data=Landings_country_T, aes(Year, LandingWeight_ton, colour=FlagCountry)
 
 **Text describing figures 3
 
-## Figures 3: Landings {.tabset}
+## Figures 3: Landings by Species {.tabset}
 ### 1 Total landings top 10 species - line  
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 CL_years$Species1 <- as.character(CL_years$Species)
