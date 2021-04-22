@@ -23,7 +23,6 @@ shinyUI(
                header = tags$style(
                   ".navbar-right { float: right !important;}",
                   "body {padding-top: 55px;}"),
-               
 
                 # tabs
                 # -----------------------------------
@@ -141,6 +140,7 @@ shinyUI(
     
     tabPanel(
       "Static map",
+      useShinyalert(),
       uiOutput("static"),
       add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
     ),
@@ -151,6 +151,7 @@ shinyUI(
     
     tabPanel(
       "Interactive plots", 
+       useShinyalert(),
         uiOutput("summary"),
         add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
       
