@@ -11,7 +11,8 @@
 
 dd <- reactive({
   
-  data<-data_list()[[3]]
+  #data<-data_list()[[3]]
+  data<-data_list()[[4]]
   data<-as.data.frame(data)
   
   if (!("All" %in% input$region)){
@@ -24,7 +25,8 @@ dd <- reactive({
 
 observe({
   #updateSelectInput(session, "country", choices = unique(dd()$LandingCountry), selected = sort(unique(dd()$LandingCountry))[1]) 
-  updateSelectInput(session, "country", choices = c("All",as.character(unique(dd()$LandingCountry))), selected = "All") 
+  #updateSelectInput(session, "country", choices = c("All",as.character(unique(dd()$LandingCountry))), selected = "All") 
+  updateSelectInput(session, "country", choices = c("All",as.character(unique(dd()$FlagCountry))), selected = "All") 
   
   })
 
@@ -38,6 +40,7 @@ vars <- reactive ({
   
   if (!("All" %in% input$country)){
     data <- data[data$LandingCountry %in% input$country,]
+    data <- data[data$FlagCountry %in% input$country,]
   }
 
   data <- data[, input$sppNamechoice]
@@ -74,7 +77,8 @@ output$absolute <- renderUI({
       "region",
       "Region",
       choices =
-        c("All", levels(data_list()[[3]]$Region)),
+      #c("All", levels(data_list()[[3]]$Region)),
+      c("All", levels(data_list()[[4]]$Region)),
       multiple = F,
       selected = "All"
     ),
@@ -110,7 +114,8 @@ output$absolute <- renderUI({
       "samtype",
       "Sampling Type",
       choices =
-        c("All", levels(data_list()[[3]]$SamplingType)),
+      #c("All", levels(data_list()[[3]]$SamplingType)),
+      c("All", levels(data_list()[[4]]$SamplingType)),
       multiple = TRUE,
       selected = "All",
       options = list(plugins = list("remove_button", "drag_drop"))
@@ -119,7 +124,8 @@ output$absolute <- renderUI({
       "quarter",
       "Quarter",
       choices =
-        c("All", levels(data_list()[[3]]$Quarter)),
+      #c("All", levels(data_list()[[3]]$Quarter)),
+      c("All", levels(data_list()[[4]]$Quarter)),
       multiple = TRUE,
       selected = "All",
       options = list(plugins = list("remove_button", "drag_drop"))
@@ -146,7 +152,8 @@ output$absolute <- renderUI({
 
 df <- reactive({
   
-  data<-data_list()[[3]]
+  #data<-data_list()[[3]]
+  data<-data_list()[[4]]
   data<-as.data.frame(data)
   data<-data%>%left_join(spptable)
   
@@ -154,7 +161,8 @@ df <- reactive({
     data <- data[data$Region == input$region,]
   }
   if (!("All" %in% input$country)){
-    data <- data[data$LandingCountry %in% input$country,]
+    #data <- data[data$LandingCountry %in% input$country,]
+    data <- data[data$FlagCountry %in% input$country,]
   }
   if (!("All" %in% input$species)){
     
@@ -179,9 +187,13 @@ df <- reactive({
     data <- data[data$Quarter %in% input$quarter,]
   }
   
-  data <- data[, c("LandingCountry", "Quarter",  "Species", "SamplingType",
+  # data <- data[, c("LandingCountry", "Quarter",  "Species", "SamplingType",
+  #                  "lat", "lon", input$N_var2)]
+  data <- data[, c("FlagCountry", "Quarter",  "Species", "SamplingType",
                    "lat", "lon", input$N_var2)]
-  names(data) <- c("LandingCountry", "Quarter",  "Species", "SamplingType",
+  # names(data) <- c("LandingCountry", "Quarter",  "Species", "SamplingType",
+  #                  "lat", "lon", "aux")
+  names(data) <- c("FlagCountry", "Quarter",  "Species", "SamplingType",
                    "lat", "lon", "aux")
   data
 })
@@ -230,6 +242,7 @@ filter_df <- eventReactive(input$view2, {
 ColorsBAR <- colour_table$colour4
 names(ColorsBAR) <- colour_table$Country
 colScaleBAR<-scale_fill_manual(name="LandingCountry", values=ColorsBAR)
+colScaleBAR<-scale_fill_manual(name="FlagCountry", values=ColorsBAR)
 
 pal.rmd<-reactive({colorNumeric ("viridis", domain = as.numeric(filter_df()$aux))})
 
@@ -323,10 +336,11 @@ output$plot2 <- renderPlot ({
   #validate(need(input$plottype=="Barplot", message=FALSE))
   ColorsBAR <- colour_table$colour4
   names(ColorsBAR) <- colour_table$Country
-  colScaleBAR<-scale_fill_manual(name="LandingCountry", values=ColorsBAR)
-  isolate({
-    if(nrow(df())==0) return({shinyalert("Oops!", "No data for this selection", type = "error")})
-    ggplot(df(), aes(x=LandingCountry, y=aux, fill=LandingCountry)) +
+  #colScaleBAR<-scale_fill_manual(name="LandingCountry", values=ColorsBAR)
+  colScaleBAR<-scale_fill_manual(name="FlagCountry", values=ColorsBAR)
+  isolate({ #ggplot(df(), aes(x=LandingCountry, y=aux, fill=LandingCountry)) +
+    if(nrow(df())==0) return({shinyalert("Oops!", "No data for this selection", type = "error")})  
+    ggplot(df(), aes(x=FlagCountry, y=aux, fill=FlagCountry)) +
       geom_bar(stat="identity")+
       colScaleBAR +
       theme_bw()+
