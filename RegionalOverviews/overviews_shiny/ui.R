@@ -23,6 +23,21 @@ shinyUI(
                   ".navbar-right { float: right !important;}",
                   "body {padding-top: 55px;}"),
                
+               # customize notification
+               tags$head(
+                 tags$style(
+                   HTML(".shiny-notification {
+                            position:fixed;
+                            top: calc(50%);
+                            left: calc(50%);
+                            width: 25em;
+                            opacity: 1;
+                          }
+                        "
+                   )
+                 )
+               ),
+               
 
                 # tabs
                 # -----------------------------------
