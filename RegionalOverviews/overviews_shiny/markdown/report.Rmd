@@ -55,7 +55,7 @@ leaflet(params$data2, height=800, width=900) %>%
 **Barplot**
 
 ```{r, echo=F}
-      ggplot(params$data1, aes(x=LandingCountry, y=aux, fill=LandingCountry)) +
+      ggplot(params$data1, aes(x=FlagCountry, y=aux, fill=FlagCountry)) +
          geom_bar(stat="identity")+
          params$f +
          theme_bw()+

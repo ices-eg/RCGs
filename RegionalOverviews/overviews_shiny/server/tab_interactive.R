@@ -241,7 +241,7 @@ filter_df <- eventReactive(input$view2, {
 #input$view2ColorsBAR <- colour_table$colour4
 ColorsBAR <- colour_table$colour4
 names(ColorsBAR) <- colour_table$Country
-colScaleBAR<-scale_fill_manual(name="LandingCountry", values=ColorsBAR)
+#colScaleBAR<-scale_fill_manual(name="LandingCountry", values=ColorsBAR)
 colScaleBAR<-scale_fill_manual(name="FlagCountry", values=ColorsBAR)
 
 pal.rmd<-reactive({colorNumeric ("viridis", domain = as.numeric(filter_df()$aux))})

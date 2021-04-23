@@ -228,14 +228,23 @@ filter_df3 <- eventReactive(input$view3, {
 #   head(sqrt(as.numeric(input$N_var3))*2, 5)
 # })
 
-observeEvent(input$view3, {
-  
-  if(nrow(filter_df3()) ==0 |sum(filter_df3()$aux) == 0){
-    showNotification("No data available at this level", type = "error")
-  
-    }else{
-    
+
+
+# -----------------------------------
+# Mapa
+# -----------------------------------
+
+#Reactives 
+
+# viridis is the default colour/fill scale for ordered factors
+
     output$plot3 <- renderPlot ({
+      
+      input$view3
+      
+      isolate({
+        
+        if(nrow(filter_df3()) == 0 |sum(filter_df3()$aux) == 0) return({shinyalert("Oops!", "No data for this selection", type = "error", size = "xs")})
       
         ggplot(data = world) + geom_sf(fill= "antiquewhite") +
           geom_point(data = filter_df3(), aes(x = lon, y = lat, color = aux, size = aux)) +
@@ -264,56 +273,11 @@ observeEvent(input$view3, {
             panel.grid.major = element_line(color = gray(.8), linetype ='dashed', size = 0.5)
           )
 
-      }) # end of the renderplot
-    }
-})
+      }) 
+    })
 
-# -----------------------------------
-# Mapa
-# -----------------------------------
 
-#Reactives 
 
-# viridis is the default colour/fill scale for ordered factors
-
-# output$plot3 <- renderPlot ({
-#   
-#   input$view3
-#   
-#   isolate({
-#     
-#     #if(nrow(filter_df3())==0 | sum(filter_df3()$aux == 0)) return(invisible(NULL))
-#     if(nrow(filter_df3())==0 ) return(invisible(NULL))
-#     
-#     ggplot(data = world) + geom_sf(fill= "antiquewhite") +
-#       geom_point(data = filter_df3(), aes(x = lon, y = lat, color = aux, size = aux)) +
-#       #scale_colour_viridis(guide ="legend") + 
-#       scale_color_viridis(guide ="legend", limits = c(min(filter_df3()$aux), roundUpNice(max(filter_df3()$aux)))) +
-#       scale_size_continuous (limits = c(min(filter_df3()$aux), roundUpNice(max(filter_df3()$aux))))+
-#       #facet_grid (SamplingType~LandingCountry)+
-#       facet_wrap(~facet)+
-#       coord_sf(crs = "+init=epsg:4326", 
-#                xlim = range(filter_df3()[filter_df3()$lat & filter_df3()$lon,]$lon)+ c(-1, 1), 
-#                ylim = range(filter_df3()[filter_df3()$lat & filter_df3()$lon,]$lat) + c(-0.5,+0.5), 
-#                expand = FALSE) +
-#       xlab("Longitude") + ylab("Latitude") + labs(size=input$N_var3, colour=input$N_var3)+
-#       ggtitle(paste("Region:",input$regiong,"- Species:", input$speciesg, "- Sampling type:",input$samtypeg,"- Quarter:", input$quarterg, sep = " ")) +
-#       theme(
-#         plot.title = element_text(size =20,hjust = 0.5),
-#         text = element_text(color = "#22211d"),
-#         plot.background = element_rect(fill = "#ffffff", color = NA),
-#         panel.background = element_rect(fill = "aliceblue", color = NA),
-#         legend.background = element_rect(fill = "#ffffff", color = NA),
-#         panel.border = element_rect(
-#           colour = "black",
-#           fill = NA,
-#           size = 1.5
-#         ),
-#         panel.grid.major = element_line(color = gray(.8), linetype ='dashed', size = 0.5)
-#       )
-#   
-#   })
-# })
 
 
 
@@ -329,28 +293,34 @@ output$down3 <- downloadHandler(
   content = function(static.plot){
     png(static.plot)  
     
-    if(nrow(filter_df3())==0) return(invisible(NULL))
+    if(nrow(filter_df3()) == 0 |sum(filter_df3()$aux) == 0) return(invisible(NULL))
     
     static.plot <-ggplot(data = world) + geom_sf(fill= "antiquewhite") +
-              geom_point(data = filter_df3(), aes(x = lon, y = lat, colour = aux, size = aux)) +
-              scale_colour_viridis(guide ="legend") + 
-              #facet_grid (SamplingType~LandingCountry)+
-              facet_wrap(~facet)+
-              coord_sf(crs = "+init=epsg:4326", xlim = c(-25, 5), ylim = c(43, 63), expand = FALSE) +
-              xlab("Longitude") + ylab("Latitude") + labs(size=input$N_var3, colour=input$N_var3)+
-              ggtitle(paste("Region:",input$regiong,"-Species:", input$speciesg, "-Sampling type:",input$samtypeg,"-Quarter:", input$quarterg, sep = "")) +
-              theme(
-                  plot.title = element_text(size =20,hjust = 0.5),
-                  text = element_text(color = "#22211d"),
-                  plot.background = element_rect(fill = "#ffffff", color = NA),
-                  panel.background = element_rect(fill = "aliceblue", color = NA),
-                  legend.background = element_rect(fill = "#ffffff", color = NA),
-                  panel.border = element_rect(
-                  colour = "black",
-                  fill = NA,
-                  size = 1.5),
-                  panel.grid.major = element_line(color = gray(.8), linetype ='dashed', size = 0.5)
-                  )
+      geom_point(data = filter_df3(), aes(x = lon, y = lat, color = aux, size = aux)) +
+      #scale_colour_viridis(guide ="legend") +
+      scale_color_viridis(guide ="legend", limits = c(min(filter_df3()$aux), roundUpNice(max(filter_df3()$aux)))) +
+      scale_size_continuous (limits = c(min(filter_df3()$aux), roundUpNice(max(filter_df3()$aux))))+
+      #facet_grid (SamplingType~LandingCountry)+
+      facet_wrap(~facet)+
+      coord_sf(crs = "+init=epsg:4326",
+               xlim = range(filter_df3()[filter_df3()$lat & filter_df3()$lon,]$lon)+ c(-1, 1),
+               ylim = range(filter_df3()[filter_df3()$lat & filter_df3()$lon,]$lat) + c(-0.5,+0.5),
+               expand = FALSE) +
+      xlab("Longitude") + ylab("Latitude") + labs(size=input$N_var3, colour=input$N_var3)+
+      ggtitle(paste("Region:",input$regiong,"- Species:", input$speciesg, "- Sampling type:",input$samtypeg,"- Quarter:", input$quarterg, sep = " ")) +
+      theme(
+        plot.title = element_text(size =20,hjust = 0.5),
+        text = element_text(color = "#22211d"),
+        plot.background = element_rect(fill = "#ffffff", color = NA),
+        panel.background = element_rect(fill = "aliceblue", color = NA),
+        legend.background = element_rect(fill = "#ffffff", color = NA),
+        panel.border = element_rect(
+          colour = "black",
+          fill = NA,
+          size = 1.5
+        ),
+        panel.grid.major = element_line(color = gray(.8), linetype ='dashed', size = 0.5)
+      )
     print(static.plot)
     dev.off()
   }
