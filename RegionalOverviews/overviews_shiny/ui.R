@@ -24,19 +24,19 @@ shinyUI(
                   "body {padding-top: 55px;}"),
                
                # customize notification
-               tags$head(
-                 tags$style(
-                   HTML(".shiny-notification {
-                            position:fixed;
-                            top: calc(50%);
-                            left: calc(50%);
-                            width: 25em;
-                            opacity: 1;
-                          }
-                        "
-                   )
-                 )
-               ),
+               # tags$head(
+               #   tags$style(
+               #     HTML(".shiny-notification {
+               #              position:fixed;
+               #              top: calc(50%);
+               #              left: calc(50%);
+               #              width: 25em;
+               #              opacity: 1;
+               #            }
+               #          "
+               #     )
+               #   )
+               # ),
                
 
                 # tabs
@@ -154,6 +154,20 @@ shinyUI(
     
     tabPanel(
       "Static map",
+      #customize notification
+      tags$head(
+        tags$style(
+          HTML(".shiny-notification {
+                   position:fixed;
+                   top: calc(50%);
+                   left: calc(50%);
+                   width: 25em;
+                   opacity: 1;
+                 }
+               "
+          )
+        )
+      ),
       uiOutput("static"),
       add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
     ),
