@@ -40,7 +40,6 @@ output$summary <- renderUI({
          fluidRow(
            br(),
            column(4,
-                  p("Barplot"),
                   selectizeInput("fishgroundp","Fishing Ground",
                                  choices =c("All", levels(data_list()[[2]]$FishingGround)),
                                  multiple = TRUE,
