@@ -28,6 +28,7 @@ library(dplyr)
 library(rgeos) # requiered by shinyappsio
 library(rintrojs)
 
+
 ##--------------
 ## data
 ##--------------
@@ -68,6 +69,13 @@ world <- ne_countries(scale = "medium", returnclass = "sf")
 facetvar <-
   c("LandingCountry",
     #"FlagCountry",
+    "Species", 
+    "SamplingType", 
+    "Quarter")
+
+facetvar2 <-
+  c(#"LandingCountry",
+    "FlagCountry",
     "Species", 
     "SamplingType", 
     "Quarter")
@@ -115,4 +123,11 @@ spptable <- read.csv("data/jointable.csv", sep= ";")
 #            "Quarter","Species","Area","SamplingType",        
 #            "Metier","StatisticalRectangle","lat","lon") 
 
-### 
+##--------------
+## round the max value in mapping variable otherwise viridis did not take into account
+##-------------- 
+
+roundUpNice <- function(x, nice=c(1,2,4,5,6,8,10)) {
+  if(length(x) != 1) stop("'x' must be of length 1")
+  10^floor(log10(x)) * nice[[which(x <= 10^floor(log10(x)) * nice)[[1]]]]
+}
