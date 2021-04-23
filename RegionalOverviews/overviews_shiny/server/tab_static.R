@@ -64,7 +64,8 @@ output$static <- renderUI({
                 "regiong",
                 "Region",
                 choices =
-                c("All", levels(data_list()[[3]]$Region)),
+                #c("All", levels(data_list()[[3]]$Region)),
+                c("All", levels(data_list()[[4]]$Region)),
               multiple = F,
             selected = "All"
             ), 
@@ -100,7 +101,8 @@ output$static <- renderUI({
              "samtypeg",
              "Sampling Type",
              choices =
-               c("All", levels(data_list()[[3]]$SamplingType)),
+               #c("All", levels(data_list()[[3]]$SamplingType)),
+              c("All", levels(data_list()[[4]]$SamplingType)),
              multiple = TRUE,
              selected = "All",
              options = list(plugins = list("remove_button", "drag_drop"))
@@ -109,7 +111,8 @@ output$static <- renderUI({
              "quarterg",
              "Quarter",
              choices =
-               c("All", levels(data_list()[[3]]$Quarter)),
+              #c("All", levels(data_list()[[3]]$Quarter)),
+             c("All", levels(data_list()[[4]]$Quarter)),
              multiple = TRUE,
              selected = "All",
              options = list(plugins = list("remove_button", "drag_drop"))
