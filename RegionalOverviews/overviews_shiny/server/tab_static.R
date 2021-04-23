@@ -228,13 +228,13 @@ filter_df3 <- eventReactive(input$view3, {
 #   head(sqrt(as.numeric(input$N_var3))*2, 5)
 # })
 
-observeEvent(input$view3, {
-  
-  if(nrow(filter_df3()) == 0 |sum(filter_df3()$aux) == 0){
-    #showNotification("No data available at this level", type = "error")
-    shinyalert("Oops!", "No data for this selection", type = "error", size = "xs")
-  }
-})
+# observeEvent(input$view3, {
+#   
+#   if(nrow(filter_df3()) == 0 |sum(filter_df3()$aux) == 0){
+#     #showNotification("No data available at this level", type = "error")
+#     shinyalert("Oops!", "No data for this selection", type = "error", size = "xs")
+#   }
+# })
 
 
 
@@ -244,7 +244,7 @@ observeEvent(input$view3, {
       
       isolate({
         
-        if(nrow(filter_df3()) == 0 |sum(filter_df3()$aux) == 0) return(invisible(NULL))
+        if(nrow(filter_df3()) == 0 |sum(filter_df3()$aux) == 0) return({shinyalert("Oops!", "No data for this selection", type = "error", size = "xs")})
       
         ggplot(data = world) + geom_sf(fill= "antiquewhite") +
           geom_point(data = filter_df3(), aes(x = lon, y = lat, color = aux, size = aux)) +
