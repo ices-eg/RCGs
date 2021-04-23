@@ -217,10 +217,10 @@ filter_df3 <- eventReactive(input$view3, {
 # # Debugging
 # # -----------------------------------
 # 
- output$debug3 <- renderTable({
-   #range(filter_df3()[filter_df3()$lat & filter_df3()$lon,]$lon)+ c(-1, 1)
-    sum(filter_df3()$aux)
- })
+ # output$debug3 <- renderTable({
+ #   #range(filter_df3()[filter_df3()$lat & filter_df3()$lon,]$lon)+ c(-1, 1)
+ #    sum(filter_df3()$aux)
+ # })
 
 
 # output$debug3 <- renderText({
@@ -232,7 +232,7 @@ observeEvent(input$view3, {
   
   if(nrow(filter_df3()) == 0 |sum(filter_df3()$aux) == 0){
     #showNotification("No data available at this level", type = "error")
-    shinyalert(title = "No data available at this level", type = "error")
+    shinyalert("Oops!", "No data for this selection", type = "error", size = "xs")
   }
 })
 
