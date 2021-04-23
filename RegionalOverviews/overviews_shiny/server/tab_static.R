@@ -217,10 +217,10 @@ filter_df3 <- eventReactive(input$view3, {
 # # Debugging
 # # -----------------------------------
 # 
- # output$debug3 <- renderTable({
- #   #range(filter_df3()[filter_df3()$lat & filter_df3()$lon,]$lon)+ c(-1, 1)
- #    sum(filter_df3()$aux)
- # })
+ output$debug3 <- renderTable({
+   #range(filter_df3()[filter_df3()$lat & filter_df3()$lon,]$lon)+ c(-1, 1)
+    sum(filter_df3()$aux)
+ })
 
 
 # output$debug3 <- renderText({
@@ -230,12 +230,21 @@ filter_df3 <- eventReactive(input$view3, {
 
 observeEvent(input$view3, {
   
-  if(nrow(filter_df3()) ==0 |sum(filter_df3()$aux) == 0){
-    showNotification("No data available at this level", type = "error")
-  
-    }else{
-    
+  if(nrow(filter_df3()) == 0 |sum(filter_df3()$aux) == 0){
+    #showNotification("No data available at this level", type = "error")
+    shinyalert(title = "No data available at this level", type = "error")
+  }
+})
+
+
+
     output$plot3 <- renderPlot ({
+      
+      input$view3
+      
+      isolate({
+        
+        if(nrow(filter_df3()) == 0 |sum(filter_df3()$aux) == 0) return(invisible(NULL))
       
         ggplot(data = world) + geom_sf(fill= "antiquewhite") +
           geom_point(data = filter_df3(), aes(x = lon, y = lat, color = aux, size = aux)) +
@@ -264,9 +273,8 @@ observeEvent(input$view3, {
             panel.grid.major = element_line(color = gray(.8), linetype ='dashed', size = 0.5)
           )
 
-      }) # end of the renderplot
-    }
-})
+      }) 
+    })
 
 # -----------------------------------
 # Mapa
