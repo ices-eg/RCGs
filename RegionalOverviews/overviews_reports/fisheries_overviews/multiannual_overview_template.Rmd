@@ -546,8 +546,7 @@ CL_years$SpeciesAphiaID<-as.character(CL_years$SpeciesAphiaID)
 CL_years$ID <- paste(CL_years$Area, CL_years$SpeciesAphiaID, sep='')
 temp<-left_join(CL_years,Def_stock_KK, by='ID', all.x=TRUE)
 temp$new_stock<-ifelse(is.na(temp$Code),temp$stock,temp$Code)
-#if still new_stock is na ->catch_group
-# temp$new_stockplus<-ifelse(is.na(temp$new_stock),paste(temp$catch_group,temp$Area,sep=''),temp$new_stock)
+
 temp$new_stockplus<-ifelse(is.na(temp$new_stock),paste(temp$SpeciesDesc,temp$FishingGround,sep=''),temp$new_stock)
 
 # temp$new_stockplus<-as.factor(temp$new_stockplus)
