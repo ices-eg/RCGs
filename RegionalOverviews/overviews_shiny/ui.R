@@ -153,6 +153,28 @@ shinyUI(
         uiOutput("summary"),
         add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
       
+    ),
+    
+    # -----------------------------------
+    # sampling vs landings
+    # -----------------------------------
+    
+    tabPanel(
+      "Sampling vs Landings",
+      useShinyalert(),
+      fileInput("CLfile", h3(""),buttonLabel = "Browse",placeholder = "CL.Rdata"), p("It might take a while",align="left"),
+      textOutput('CLregionMessage'),
+      tabsetPanel(type = "tabs",
+                  tabPanel( 
+                    title = "Matrix", 
+                    uiOutput("SvL_TabMatrix")),
+                  tabPanel(
+                    title = 'Map',
+                    plotOutput("SvL_map")
+                   # uiOutput("SvL_TabMap")
+                  )
+                  ),
+      add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
     )
   )# end navMENU
 
