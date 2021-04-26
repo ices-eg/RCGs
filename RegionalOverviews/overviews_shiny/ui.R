@@ -24,6 +24,7 @@ shinyUI(
                   ".navbar-right { float: right !important;}",
                   "body {padding-top: 55px;}"),
 
+
                 # tabs
                 # -----------------------------------
                 # Home tab
@@ -49,7 +50,7 @@ shinyUI(
                          #   )
                          fluidRow(
                            column(12,align="center",
-                                  img( src="RCGs_logo.png", height=150)
+                                  img( src="RCGs_logo2.png", height=100)
                            )),
                          br(), 
                          fluidRow(
@@ -59,11 +60,12 @@ shinyUI(
                          br(), 
                          fluidRow(
                            column(12, align="center",
-                                  div(style="display: inline-block;",class= "image", img(id="inputID", src="input_logo_4.png", height=300, style="cursor:pointer;")),
-                                  div(style="display: inline-block;",class= "image", img(id ="inventID", src="inventory_logo_4.png", height=300, style="cursor:pointer;")),
-                                  div(style="display: inline-block;",class= "image", img(id ="mapIntID", src="mapInt_logo_4.png", height=300, style="cursor:pointer;")),
-                                  div(style="display: inline-block;",class= "image", img(id ="mapStatID", src="mapStat_logo_4.png", height=300,style="cursor:pointer;")),
-                                  div(style="display: inline-block;",class= "image", img(id ="plotID", src="plots_logo_4.png", height=300,style="cursor:pointer;"))
+                                  div(style="display: inline-block;",class= "image", img(id="inputID", src="input_logo_4.png", height=250, style="cursor:pointer;margin-right:40px;")),
+                                  div(style="display: inline-block;",class= "image", img(id ="inventID", src="inventory_logo_4.png", height=250, style="cursor:pointer;margin-right:40px;")),
+                                  div(style="display: inline-block;",class= "image", img(id ="mapIntID", src="mapInt_logo_4.png", height=250, style="cursor:pointer;margin-right:40px;")),
+                                  div(style="display: inline-block;",class= "image", img(id ="mapStatID", src="mapStat_logo_4.png", height=250,style="cursor:pointer;margin-right:40px;")),
+                                  div(style="display: inline-block;",class= "image", img(id ="plotID", src="plots_logo_4.png", height=250,style="cursor:pointer;margin-right:40px;")),
+                                  div(style="display: inline-block;",class= "image", img(id ="sampvslandID", src="sampvsland_logo_4.png", height=250,style="cursor:pointer;"))
 
                          )
                          )
@@ -74,7 +76,8 @@ shinyUI(
 # Fisheries overview tab
 # -----------------------------------
   
-  tabPanel(id = "tabInput", "Input data",align='center',br(),p("Upload RDB_All_Regions_YYYY.Rdata, available ", a(href="https://community.ices.dk/ExternalSites/datacollection/Regional%20coordination%20meetings%202017/RCGIntersessionalWork/_layouts/15/start.aspx#/SitePages/HomePage.aspx","here"),align="center"),fileInput("file", h3(""),buttonLabel = "Browse",placeholder = "example.Rdata"), p("It might take a while",align="center"),
+
+  tabPanel(id = "tabInput", "Input data",align='center',br(),p("Upload RDB_All_Regions_YYYY.Rdata, available ", a(href="https://community.ices.dk/ExternalSites/datacollection/Regional%20coordination%20meetings%202017/RCGIntersessionalWork/_layouts/15/start.aspx#/SitePages/HomePage.aspx","here"),align="center"),fileInput("file", h3(""),buttonLabel = "Browse",placeholder = "example.Rdata"), p("It might take a while",align="center"), 
            add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
   ),
 
@@ -153,6 +156,28 @@ shinyUI(
         uiOutput("summary"),
         add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
       
+    ),
+    
+    # -----------------------------------
+    # sampling vs landings
+    # -----------------------------------
+    
+    tabPanel(
+      "Sampling vs Landings",
+      useShinyalert(),
+      fileInput("CLfile", h3(""),buttonLabel = "Browse",placeholder = "CL.Rdata"), p("It might take a while",align="left"),
+      textOutput('CLregionMessage'),
+      tabsetPanel(type = "tabs",
+                  tabPanel( 
+                    title = "Matrix", 
+                    uiOutput("SvL_TabMatrix")),
+                  tabPanel(
+                    title = 'Map',
+                    plotOutput("SvL_map")
+                   # uiOutput("SvL_TabMap")
+                  )
+                  ),
+      add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
     )
   )# end navMENU
 

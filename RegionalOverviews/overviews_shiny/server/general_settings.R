@@ -9,6 +9,7 @@ shinyjs::onclick("inventID",  updateTabsetPanel(session, inputId="navbar", selec
 shinyjs::onclick("mapIntID",  updateTabsetPanel(session, inputId="navbar", selected="Interactive map"))
 shinyjs::onclick("mapStatID",  updateTabsetPanel(session, inputId="navbar", selected="Static map"))
 shinyjs::onclick("plotID",  updateTabsetPanel(session, inputId="navbar", selected="Interactive plots"))
+shinyjs::onclick("sampvslandID",  updateTabsetPanel(session, inputId="navbar", selected="Interactive plots"))
 
 # --------------------------------
 # modal disclaimer
