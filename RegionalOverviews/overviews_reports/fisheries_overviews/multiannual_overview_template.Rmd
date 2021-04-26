@@ -22,7 +22,7 @@ library(flextable)
 library(scales)
 source("../../funs/fun_theme_flextable.r")
 #Choose RCG. Options: BA, NA, NSEA
-RCG <- "NA"
+RCG <- "BA"
 years <- c(2015,2016,2017,2018,2019)
 year <- 2020 # fleet register
 data_dir <- paste("../../data/002_prepared/RCG_", RCG, "/", sep = '')
