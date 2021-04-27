@@ -36,6 +36,7 @@ library(data.table)
 library(directlabels)
 library(flextable)
 library(scales)
+library(DT)
 source("../../funs/fun_theme_flextable.r")
 #Choose RCG. Options: BA, NA, NSEA
 #RCG <- "BA"
