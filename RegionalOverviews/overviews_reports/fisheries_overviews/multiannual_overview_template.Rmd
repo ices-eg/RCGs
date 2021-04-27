@@ -15,7 +15,7 @@ if (RCG == "NA") {
 ```
 
 ---
-title: `r logo`
+title: `r front_title`
 author: "RCG ISSG Regional overviews"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
@@ -44,6 +44,8 @@ year <- 2020 # fleet register
 data_dir <- paste("../../data/002_prepared/RCG_", RCG, "/", sep = '')
 load(paste(data_dir,"RDB_RCG_",RCG,"_CE_2009_2019_prepared_20200616.Rdata", sep=""))
 load(paste(data_dir,"RDB_RCG_",RCG,"_CL_2009_2019_prepared_20200616.Rdata", sep=""))
+#Nuno file with stocks
+Def_stock<-read.delim("../../data/aux_stocks.txt")
 # load(paste("Q:\\mynd\\RDB\\RDB_fisheries_overviews\\RDB_RCG_",RCG,"_CE_2009_2019_prepared_20200616.Rdata", sep=""))
 # load(paste("Q:\\mynd\\RDB\\RDB_fisheries_overviews\\RDB_RCG_",RCG,"_CL_2009_2019_prepared_20200616.Rdata", sep=""))
 CE_years <- ce_rcg[ce_rcg$Year %in% years,]
@@ -538,13 +540,12 @@ ggplot(data=landings_sp_sum, aes(x=Year, y=Landing_ton, fill=FlagCountry)) +
 **Text describing stocks
 
 ## Stock {.tabset}
-### Year|Country|Stock|FishingGround|Species|Landings|Total Landings|Percent
+### Landings by country top 5 stocks
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
-Def_stock_KK<-read.delim("D:/rcgs_dane/aux_stocks.txt")
-Def_stock_KK$ID<- paste(Def_stock_KK$area, Def_stock_KK$AphiaID, sep='')
+Def_stock$ID<- paste(Def_stock$area, Def_stock$AphiaID, sep='')
 CL_years$SpeciesAphiaID<-as.character(CL_years$SpeciesAphiaID)
 CL_years$ID <- paste(CL_years$Area, CL_years$SpeciesAphiaID, sep='')
-temp<-left_join(CL_years,Def_stock_KK, by='ID', all.x=TRUE)
+temp<-left_join(CL_years,Def_stock, by='ID', all.x=TRUE)
 temp$new_stock<-ifelse(is.na(temp$Code),temp$stock,temp$Code)
 
 temp$new_stockplus<-ifelse(is.na(temp$new_stock),paste(temp$SpeciesDesc,temp$FishingGround,sep=''),temp$new_stock)
@@ -571,7 +572,7 @@ flextable(top5)
 
 ```
 
-### Stock|Country|Landings
+### Landings by top 10 stocks
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 top10_stock <- temp1 %>%
   group_by(Stock) %>%
