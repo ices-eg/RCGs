@@ -36,6 +36,7 @@ library(data.table)
 library(directlabels)
 library(flextable)
 library(scales)
+library(DT)
 source("../../funs/fun_theme_flextable.r")
 #Choose RCG. Options: BA, NA, NSEA
 #RCG <- "BA"
@@ -568,7 +569,7 @@ result$percent<-label_percent()(result$percent)
 top5 = result %>% group_by(Year,FlagCountry)%>% top_n(5,Landing) # to table
 top5$Landing<-round(top5$Landing/1000,0)
 top5$Total<-round(top5$Total/1000,0)
-flextable(top5)
+DT::datatable(top5)
 
 ```
 
