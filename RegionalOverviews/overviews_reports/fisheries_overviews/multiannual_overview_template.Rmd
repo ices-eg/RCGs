@@ -6,10 +6,13 @@ years <- c(2015,2016,2017,2018,2019)
 
 if (RCG == "NA") {
   front_title <- paste("RDB Catch and Effort Overview North Atlantic ",  "  \n ","![](../../overviews_shiny/www/RCGs_logo2.png)", sep = "")
+  title_stock <- c('North Atlantic region')
 } else if (RCG == "BA") {
   front_title <- paste("RDB Catch and Effort Overview Baltic ", "  \n ","![](../../overviews_shiny/www/RCGs_logo2.png)", sep = "")
+  title_stock <- c('Baltic region')
 } else if (RCG == "NSEA") {
   front_title <- paste("RDB Catch and Effort Overview North Sea and Eastern Arctic ", "  \n ","![](../../overviews_shiny/www/RCGs_logo2.png)", sep = "")
+  title_stock <- c('North Sea and Eastern Arctic regions')
 }
 
 ```
@@ -122,8 +125,8 @@ Landings_country$gear <- substr(Landings_country$FishingActivityLvl5,1,3)
 		fleetreg$Power_Main<-as.numeric(fleetreg$Power_Main)
 		fleetreg$Ton_Gt<-as.numeric(fleetreg$Ton_Gt)
 		# QCA: should yield 0
-   	sum(is.na(fleetreg$Power_Main))
-		sum(is.na(fleetreg$Ton_Gt))
+#    	sum(is.na(fleetreg$Power_Main))
+# 		sum(is.na(fleetreg$Ton_Gt))
 		
 ```
 
@@ -538,10 +541,14 @@ ggplot(data=landings_sp_sum, aes(x=Year, y=Landing_ton, fill=FlagCountry)) +
 
 ## {-}
 
-**Text describing stocks
+
 
 ## Stock {.tabset}
+The following chapter refers to the multiannual stocks’ distribution for `r title_stock`. This data is provided from ICES’ fishframe RDB regional database that has been working with the development and production of fisheries data.
+
 ### Landings by country top 5 stocks
+The first table regards Top 5 stocks in Landing’s percentage incidence per country from `r years[1]` to `r years[5]`, this stock information has been developed for this last five years scope where adjustments and definitions are being worked ever since. However, regarding this first picture, main stocks had been roughly the same and the Top 5 range only floated slightly.
+
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 Def_stock$ID<- paste(Def_stock$area, Def_stock$AphiaID, sep='')
 CL_years$SpeciesAphiaID<-as.character(CL_years$SpeciesAphiaID)
@@ -574,6 +581,7 @@ DT::datatable(top5)
 ```
 
 ### Landings by top 10 stocks
+The graph refers to the Landing’s percentage incidence by Top 10 Stocks per country. The main goal of this topic is to show how stocks are allocated to each country and, also very important, there is also important to check the evolution since `r years[1]` until `r years[5]` in order to have a hint for the stock incidence history per country.
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 top10_stock <- temp1 %>%
   group_by(Stock) %>%
