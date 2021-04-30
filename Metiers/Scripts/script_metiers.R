@@ -111,7 +111,7 @@ step.levels<-list(c("vessel_id","month","area","seq_dom_group","gear_group"),
                   c("vessel_id","year","seq_dom_group","gear_group"),
                   c("vessel_id","year","seq_dom_group"))
 for(level in step.levels){
-  if(nrow(input.data[metier_level_6=="MIS_MIS_0_0_0"])>0){
+  if(nrow(input.data[substr(metier_level_6,1,3)=="MIS"])>0){
     input.data <- missingMetiersByLevel(input.data,level,sequence.def)
   } else {break}
 }
@@ -129,7 +129,7 @@ step.levels<-list(c("vessel_id","month","area","gear_level6"),
                   c("vessel_id","quarter","gear_group"),
                   c("vessel_id","year","gear_group"))
 for(level in step.levels){
-  if(nrow(input.data[metier_level_6=="MIS_MIS_0_0_0"])>0){
+  if(nrow(input.data[substr(metier_level_6,1,3)=="MIS"])>0){
     input.data <- missingMetiersByLevel(input.data,level,sequence.def)
   } else {break}
 }
@@ -149,7 +149,7 @@ step.levels<-list(c("month","vessel_length_group","gear_FR","area","seq_dom_grou
                   c("year","vessel_length_group","gear_FR","seq_dom_group"),
                   c("year","gear_FR","seq_dom_group"))
 for(level in step.levels){
-  if(nrow(input.data[metier_level_6=="MIS_MIS_0_0_0"])>0){
+  if(nrow(input.data[substr(metier_level_6,1,3)=="MIS"])>0){
     input.data <- missingMetiersByLevel(input.data,level,sequence.def)
   } else {break}
 }
@@ -179,7 +179,7 @@ step.levels<-list(c("month","vessel_length_group","gear_FR","area","gear_level6"
                   c("year","vessel_length_group","gear_FR","gear_group"),
                   c("year","gear_FR","gear_group"))
 for(level in step.levels){
-  if(nrow(input.data[metier_level_6=="MIS_MIS_0_0_0"])>0){
+  if(nrow(input.data[substr(metier_level_6,1,3)=="MIS"])>0){
     input.data <- missingMetiersByLevel(input.data,level,sequence.def)
   } else {break}
 }

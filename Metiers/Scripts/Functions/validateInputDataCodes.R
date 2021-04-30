@@ -1,4 +1,5 @@
 validateInputDataCodes <- function(input.data, gear.list, area.list, species.list){
+  message("Validation of input data format...")
   assemblage.list <- unique(c(species.list$species_group, species.list$dws_group))
   assemblage.list <- assemblage.list[!is.na(assemblage.list)]
   
