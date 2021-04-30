@@ -18,8 +18,8 @@ data.file <- "data_input_example.csv"
 input.data <- loadInputData(data.file)
 rm(data.file)
 
-# Validate input data
-input.data <- validateInputData(input.data)
+# Validate input data format
+validateInputDataFormat(input.data)
 
 # Load reference lists
 url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/AreaRegionLookup.csv"
@@ -30,9 +30,11 @@ url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/RDB_I
 metier.list <- loadMetierList(url)
 url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/Code-ERSGearType-v1.1.xlsx"
 gear.list <- loadGearList(url)
-assemblage.list <- unique(c(species.list$species_group, species.list$dws_group))
-assemblage.list <- assemblage.list[!is.na(assemblage.list)]
 rm(url)
+
+# Validate input data codes
+validateInputDataCodes(input.data, gear.list, area.list, species.list)
+
 # Prepare input data
 input.data[,EUR:=as.numeric(EUR)]
 input.data[,KG:=as.numeric(KG)]
