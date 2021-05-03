@@ -191,7 +191,8 @@ ft
 
 **Text describing the input data....
 
-**Text describing figures 1**
+**Text describing figures 1
+The annual fishing effort in number of days at sea for `r title_stock`, is presented in Figure 1. The first plot gives a general idea on the annual total fishing effort by country. The following plots present the annual fishing effort distribution among the different fisheries by country, where the "Fishing activity level 5" data is grouped according to métier level 3 definition: the "Bottom trawl fisheries" include the otter and pair bottom trawls (OTB and PTB), the multi-rig otter trawl (OTT) and the beam bottom trawl (TBB); the "Pelagic trawl fisheries" include the mid-water otter trawl (OTM) and pelagic pair trawl (PTM); the "Surrounding nets fisheries" include the lampara nets (LA) and purse seine (PS); the "Seine fisheries" include the beach and boat seines (SB and SV), the fly shooting seine (SSC), anchored seine (SDN) and pair seine (SPR); the "Net fisheries" include set gillnet (GNS), driftnet (GND) and trammel net (GTR); the "Longline fisheries" include set and drifting longlines (LLS and LLD); the "Rods and lines fisheries" include the hand and pole lines (LHP and LHM) and the trolling lines (LTL); the "Dredge fisheries" include boat and hand dredges (DRB and HMD); and "Traps fisheries" include the pots and traps (FPO), the stationary uncovered pound nets (FPN) and fyke nets (FYK). Note that the presence of "blank plots" is related to single year data in a particular gear group.
 
 ## Figures 1: Effort {.tabset}
 
@@ -332,7 +333,8 @@ ggplot(data=DAS_country_T, aes(Year, DaysAtSea, colour=FlagCountry)) +
 
 
 
-**Text describing figures 2
+**Text describing figures 2:
+The annual landings overview for `r title_stock`, is presented in Figure 2. The first plot compiles the annual total landings by country. The following plots present the annual total landings from the different fisheries by country, where the "Fishing activity level 5" data is grouped according to métier level 3 definition: the "Bottom trawl fisheries" include the otter and pair bottom trawls (OTB and PTB), the multi-rig otter trawl (OTT) and the beam bottom trawl (TBB); the "Pelagic trawl fisheries" include the mid-water otter trawl (OTM) and pelagic pair trawl (PTM); the "Surrounding nets fisheries" include the lampara nets (LA) and purse seine (PS); the "Seine fisheries" include the beach and boat seines (SB and SV), the fly shooting seine (SSC), anchored seine (SDN) and pair seine (SPR); the "Net fisheries" include set gillnet (GNS), driftnet (GND) and trammel net (GTR); the "Longline fisheries" include set and drifting longlines (LLS and LLD); the "Rods and lines fisheries" include the hand and pole lines (LHP and LHM) and the trolling lines (LTL); the "Dredge fisheries" include boat and hand dredges (DRB and HMD); and "Traps fisheries" include the pots and traps (FPO), the stationary uncovered pound nets (FPN) and fyke nets (FYK). Note that the presence of "blank plots" is related to single year data in a particular gear group.
 
 ## Figures 2 Landings {.tabset}
 
@@ -464,7 +466,8 @@ ggplot(data=Landings_country_T, aes(Year, LandingWeight_ton, colour=FlagCountry)
 
 
 
-**Text describing figures 3
+**Text describing figures 3:
+The most landed species in weight, in `r title_stock` are presented in the plots from Figure 3. The first three plots show the top 10 species present in the landings of the region, using different layouts (lines and stacked bars). The last plot presents the main landed species in weight (top 10) by country.
 
 ## Figures 3: Landings by Species {.tabset}
 ### 1 Total landings top 10 species - line  
@@ -609,7 +612,7 @@ DT::datatable(top5)
 ```
 
 ### Landings by top 10 stocks
-The graph refers to the Landing’s percentage incidence by Top 10 Stocks per country. The main goal of this topic is to show how stocks are allocated to each country and, also very important, there is also important to check the evolution since `r years[1]` until `r years[5]` in order to have a hint for the stock incidence history per country.
+The graph refers to the Landing’s percentage incidence by Top 10 Stocks per country. The main goal of this topic is to show how stocks are allocated to each country and, also very important, to check the evolution since `r years[1]` until `r years[5]` in order to have a hint for the stock incidence history per country.
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 top10_stock <- temp1 %>%
   group_by(Stock) %>%
