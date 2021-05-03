@@ -466,7 +466,7 @@ ggplot(data=Landings_country_T, aes(Year, LandingWeight_ton, colour=FlagCountry)
 
 
 
-**Text describing figures 3:
+**Text describing figures 3: 
 The most landed species in weight, in `r title_stock` are presented in the plots from Figure 3. The first three plots show the top 10 species present in the landings of the region, using different layouts (lines and stacked bars). The last plot presents the main landed species in weight (top 10) by country.
 
 ## Figures 3: Landings by Species {.tabset}
