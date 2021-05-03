@@ -5,13 +5,13 @@ years <- c(2016,2017,2018,2019,2020)
 
 
 if (RCG == "NA") {
-  front_title <- paste("RDB Catch and Effort Overview North Atlantic ",  "  \n ","![](../../overviews_shiny/www/RCGs_logo2.png)", sep = "")
+  front_title <- paste("RDB Catch and Effort Overview North Atlantic ", sep = "")
   title_stock <- c('North Atlantic region')
 } else if (RCG == "BA") {
-  front_title <- paste("RDB Catch and Effort Overview Baltic ", "  \n ","![](../../overviews_shiny/www/RCGs_logo2.png)", sep = "")
+  front_title <- paste("RDB Catch and Effort Overview Baltic ", sep = "")
   title_stock <- c('Baltic region')
 } else if (RCG == "NSEA") {
-  front_title <- paste("RDB Catch and Effort Overview North Sea and Eastern Arctic ", "  \n ","![](../../overviews_shiny/www/RCGs_logo2.png)", sep = "")
+  front_title <- paste("RDB Catch and Effort Overview North Sea and Eastern Arctic ", sep = "")
   title_stock <- c('North Sea and Eastern Arctic regions')
 }
 
@@ -28,6 +28,29 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
 
+```{r, echo=FALSE}
+if (RCG == "NA") {
+  htmltools::img(src = knitr::image_uri(file.path("../../overviews_shiny/www/logo RCG NA NS_EA.png")), 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; right:0; padding:10px;',width="300px", height="100px")
+
+} else if (RCG == "BA") {
+  htmltools::img(src = knitr::image_uri(file.path("../../overviews_shiny/www/logo RCG BALTIC.PNG")), 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; right:0; padding:10px;',width="300px", height="100px")
+
+} else if (RCG == "NSEA") {
+  htmltools::img(src = knitr::image_uri(file.path("../../overviews_shiny/www/logo RCG NA NS_EA.png")), 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; right:0; padding:10px;',width="300px", height="100px")
+
+}
+
+
+htmltools::img(src = knitr::image_uri(file.path("../../overviews_shiny/www/logo RCG BALTIC.PNG")), 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; right:0; padding:10px;',width="300px", height="100px")
+```
 
 ```{r ReadData, echo=FALSE, message=FALSE, warning=FALSE}
 library(dplyr)
