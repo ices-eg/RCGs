@@ -1,6 +1,6 @@
 
 ```{r title, include = F}
-RCG <- "BA" # RCG_NA, RCG_BA or RCG_NSEA
+RCG <- "NSEA" # RCG_NA, RCG_BA or RCG_NSEA
 years <- c(2016,2017,2018,2019,2020)
 
 
@@ -28,29 +28,29 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
 
+
+
 ```{r, echo=FALSE}
+
 if (RCG == "NA") {
   htmltools::img(src = knitr::image_uri(file.path("../../overviews_shiny/www/logo RCG NA NS_EA.png")), 
                alt = 'logo', 
-               style = 'position:absolute; top:0; right:0; padding:10px;',width="300px", height="100px")
+               style = 'position:absolute; top:10; right:0; padding:10px;',width="300px", height="100px")
 
 } else if (RCG == "BA") {
   htmltools::img(src = knitr::image_uri(file.path("../../overviews_shiny/www/logo RCG BALTIC.PNG")), 
                alt = 'logo', 
-               style = 'position:absolute; top:0; right:0; padding:10px;',width="300px", height="100px")
+               style = 'position:absolute; top:10; right:0; padding:10px;',width="300px", height="100px")
 
 } else if (RCG == "NSEA") {
   htmltools::img(src = knitr::image_uri(file.path("../../overviews_shiny/www/logo RCG NA NS_EA.png")), 
                alt = 'logo', 
-               style = 'position:absolute; top:0; right:0; padding:10px;',width="300px", height="100px")
+               style = 'position:absolute; top:10; right:0; padding:10px;',width="300px", height="100px")
 
 }
 
-
-htmltools::img(src = knitr::image_uri(file.path("../../overviews_shiny/www/logo RCG BALTIC.PNG")), 
-               alt = 'logo', 
-               style = 'position:absolute; top:0; right:0; padding:10px;',width="300px", height="100px")
 ```
+
 
 ```{r ReadData, echo=FALSE, message=FALSE, warning=FALSE}
 library(dplyr)
@@ -74,8 +74,7 @@ load(paste(data_dir,"RDB_RCG_",RCG,"_CE_2009_2020_prepared_20210428.Rdata", sep=
 load(paste(data_dir,"RDB_RCG_",RCG,"_CL_2009_2020_prepared_20210428.Rdata", sep=""))
 #Nuno file with stocks
 Def_stock<-read.delim("../../data/aux_stocks.txt")
-# load(paste("Q:\\mynd\\RDB\\RDB_fisheries_overviews\\RDB_RCG_",RCG,"_CE_2009_2019_prepared_20200616.Rdata", sep=""))
-# load(paste("Q:\\mynd\\RDB\\RDB_fisheries_overviews\\RDB_RCG_",RCG,"_CL_2009_2019_prepared_20200616.Rdata", sep=""))
+
 CE_years <- ce_rcg[ce_rcg$Year %in% years,]
 CL_years <- cl_rcg[cl_rcg$Year %in% years,]
 
@@ -185,13 +184,15 @@ ft
 ```
 
 
-##{-}
+## {-}
 
 **CE and CL data Data**
 
-**Text describing the input data....
+The figures below are based on RDB effort (CE) and landings (CL) data.
 
-**Text describing figures 1**
+**Figures 1**
+
+The annual fishing effort in number of days at sea for the `r title_stock`, is presented in Figure 1. The first panel ('Days at sea Total fisheries') gives a general idea on the annual total fishing effort by country. The following panels present the annual fishing effort distribution among the different fisheries by country, where the "Fishing activity level 5" data is grouped according to métier level 3 definition: the "Bottom trawl fisheries" include the otter and pair bottom trawls (OTB and PTB), the multi-rig otter trawl (OTT) and the beam bottom trawl (TBB); the "Pelagic trawl fisheries" include the mid-water otter trawl (OTM) and pelagic pair trawl (PTM); the "Surrounding nets fisheries" include the lampara nets (LA) and purse seine (PS); the "Seine fisheries" include the beach and boat seines (SB and SV), the fly shooting seine (SSC), anchored seine (SDN) and pair seine (SPR); the "Net fisheries" include set gillnet (GNS), driftnet (GND) and trammel net (GTR); the "Longline fisheries" include set and drifting longlines (LLS and LLD); the "Rods and lines fisheries" include the hand and pole lines (LHP and LHM) and the trolling lines (LTL); the "Dredge fisheries" include boat and hand dredges (DRB and HMD); and "Traps fisheries" include the pots and traps (FPO), the stationary uncovered pound nets (FPN) and fyke nets (FYK). Note that the presence of "blank plots" is related to single year data in a particular gear group.
 
 ## Figures 1: Effort {.tabset}
 
@@ -331,8 +332,9 @@ ggplot(data=DAS_country_T, aes(Year, DaysAtSea, colour=FlagCountry)) +
 ## {-}
 
 
+**Figures 2**
 
-**Text describing figures 2
+The annual landings overview for the `r title_stock`, is presented in Figure 2. The first panel ('Landings Total fisheries') compiles the annual total landings by country. The following panels present the annual total landings from the different fisheries by country, where the "Fishing activity level 5" data is grouped according to métier level 3 definition: the "Bottom trawl fisheries" include the otter and pair bottom trawls (OTB and PTB), the multi-rig otter trawl (OTT) and the beam bottom trawl (TBB); the "Pelagic trawl fisheries" include the mid-water otter trawl (OTM) and pelagic pair trawl (PTM); the "Surrounding nets fisheries" include the lampara nets (LA) and purse seine (PS); the "Seine fisheries" include the beach and boat seines (SB and SV), the fly shooting seine (SSC), anchored seine (SDN) and pair seine (SPR); the "Net fisheries" include set gillnet (GNS), driftnet (GND) and trammel net (GTR); the "Longline fisheries" include set and drifting longlines (LLS and LLD); the "Rods and lines fisheries" include the hand and pole lines (LHP and LHM) and the trolling lines (LTL); the "Dredge fisheries" include boat and hand dredges (DRB and HMD); and "Traps fisheries" include the pots and traps (FPO), the stationary uncovered pound nets (FPN) and fyke nets (FYK). Note that the presence of "blank plots" is related to single year data in a particular gear group.
 
 ## Figures 2 Landings {.tabset}
 
@@ -464,7 +466,9 @@ ggplot(data=Landings_country_T, aes(Year, LandingWeight_ton, colour=FlagCountry)
 
 
 
-**Text describing figures 3
+**Figures 3**
+
+The most landed species in weight, in `r title_stock` are presented in the plots from Figure 3. The first three panels show the top 10 species present in the landings of the region, using different layouts (1:lines; 2:stacked bars; 3: stacked bar proportions). The last panel presents the countries that contribute for the landings of the main landed species in weight (top 10) in the `r title_stock`.
 
 ## Figures 3: Landings by Species {.tabset}
 ### 1 Total landings top 10 species - line  
