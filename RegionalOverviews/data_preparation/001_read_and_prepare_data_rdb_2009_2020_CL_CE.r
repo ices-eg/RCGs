@@ -1,6 +1,6 @@
 # RCG subgroup work on Regional Fisheries and Sampling Overview
 	# Nuno, Lucia, Sven, Marta, Gwladys, Hans, Henrik, Kirsten, Perttu, Alastair, Liz, Emilie, Joël, Karolina, Katarzyna, Federico, Maria, 
-	# 2019-2020
+	# Ana Cláudia: script updated for 2020 data
 	
 # script prepares datasets for further analysis
 
