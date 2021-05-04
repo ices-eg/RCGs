@@ -32,6 +32,22 @@ disclaimer_modal <- modalDialog(
   observeEvent(input$ok,{
           removeModal()
   })
+
+  
+  
+  # --------------------------------
+  # modal disclaimer to the Sampling vs Landings part
+  # --------------------------------  
+  
+  observe({
+    if (input$navbar == "Sampling vs Landings")  {
+      showModal(modalDialog(
+        title = "Keep in mind",
+        includeHTML("data/SamplingVsLandingsInformation.txt"),
+        easyClose = TRUE
+      ))
+    }
+  })
   
 # -------------------------------
 # Download disclaimer

@@ -165,6 +165,9 @@ shinyUI(
     tabPanel(
       "Sampling vs Landings",
       useShinyalert(),
+      br(),p("Upload RDB_RCG_BA/NA/NSEA_CL_YYYY.Rdata, available ", 
+             a(href="https://community.ices.dk/ExternalSites/datacollection/Regional%20coordination%20meetings%202017/RCGIntersessionalWork/_layouts/15/start.aspx#/SitePages/HomePage.aspx","here"),
+             align="left"),
       fileInput("CLfile", h3(""),buttonLabel = "Browse",placeholder = "CL.Rdata"), p("It might take a while",align="left"),
       textOutput('CLregionMessage'),
       tabsetPanel(type = "tabs",
@@ -180,6 +183,7 @@ shinyUI(
       add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
     )
   )# end navMENU
+
 
 # -----------------------------------
 # Stock overview tab
