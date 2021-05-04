@@ -166,7 +166,7 @@ pre code {
 
 <h1 class="title toc-ignore">Metier assignement</h1>
 <h4 class="author">RCG ISSG Metier issues</h4>
-<h4 class="date">15.04.2021</h4>
+<h4 class="date">04.05.2021</h4>
 
 </div>
 
@@ -329,17 +329,17 @@ rm(data.file)</code></pre>
 </tbody>
 </table>
 </div>
-<div id="input-data-validation" class="section level3">
-<h3>Input data validation</h3>
-<p>The <em>validateInputData</em> function checks if all columns defined in the data format are present in the input data set and if they are of a correct data type. If any of the columns defined in the data format are not present, the function fill stop executing and return an error. If any column has different type than expected then the function will return a warning. If there are additional columns not included in the data format, the function will return a warning.</p>
-<pre class="r"><code>input.data &lt;- validateInputData(input.data)</code></pre>
-<pre><code>## Validation of input data...</code></pre>
+<div id="input-data-format-validation" class="section level3">
+<h3>Input data format validation</h3>
+<p>The <em>validateInputDataFormat</em> function checks if all columns defined in the data format are present in the input data set and if they are of a correct data type. If any of the columns defined in the data format are not present, the function fill stop executing and return an error. If any column has different type than expected then the function will return a warning. If there are additional columns not included in the data format, the function will return a warning. If any of the columns are factors the function will return an error.</p>
+<pre class="r"><code>validateInputDataFormat(input.data)</code></pre>
+<pre><code>## Validation of input data format...</code></pre>
 <pre><code>## [1] &quot;Column Country: validation passed.&quot;
 ## [1] &quot;Column year: validation passed.&quot;
 ## [1] &quot;Column vessel_id: validation passed.&quot;
 ## [1] &quot;Column vessel_length: validation passed.&quot;
 ## [1] &quot;Column trip_id: validation passed.&quot;</code></pre>
-<pre><code>## Warning in validateInputData(input.data): Column haul_id should be of type
+<pre><code>## Warning in validateInputDataFormat(input.data): Column haul_id should be of type
 ## character.</code></pre>
 <pre><code>## [1] &quot;Column fishing_day: validation passed.&quot;
 ## [1] &quot;Column area: validation passed.&quot;
@@ -350,11 +350,12 @@ rm(data.file)</code></pre>
 ## [1] &quot;Column selection: validation passed.&quot;
 ## [1] &quot;Column registered_target_assemblage: validation passed.&quot;
 ## [1] &quot;Column FAO_species: validation passed.&quot;</code></pre>
-<pre><code>## Warning in validateInputData(input.data): Column metier_level_6 should be of
-## type character.</code></pre>
+<pre><code>## Warning in validateInputDataFormat(input.data): Column metier_level_6 should be
+## of type character.</code></pre>
 <pre><code>## [1] &quot;Column measure: validation passed.&quot;
 ## [1] &quot;Column KG: validation passed.&quot;
 ## [1] &quot;Column EUR: validation passed.&quot;</code></pre>
+<pre><code>## [1] TRUE</code></pre>
 </div>
 <div id="loading-reference-lists" class="section level3">
 <h3>Loading reference lists</h3>
@@ -380,6 +381,17 @@ gear.list &lt;- loadGearList(url)</code></pre>
 <pre class="r"><code>assemblage.list &lt;- unique(c(species.list$species_group, species.list$dws_group))
 assemblage.list &lt;- assemblage.list[!is.na(assemblage.list)]
 rm(url)</code></pre>
+</div>
+<div id="input-data-codes-validation" class="section level3">
+<h3>Input data codes validation</h3>
+<p>The <em>validateInputDataCodes</em> function validates the codes in the columns: area, gear, gearFR, selection, registered_target_assemblage, FAO_species, measure. If any of the above mentioned columns contains invalid etries then the function gives a warning.</p>
+<pre class="r"><code>validateInputDataCodes(input.data, gear.list, area.list, species.list)</code></pre>
+<pre><code>## Validation of input data format...</code></pre>
+<pre><code>## Warning in validateInputDataCodes(input.data, gear.list, area.list,
+## species.list): Invalid gear codes found: XYZ</code></pre>
+<pre><code>## Warning in validateInputDataCodes(input.data, gear.list, area.list,
+## species.list): Invalid species codes found: YYY</code></pre>
+<pre><code>## [1] TRUE</code></pre>
 </div>
 <div id="input-data-preparation" class="section level3">
 <h3>Input data preparation</h3>
@@ -462,7 +474,7 @@ input.data[,selection_mesh:=ifelse(selection_mesh==&quot;&quot;,NA,selection_mes
 <td align="left">NA</td>
 <td align="left">gillnets and entangling nets</td>
 <td align="left">GN</td>
-<td align="left">LDF,NSEA,Natl,MED,BALT</td>
+<td align="left">LDF,NSEA,Natl</td>
 </tr>
 <tr class="even">
 <td align="left">GNS</td>
@@ -491,7 +503,7 @@ input.data[,selection_mesh:=ifelse(selection_mesh==&quot;&quot;,NA,selection_mes
 <td align="left">NA</td>
 <td align="left">gillnets and entangling nets</td>
 <td align="left">GNS</td>
-<td align="left">LDF,NSEA,Natl,MED,BALT</td>
+<td align="left">LDF,NSEA,Natl</td>
 </tr>
 <tr class="odd">
 <td align="left">GNS</td>
@@ -520,7 +532,7 @@ input.data[,selection_mesh:=ifelse(selection_mesh==&quot;&quot;,NA,selection_mes
 <td align="left">NA</td>
 <td align="left">gillnets and entangling nets</td>
 <td align="left">GNS</td>
-<td align="left">LDF,NSEA,Natl,MED,BALT</td>
+<td align="left">LDF,NSEA,Natl</td>
 </tr>
 <tr class="even">
 <td align="left">GNS</td>
@@ -549,7 +561,7 @@ input.data[,selection_mesh:=ifelse(selection_mesh==&quot;&quot;,NA,selection_mes
 <td align="left">NA</td>
 <td align="left">gillnets and entangling nets</td>
 <td align="left">GNS</td>
-<td align="left">LDF,NSEA,Natl,MED,BALT</td>
+<td align="left">LDF,NSEA,Natl</td>
 </tr>
 <tr class="odd">
 <td align="left">GNS</td>
@@ -578,7 +590,7 @@ input.data[,selection_mesh:=ifelse(selection_mesh==&quot;&quot;,NA,selection_mes
 <td align="left">NA</td>
 <td align="left">gillnets and entangling nets</td>
 <td align="left">GNS</td>
-<td align="left">LDF,NSEA,Natl,MED,BALT</td>
+<td align="left">LDF,NSEA,Natl</td>
 </tr>
 </tbody>
 </table>
@@ -1028,7 +1040,7 @@ input.data[,c(&quot;metier_level_6&quot;,&quot;metier_level_5&quot;):=pmap_dfr(l
 </div>
 <div id="missing-metiers." class="section level3">
 <h3>Missing metiers.</h3>
-<p>Function <em>missingMetiersByLevel</em> is executed for search levels defined. The function tries to find a metier in case there is MIS_MIS. In case of a success, the function return new metier level 5 and level 6 together with a number of sequences of the new metier and a search level used.</p>
+<p>Function <em>missingMetiersByLevel</em> is executed for search levels defined. The function tries to find a metier in case metiers starting with “MIS” were assigned in the previous step. In case of a success, the function returns new metier level 5 and level 6 together with a number of sequences of the new metier and a search level used.</p>
 <div id="step-1.-target-assemblage-and-gear-group" class="section level4">
 <h4>Step 1. Target assemblage and gear group</h4>
 <pre class="r"><code>input.data[,&quot;:=&quot;(month=month(dmy(fishing_day)),
@@ -1046,7 +1058,7 @@ step.levels&lt;-list(c(&quot;vessel_id&quot;,&quot;month&quot;,&quot;area&quot;,
                   c(&quot;vessel_id&quot;,&quot;year&quot;,&quot;seq_dom_group&quot;,&quot;gear_group&quot;),
                   c(&quot;vessel_id&quot;,&quot;year&quot;,&quot;seq_dom_group&quot;))
 for(level in step.levels){
-  if(nrow(input.data[metier_level_6==&quot;MIS_MIS_0_0_0&quot;])&gt;0){
+  if(nrow(input.data[substr(metier_level_6,1,3)==&quot;MIS&quot;])&gt;0){
     input.data &lt;- missingMetiersByLevel(input.data,level,sequence.def)
   } else {break}
 }</code></pre>
@@ -1066,7 +1078,7 @@ for(level in step.levels){
                   c(&quot;vessel_id&quot;,&quot;quarter&quot;,&quot;gear_group&quot;),
                   c(&quot;vessel_id&quot;,&quot;year&quot;,&quot;gear_group&quot;))
 for(level in step.levels){
-  if(nrow(input.data[metier_level_6==&quot;MIS_MIS_0_0_0&quot;])&gt;0){
+  if(nrow(input.data[substr(metier_level_6,1,3)==&quot;MIS&quot;])&gt;0){
     input.data &lt;- missingMetiersByLevel(input.data,level,sequence.def)
   } else {break}
 }</code></pre>
@@ -1087,7 +1099,7 @@ step.levels&lt;-list(c(&quot;month&quot;,&quot;vessel_length_group&quot;,&quot;g
                   c(&quot;year&quot;,&quot;vessel_length_group&quot;,&quot;gear_FR&quot;,&quot;seq_dom_group&quot;),
                   c(&quot;year&quot;,&quot;gear_FR&quot;,&quot;seq_dom_group&quot;))
 for(level in step.levels){
-  if(nrow(input.data[metier_level_6==&quot;MIS_MIS_0_0_0&quot;])&gt;0){
+  if(nrow(input.data[substr(metier_level_6,1,3)==&quot;MIS&quot;])&gt;0){
     input.data &lt;- missingMetiersByLevel(input.data,level,sequence.def)
   } else {break}
 }</code></pre>
@@ -1337,14 +1349,14 @@ for(level in step.levels){
 </div>
 <div id="vessel-patterns" class="section level3">
 <h3>Vessel patterns</h3>
-<p>Vessel patterns analysis tries to find a common metier list for a vessel and year which will create a pattern. Then the pattern will be used to replace rare metiers with the best matched common metier at the specified search level.</p>
+<p>Vessel patterns analysis tries to find a common metier list for a vessel and year which will create a pattern. Then the pattern will be used to replace rare metiers with the best matched common metiers at the specified search level.</p>
 <div id="specify-the-percentage-threshold-of-the-number-of-sequences-below-which-a-metier-will-be-considered-rare" class="section level4">
 <h4>Specify the percentage threshold of the number of sequences below which a metier will be considered rare</h4>
 <pre class="r"><code>rare.threshold &lt;- 15</code></pre>
 </div>
 <div id="identify-rare-metiers" class="section level4">
 <h4>Identify rare metiers</h4>
-<p>Function <em>rareMetiersLvl5</em> attributes a metier with a “rare” or “common” label based on the treshold specified.</p>
+<p>Function <em>rareMetiersLvl5</em> attributes a metier with a “rare” or “common” label based on the specified threshold.</p>
 <pre class="r"><code>input.data&lt;-rareMetiersLvl5(input.data,sequence.def,rare.threshold)</code></pre>
 <table>
 <thead>
@@ -1677,21 +1689,21 @@ for(level in step.levels){
 <tr class="odd">
 <td align="right">2018</td>
 <td align="left">AAA-1</td>
-<td align="left">GNS_DEF</td>
-<td align="left">GNS</td>
+<td align="left">OTB_DEF</td>
+<td align="left">OTB</td>
 <td align="left">COD</td>
 <td align="left">27.3.d.25</td>
 <td align="left">POL</td>
 <td align="right">15</td>
-<td align="left">POLAAA1201811011240</td>
+<td align="left">POLAAA120180701test</td>
 <td align="left">NA</td>
-<td align="left">02-11-2018</td>
+<td align="left">02-12-2018</td>
 <td align="left">37G5</td>
-<td align="left">GNS</td>
-<td align="right">110</td>
+<td align="left">OTB</td>
+<td align="right">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
-<td align="left">GNS_DEF_110-156_0_0</td>
+<td align="left">OTB_DEF_&gt;0_0_0</td>
 <td align="left">weight</td>
 <td align="right">500</td>
 <td align="right">NA</td>
@@ -1699,10 +1711,10 @@ for(level in step.levels){
 <td align="left">NA</td>
 <td align="left">BALT</td>
 <td align="left">DEF</td>
-<td align="left">gillnets and entangling nets</td>
-<td align="left">GNS</td>
+<td align="left">trawls</td>
+<td align="left">OTB</td>
 <td align="left">DEF</td>
-<td align="right">11</td>
+<td align="right">12</td>
 <td align="right">4</td>
 <td align="right">NA</td>
 <td align="left">NA</td>
@@ -1713,21 +1725,21 @@ for(level in step.levels){
 <tr class="even">
 <td align="right">2018</td>
 <td align="left">AAA-1</td>
-<td align="left">GNS_DEF</td>
-<td align="left">GNS</td>
+<td align="left">OTB_DEF</td>
+<td align="left">OTB</td>
 <td align="left">FLE</td>
 <td align="left">27.3.d.25</td>
 <td align="left">POL</td>
 <td align="right">15</td>
-<td align="left">POLAAA1201811011240</td>
+<td align="left">POLAAA120180701test</td>
 <td align="left">NA</td>
-<td align="left">02-11-2018</td>
+<td align="left">02-12-2018</td>
 <td align="left">37G5</td>
-<td align="left">GNS</td>
-<td align="right">110</td>
+<td align="left">OTB</td>
+<td align="right">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
-<td align="left">GNS_DEF_110-156_0_0</td>
+<td align="left">OTB_DEF_&gt;0_0_0</td>
 <td align="left">weight</td>
 <td align="right">300</td>
 <td align="right">NA</td>
@@ -1735,10 +1747,10 @@ for(level in step.levels){
 <td align="left">NA</td>
 <td align="left">BALT</td>
 <td align="left">DEF</td>
-<td align="left">gillnets and entangling nets</td>
-<td align="left">GNS</td>
+<td align="left">trawls</td>
+<td align="left">OTB</td>
 <td align="left">DEF</td>
-<td align="right">11</td>
+<td align="right">12</td>
 <td align="right">4</td>
 <td align="right">NA</td>
 <td align="left">NA</td>
@@ -1868,7 +1880,7 @@ for(level in step.levels){
 <td align="left">[12,18)</td>
 <td align="left">rare</td>
 <td align="left">OTB_DEF</td>
-<td align="right">3</td>
+<td align="right">6</td>
 <td align="left">vessel_id|year|gear_level6</td>
 </tr>
 <tr class="even">
@@ -1906,7 +1918,7 @@ for(level in step.levels){
 <td align="left">[12,18)</td>
 <td align="left">rare</td>
 <td align="left">OTB_DEF</td>
-<td align="right">3</td>
+<td align="right">6</td>
 <td align="left">vessel_id|year|gear_level6</td>
 </tr>
 <tr class="odd">
@@ -1944,7 +1956,7 @@ for(level in step.levels){
 <td align="left">[12,18)</td>
 <td align="left">rare</td>
 <td align="left">OTB_DEF</td>
-<td align="right">3</td>
+<td align="right">6</td>
 <td align="left">vessel_id|year|gear_level6</td>
 </tr>
 <tr class="even">
@@ -1982,7 +1994,7 @@ for(level in step.levels){
 <td align="left">[12,18)</td>
 <td align="left">rare</td>
 <td align="left">OTB_DEF</td>
-<td align="right">3</td>
+<td align="right">6</td>
 <td align="left">vessel_id|year|gear_level6</td>
 </tr>
 <tr class="odd">
@@ -2140,21 +2152,21 @@ for(level in step.levels){
 <tr class="odd">
 <td align="right">2018</td>
 <td align="left">AAA-1</td>
-<td align="left">GNS_DEF</td>
-<td align="left">GNS</td>
+<td align="left">OTB_DEF</td>
+<td align="left">OTB</td>
 <td align="left">COD</td>
 <td align="left">27.3.d.25</td>
 <td align="left">POL</td>
 <td align="right">15</td>
-<td align="left">POLAAA1201811011240</td>
+<td align="left">POLAAA120180701test</td>
 <td align="left">NA</td>
-<td align="left">02-11-2018</td>
+<td align="left">02-12-2018</td>
 <td align="left">37G5</td>
-<td align="left">GNS</td>
-<td align="right">110</td>
+<td align="left">OTB</td>
+<td align="right">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
-<td align="left">GNS_DEF_110-156_0_0</td>
+<td align="left">OTB_DEF_&gt;0_0_0</td>
 <td align="left">weight</td>
 <td align="right">500</td>
 <td align="right">NA</td>
@@ -2162,10 +2174,10 @@ for(level in step.levels){
 <td align="left">NA</td>
 <td align="left">BALT</td>
 <td align="left">DEF</td>
-<td align="left">gillnets and entangling nets</td>
-<td align="left">GNS</td>
+<td align="left">trawls</td>
+<td align="left">OTB</td>
 <td align="left">DEF</td>
-<td align="right">11</td>
+<td align="right">12</td>
 <td align="right">4</td>
 <td align="right">NA</td>
 <td align="left">NA</td>
@@ -2178,21 +2190,21 @@ for(level in step.levels){
 <tr class="even">
 <td align="right">2018</td>
 <td align="left">AAA-1</td>
-<td align="left">GNS_DEF</td>
-<td align="left">GNS</td>
+<td align="left">OTB_DEF</td>
+<td align="left">OTB</td>
 <td align="left">FLE</td>
 <td align="left">27.3.d.25</td>
 <td align="left">POL</td>
 <td align="right">15</td>
-<td align="left">POLAAA1201811011240</td>
+<td align="left">POLAAA120180701test</td>
 <td align="left">NA</td>
-<td align="left">02-11-2018</td>
+<td align="left">02-12-2018</td>
 <td align="left">37G5</td>
-<td align="left">GNS</td>
-<td align="right">110</td>
+<td align="left">OTB</td>
+<td align="right">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
-<td align="left">GNS_DEF_110-156_0_0</td>
+<td align="left">OTB_DEF_&gt;0_0_0</td>
 <td align="left">weight</td>
 <td align="right">300</td>
 <td align="right">NA</td>
@@ -2200,10 +2212,10 @@ for(level in step.levels){
 <td align="left">NA</td>
 <td align="left">BALT</td>
 <td align="left">DEF</td>
-<td align="left">gillnets and entangling nets</td>
-<td align="left">GNS</td>
+<td align="left">trawls</td>
+<td align="left">OTB</td>
 <td align="left">DEF</td>
-<td align="right">11</td>
+<td align="right">12</td>
 <td align="right">4</td>
 <td align="right">NA</td>
 <td align="left">NA</td>
@@ -2220,14 +2232,17 @@ for(level in step.levels){
 <div id="assign-metier-level-6-to-metier-level-5-from-pattern" class="section level4">
 <h4>Assign metier level 6 to metier level 5 from pattern</h4>
 <p>Function called <em>metiersLvl6ForLvl5pattern</em> tries to find the best matched metier level 6 for metier level 5 from pattern which was assigned in the previous step. The function takes a search level as a parameter. It returns a metier level 6 together with the number of sequences and search level used.</p>
-<pre class="r"><code>step.levels&lt;-list(c(&quot;vessel_id&quot;,&quot;month&quot;,&quot;area&quot;,&quot;metier_level_5&quot;),
+<pre class="r"><code>input.data[,metier_level_6_pattern:=NA]
+step.levels&lt;-list(c(&quot;vessel_id&quot;,&quot;month&quot;,&quot;area&quot;,&quot;metier_level_5&quot;),
                   c(&quot;vessel_id&quot;,&quot;quarter&quot;,&quot;area&quot;,&quot;metier_level_5&quot;),
                   c(&quot;vessel_id&quot;,&quot;year&quot;,&quot;area&quot;,&quot;metier_level_5&quot;),
                   c(&quot;vessel_id&quot;,&quot;month&quot;,&quot;metier_level_5&quot;),
                   c(&quot;vessel_id&quot;,&quot;quarter&quot;,&quot;metier_level_5&quot;),
                   c(&quot;vessel_id&quot;,&quot;year&quot;,&quot;metier_level_5&quot;))
 for(level in step.levels){
-  if(nrow(input.data[metier_level_5_status==&quot;rare&quot; &amp; is.na(metier_level_5_pattern)])&gt;0){
+  if(nrow(input.data[metier_level_5_status==&quot;rare&quot; &amp; 
+                     !is.na(metier_level_5_pattern) &amp;
+                     is.na(metier_level_6_pattern)])&gt;0){
     input.data &lt;- metiersLvl6ForLvl5pattern(input.data,level,sequence.def)
   } else {break}
 }</code></pre>
@@ -2292,7 +2307,7 @@ for(level in step.levels){
 <td align="left">rare</td>
 <td align="left">OTB_DEF</td>
 <td align="left">vessel_id|year|gear_level6</td>
-<td align="right">3</td>
+<td align="right">6</td>
 <td align="left">OTB_DEF_105-115_1_120</td>
 <td align="left">vessel_id|year|metier_level_5</td>
 <td align="right">3</td>
@@ -2323,7 +2338,7 @@ for(level in step.levels){
 <td align="left">rare</td>
 <td align="left">OTB_DEF</td>
 <td align="left">vessel_id|year|gear_level6</td>
-<td align="right">3</td>
+<td align="right">6</td>
 <td align="left">OTB_DEF_105-115_1_120</td>
 <td align="left">vessel_id|year|metier_level_5</td>
 <td align="right">3</td>
@@ -2354,7 +2369,7 @@ for(level in step.levels){
 <td align="left">rare</td>
 <td align="left">OTB_DEF</td>
 <td align="left">vessel_id|year|gear_level6</td>
-<td align="right">3</td>
+<td align="right">6</td>
 <td align="left">OTB_DEF_105-115_1_120</td>
 <td align="left">vessel_id|year|metier_level_5</td>
 <td align="right">3</td>
@@ -2385,7 +2400,7 @@ for(level in step.levels){
 <td align="left">rare</td>
 <td align="left">OTB_DEF</td>
 <td align="left">vessel_id|year|gear_level6</td>
-<td align="right">3</td>
+<td align="right">6</td>
 <td align="left">OTB_DEF_105-115_1_120</td>
 <td align="left">vessel_id|year|metier_level_5</td>
 <td align="right">3</td>
@@ -2503,6 +2518,130 @@ for(level in step.levels){
 <td align="right">100.00</td>
 <td align="right">NA</td>
 <td align="left">OTB_DEF_105-115_1_120</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">OTB_DEF</td>
+<td align="left">common</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">POL</td>
+<td align="left">BALT</td>
+<td align="right">2018</td>
+<td align="left">AAA-1</td>
+<td align="right">15.00</td>
+<td align="left">POLAAA120180701test</td>
+<td align="left">NA</td>
+<td align="left">02-12-2018</td>
+<td align="left">27.3.d.25</td>
+<td align="left">37G5</td>
+<td align="left">OTB</td>
+<td align="left">OTB</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">COD</td>
+<td align="left">NA</td>
+<td align="right">500.00</td>
+<td align="right">NA</td>
+<td align="left">OTB_DEF_&gt;0_0_0</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">OTB_DEF</td>
+<td align="left">common</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">POL</td>
+<td align="left">BALT</td>
+<td align="right">2018</td>
+<td align="left">AAA-1</td>
+<td align="right">15.00</td>
+<td align="left">POLAAA120180701test</td>
+<td align="left">NA</td>
+<td align="left">02-12-2018</td>
+<td align="left">27.3.d.25</td>
+<td align="left">37G5</td>
+<td align="left">OTB</td>
+<td align="left">OTB</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">FLE</td>
+<td align="left">NA</td>
+<td align="right">300.00</td>
+<td align="right">NA</td>
+<td align="left">OTB_DEF_&gt;0_0_0</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">OTB_DEF</td>
+<td align="left">common</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">POL</td>
+<td align="left">BALT</td>
+<td align="right">2018</td>
+<td align="left">AAA-1</td>
+<td align="right">15.00</td>
+<td align="left">POLAAA120180701test</td>
+<td align="left">NA</td>
+<td align="left">03-12-2018</td>
+<td align="left">27.3.d.25</td>
+<td align="left">37G5</td>
+<td align="left">OTB</td>
+<td align="left">OTB</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">PLE</td>
+<td align="left">NA</td>
+<td align="right">100.00</td>
+<td align="right">NA</td>
+<td align="left">OTB_DEF_&gt;0_0_0</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">OTB_DEF</td>
+<td align="left">common</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">POL</td>
+<td align="left">BALT</td>
+<td align="right">2018</td>
+<td align="left">AAA-1</td>
+<td align="right">15.00</td>
+<td align="left">POLAAA120180701test</td>
+<td align="left">NA</td>
+<td align="left">04-12-2018</td>
+<td align="left">27.3.d.25</td>
+<td align="left">37G5</td>
+<td align="left">OTB</td>
+<td align="left">OTB</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">PLE</td>
+<td align="left">NA</td>
+<td align="right">100.00</td>
+<td align="right">NA</td>
+<td align="left">OTB_DEF_&gt;0_0_0</td>
 <td align="left">NA</td>
 <td align="right">NA</td>
 <td align="left">OTB_DEF</td>
@@ -2662,12 +2801,12 @@ for(level in step.levels){
 <td align="right">NA</td>
 <td align="left">LLS_DEF</td>
 <td align="left">rare</td>
-<td align="left">PTB_DEF</td>
+<td align="left">OTB_DEF</td>
 <td align="left">vessel_id|month|area|seq_dom_group</td>
-<td align="right">2</td>
-<td align="left">PTB_DEF_105-115_1_120</td>
+<td align="right">3</td>
+<td align="left">OTB_DEF_&gt;0_0_0</td>
 <td align="left">vessel_id|month|area|metier_level_5</td>
-<td align="right">2</td>
+<td align="right">3</td>
 </tr>
 <tr class="even">
 <td align="left">POL</td>
@@ -3571,6 +3710,439 @@ for(level in step.levels){
 </tbody>
 </table>
 </div>
+<div id="find-metier-codes-with-more-precise-mesh-size-ranges-and-replace-the-0_0_0-metier-codes-if-possible." class="section level4">
+<h4>Find metier codes with more precise mesh size ranges and replace the “&gt;0_0_0” metier codes if possible.</h4>
+<div id="create-new-metier-columns-where-rare-metiers-are-replaced-with-the-ones-found-in-the-pattern." class="section level5">
+<h5>Create new metier columns where rare metiers are replaced with the ones found in the pattern.</h5>
+<pre class="r"><code>input.data[,&quot;:=&quot;(metier_level_5_new=ifelse(is.na(metier_level_5_pattern),
+                                           metier_level_5,
+                                           metier_level_5_pattern),
+                 metier_level_6_new=ifelse(is.na(metier_level_6_pattern),
+                                           metier_level_6,
+                                           metier_level_6_pattern))]</code></pre>
+</div>
+<div id="function-called-detailedmetierslvl6forlvl5-replaces-0_0_0-metiers-with-more-precise-metiers." class="section level5">
+<h5>Function called <em>detailedMetiersLvl6ForLvl5</em> replaces “&gt;0_0_0” metiers with more precise metiers.</h5>
+<pre class="r"><code>input.data[,detailed_metier_level_6:=ifelse(grepl(&quot;_&gt;0_0_0&quot;,metier_level_6_new),NA,metier_level_6_new)]
+step.levels&lt;-list(c(&quot;vessel_id&quot;,&quot;month&quot;,&quot;area&quot;,&quot;metier_level_5_new&quot;),
+                  c(&quot;vessel_id&quot;,&quot;quarter&quot;,&quot;area&quot;,&quot;metier_level_5_new&quot;),
+                  c(&quot;vessel_id&quot;,&quot;year&quot;,&quot;area&quot;,&quot;metier_level_5_new&quot;),
+                  c(&quot;vessel_id&quot;,&quot;month&quot;,&quot;metier_level_5_new&quot;),
+                  c(&quot;vessel_id&quot;,&quot;quarter&quot;,&quot;metier_level_5_new&quot;),
+                  c(&quot;vessel_id&quot;,&quot;year&quot;,&quot;metier_level_5_new&quot;))
+for(level in step.levels){
+  if(nrow(input.data[is.na(detailed_metier_level_6)])&gt;0){
+    input.data &lt;- detailedMetiersLvl6ForLvl5(input.data,level,sequence.def)
+  } else {break}
+}</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Country</th>
+<th align="left">RCG</th>
+<th align="right">year</th>
+<th align="left">vessel_id</th>
+<th align="right">vessel_length</th>
+<th align="left">trip_id</th>
+<th align="left">haul_id</th>
+<th align="left">fishing_day</th>
+<th align="left">area</th>
+<th align="left">ices_rectangle</th>
+<th align="left">gear</th>
+<th align="left">gear_FR</th>
+<th align="right">mesh</th>
+<th align="left">selection</th>
+<th align="left">FAO_species</th>
+<th align="left">registered_target_assemblage</th>
+<th align="right">KG</th>
+<th align="right">EUR</th>
+<th align="left">metier_level_6</th>
+<th align="left">mis_met_level</th>
+<th align="right">mis_met_number_of_seq</th>
+<th align="left">metier_level_5</th>
+<th align="left">metier_level_5_status</th>
+<th align="left">metier_level_5_pattern</th>
+<th align="left">ves_pat_level</th>
+<th align="right">ves_pat_number_of_seq</th>
+<th align="left">metier_level_6_pattern</th>
+<th align="left">ves_pat_met6_level</th>
+<th align="right">ves_pat_met6_number_of_seq</th>
+<th align="left">metier_level_6_new</th>
+<th align="left">detailed_metier_level_6</th>
+<th align="right">det_met6_number_of_seq</th>
+<th align="left">det_met6_level</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">POL</td>
+<td align="left">BALT</td>
+<td align="right">2018</td>
+<td align="left">AAA-1</td>
+<td align="right">15</td>
+<td align="left">POLAAA120180701test</td>
+<td align="left">NA</td>
+<td align="left">02-12-2018</td>
+<td align="left">27.3.d.25</td>
+<td align="left">37G5</td>
+<td align="left">OTB</td>
+<td align="left">OTB</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">COD</td>
+<td align="left">NA</td>
+<td align="right">500</td>
+<td align="right">NA</td>
+<td align="left">OTB_DEF_&gt;0_0_0</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">OTB_DEF</td>
+<td align="left">common</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">OTB_DEF_&gt;0_0_0</td>
+<td align="left">OTB_DEF_105-115_1_120</td>
+<td align="right">3</td>
+<td align="left">vessel_id|year|area|metier_level_5_new</td>
+</tr>
+<tr class="even">
+<td align="left">POL</td>
+<td align="left">BALT</td>
+<td align="right">2018</td>
+<td align="left">AAA-1</td>
+<td align="right">15</td>
+<td align="left">POLAAA120180701test</td>
+<td align="left">NA</td>
+<td align="left">02-12-2018</td>
+<td align="left">27.3.d.25</td>
+<td align="left">37G5</td>
+<td align="left">OTB</td>
+<td align="left">OTB</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">FLE</td>
+<td align="left">NA</td>
+<td align="right">300</td>
+<td align="right">NA</td>
+<td align="left">OTB_DEF_&gt;0_0_0</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">OTB_DEF</td>
+<td align="left">common</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">OTB_DEF_&gt;0_0_0</td>
+<td align="left">OTB_DEF_105-115_1_120</td>
+<td align="right">3</td>
+<td align="left">vessel_id|year|area|metier_level_5_new</td>
+</tr>
+<tr class="odd">
+<td align="left">POL</td>
+<td align="left">BALT</td>
+<td align="right">2018</td>
+<td align="left">AAA-1</td>
+<td align="right">15</td>
+<td align="left">POLAAA120180701test</td>
+<td align="left">NA</td>
+<td align="left">03-12-2018</td>
+<td align="left">27.3.d.25</td>
+<td align="left">37G5</td>
+<td align="left">OTB</td>
+<td align="left">OTB</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">PLE</td>
+<td align="left">NA</td>
+<td align="right">100</td>
+<td align="right">NA</td>
+<td align="left">OTB_DEF_&gt;0_0_0</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">OTB_DEF</td>
+<td align="left">common</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">OTB_DEF_&gt;0_0_0</td>
+<td align="left">OTB_DEF_105-115_1_120</td>
+<td align="right">3</td>
+<td align="left">vessel_id|year|area|metier_level_5_new</td>
+</tr>
+<tr class="even">
+<td align="left">POL</td>
+<td align="left">BALT</td>
+<td align="right">2018</td>
+<td align="left">AAA-1</td>
+<td align="right">15</td>
+<td align="left">POLAAA120180701test</td>
+<td align="left">NA</td>
+<td align="left">04-12-2018</td>
+<td align="left">27.3.d.25</td>
+<td align="left">37G5</td>
+<td align="left">OTB</td>
+<td align="left">OTB</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">PLE</td>
+<td align="left">NA</td>
+<td align="right">100</td>
+<td align="right">NA</td>
+<td align="left">OTB_DEF_&gt;0_0_0</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">OTB_DEF</td>
+<td align="left">common</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">OTB_DEF_&gt;0_0_0</td>
+<td align="left">OTB_DEF_105-115_1_120</td>
+<td align="right">3</td>
+<td align="left">vessel_id|year|area|metier_level_5_new</td>
+</tr>
+<tr class="odd">
+<td align="left">POL</td>
+<td align="left">BALT</td>
+<td align="right">2018</td>
+<td align="left">AAA-1</td>
+<td align="right">15</td>
+<td align="left">POLAAA1201812101800</td>
+<td align="left">NA</td>
+<td align="left">03-12-2018</td>
+<td align="left">27.3.d.25</td>
+<td align="left">37G5</td>
+<td align="left">LLS</td>
+<td align="left">LLS</td>
+<td align="right">110</td>
+<td align="left">NA</td>
+<td align="left">FLE</td>
+<td align="left">NA</td>
+<td align="right">300</td>
+<td align="right">NA</td>
+<td align="left">LLS_DEF_0_0_0</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">LLS_DEF</td>
+<td align="left">rare</td>
+<td align="left">OTB_DEF</td>
+<td align="left">vessel_id|month|area|seq_dom_group</td>
+<td align="right">3</td>
+<td align="left">OTB_DEF_&gt;0_0_0</td>
+<td align="left">vessel_id|month|area|metier_level_5</td>
+<td align="right">3</td>
+<td align="left">OTB_DEF_&gt;0_0_0</td>
+<td align="left">OTB_DEF_105-115_1_120</td>
+<td align="right">3</td>
+<td align="left">vessel_id|year|area|metier_level_5_new</td>
+</tr>
+<tr class="even">
+<td align="left">POL</td>
+<td align="left">NSEA</td>
+<td align="right">2018</td>
+<td align="left">AAA-1</td>
+<td align="right">15</td>
+<td align="left">POLAAA1201806100325</td>
+<td align="left">NA</td>
+<td align="left">10-06-2018</td>
+<td align="left">27.2.a</td>
+<td align="left">NA</td>
+<td align="left">OTB</td>
+<td align="left">OTB</td>
+<td align="right">100</td>
+<td align="left">NA</td>
+<td align="left">HER</td>
+<td align="left">NA</td>
+<td align="right">500</td>
+<td align="right">475</td>
+<td align="left">OTB_DWS_100-119_0_0</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">OTB_DWS</td>
+<td align="left">rare</td>
+<td align="left">OTB_DEF</td>
+<td align="left">vessel_id|year|gear_level6</td>
+<td align="right">6</td>
+<td align="left">OTB_DEF_105-115_1_120</td>
+<td align="left">vessel_id|year|metier_level_5</td>
+<td align="right">3</td>
+<td align="left">OTB_DEF_105-115_1_120</td>
+<td align="left">OTB_DEF_105-115_1_120</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">POL</td>
+<td align="left">NSEA</td>
+<td align="right">2018</td>
+<td align="left">AAA-1</td>
+<td align="right">15</td>
+<td align="left">POLAAA1201806100325</td>
+<td align="left">NA</td>
+<td align="left">10-06-2018</td>
+<td align="left">27.2.a</td>
+<td align="left">NA</td>
+<td align="left">OTB</td>
+<td align="left">OTB</td>
+<td align="right">100</td>
+<td align="left">NA</td>
+<td align="left">HXC</td>
+<td align="left">NA</td>
+<td align="right">400</td>
+<td align="right">2500</td>
+<td align="left">OTB_DWS_100-119_0_0</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">OTB_DWS</td>
+<td align="left">rare</td>
+<td align="left">OTB_DEF</td>
+<td align="left">vessel_id|year|gear_level6</td>
+<td align="right">6</td>
+<td align="left">OTB_DEF_105-115_1_120</td>
+<td align="left">vessel_id|year|metier_level_5</td>
+<td align="right">3</td>
+<td align="left">OTB_DEF_105-115_1_120</td>
+<td align="left">OTB_DEF_105-115_1_120</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">POL</td>
+<td align="left">NSEA</td>
+<td align="right">2018</td>
+<td align="left">AAA-1</td>
+<td align="right">15</td>
+<td align="left">POLAAA1201806100325</td>
+<td align="left">NA</td>
+<td align="left">10-06-2018</td>
+<td align="left">27.2.a</td>
+<td align="left">NA</td>
+<td align="left">OTB</td>
+<td align="left">OTB</td>
+<td align="right">100</td>
+<td align="left">NA</td>
+<td align="left">SHO</td>
+<td align="left">NA</td>
+<td align="right">200</td>
+<td align="right">400</td>
+<td align="left">OTB_DWS_100-119_0_0</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">OTB_DWS</td>
+<td align="left">rare</td>
+<td align="left">OTB_DEF</td>
+<td align="left">vessel_id|year|gear_level6</td>
+<td align="right">6</td>
+<td align="left">OTB_DEF_105-115_1_120</td>
+<td align="left">vessel_id|year|metier_level_5</td>
+<td align="right">3</td>
+<td align="left">OTB_DEF_105-115_1_120</td>
+<td align="left">OTB_DEF_105-115_1_120</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">POL</td>
+<td align="left">NSEA</td>
+<td align="right">2018</td>
+<td align="left">AAA-1</td>
+<td align="right">15</td>
+<td align="left">POLAAA1201806100325</td>
+<td align="left">NA</td>
+<td align="left">10-06-2018</td>
+<td align="left">27.2.a</td>
+<td align="left">NA</td>
+<td align="left">OTB</td>
+<td align="left">OTB</td>
+<td align="right">100</td>
+<td align="left">NA</td>
+<td align="left">SPR</td>
+<td align="left">NA</td>
+<td align="right">1800</td>
+<td align="right">1710</td>
+<td align="left">OTB_DWS_100-119_0_0</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">OTB_DWS</td>
+<td align="left">rare</td>
+<td align="left">OTB_DEF</td>
+<td align="left">vessel_id|year|gear_level6</td>
+<td align="right">6</td>
+<td align="left">OTB_DEF_105-115_1_120</td>
+<td align="left">vessel_id|year|metier_level_5</td>
+<td align="right">3</td>
+<td align="left">OTB_DEF_105-115_1_120</td>
+<td align="left">OTB_DEF_105-115_1_120</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">POL</td>
+<td align="left">BALT</td>
+<td align="right">2018</td>
+<td align="left">AAA-1</td>
+<td align="right">15</td>
+<td align="left">POLAAA1201807011230</td>
+<td align="left">NA</td>
+<td align="left">02-07-2018</td>
+<td align="left">27.3.d.25</td>
+<td align="left">37G5</td>
+<td align="left">OTB</td>
+<td align="left">OTB</td>
+<td align="right">110</td>
+<td align="left">NA</td>
+<td align="left">COD</td>
+<td align="left">NA</td>
+<td align="right">500</td>
+<td align="right">NA</td>
+<td align="left">OTB_DEF_105-115_1_120</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">OTB_DEF</td>
+<td align="left">common</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">OTB_DEF_105-115_1_120</td>
+<td align="left">OTB_DEF_105-115_1_120</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="explanation-of-the-result-columns" class="section level3">
+<h3>Explanation of the result columns</h3>
+<ul>
+<li><em>metier_level_5</em> and <em>metier_level_6</em> - metier codes assigned in the first step by the <em>getMetier</em> function. In the next step the <em>missingMetiersByLevel</em> is called which tries to replace “MIS” metier codes with the best matched metier codes using the specified search levels,</li>
+<li><em>mis_met_level</em> and <em>mis_met_number_of_seq</em> - if the <em>missingMetiersByLevel</em> succeeds to replace “MIS” metier code then it gives the information on the level where the metier was found together with the number of fishing sequences for that metier. Initially assigned non-“MIS” metiers have empty values in these columns. Only “MIS” metiers which have been replaced with new codes have non-empty values in these columns,</li>
+<li><em>metier_level_5_status</em> - label indicating whether the metier code in the <em>metier_level_5</em> column is considered rare given the specified threshold. These is determined by the <em>rareMetiersLvl5</em> function,</li>
+<li><em>metier_level_5_pattern</em> - the metier level 5 codes found in the vessel pattern for metiers level 5 labeled as rare in the previous step. This is done by the <em>vesselPatternByLevel</em> function,</li>
+<li><em>ves_pat_level</em> and <em>ves_pat_number_of_seq</em> - if the <em>vesselPatternByLevel</em> function succeeds to find the metier in the vessel pattern then it gives the information on the level where the metier was found together with the number of fishing sequences for that metier,</li>
+<li><em>metier_level_6_pattern</em> - the best matched metier level 6 code from the vessel pattern given the metier level 5 from pattern and the specified search level. The value in this column is returned by the <em>metierLvl6ForLvl5pattern</em>,</li>
+<li><em>ves_pat_met6_level</em> and <em>ves_pat_met6_number_of_seq</em> - the <em>metierLvl6ForLvl5pattern</em> function returns the information on the level where the metier was found together with the number of fishing sequences for that metier,</li>
+<li><em>metier_level_5_new</em> and <em>metier_level_6_new</em> - values in these columns contain the metiers found by <em>getMetier</em> completed by <em>missingMetiersByLevel</em> or metiers returned from the vessel pattern which replaced rare metiers,</li>
+<li><em>detailed_metier_level_6</em> - the best matched metier level 6 with more precise mesh size ranges which replaces the “&gt;0_0_0” metiers. This step is done by the <em>detailedMetiersLvl6ForLvl5</em>,</li>
+<li><em>det_met6_number_of_seq</em> and <em>det_met6_level</em> - if the <em>detailedMetiersLvl6ForLvl5</em> function succeeds to find the metier with more precise mesh size range then it gives the information on the level where the metier was found together with the number of fishing sequences for that metier.</li>
+</ul>
 </div>
 </div>
 
