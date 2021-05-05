@@ -583,11 +583,12 @@ Warning: This stock allocation represents the RDB variable "stock", which is cur
 The first table regards Top 5 stocks in Landing’s percentage incidence per country from `r years[1]` to `r years[5]`, this stock information has been developed for this last five years scope where adjustments and definitions are being worked ever since. However, regarding this first picture, main stocks had been roughly the same and the Top 5 range only floated slightly.
 
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
+Def_stock$Code = as.character(Def_stock$Code)
 Def_stock$ID<- paste(Def_stock$area, Def_stock$AphiaID, sep='')
 CL_years$SpeciesAphiaID<-as.character(CL_years$SpeciesAphiaID)
 CL_years$ID <- paste(CL_years$Area, CL_years$SpeciesAphiaID, sep='')
 temp<-left_join(CL_years,Def_stock, by='ID', all.x=TRUE)
-temp$new_stock<-ifelse(is.na(temp$Code),temp$stock,temp$Code)
+temp$new_stock<-ifelse(is.na(temp$Code),temp$Stock,temp$Code)
 
 temp$new_stockplus<-ifelse(is.na(temp$new_stock),paste(temp$SpeciesDesc,temp$FishingGround,sep=''),temp$new_stock)
 
