@@ -143,11 +143,11 @@ output$absolute <- renderUI({
 # Pop up box in interactive map 
 observeEvent(input$N_var2, {
     if(input$N_var2 %in% "NoAge"){
-      addPopover(session, "N_var2", "Number of fish with age measurements", trigger = "hover" , placement = "right")
+      addPopover(session, "N_var2", "Number of fish with age recorded", trigger = "hover" , placement = "right")
       }else if(input$N_var2 %in% "NoAgeTrips"){
         addPopover(session, "N_var2", "Numbers of trips with age samples", trigger = "hover" , placement = "right")
       }else if(input$N_var2 %in% "NoWeight"){
-        addPopover(session, "N_var2", "Total weight of samples", trigger = "hover" , placement = "right")
+        addPopover(session, "N_var2", "Number of weight measurements", trigger = "hover" , placement = "right")
       }else if(input$N_var2 %in% "NoWeightTrips"){
         addPopover(session, "N_var2", "Numbers of trips with recorded weight", trigger = "hover" , placement = "right")
       }else if(input$N_var2 %in% "NoMaturityStage"){
