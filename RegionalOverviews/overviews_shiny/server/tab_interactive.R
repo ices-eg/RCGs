@@ -39,7 +39,7 @@ vars <- reactive ({
   data <- dd()
   
   if (!("All" %in% input$country)){
-    data <- data[data$LandingCountry %in% input$country,]
+    #data <- data[data$LandingCountry %in% input$country,]
     data <- data[data$FlagCountry %in% input$country,]
   }
 
