@@ -58,6 +58,7 @@ observe({
 output$absolute <- renderUI({
   req(input$file)
   absolutePanel(
+    singleton(tags$head(tags$script(src = "code.js"))),
     id = "controls",
     class = "panel panel-default",
     fixed = TRUE,
