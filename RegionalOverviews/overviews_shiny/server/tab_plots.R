@@ -87,14 +87,14 @@ output$summary <- renderUI({
                   # for logs
                   tableOutput("bugtable"))
            )
-           ),
+           )#,
        
        #------------------------------------
        # Sampling vs landing
        #------------------------------------
        
-       tabPanel( 
-         title = "Sampling vs landings")
+       # tabPanel( 
+       #   title = "Sampling vs landings")
        
   )# end of the tabsetPanel
   
