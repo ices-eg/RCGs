@@ -1,7 +1,7 @@
 ---
 title: "Metier assignement"
 author: "RCG ISSG Metier issues"
-date: "15.04.2021"
+date: "04.05.2021"
 output: html_document
 ---
 
@@ -48,10 +48,10 @@ rm(data.file)
 knitr::kable(input.data[1:5,])
 ```
 
-### Input data validation
-The *validateInputData* function checks if all columns defined in the data format are present in the input data set and if they are of a correct data type. If any of the columns defined in the data format are not present, the function fill stop executing and return an error. If any column has different type than expected then the function will return a warning. If there are additional columns not included in the data format, the function will return a warning.
-```{r validate_input_data}
-input.data <- validateInputData(input.data)
+### Input data format validation
+The *validateInputDataFormat* function checks if all columns defined in the data format are present in the input data set and if they are of a correct data type. If any of the columns defined in the data format are not present, the function fill stop executing and return an error. If any column has different type than expected then the function will return a warning. If there are additional columns not included in the data format, the function will return a warning. If any of the columns are factors the function will return an error.
+```{r validate_input_data_format}
+validateInputDataFormat(input.data)
 ```
 
 ### Loading reference lists
@@ -74,6 +74,13 @@ assemblage.list <- unique(c(species.list$species_group, species.list$dws_group))
 assemblage.list <- assemblage.list[!is.na(assemblage.list)]
 rm(url)
 ```
+### Input data codes validation
+The *validateInputDataCodes* function validates the codes in the columns: area, gear, gearFR, selection, registered_target_assemblage, FAO_species, measure. If any of the above mentioned columns contains invalid etries then the function gives a warning.
+```{r validate_input_data_codes}
+validateInputDataCodes(input.data, gear.list, area.list, species.list)
+```
+
+
 ### Input data preparation
 #### Basic conversions/recodings
 ```{r basic_conversions}
@@ -174,7 +181,7 @@ knitr::kable(input.data[order(vessel_id,trip_id,fishing_day,area,ices_rectangle,
 
 
 ### Missing metiers.
-Function *missingMetiersByLevel* is executed for search levels defined. The function tries to find a metier in case there is MIS_MIS. In case of a success, the function return new metier level 5 and level 6 together with a number of sequences of the new metier and a search level used.
+Function *missingMetiersByLevel* is executed for search levels defined. The function tries to find a metier in case metiers starting with "MIS" were assigned in the previous step. In case of a success, the function returns new metier level 5 and level 6 together with a number of sequences of the new metier and a search level used.
 
 #### Step 1. Target assemblage and gear group
 ```{r missing_metiers_step1}
@@ -193,7 +200,7 @@ step.levels<-list(c("vessel_id","month","area","seq_dom_group","gear_group"),
                   c("vessel_id","year","seq_dom_group","gear_group"),
                   c("vessel_id","year","seq_dom_group"))
 for(level in step.levels){
-  if(nrow(input.data[metier_level_6=="MIS_MIS_0_0_0"])>0){
+  if(nrow(input.data[substr(metier_level_6,1,3)=="MIS"])>0){
     input.data <- missingMetiersByLevel(input.data,level,sequence.def)
   } else {break}
 }
@@ -214,7 +221,7 @@ step.levels<-list(c("vessel_id","month","area","gear_level6"),
                   c("vessel_id","quarter","gear_group"),
                   c("vessel_id","year","gear_group"))
 for(level in step.levels){
-  if(nrow(input.data[metier_level_6=="MIS_MIS_0_0_0"])>0){
+  if(nrow(input.data[substr(metier_level_6,1,3)=="MIS"])>0){
     input.data <- missingMetiersByLevel(input.data,level,sequence.def)
   } else {break}
 }
@@ -236,7 +243,7 @@ step.levels<-list(c("month","vessel_length_group","gear_FR","area","seq_dom_grou
                   c("year","vessel_length_group","gear_FR","seq_dom_group"),
                   c("year","gear_FR","seq_dom_group"))
 for(level in step.levels){
-  if(nrow(input.data[metier_level_6=="MIS_MIS_0_0_0"])>0){
+  if(nrow(input.data[substr(metier_level_6,1,3)=="MIS"])>0){
     input.data <- missingMetiersByLevel(input.data,level,sequence.def)
   } else {break}
 }
@@ -280,7 +287,7 @@ knitr::kable(input.data[order(mis_met_number_of_seq,vessel_id,trip_id,fishing_da
 ```
 
 ### Vessel patterns
-Vessel patterns analysis tries to find a common metier list for a vessel and year which will create a pattern. Then the pattern will be used to replace rare metiers with the best matched common metier at the specified search level.
+Vessel patterns analysis tries to find a common metier list for a vessel and year which will create a pattern. Then the pattern will be used to replace rare metiers with the best matched common metiers at the specified search level.
 
 #### Specify the percentage threshold of the number of sequences below which a metier will be considered rare
 ```{r rare_treshold}
@@ -288,7 +295,8 @@ rare.threshold <- 15
 ```
 
 #### Identify rare metiers
-Function *rareMetiersLvl5* attributes a metier with a "rare" or "common" label based on the treshold specified.
+Function *rareMetiersLvl5* attributes a metier with a "rare" or "common" label based on the specified threshold.
+
 ```{r rare_metiers}
 input.data<-rareMetiersLvl5(input.data,sequence.def,rare.threshold)
 ```
@@ -348,7 +356,9 @@ knitr::kable(input.data[order(vessel_id,trip_id,fishing_day,area,ices_rectangle,
 
 #### Assign metier level 6 to metier level 5 from pattern
 Function called *metiersLvl6ForLvl5pattern* tries to find the best matched metier level 6 for metier level 5 from pattern which was assigned in the previous step. The function takes a search level as a parameter. It returns a metier level 6 together with the number of sequences and search level used.
+
 ```{r metier_level6_to_metier_level5}
+input.data[,metier_level_6_pattern:=NA]
 step.levels<-list(c("vessel_id","month","area","metier_level_5"),
                   c("vessel_id","quarter","area","metier_level_5"),
                   c("vessel_id","year","area","metier_level_5"),
@@ -356,7 +366,9 @@ step.levels<-list(c("vessel_id","month","area","metier_level_5"),
                   c("vessel_id","quarter","metier_level_5"),
                   c("vessel_id","year","metier_level_5"))
 for(level in step.levels){
-  if(nrow(input.data[metier_level_5_status=="rare" & is.na(metier_level_5_pattern)])>0){
+  if(nrow(input.data[metier_level_5_status=="rare" & 
+                     !is.na(metier_level_5_pattern) &
+                     is.na(metier_level_6_pattern)])>0){
     input.data <- metiersLvl6ForLvl5pattern(input.data,level,sequence.def)
   } else {break}
 }
@@ -370,3 +382,56 @@ knitr::kable(input.data[order(vessel_id,trip_id,fishing_day,area,ices_rectangle,
                  metier_level_5_pattern,ves_pat_level,ves_pat_number_of_seq,
                  metier_level_6_pattern,ves_pat_met6_level,ves_pat_met6_number_of_seq)])
 ```
+
+#### Find metier codes with more precise mesh size ranges and replace the ">0_0_0" metier codes if possible.
+##### Create new metier columns where rare metiers are replaced with the ones found in the pattern.
+
+```{r new_metier_columns}
+input.data[,":="(metier_level_5_new=ifelse(is.na(metier_level_5_pattern),
+                                           metier_level_5,
+                                           metier_level_5_pattern),
+                 metier_level_6_new=ifelse(is.na(metier_level_6_pattern),
+                                           metier_level_6,
+                                           metier_level_6_pattern))]
+```
+
+##### Function called *detailedMetiersLvl6ForLvl5* replaces ">0_0_0" metiers with more precise metiers.
+
+```{r replace_zero_metiers}
+input.data[,detailed_metier_level_6:=ifelse(grepl("_>0_0_0",metier_level_6_new),NA,metier_level_6_new)]
+step.levels<-list(c("vessel_id","month","area","metier_level_5_new"),
+                  c("vessel_id","quarter","area","metier_level_5_new"),
+                  c("vessel_id","year","area","metier_level_5_new"),
+                  c("vessel_id","month","metier_level_5_new"),
+                  c("vessel_id","quarter","metier_level_5_new"),
+                  c("vessel_id","year","metier_level_5_new"))
+for(level in step.levels){
+  if(nrow(input.data[is.na(detailed_metier_level_6)])>0){
+    input.data <- detailedMetiersLvl6ForLvl5(input.data,level,sequence.def)
+  } else {break}
+}
+```
+
+```{r, echo=FALSE}
+knitr::kable(input.data[order(vessel_id,trip_id,fishing_day,area,ices_rectangle,gear,mesh),
+               .(Country,RCG,year,vessel_id,vessel_length,trip_id,haul_id,fishing_day,area,ices_rectangle,gear,gear_FR,mesh,selection,FAO_species,
+                 registered_target_assemblage,KG,EUR,metier_level_6,mis_met_level,mis_met_number_of_seq,
+                 metier_level_5,metier_level_5_status,
+                 metier_level_5_pattern,ves_pat_level,ves_pat_number_of_seq,
+                 metier_level_6_pattern,ves_pat_met6_level,ves_pat_met6_number_of_seq,metier_level_6_new,
+                 detailed_metier_level_6,det_met6_number_of_seq,det_met6_level)][order(det_met6_number_of_seq)][1:10])
+```
+
+### Explanation of the result columns
+
+* *metier_level_5* and *metier_level_6* - metier codes assigned in the first step by the *getMetier* function. In the next step the *missingMetiersByLevel* is called which tries to replace "MIS" metier codes with the best matched metier codes using the specified search levels,
+* *mis_met_level* and *mis_met_number_of_seq* - if the *missingMetiersByLevel* succeeds to replace "MIS" metier code then it gives the information on the level where the metier was found together with the number of fishing sequences for that metier. Initially assigned non-"MIS" metiers have empty values in these columns. Only "MIS" metiers which have been replaced with new codes have non-empty values in these columns,
+* *metier_level_5_status* - label indicating whether the metier code in the *metier_level_5* column is considered rare given the specified threshold. These is determined by the *rareMetiersLvl5* function,
+* *metier_level_5_pattern* - the metier level 5 codes found in the vessel pattern for metiers level 5 labeled as rare in the previous step. This is done by the *vesselPatternByLevel* function, 
+* *ves_pat_level* and *ves_pat_number_of_seq* - if the *vesselPatternByLevel* function succeeds to find the metier in the vessel pattern then it gives the information on the level where the metier was found together with the number of fishing sequences for that metier,
+* *metier_level_6_pattern* - the best matched metier level 6 code from the vessel pattern given the metier level 5 from pattern and the specified search level. The value in this column is returned by the *metierLvl6ForLvl5pattern*,
+* *ves_pat_met6_level* and *ves_pat_met6_number_of_seq* - the *metierLvl6ForLvl5pattern* function returns the information on the level where the metier was found together with the number of fishing sequences for that metier,
+* *metier_level_5_new* and *metier_level_6_new* - values in these columns contain the metiers found by *getMetier* completed by *missingMetiersByLevel* or metiers returned from the vessel pattern which replaced rare metiers,
+* *detailed_metier_level_6* - the best matched metier level 6 with more precise mesh size ranges which replaces the ">0_0_0" metiers. This step is done by the *detailedMetiersLvl6ForLvl5*,
+* *det_met6_number_of_seq* and *det_met6_level* - if the *detailedMetiersLvl6ForLvl5* function succeeds to find the metier with more precise mesh size range then it gives the information on the level where the metier was found together with the number of fishing sequences for that metier.
+
