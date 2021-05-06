@@ -143,21 +143,21 @@ output$static <- renderUI({
 # Pop up box in static map 
 observeEvent(input$N_var3, {
   if(input$N_var2 %in% "NoAge"){
-    addPopover(session, "N_var3", "Number of fish with age recorded", trigger = "hover" , placement = "right")
+    addPopover(session, "N_var3",  "", content = "Number of fish with age recorded", trigger = "hover" , placement = "right")
   }else if(input$N_var3 %in% "NoAgeTrips"){
-    addPopover(session, "N_var3", "Numbers of trips with age samples", trigger = "hover" , placement = "right")
+    addPopover(session, "N_var3",  "", content = "Numbers of trips with age samples", trigger = "hover" , placement = "right")
   }else if(input$N_var3 %in% "NoWeight"){
-    addPopover(session, "N_var3", "Number of weight measurements", trigger = "hover" , placement = "right")
+    addPopover(session, "N_var3",  "", content = "Number of weight measurements", trigger = "hover" , placement = "right")
   }else if(input$N_var3 %in% "NoWeightTrips"){
-    addPopover(session, "N_var3", "Numbers of trips with recorded weight", trigger = "hover" , placement = "right")
+    addPopover(session, "N_var3",  "", content = "Numbers of trips with recorded weight", trigger = "hover" , placement = "right")
   }else if(input$N_var3 %in% "NoMaturityStage"){
-    addPopover(session, "N_var3", "Numbers of fish with maturity stage readings", trigger = "hover" , placement = "right")
+    addPopover(session, "N_var3",  "", content = "Numbers of fish with maturity stage readings", trigger = "hover" , placement = "right")
   }else if(input$N_var3 %in% "NoMaturityStageTrips"){
-    addPopover(session, "N_var3", "Numbers of trips with recorded maturity stage", trigger = "hover" , placement = "right")
+    addPopover(session, "N_var3", "", content =  "Numbers of trips with recorded maturity stage", trigger = "hover" , placement = "right")
   }else if(input$N_var3 %in% "NoLength"){
-    addPopover(session, "N_var3", "Numbers of fish with length measurements", trigger = "hover" , placement = "right")
+    addPopover(session, "N_var3",  "", content = "Numbers of fish with length measurements", trigger = "hover" , placement = "right")
   }else{
-    addPopover(session, "N_var3", "Numbers of trips with length samples", trigger = "hover" , placement = "right")
+    addPopover(session, "N_var3",  "", content = "Numbers of trips with length samples", trigger = "hover" , placement = "right")
   }})
 
 
