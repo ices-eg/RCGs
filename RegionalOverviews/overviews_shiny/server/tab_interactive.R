@@ -61,6 +61,7 @@ observe({
 output$absolute <- renderUI({
   req(input$file)
   absolutePanel(
+    singleton(tags$head(tags$script(src = "code.js"))),
     id = "controls",
     class = "panel panel-default",
     fixed = TRUE,
@@ -131,7 +132,7 @@ output$absolute <- renderUI({
       options = list(plugins = list("remove_button", "drag_drop"))
     ),
     
-    selectInput ("N_var2", "Variable", var, multiple = F),
+    popify(selectInput ("N_var2", "Variable", var, multiple = F), ""),
     checkboxInput("rec", "ICES Rectangles"),
     br(),
     actionButton ("view2", "View"),
@@ -144,6 +145,27 @@ output$absolute <- renderUI({
     , tableOutput("debug")
   )
 })
+
+# Pop up box in interactive map 
+observeEvent(input$N_var2, {
+    if(input$N_var2 %in% "NoAge"){
+      addPopover(session, "N_var2", "Number of fish with age recorded", trigger = "hover" , placement = "right")
+      }else if(input$N_var2 %in% "NoAgeTrips"){
+        addPopover(session, "N_var2", "Numbers of trips with age samples", trigger = "hover" , placement = "right")
+      }else if(input$N_var2 %in% "NoWeight"){
+        addPopover(session, "N_var2", "Number of weight measurements", trigger = "hover" , placement = "right")
+      }else if(input$N_var2 %in% "NoWeightTrips"){
+        addPopover(session, "N_var2", "Numbers of trips with recorded weight", trigger = "hover" , placement = "right")
+      }else if(input$N_var2 %in% "NoMaturityStage"){
+        addPopover(session, "N_var2", "Numbers of fish with maturity stage readings", trigger = "hover" , placement = "right")
+      }else if(input$N_var2 %in% "NoMaturityStageTrips"){
+        addPopover(session, "N_var2", "Numbers of trips with recorded maturity stage", trigger = "hover" , placement = "right")
+      }else if(input$N_var2 %in% "NoLength"){
+        addPopover(session, "N_var2", "Numbers of fish with length measurements", trigger = "hover" , placement = "right")
+      }else{
+        addPopover(session, "N_var2", "Numbers of trips with length samples", trigger = "hover" , placement = "right")
+}})
+
 
 
 # -----------------------------------
