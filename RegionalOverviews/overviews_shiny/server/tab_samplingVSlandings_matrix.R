@@ -78,7 +78,7 @@ varsSvL <- reactive ({
     data <- data[data$FlagCountry %in% input$flagCountrySvL,]
   }
   
-  print(head(data))
+ # print(head(data))
   data <- data[, 'Species'] #<------------ to do - add species coding selection as in tab_interactive
   data
 })
@@ -121,7 +121,7 @@ output$SvL_TabMatrix<- renderUI({
     ),
     column(9,
            uiOutput("SvLfilter"),
-           plotOutput("SvL_matrix"),
+           plotOutput("SvL_matrix", height = 800), # height = 'auto'
            DT::dataTableOutput("tableCL")
            )
   )
@@ -191,19 +191,23 @@ output$SvL_matrix <-renderPlot({
   
   
   
-})
+}
+#, height = function() { # this works but makes plot too big
+#  session$clientData$output_SvL_matrix_width
+#}
+)
 
 ########################################################
 # help table and print - later to be deleted
 ########################################################
 
-output$tableCL  <- DT::renderDT(DT::datatable({SvL_masterF()}
-                                              
-                                              , options = list(
-                                                pageLength = 20,autoWidth=T,scrollX=TRUE
-                                              ),filter = 'top'
-))
-
+# output$tableCL  <- DT::renderDT(DT::datatable({SvL_masterF()}
+#                                               
+#                                               , options = list(
+#                                                 pageLength = 20,autoWidth=T,scrollX=TRUE
+#                                               ),filter = 'top'
+# ))
+# 
 
 
 

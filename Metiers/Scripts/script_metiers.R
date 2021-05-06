@@ -18,8 +18,8 @@ data.file <- "data_input_example.csv"
 input.data <- loadInputData(data.file)
 rm(data.file)
 
-# Validate input data
-input.data <- validateInputData(input.data)
+# Validate input data format
+validateInputDataFormat(input.data)
 
 # Load reference lists
 url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/AreaRegionLookup.csv"
@@ -30,9 +30,11 @@ url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/RDB_I
 metier.list <- loadMetierList(url)
 url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/Code-ERSGearType-v1.1.xlsx"
 gear.list <- loadGearList(url)
-assemblage.list <- unique(c(species.list$species_group, species.list$dws_group))
-assemblage.list <- assemblage.list[!is.na(assemblage.list)]
 rm(url)
+
+# Validate input data codes
+validateInputDataCodes(input.data, gear.list, area.list, species.list)
+
 # Prepare input data
 input.data[,EUR:=as.numeric(EUR)]
 input.data[,KG:=as.numeric(KG)]
@@ -109,7 +111,7 @@ step.levels<-list(c("vessel_id","month","area","seq_dom_group","gear_group"),
                   c("vessel_id","year","seq_dom_group","gear_group"),
                   c("vessel_id","year","seq_dom_group"))
 for(level in step.levels){
-  if(nrow(input.data[metier_level_6=="MIS_MIS_0_0_0"])>0){
+  if(nrow(input.data[substr(metier_level_6,1,3)=="MIS"])>0){
     input.data <- missingMetiersByLevel(input.data,level,sequence.def)
   } else {break}
 }
@@ -127,7 +129,7 @@ step.levels<-list(c("vessel_id","month","area","gear_level6"),
                   c("vessel_id","quarter","gear_group"),
                   c("vessel_id","year","gear_group"))
 for(level in step.levels){
-  if(nrow(input.data[metier_level_6=="MIS_MIS_0_0_0"])>0){
+  if(nrow(input.data[substr(metier_level_6,1,3)=="MIS"])>0){
     input.data <- missingMetiersByLevel(input.data,level,sequence.def)
   } else {break}
 }
@@ -147,7 +149,7 @@ step.levels<-list(c("month","vessel_length_group","gear_FR","area","seq_dom_grou
                   c("year","vessel_length_group","gear_FR","seq_dom_group"),
                   c("year","gear_FR","seq_dom_group"))
 for(level in step.levels){
-  if(nrow(input.data[metier_level_6=="MIS_MIS_0_0_0"])>0){
+  if(nrow(input.data[substr(metier_level_6,1,3)=="MIS"])>0){
     input.data <- missingMetiersByLevel(input.data,level,sequence.def)
   } else {break}
 }
@@ -177,7 +179,7 @@ step.levels<-list(c("month","vessel_length_group","gear_FR","area","gear_level6"
                   c("year","vessel_length_group","gear_FR","gear_group"),
                   c("year","gear_FR","gear_group"))
 for(level in step.levels){
-  if(nrow(input.data[metier_level_6=="MIS_MIS_0_0_0"])>0){
+  if(nrow(input.data[substr(metier_level_6,1,3)=="MIS"])>0){
     input.data <- missingMetiersByLevel(input.data,level,sequence.def)
   } else {break}
 }
@@ -228,6 +230,7 @@ for(level in step.levels){
 }
 
 # Metier level 6 assignment to metier level 5 which was assigned from pattern.
+input.data[,metier_level_6_pattern:=NA]
 step.levels<-list(c("vessel_id","month","area","metier_level_5"),
                   c("vessel_id","quarter","area","metier_level_5"),
                   c("vessel_id","year","area","metier_level_5"),
@@ -235,8 +238,32 @@ step.levels<-list(c("vessel_id","month","area","metier_level_5"),
                   c("vessel_id","quarter","metier_level_5"),
                   c("vessel_id","year","metier_level_5"))
 for(level in step.levels){
-  if(nrow(input.data[metier_level_5_status=="rare" & is.na(metier_level_5_pattern)])>0){
+  if(nrow(input.data[metier_level_5_status=="rare" & 
+                     !is.na(metier_level_5_pattern) &
+                     is.na(metier_level_6_pattern)])>0){
     input.data <- metiersLvl6ForLvl5pattern(input.data,level,sequence.def)
+  } else {break}
+}
+
+# Create new metier columns where rare metiers are replaced with the ones found in the pattern.
+input.data[,":="(metier_level_5_new=ifelse(is.na(metier_level_5_pattern),
+                                           metier_level_5,
+                                           metier_level_5_pattern),
+                 metier_level_6_new=ifelse(is.na(metier_level_6_pattern),
+                                           metier_level_6,
+                                           metier_level_6_pattern))]
+
+# Detailed metier level 6 assignment to general >0_0_0 cases.
+input.data[,detailed_metier_level_6:=ifelse(grepl("_>0_0_0",metier_level_6_new),NA,metier_level_6_new)]
+step.levels<-list(c("vessel_id","month","area","metier_level_5_new"),
+                  c("vessel_id","quarter","area","metier_level_5_new"),
+                  c("vessel_id","year","area","metier_level_5_new"),
+                  c("vessel_id","month","metier_level_5_new"),
+                  c("vessel_id","quarter","metier_level_5_new"),
+                  c("vessel_id","year","metier_level_5_new"))
+for(level in step.levels){
+  if(nrow(input.data[is.na(detailed_metier_level_6)])>0){
+    input.data <- detailedMetiersLvl6ForLvl5(input.data,level,sequence.def)
   } else {break}
 }
 
@@ -247,12 +274,14 @@ result<-input.data[order(vessel_id,trip_id,fishing_day,area,ices_rectangle,gear,
                  registered_target_assemblage,KG,EUR,metier_level_6,mis_met_level,mis_met_number_of_seq,
                  metier_level_5,metier_level_5_status,
                  metier_level_5_pattern,ves_pat_level,ves_pat_number_of_seq,
-                 metier_level_6_pattern,ves_pat_met6_level,ves_pat_met6_number_of_seq)]
+                 metier_level_6_pattern,ves_pat_met6_level,ves_pat_met6_number_of_seq,
+                 metier_level_5_new,metier_level_6_new,
+                 detailed_metier_level_6,det_met6_level,det_met6_number_of_seq)]
 write.csv(result,"metier_results.csv", na = "")
 write.xlsx(file = "metier_results_summary.xlsx",result[,.(n_count=.N,
                                                           KG_sum=sum(KG, na.rm=T),
                                                           EUR_sum=sum(EUR, na.rm=T)),
-                                                       by=.(Country, RCG, metier_level_6)][order(Country, RCG, metier_level_6)])
+                                                       by=.(Country, RCG, metier_level_6_new)][order(Country, RCG, metier_level_6_new)])
 
 
 

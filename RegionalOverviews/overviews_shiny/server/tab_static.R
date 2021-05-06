@@ -123,10 +123,10 @@ output$static <- renderUI({
            #selectInput ("facety", "Facet.y", facetvar, multiple = F),
            hr(),
            div(style="display: inline-block;vertical-align:top;",actionButton ("view3", "View")), 
-           div(style="display: inline-block;vertical-align:top;",downloadButton ("down3", "Download plot")),
-           div(style="display: inline-block;vertical-align:top;",circleButton ("help3",  icon = icon("info-circle"), size = "sm")),
-           bsModal("modal", "Help", "help3", size = "large",
-                   includeHTML ("data/DescriptionStaticmap.txt"))
+           div(style="display: inline-block;vertical-align:top;",downloadButton ("down3", "Download plot"))#,
+           # div(style="display: inline-block;vertical-align:top;",circleButton ("help3",  icon = icon("info-circle"), size = "sm")),
+           # bsModal("modal", "Help", "help3", size = "large",
+           #         includeHTML ("data/DescriptionStaticmap.txt"))
     ), 
     column(8, 
            br(),br(),
