@@ -146,7 +146,7 @@ ft
 ### Power
 Power (`1000*`kW) by flag country in the EU vessel register.
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
-res_fleetreg_pwr<-tapply(fleetreg$Power_Main, list(fleetreg$Country_Code, fleetreg$Status_date), sum)
+res_fleetreg_pwr<-round(tapply(fleetreg$Power_Main, list(fleetreg$Country_Code, fleetreg$Status_date), sum)/1000,1)
 ft<-theme_flextable(res_fleetreg_pwr)
 ```
 
@@ -155,7 +155,7 @@ ft<-theme_flextable(res_fleetreg_pwr)
 ### Gross tonnage
 Gross Tonnage (`1000*`GT) by flag country in the EU vessel register.
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
-res_fleetreg_gt <- tapply(fleetreg$Ton_Gt, list(fleetreg$Country_Code, fleetreg$Status_date), sum)
+res_fleetreg_gt <- round(tapply(fleetreg$Ton_Gt, list(fleetreg$Country_Code, fleetreg$Status_date), sum)/1000,1)
 ft<-theme_flextable(res_fleetreg_gt)
 ft
 ```
