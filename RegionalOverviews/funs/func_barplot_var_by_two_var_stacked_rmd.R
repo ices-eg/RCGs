@@ -24,7 +24,7 @@ barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, pro
 		# 2019-05-08: added argument save_plot_to_list (saves plot as second argument of final list)
     # 2020-04-07: added captions K.Krakówka
     # 2020-06-18: added catch groups 
-  source("../../RCGs/RegionalOverviews/funs/fun_rename.r")
+  source("../../funs/fun_rename.r")
   
 		percent_Var <- round(sum(!is.na(x[,Var]))/dim(x)[1]*100,2)
 		percent_var1 <- round(sum(!is.na(x[,var1]))/dim(x)[1]*100,2)

@@ -1,7 +1,8 @@
 for (ctry in c("BEL","DEU" ,"DNK","ESP","EST","FIN","FRA","GBR","IRL","LTU","LVA","NLD","POL","PRT","SWE"))
  #"BEL","DEU" ,"DNK","ESP","EST","FIN","FRA","GBR","IRL","LTU","LVA","NLD","POL","PRT","SWE"
 {
-eu_fleet_register<-read.csv2(paste("data\\fleet_reg\\input\\2019\\FLEET-",ctry,".csv",sep = ""), sep=";", header=T, row.names=NULL, as.is=T)
+  #change year
+eu_fleet_register<-read.csv2(paste("D:\\RCGs\\RegionalOverviews\\data\\fleet_reg\\input\\2020\\FLEET-",ctry,".csv",sep = ""), sep=";", header=T, row.names=NULL, as.is=T)
 names(eu_fleet_register)
 names(eu_fleet_register)<-c("Country_Code","CFR","UVI","Event_Code","Event_Start_Date","Event_End_Date",
                             "Registration_Nbr","Ext_Marking","Vessel_Name","Port_Code","IRCS","IRCS_Code",
@@ -20,7 +21,7 @@ a<-eu_fleet_register$Event_End_Date
 a<- strptime(as.character(a), "%Y-%m-%d")
 a<- format(a, "%Y%m%d")
 eu_fleet_register$Event_End_Date<-as.numeric(a)
-
-write.csv2(eu_fleet_register, file=paste("D:\\RCGs\\RegionalOverviews\\data\\fleet_reg\\output\\2019\\",ctry,"_export.csv",sep=""), row.names=F)	
+#change year 
+write.csv2(eu_fleet_register, file=paste("D:\\RCGs\\RegionalOverviews\\data\\fleet_reg\\output\\2020\\",ctry,"_export.csv",sep=""), row.names=F)	
 }
 

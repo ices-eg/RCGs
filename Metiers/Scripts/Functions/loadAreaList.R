@@ -1,5 +1,5 @@
 loadAreaList <- function(url){
-  print("Loading area list ...")
+  message("Loading area list ...")
   x <- data.table(read.csv(url, sep = ",", stringsAsFactors = F))
   setnames(x, old = c("Code","AreaCode"), new = c("RCG","area"))
   x <- x[,map(.SD,trimws)]
@@ -8,5 +8,5 @@ loadAreaList <- function(url){
     x<-x[!duplicated(x$area)]
     print("Warning! Duplicated area codes were found and were removed.")
   }
-  return(x)
+  return(x[,.(area,RCG)])
 }

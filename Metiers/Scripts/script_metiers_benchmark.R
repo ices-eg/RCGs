@@ -88,7 +88,7 @@ input.data[seq_DWS_perc>8,seq_dom_group:="DWS"]
 # Assign metier level 6
 input.data$metier_level_6<-NA
 tic("Assign metier level 6")
-input.data[,metier_level_6:=as.character(pmap(list(RCG,
+input.data[,c("metier_level_6","metier_level_5"):=as.character(pmap(list(RCG,
                                                    year,
                                                    gear, 
                                                    registered_target_assemblage,

@@ -9,6 +9,7 @@ shinyjs::onclick("inventID",  updateTabsetPanel(session, inputId="navbar", selec
 shinyjs::onclick("mapIntID",  updateTabsetPanel(session, inputId="navbar", selected="Interactive map"))
 shinyjs::onclick("mapStatID",  updateTabsetPanel(session, inputId="navbar", selected="Static map"))
 shinyjs::onclick("plotID",  updateTabsetPanel(session, inputId="navbar", selected="Interactive plots"))
+shinyjs::onclick("sampvslandID",  updateTabsetPanel(session, inputId="navbar", selected="Sampling vs Landings"))
 
 # --------------------------------
 # modal disclaimer
@@ -30,6 +31,22 @@ disclaimer_modal <- modalDialog(
 # ... close when agree
   observeEvent(input$ok,{
           removeModal()
+  })
+
+  
+  
+  # --------------------------------
+  # modal disclaimer to the Sampling vs Landings part
+  # --------------------------------  
+  
+  observe({
+    if (input$navbar == "Sampling vs Landings")  {
+      showModal(modalDialog(
+        title = "Keep in mind",
+        includeHTML("data/SamplingVsLandingsInformation.txt"),
+        easyClose = TRUE
+      ))
+    }
   })
   
 # -------------------------------
