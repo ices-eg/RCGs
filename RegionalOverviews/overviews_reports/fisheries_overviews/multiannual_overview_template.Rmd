@@ -1,5 +1,5 @@
 ```{r title, include = F}
-RCG <- "NSEA" # RCG_NA, RCG_BA or RCG_NSEA
+RCG <- "NA" # RCG_NA, RCG_BA or RCG_NSEA
 years <- c(2016,2017,2018,2019,2020)
 if (RCG == "NA") {
   front_title <- paste("RDB Catch and Effort Overview North Atlantic ", sep = "")
@@ -169,7 +169,7 @@ The RDB is hosted at the International Council for Exploration of the Sea (ICES)
 2)	To provide a regional estimation system such that statistical estimates of quantities of interest can be produced from sample data, in order to deliver data for ICES stock assessments and advice,
 3)	To serve and facilitate the production of fisheries management advice and status reports,
 4)	To increase the awareness of fisheries data collected by the users of the RDB and the overall usage of these data.
-5)	Addresses fishery management needs related to the European Union Common Fisheries
+5)	To address fishery management needs related to the European Union Common Fisheries
 
 However, it has been recognised for many years that there is a need to have a new version of the RDB which would also store details about how the sampling was performed and enable statistical estimations to be made. 
 
