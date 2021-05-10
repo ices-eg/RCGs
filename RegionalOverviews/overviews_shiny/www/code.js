@@ -1,6 +1,4 @@
-$( document ).ready(function() {
-  $( ".navbar .container-fluid" ).append( '<img src="rcglogo.png" align="right">' );
-});
+
 
 shinyBS.addTooltip = function(id, type, opts) {
   var $id = shinyBS.getTooltipTarget(id);
