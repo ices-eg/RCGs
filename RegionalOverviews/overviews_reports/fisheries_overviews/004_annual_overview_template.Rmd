@@ -32,7 +32,7 @@ output:
 #Paramters
 RDB_download_date <- "23/04/2019"
 
-target_region <- "RCG_NSEA"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
+target_region <- "RCG_BA"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
 years <- c(2020)
 
 period <- "2020"
@@ -272,6 +272,13 @@ ce <- droplevels(ce)
 
 ```
 
+**Disclaimer**
+
+Tables, plots and graphs presented in this document and overviews are made for the coordination purposes of regional fisheries data collection and are not designed for any other use. Data used for the outputs are extracted from the Regional Database (RDB) and EU Fleet Register. Dates of data extractions are stated in Appendix A. Due to different aggregations and reporting authorities, data can differ to those e.g. used for assessments or technical reports.
+Member States (MS) are responsible for uploading latest data and the latest year should be viewed as provisional. Data can be resubmitted by a MS for more than one previous year so there might be differences in earlier year reports if countries update back in time. Responsibility for the quality of the data and comparability to other data sources lies with the MS that provided these data.
+
+The respective scripts and calculations used for data displaying are publicly available via the RCG github (https://github.com/ices-eg/RCGs) and subject to change as the work of the group progresses. 
+
 # Introduction
 
 The present Catch and Effort Overview displays summary information on the commercial landings (CL) and commercial effort (CE) statistics included in the Regional Data Base (RDB), which is used to store detailed commercial fisheries and sampling data.
@@ -283,8 +290,6 @@ The RDB is hosted at the International Council for Exploration of the Sea (ICES)
 However, it has been recognised for many years that there is a need to have a new version of the RDB which would also store details about how the sampling was performed and enable statistical estimations to be made.
 
 In fact, the current Regional Data Base stores the commercial catch and sample data at detailed level, and here the data format and estimations does not support statistical estimations, even though most of the countries’ sampling are not done in a statistical way the countries never used the RDB for raising/estimating their data. The countries have raised/estimated the data nationally at the institutes and uploaded the data to InterCatch for the stock assessment Expert Groups. That means the stock assessment EG have no information of how the data have been raised/estimated until the data are uploaded into InterCatch, from that point and through the international raising the data and processes are fully documented. InterCatch does neither support statistical estimations. It has therefore been requested to write specifications for a new version of the RDB, which have been given the name ‘Regional DataBase and Estimation System’, RDBES, to make it more obvious that the major part of the RDB is the estimation part.
-
-The data referring to the present year was collected under the RCG 2021 data call for the 2020 data for the Baltic Sea, North Sea, Eastern Arctic and the North Atlantic regions and downloaded from the system on the 24th of April 2021 with the exception of information detailed in section “2. Overall Fleet Evolution” which was extracted from the EU Fleet Register (https://webgate.ec.europa.eu/fleet-europa/index_en) on the 14th of April 2021.
 
 ## Reading the graphs
 ### Barplots
@@ -775,6 +780,10 @@ cat('  \n ')
 ```
 
 ###### Page break
+
+#### Dates of data extraction
+
+The data referring to the present year was collected under the RCG 2021 data call for the 2020 data for the Baltic Sea, North Sea, Eastern Arctic and the North Atlantic regions and downloaded from the system on the 24th of April 2021 with the exception of information detailed in section “2. Overall Fleet Evolution” which was extracted from the EU Fleet Register (https://webgate.ec.europa.eu/fleet-europa/index_en) on the 14th of April 2021.
 
 #### Catch groups
 
