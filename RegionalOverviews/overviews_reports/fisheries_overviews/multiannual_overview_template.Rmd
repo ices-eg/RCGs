@@ -1,15 +1,18 @@
 ```{r title, include = F}
-RCG <- "NSEA" # RCG_NA, RCG_BA or RCG_NSEA
+RCG <- "NA" # RCG_NA, RCG_BA or RCG_NSEA
 years <- c(2016,2017,2018,2019,2020)
 if (RCG == "NA") {
   front_title <- paste("RDB Catch and Effort Overview North Atlantic ", sep = "")
   title_stock <- c('North Atlantic region')
+  warning_stock<-c('')
 } else if (RCG == "BA") {
   front_title <- paste("RDB Catch and Effort Overview Baltic ", sep = "")
   title_stock <- c('Baltic region')
+  warning_stock<-c("Moreover some countries reported landings of herring from area 27.3.d.28. The group was not able to identify whether it was stock 'her.27.28' or 'her.27.25-2932'. As a temporary solution, all these landings were assigned to 'her.27.25-2932'.")
 } else if (RCG == "NSEA") {
   front_title <- paste("RDB Catch and Effort Overview North Sea and Eastern Arctic ", sep = "")
   title_stock <- c('North Sea and Eastern Arctic regions')
+  warning_stock<-c('')
 }
 ```
 
@@ -67,6 +70,7 @@ source("../../funs/fun_theme_flextable.r")
 #years <- c(2015,2016,2017,2018,2019)
 year <- 2020 # fleet register
 #data_dir <- paste("../../data/002_prepared/RCG_", RCG, "/", sep = '')
+#data_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Data/2020 data/RCG_", RCG, "/", sep = '') #Marta's path
 data_dir <- paste("Q:/mynd/RDB/RDB_fisheries_overviews/data/002_prepared/RCG_", RCG, "/", sep = '')
 load(paste(data_dir,"RDB_RCG_",RCG,"_CE_2009_2020_prepared_20210428.Rdata", sep=""))
 load(paste(data_dir,"RDB_RCG_",RCG,"_CL_2009_2020_prepared_20210428.Rdata", sep=""))
@@ -95,7 +99,8 @@ Landings_country$gear <- substr(Landings_country$FishingActivityLvl5,1,3)
 		# based on full history
 	
 	dir<-paste("Q:\\mynd\\RDB\\RDB_fisheries_overviews\\RegionalOverviews\\data\\fleet_reg\\output\\",year,"\\",sep="")
-		
+	#dir<-paste("..\\..\\data\\fleet_reg\\output\\",year,"\\",sep="") #Marta's path
+	
 	for (ctry in c("BEL","DEU","DNK","ESP","EST","FIN","FRA","GBR","IRL","LTU","LVA","NLD","POL","PRT","SWE"))
 		{
 		# print(ctry)
@@ -157,14 +162,14 @@ Landings_country$gear <- substr(Landings_country$FishingActivityLvl5,1,3)
 
 The present Catch and Effort Overview displays summary information on the commercial landings (CL) and commercial effort (CE) statistics included in the Regional Data Base (RDB), which is used to store detailed commercial fisheries and sampling data. 
 
-Before the subgroup on Fisheries and Sampling Overviews was set up, the different RCGs conducted data analysis and overviews separately with minimal exchange, resulting in redundancies and efficiency loss. Furthermore, a substantial part of the work was being carried out during the RCG meetings themselves and so not readily available to inform RCG preparation and meeting discussions. This group was established to streamline and facilitate the work on the fisheries and sampling data of the MS and prepare data overviews in advance of the RCG meetings. 
+Before the subgroup on Catch, effort and sampling overviews was set up, the different RCGs conducted data analysis and overviews separately with minimal exchange, resulting in redundancies and efficiency loss. Furthermore, a substantial part of the work was being carried out during the RCG meetings themselves and so not readily available to inform RCG preparation and meeting discussions. This group was established to streamline and facilitate the work on the fisheries and sampling data of the MS and prepare data overviews in advance of the RCG meetings. 
 
 The RDB is hosted at the International Council for Exploration of the Sea (ICES) and its data is property of EU Member States with usage governed by the RDB data policy. It’s a regionally coordinated database platform covering fisheries in the North Atlantic Ocean, the North Sea and the Baltic Sea and is a main resource used by the Regional Coordination Groups to coordinate data collection of EU fisheries. This database aims also:
 1)	To ensure that data can be made available for the coordination of regional fisheries data sampling plans, in particular for the DCF Regional Coordination Groups (RCGs);
 2)	To provide a regional estimation system such that statistical estimates of quantities of interest can be produced from sample data, in order to deliver data for ICES stock assessments and advice,
 3)	To serve and facilitate the production of fisheries management advice and status reports,
 4)	To increase the awareness of fisheries data collected by the users of the RDB and the overall usage of these data.
-5)	Addresses fishery management needs related to the European Union Common Fisheries
+5)	To address fishery management needs related to the European Union Common Fisheries
 
 However, it has been recognised for many years that there is a need to have a new version of the RDB which would also store details about how the sampling was performed and enable statistical estimations to be made. 
 
@@ -590,7 +595,7 @@ ggplot(data=landings_sp_sum, aes(x=Year, y=Landing_ton, fill=FlagCountry)) +
 ## Stock {.tabset}
 The following chapter refers to the multiannual stocks’ distribution for `r title_stock`. This data is provided from ICES’ fishframe RDB regional database that has been working with the development and production of fisheries data.
 
-Warning: This stock allocation represents variable stock which was adjusted by the group accordingly with procedures discussed within ICES community and therefore it does not come directly from the RDB 
+Warning: This stock allocation represents variable stock which was adjusted by the group accordingly with procedures discussed within ICES community and therefore it does not come directly from the RDB. `r warning_stock`
 
 
 ### Landings by country top 5 stocks
@@ -606,6 +611,11 @@ temp<-left_join(CL_years,Def_stock, by='ID', all.x=TRUE)
 temp$new_stock<-ifelse(is.na(temp$Code) & !is.na(temp$Stock),temp$Stock,temp$Code)
 
 temp$new_stockplus<-ifelse(is.na(temp$new_stock),paste(temp$SpeciesDesc,temp$FishingGround,sep=''),temp$new_stock)
+
+# Dealing with herring stock, where area was reported as 27.3.d.28 - we have no knowledge if it was 27.3.d.28.1 or 27.3.d.28.2
+# Now we're assuming that it was stock ‘her.27.25-2932’
+temp$new_stockplus<- ifelse(temp$new_stockplus == "her-2529+32(-GOR)", "her.27.25-2932", temp$new_stockplus  )
+# ADD INFORMATION ABOUT THIS IN THE TEXT
 
 # temp$new_stockplus<-as.factor(temp$new_stockplus)
 # temp<-temp[,c('Year','FlagCountry','OfficialLandingCatchWeight','new_stock','new_stockplus')]
@@ -625,7 +635,9 @@ result$percent<-label_percent()(result$percent)
 top5 = result %>% group_by(Year,FlagCountry)%>% top_n(5,Landing) # to table
 top5$Landing<-round(top5$Landing/1000,0)
 top5$Total<-round(top5$Total/1000,0)
-DT::datatable(top5)
+DT::datatable(top5, filter = list(
+  position = 'top', clear = FALSE
+))
 
 ```
 
