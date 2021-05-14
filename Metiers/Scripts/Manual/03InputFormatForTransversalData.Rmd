@@ -7,17 +7,11 @@ library(knitr)
 library(kableExtra)
 inpdat <- xlsx::read.xlsx(file = "./InputDataTable.xlsx",sheetIndex = 1)
 colnames(inpdat) <- c("Column Name", "Description","Example")
-inpdat[,1] <- gsub("_", " ", inpdat[,1])
+# inpdat[,1] <- gsub("_", " ", inpdat[,1])
 inpdat[is.na(inpdat )] <- " "
-kable(inpdat, "latex", booktabs = TRUE, longtable= TRUE, align=rep('l', 3), linesep = "\\addlinespace") %>%
-  column_spec(1, width ="10em") %>%
-  column_spec(2, width ="25em") %>%
-  column_spec(3, width ="10em") %>%
-kable_styling(latex_options = c("repeat_header"))%>%
-footnote(general = "Mandatory/Optional Field",
- general_title = "Column Name:  ",
-footnote_as_chunk = T)
+kable(inpdat)%>%
+  kable_styling()
 
 ```
 
-An example of the input data format can be found here: https://github.com/ices-eg/RCGs/blob/master/Metiers/Metier_data_format_Example_test_input.csv
+An example of the input data format can be found [on the github repository.](https://github.com/ices-eg/RCGs/blob/master/Metiers/Metier_data_format_Example_test_input.csv)

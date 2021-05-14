@@ -2,20 +2,25 @@
 
 ## Métier list
  
-The R-script downloads the métier list from https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/RDB_ISSG_Metier_list.csv. It is also available in excel format.
+The R-script downloads the métier list from [the github repository](https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/RDB_ISSG_Metier_list.csv). It is also available in excel format.
 
 
 The métiers reference list at DCF level6 (see “Metier_level6” column), to be considered by the algorithm, has been established by RCG (see “RCG” column): Baltic (BALT), Long Distance Fisheries (LDF), Mediterranean and Black Sea (MBS), North Atlantic (NAtl) and North Sea and Eastern Arctic (NSEA). In some cases, the reference métier codes are dated especially when the reference métier code is allowed only during a fixed time period (see columns “Start_year” and “End-year”). This could be due to legislation.
 
 
-The column “old_code” is a reference to the correspondent codes used in the previous métier list from the RDB. If they are marked with red in the excel file, the code has changed in the new métier list. The column “Use_by_country_in_RDB” lists the countries that have uploaded data with the considered métiers in the RDB for the 2009-2017 periods and  the column “Total_n_trips_RDB_2009t2017” present the sum of the total number of trips with the old codes uploaded to the RDB for 2009 to 2017.
+The column “old_code” is a reference to the corresponding codes used in the previous métier list from the RDB. If they are marked with red in the excel file, the code has changed in the new métier list. The column “Use_by_country_in_RDB” lists the countries that have uploaded data with the considered métiers in the RDB for the 2009-2017 periods and  the column “Total_n_trips_RDB_2009t2017” present the sum of the total number of trips with the old codes uploaded to the RDB for 2009 to 2017.
+
+**Procedure for adding new metiers to the list**
+
+If a metier code is missing in the list, it can be requested by sending an email to: Josefine Egekvist (jsv@aqua.dtu.dk) with the new metier code requested, the relevant RCG region (Baltic Sea, North Sea and Eastern Arctic, North Atlantic, Mediterranean, Distant Waters) and the species and fishery should be described. The suggestions will be evaluated at the next meeting within the RCG ISSG on Metier Issues, following the principles: harmonisation, non-overlapping mesh size ranges and not using general gear codes like LX or OT.
 
 
 ## Species list
-The R-script dowloads the species list from https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/Metier%20Subgroup%20Species%202020.xlsx
+
+The R-script dowloads the species list from [the github repository](https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/Metier%20Subgroup%20Species%202020.xlsx)
 
 
-The species list is a subset from the ASFIS list of species maintained by FAO (http://www.fao.org/fishery/collection/asfis/en) and include, as far as possible, all the commercial species landed in the RCG fishing areas. FAO species code for the commercial species considered is specified in column A and for each of them some complementary information are available in columns B to G (e.g. “Scientific name”, Taxocode”, “ISSCAAP description”, …). The columns H to T reflect the different ways on grouping the species codes in target assemblage of species  groups developed for different purposes: R data package, fishPi EU project, RCM 2007, DWS regulation and what has been done/referenced within countries. In the end, columns U, V and W contain the latest proposal on species groups at three different levels of aggregation. **These aggregations are used by the R-script:**
+The species list is a subset from the [ASFIS list of species](http://www.fao.org/fishery/collection/asfis/en) maintained by FAO and include, as far as possible, all the commercial species landed in the RCG fishing areas. FAO species code for the commercial species considered is specified in column A and for each of them some complementary information is available in columns B to G (e.g. “Scientific name”, Taxocode”, “ISSCAAP description”, …). The columns H to T reflect the different ways on grouping the species codes in target assemblage of species  groups developed for different purposes: R data package, fishPi EU project, RCM 2007, DWS regulation and what has been done/referenced within countries. In the end, columns U, V and W contain the latest proposal on species groups at three different levels of aggregation. **These aggregations are used by the R-script:**
 
 
 Grouping 1 in column U aggregate the commercial species into the following target assemblage of species: Crustaceans (CRU), Molluscs (MOL), Finfishes (FIF), Seaweeds (SWD) and Miscellaneous (MIS).
@@ -29,16 +34,20 @@ Groupings 2 and 3 constitute the reference basis used by the script and the algo
  
 ## Area list
 
-The R-script downloads the area list from https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/AreaRegionLookup.csv.
+The R-script downloads the area list from [the github repository.](https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/AreaRegionLookup.csv)
 
-Area, SubArea, Division, SubDivision and Unit FAO level (http://www.fao.org/fishery/area/search/en) fishing area codes are listed in the reference list with their links to the RCG code (same code  used in the métier reference list). All the FAO fishing areas possible codification at the different levels are listed except the FAO fishing areas codes at “SubArea level” (e.g. 27.5) or at “Area level” (e.g. 27) which encompass several RCGs. Therefore, for FAO area 27 it is promoted to provide, as a minimum level, FAO area at “Division level” in the input data.
+Area, SubArea, Division, SubDivision and Unit FAO level [fishing area codes](http://www.fao.org/fishery/area/search/en) are listed in the reference list with their links to the RCG code (same code  used in the métier reference list). All the FAO fishing areas possible codification at the different levels are listed except the FAO fishing areas codes at “SubArea level” (e.g. 27.5) or at “Area level” (e.g. 27) which encompass several RCGs. Therefore, for FAO area 27 it is promoted to provide, as a minimum level, FAO area at “Division level” in the input data.
 
 
 ##	Gear list
 
-The R-script downloads the gearlist from https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/ Code-ERSGearType-v1.1.xlsx.
+The R-script downloads the gearlist from [the github repository.](https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/Code-ERSGearType-v1.1.xlsx)
 
-ISSCFG FAO fishing gear classification codes (http://www.fao.org/cwp-on-fishery-statistics/handbook/capture-fisheries-statistics/fishing-gear-classification/en/) are detailed in column A and for each of them: 1) a description of the code is provided in column B and 2) in column C an aggregation by group of fishing gears (e.g. seine nets) is proposed; such aggregation is possibly used in some specific steps of the algorithm.
+ISSCFG FAO [fishing gear classification codes](http://www.fao.org/cwp-on-fishery-statistics/handbook/capture-fisheries-statistics/fishing-gear-classification/en/) are detailed in column A and for each of them: 1) a description of the code is provided in column B and 2) in column C an aggregation by group of fishing gears (e.g. seine nets) is proposed; such aggregation is possibly used in some specific steps of the algorithm.
+
+In column D, a re-coding of some of the declared gear codes is proposed in order to be in line with the gear codification used in the metier list at DCF level5 (e.g. FDV-Free diving => DIV-Diving). Column D is then the column considered by the algorithm and the R-script.
+
+Columns F and G specify if the gear code should be considered regarding the DWS’ specific rules and if yes for which RCGs. “Y” is allocated for gears where DWS metiers are available and therefore DWS’ specific rules apply (e.g. OTB - “Bottom otter trawls”) when “N” is allocated for the other gears.
 
 
 ##	Selection panels
@@ -46,8 +55,6 @@ ISSCFG FAO fishing gear classification codes (http://www.fao.org/cwp-on-fishery-
 The last part of the metier codes define the selection panels. When no selection devices are used then “_0_0” codification should be used in the last part of the metier code. For métiers where selection devices are used, following selection panel codes number have been referenced. They have to be filled in the input data format in the “selection” column with, in the second part of the codification, the precision of their mesh size. For the situation when there is both a selection device and escape window (selection panel code number = 4) then the smallest mesh size should be specified in the second part of the codification.
 
 Following selection panel code number have been referenced for the different type of selection panel: 
-
-\newpage
 
 
 Code number  | Selection panel type

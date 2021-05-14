@@ -4,37 +4,261 @@
 An R-script was developed and tested in 2019 for assigning métiers in the Baltic Sea, which has been further developed in 2020 to cover more areas and details. The R-script is available at https://github.com/ices-eg/RCGs/blob/master/Metiers/Scripts/script_metiers_test.R and functions are available at https://github.com/ices-eg/RCGs/tree/master/Metiers/Scripts/Functions.
 
 
-**Assigning “metier_level_6”**
+## Assigning “metier_level_6”
 
-The script loads the input transversal data in the format described in Section 2, the reference lists described in Section 3, and assigns a RCG code based on the fishing area detailed in the input data *(see “area” column)* and a target assemblage group of species based on the specie landed detailed in the input data *(see “FAO_species” column)* to each row of the input data.
-The default fishing sequence, constituting the level at which the metier level6 will be calculated and assigned, is defined by the following columns: *“Country, year, vessel id, vessel length, trip id, haul id, fishing day, area, ices rectangle, gear, mesh size, selection panel & registered target species assemblage”.*
+The script loads the input transversal data in the format described in Section 2, the reference lists described in Section 3, and assigns a RCG code based on the fishing area detailed in the input data (see “area” column) and a target assemblage group of species based on the species landed detailed in the input data (see “FAO_species” column) to each row of the input data. The gear reference list is combined with the input data to define the gear group (gear family) and a new gear code if applicable (“gear_level6” column). Additionally, Deep-Water Species rules are applied and as a consequence the target assemblage is set to “DWS”.
 
-Nevertheless, countries are free to define the level of fishing sequence they want to consider nationally. For example, countries could take the decision to not consider fishing “ices rectangle area” when defining the level of fishing sequence at which they want to calculate and assign metier level 6. Therefore they could consider only the following columns: *“Country, year, vessel id, vessel length, trip id, haul id, fishing day, gear, mesh size, selection panel & registered target species assemblage”.*
+The default fishing sequence, constituting the level at which the metier level 6 will be calculated and assigned, is defined by the following columns: “Country, year, vessel id, vessel length, trip id, haul id, fishing day, area, ices rectangle, gear, mesh size, selection panel & registered target species assemblage”.
 
-The principal target assemblage group of species is then calculated by fishing sequence at the level defined before. The principal target assemblage group of species is determined based on the maximum *(regarding all the target assemblage group of species landed for the fishing sequence considered)* total tonnage of landing calculated by fishing sequence in weight *(if all the “measure” column for the fishing sequence considered is filled out with “weight” modality)* otherwise in value. Specific algorithm allocates the DWS target species assemblage group as principal target assemblage group of species if deep water species represent more than 8% *(according to the Deep Water Regulation (EU) 2016/2336)* of the total tonnage landed in weight. 
+Nevertheless, countries are free to define the level of fishing sequence they want to consider nationally. For example, countries could take the decision to not consider fishing “ices rectangle area” when defining the level of fishing sequence at which they want to calculate and assign metier level 6. In that case, they would include only the following columns: “Country, year, vessel id, vessel length, trip id, haul id, fishing day, gear, mesh size, selection panel & registered target species assemblage”. The minimum level of the fishing sequence should be: “Country, year, vessel id, trip ID, RCG (assigned to area), gear and mesh size”.
 
-Then the combination of the RCG code, the year, the gear, the principal target assemblage group of species calculated before and the mesh size is merged to the métier reference list. The correspondent codification, if available, is therefore assigned to the fishing sequence considered and is detailed in the column *“Metier_level_6”*. In the case there is no correspondence with the métier reference list, then no métier level6 is assigned at this step to the fishing sequence and the column *“Metier_level_6”* is left blank or empty. 
+The principal target assemblage group of species is then calculated by fishing sequence at the level defined before. The principal target assemblage group of species is determined based on the maximum (regarding all the target assemblage group of species landed for the fishing sequence considered) total tonnage of landing calculated by fishing sequence in weight (if all the “measure” column for the fishing sequence considered is filled out with “weight” modality) otherwise in value. A specific algorithm allocates the DWS target species assemblage group as principal target assemblage group of species if deep water species represent more than 8% (according to the Deep Water Regulation (EU) 2016/2336 ) of the total tonnage landed in weight if the combination fishing sequence’ RCG and gear level6 agreed the use of this DWS’ specific rules (specified in the gear list reference table).
 
-
-
-**National corrections**
-
-The R-script has been developed in order to improve normalization between countries to assign métier level6 to their national transversal data. It meets a need identified during the 2018 DCF métier workshop which emphasizes the necessity to standardize and harmonize the methods to assign métiers to transversal data between countries. It seeks to be used as the core method shared between countries to assign métiers to fishing sequences. Nevertheless , countries could have some national specificities which have to be taken into account when assigning métiers. These national corrections could be added into the R-script *(for example: corrections of a species grouping if the species are fished within another métier nationally or corrections of gear codes (e.g. grouping or recoding imprecise gear codes (GN, TB)).*
-
-Countries are encouraged to upload their script with national corrections to GitHub under https://github.com/ices-eg/RCGs/tree/master/Metiers/Documentation_by_MS along with the documentation of the methods. Other countries could then use similar methods in their scripts if relevant, e.g. for defining selection panels etc. The lines with national corrections should be marked with *Country code*. The scripts uploaded don't need to be final, they can be updated as they improve.
+Then the combination of the RCG code, the year, the gear, the principal target assemblage group of species calculated before and the mesh size is merged to the métier reference list. The correspondent codification, if available, is therefore assigned to the fishing sequence considered and is detailed in columns “Metier_level_5” and “Metier_level_6”. In the case there is no correspondence with the métier reference list, then ”MIS_MIS” and “MIS_MIS_0_0_0” codes are assigned to “Metier_level_5” and “Metier_level_6” columns respectively in the fishing sequence. 
 
 
+## National corrections
 
-**Script looking at vessel patterns for assigning métiers**
+The R-script has been developed in order to improve normalization between countries to assign métier level6 to their national transversal data. It meets a need identified during the 2018 DCF métier workshop which emphasizes the necessity to standardize and harmonize the methods to assign métiers to transversal data between countries. It seeks to be used as the core method shared between countries to assign métiers to fishing sequences. Nevertheless, countries could have some national specificities which have to be taken into account when assigning métiers. These national corrections could be added into the R-script (for example: corrections of a species grouping if the species are fished within another métier nationally or corrections of gear codes (e.g. grouping or recoding imprecise gear codes (GN, TB)). Another example discussed for national correction is the fishery for Thachurus trachurus (horse mackerel), which is caught as a pelagic species in PS fishery and as demersal species in OTB fishery. In this case, it is suggested that the species will be grouped into the relevant target assemblage group based on the gear code used as a national correction.
+
+Countries are encouraged to upload their script with national corrections to GitHub under https://github.com/ices-eg/RCGs/tree/master/Metiers/Documentation_by_MS along with the documentation of the methods. Other countries could then use similar methods in their scripts if relevant, e.g. for defining selection panels, mixed target assemblage groups etc. The lines with national corrections should be marked with #Country code. The scripts uploaded don't need to be final, they can be updated as they improve.
+
+## Function assigning métiers to fishing sequences
+
+A function has been developed to try to allocate a metier Level5 and Level6  to fishing sequences for which the first metier assignment script does not allocate any metier and therefore it was coded as “MIS_MIS” and “MIS_MIS_0_0_0”. 
+
+The algorithm considers different hierarchical steps with, at each step, an incremental hierarchy of selection criteria from the most precise combination to a more generic. A default list of criteria to be considered by the algorithm are proposed in the R-script and detailed here under but they could be adapted nationally, if needed, like the fishing sequence definition (see here above).
+
+The two first steps consider the “vessel pattern” i.e. the métiers calculated for the vessel by the first step of the algorithm which could enable the metier calculation when the gear is missing, inaccurate/imprecise (e.g. TB, GN) or wrong (not in accordance with the target species group calculated, e.g. typing error, reporting error, …). Step 2 enables also the metier calculation for fishing sequences without any catches (no catches’ fishing sequences) or fishing sequences for which FAO species are unallocated (e.g. input error).
+
+The two following steps (steps 3 and 4) consider groups of vessels aggregated on the basis of their vessel length class and fleet register gear. They apply especially for vessels for which the precedent steps do not allocate any metiers for each of their fishing sequences (e.g. vessels for which all their fishing sequences are not informed regarding the fishing gear used). In these cases, the metiers allocated for their same group of vessels are considered.
+
+**1st step** consider the vessel’ pattern and the target species group calculated for the fishing sequence considered. Area is considered in the first steps. Temporal aggregation ranges from month to year :
+
+1.1)   Assign metier to same vessel, **month, area** and species group
+
+1.2)   Assign metier to same vessel, **quarter, area** and species group
+
+1.3)   Assign metier to same vessel, **year, area** and species group
+
+1.4)   Assign metier to same vessel, **month** and species group
+
+1.5)   Assign metier to same vessel, **quarter** and species group
+
+1.6)   Assign metier to same vessel, **year** and species group
+
+For each of these steps (1.1 to 1.6), a specific algorithm is applied if more than one Metier Level6 corresponds to the level considered.  In this case, the one with the highest number of sequences in the same gear group is considered and if there is none the one with the highest number of sequences without considering the gear group is considered.
+
+**2nd step** consider the remaining non allocated fishing sequences for which the 1st step does not find a metier. This step continues to consider the vessel’ pattern but here in combination with the gear level6 or the gear group declared of the fishing sequence considered. This step should be especially useful for no catches’ fishing sequences or fishing sequences for which FAO species are unallocated (e.g. input error). As before, area is considered in the first steps and temporal aggregation ranges from month to year:
+
+2.1) Assign metier to same vessel, **month, area and gear**
+
+2.2) Assign metier to same vessel, **quarter, area and gear**
+
+2.3) Assign metier to same vessel, **year, area and gear**
+
+2.4) Assign metier to same vessel, **month and gear**
+
+2.5) Assign metier to same vessel, **quarter and gear**
+
+2.6) Assign metier to same vessel, **year and gear**
+
+2.7) Assign metier to same vessel, **month, area and gear group**
+
+2.8) Assign metier to same vessel, **quarter, area and gear group**
+
+2.9) Assign metier to same vessel, **year, area and gear group**
+
+2.10) Assign metier to same vessel, **month and gear group**
+
+2.11) Assign metier to same vessel, **quarter and gear group**
+
+2.12) Assign metier to same vessel, **year and gear group**
+
+For each of these steps (2.1 to 2.12), a specific algorithm is applied if more than one Metier Level6 corresponds to the level considered.  In this case, the one with the highest number of sequences is considered.
+
+**3rd step** applies to remaining non allocated fishing sequences for which “vessel pattern” (steps 1 & 2) do not allow to allocate a metier. This step considers groups of vessels aggregated on the basis of their vessel length class and fleet register gear. It also considers the target species group calculated for the fishing sequence considered. As before, area is considered in the first steps and temporal aggregation ranges from month to year:
+
+3.1) Assign metiers to same **month, vessel length group, fleet register gear, area and species group**
+
+3.2) Assign metiers to same **month, fleet register gear, area and species group**
+
+3.3) Assign metiers to same **quarter, vessel length group, fleet register gear, area and species group**
+
+3.4) Assign metiers to same **quarter, fleet register gear, area and species group**
+
+3.5) Assign metiers to same **year, vessel length group, fleet register gear, area and species group**
+
+3.6) Assign metiers to same **year, fleet register gear, area and species group**
+
+3.7) Assign metiers to same **month, vessel length group, fleet register gear and species group**
+
+3.8) Assign metiers to same **month, fleet register gear and species group**
+
+3.9) Assign metiers to same **quarter, vessel length group, fleet register gear and species group**
+
+3.10) Assign metiers to same **quarter, fleet register gear and species group**
+
+3.11) Assign metiers to same **year, vessel length group, fleet register gear and species group**
+
+3.12) Assign metiers to same **year, fleet register gear and species group**
+
+For each of these steps (3.1 to 3.12), a specific algorithm is applied if more than one Metier Level6 corresponds to the level considered.  In this case, the one with the highest number of sequences in the same gear group is considered and if there is none the one with the highest number of sequences without considering the gear group is considered.
+
+**4th step** considers the remaining non allocated fishing sequences for which the first three steps does not find a metier. This step continues to consider groups of vessels aggregated on the basis of their vessel length class and fleet register gear but here in combination with the gear level6 or the gear group declared of the fishing sequence considered. This step should be also especially useful for no catches’ fishing sequences or fishing sequences for which FAO species are unallocated (e.g. input error). As before, area is considered in the first steps and temporal aggregation ranges from month to year:
+
+4.1)	Assign metiers to same **month, vessel length group, fleet register gear, area and gear**
+
+4.2)	Assign metiers to same **month, fleet register gear, area and gear**
+
+4.3)	Assign metiers to same **quarter, vessel length group, fleet register gear, area and gear**
+
+4.4)	Assign metiers to same **quarter, fleet register gear, area and gear**
+
+4.5)	Assign metiers to same **year, vessel length group, fleet register gear, area and gear**
+
+4.6)	Assign metiers to same **year, fleet register gear, area and gear**
+
+4.7)	Assign metiers to same **month, vessel length group, fleet register gear and gear**
+
+4.8)	Assign metiers to same **month, fleet register gear and gear**
+
+4.9)	Assign metiers to same **quarter, vessel length group, fleet register gear and gear**
+
+4.10)	Assign metiers to same **quarter, fleet register gear and gear**
+
+4.11)	Assign metiers to same **year, vessel length group, fleet register gear and gear**
+
+4.12)	Assign metiers to same **year, fleet register gear and gear**
+
+4.13)	Assign metiers to same **month, vessel length group, fleet register gear, area and gear group**
+
+4.14)	Assign metiers to same **month, fleet register gear, area and gear group**
+
+4.15)	Assign metiers to same **quarter, vessel length group, fleet register gear, area and gear group**
+
+4.16)	Assign metiers to same **quarter, fleet register gear, area and gear group**
+
+4.17)	Assign metiers to same **year, vessel length group, fleet register gear, area and gear group**
+
+4.18)	Assign metiers to same **year, fleet register gear, area and gear group**
+
+4.19)	Assign metiers to same **month, vessel length group, fleet register gear and gear group**
+
+4.20)	Assign metiers to same **month, fleet register gear and gear group**
+
+4.21)	Assign metiers to same **quarter, vessel length group, fleet register gear and gear group**
+
+4.22)	Assign metiers to same **quarter, fleet register gear and gear group**
+
+4.23)	Assign metiers to same **year, vessel length group, fleet register gear and gear group**
+
+4.24)	Assign metiers to same **year, fleet register gear and gear group**
+
+For each of these steps (4.1 to 4.24), a specific algorithm is applied if more than one Metier Level6 corresponds to the level considered.  In this case, the one with the highest number of sequences is considered.
+
+## Function looking at dominant/main metiers used by vessel
+
+A function in the métier allocation R-script enables to refine the métiers firstly assigned by the general algorithm to take into account the dominant/main metiers used by vessels, correcting for accidental catches of non-targeted species in a haul. This step contributes in particular to limit the multiplication of métiers calculated (focus on the year*vessel’ main metiers avoiding “rare” métiers firstly assigned by the general algorithm).  
+
+The three following steps are considered to define the fishing sequences for which a “rare” metier DCF level5 has been assigned. The other fishing sequences compile the dominant/main metiers DCF level5 of the vessels which are potentially used to replace the “rare” metiers firstly assigned.
+
+5.1)  **Calculate by “year\*vessel” the number and % of fishing sequences by “metier DCF level5” calculated** (based on the fishing sequences completed before i.e. for which a “metier level6” then “metier level5” has been calculated in the first steps of the script including the previous steps which are trying to allocate a metier to firstly non allocated fishing sequences).
+
+5.2)  **Fishing sequences** for which the "metier level5" associated has been calculated for less than rare **threshold** % (define before in the R-script – e.g. 5-10%) of the fishing sequences completed, are reset (reset "metier level5" to Null). Such "metier level5" are considered as "rare" metier for the "year\*vessel" considered and have to be faced with the principal practices of the "year*vessel".
+
+5.3) Other **"metier level5"** calculated for more than the **rare threshold** % (e.g. 5-10%) of the fishing sequences are kept. They constitute the dominant/main metiers level5 used by the "year\*vessel" on which the following script will be based on.
+
+For the fishing sequences reset (“rare” metier first attributed), then the following steps will compare “target species group” calculated with the “target species groups” of the dominant metiers of the “year*vessel” pattern following the order described hereunder.
+
+5.4)	Assign metier **Level5** to same vessel, **month, area** and species group
+
+5.5)	Assign metier **Level5** to same vessel, **quarter, area** and species group
+
+5.6)	Assign metier **Level5** to same vessel, **year, area** and species group
+
+5.7)	Assign metier **Level5** to same vessel, **month** and species group
+
+5.8)	Assign metier **Level5** to same vessel, **quarter** and species group
+
+5.9)	Assign metier **Level5** to same vessel, **year** and species group
+
+For each of these steps (5.4 to 5.9), a specific algorithm is  applied if more than one metier level5 corresponds to the level considered.  In this case, the one with the highest number of sequences in the same gear group is considered and if there is none the one with the highest number of sequences without considering the gear group is considered.
+
+Then for the fishing sequences reset (“rare” metier first attributed) for which the “target species group” does not match with the “target species groups” of at least one of the dominant “metiers level5” of the “year\*vessel” considered (previous steps 5.4 to 5.9) then the following steps will compare the gear declared of the fishing sequence considered with the gears and gear groups of the dominant “metiers level5” of the “year*vessel” considered following the order described hereunder.
+
+5.10)	Assign metier **Level5** to same vessel, **month, area and gear**
+
+5.11)	Assign metier **Level5** to same vessel, **quarter, area and gear**
+
+5.12)	Assign metier **Level5** to same vessel, **year, area and gear**
+
+5.13)	Assign metier **Level5** to same vessel, **month and gear**
+
+5.14)	Assign metier **Level5** to same vessel, **quarter and gear**
+
+5.15)	Assign metier **Level5** to same vessel, **year and gear** 
+
+5.16)	Assign metier **Level5** to same vessel, **month, area and gear group**
+
+5.17)	Assign metier **Level5** to same vessel, **quarter, area and gear group**
+
+5.18)	Assign metier **Level5** to same vessel, **year, area and gear group**
+
+5.19)	Assign metier **Level5** to same vessel, **month and gear group**
+
+5.20)	Assign metier **Level5** to same vessel, **quarter and gear group**
+
+5.21)	Assign metier **Level5** to same vessel, **year and gear group**
+
+For each of these steps (5.10 to 5.21), a specific algorithm is  applied if more than one metier level5 corresponds to the level considered. In this case, the one with the highest number of sequences is considered.
+Finally and in a last step 5.22), the “rare” metier firstly attributed is confirmed/validated and allocated to the reset fishing sequence considered for the ones not completed at this stage.
+
+It is then up to the end-user to keep the potential new metier DCF level5 (steps 5.1 to 5.21) attributed and to assign therefore a reviewed DCF level6 métier with the following mesh size ranges “>0_0_0” or “0_0_0” depending of the gear considered to the fishing sequence considered. The mesh size ranges could be then precised with the following function.
+
+## Function assigning a mesh size ranges (metier DCF level6) 
+
+This function assigns the best matched metier level 6 for metier level 5 assigned from the vessel pattern by the previous function. The following steps will compare the metiers level 5 found in the pattern with initially assigned metiers level 5 (excluding the rare ones) which have a metier level 6 assigned, following the order described below:
+
+6.1) Assign mesh size ranges (& metier level6 associated) to same vessel, **month, area and metier level5 from the pattern**
+
+6.2) Assign mesh size ranges (& metier level6 associated) to same vessel, **quarter, area and metier level5 from the pattern**
+
+6.3) Assign mesh size ranges (& metier level6 associated) to same vessel, **year, area and metier level5 from the pattern**
+
+6.4) Assign mesh size ranges (& metier level6 associated) to same vessel, **month and metier level5 from the pattern**
+
+6.5) Assign mesh size ranges (& metier level6 associated) to same vessel, **quarter and metier level5 from the pattern**
+
+6.6) Assign mesh size ranges (& metier level6 associated) to same vessel, **year and metier level5 from the pattern**
+
+For each of these steps (6.1 to 6.6), a specific algorithm is applied if more than one mesh size ranges (& metier level6 associated) correspond to metier level5 from the pattern and the level considered.  In this case, the one with the highest number of sequences is considered.
+
+**At this stage of data processing two new columns are added: “metier_level_5_new” and “metier_level_6_new”. They are filled with metier codes initially assigned, with “MIS…” codes replaced with the best match, and finally rare metiers replaced with the ones found in the pattern.**
+
+## Function assigning metier level 6 with more precise mesh size ranges 
+
+This function tries to complete mesh size ranges for fishing sequences where the mesh size declared was not compatible with the metier DCF level5 considered (e.g. typing error or reporting error) or not available (e.g. mesh size not declared) and also for the fishing sequence revised after applying the “rare” function (see above). For that, the vessel pattern of the vessel is considered to allocate to the fishing sequence the most frequent mesh size ranges observed for the same metier DCF level5. As before, a stepwise procedure is applied with, at each step, an incremental hierarchy of selection criteria from the most precise combination to a more generic. The following steps are tested otherwise the “>0_0_0”  mesh size range is retained:
+
+7.1) Assign mesh size ranges (& metier level6 associated) to same vessel, **month, area and metier level5 (new)**
+
+7.2) Assign mesh size ranges (& metier level6 associated) to same vessel, **quarter, area and metier level5 (new)**
+
+7.3) Assign mesh size ranges (& metier level6 associated) to same vessel, **year, area and metier level5 (new)**
+
+7.4) Assign mesh size ranges (& metier level6 associated) to same vessel, **month and metier level5 (new)**
+
+7.5) Assign mesh size ranges (& metier level6 associated) to same vessel, **quarter and metier level5 (new)**
+
+7.6) Assign mesh size ranges (& metier level6 associated) to same vessel, **year and metier level5 (new)**
+
+For each of these steps (7.1 to 7.6), a specific algorithm is applied if more than one mesh size ranges (& metier level6 associated) correspond to metier level5 and the level considered.  In this case, the one with the highest number of sequences is considered.
 
 
-A function in the métier allocation R-script enables to refine the métiers firstly assigned by the general algorithm to take into account the “vessel patterns” i.e. dominant/main metiers used by vessels. This new step contributes to 1) limit the multiplication of métiers calculated *(focus on the yearxvessel’ main metiers avoiding “rare” métiers firstly assigned by the general algorithm), 2)* enables the metier calculation when gear is missing, inaccurate/imprecise (e.g. TB, FIX, GN) or wrong *(e.g. typing error, reporting error, …) and 3)* enables the metier calculation for fishing sequences without any catches *(“zero catches” fishing sequences).* This function will output a revised level 5 métier code in the column “metier_level_5” and this information could be used to assign a reviewed level 6 métier to the fishing sequence *(up to the end-user)*.
+## Results
 
-The stepwise procedure developed  is described in detail in Section 5. 
-
-
-
-**Results**
+The resulting file, which is the input data with algorithm’ outputs (i.e. outputs resulting from the implementation of the algorithm) added (e.g. “Metier_level6”) is saved as a “.csv” file into a path which has to be specified. The results are also summed up and saved in an excel file that gives an overview of the métiers allocated.
 
 
-The resulting file, which is the input data with algorithm’ outputs *(i.e. outputs resulting from the implementation of the algorithm)* added *(e.g. “Metier_level6”)* is saved as a “.csv” file into a path which has to be specified. The results are also summed up and saved in an excel file that gives an overview of the métiers allocated.
+
+

@@ -1,42 +1,37 @@
 ---
-header-includes:
-- \usepackage{pdflscape}
-- \newcommand{\blandscape}{\begin{landscape}}
-- \newcommand{\elandscape}{\end{landscape}}
-output: 
-  pdf_document:
+output:
+  html_document:
+    df_print: paged
+    toc: true
+    toc_float: true
     number_sections: true
-  toc: true
-urlcolor: blue
-linkcolor: 'black'
+    theme: cosmo
+    highlight: default
 ---
 
 
-\pagenumbering{gobble}
+<!-- \pagenumbering{gobble} -->
 
 ```{r child = '01TitlePage.Rmd'}
 
 ```
 
-\pagenumbering{gobble}
+<!-- \pagenumbering{gobble} -->
 
-\newpage 
-\tableofcontents
+<!-- \newpage  -->
+<!-- \tableofcontents -->
 
-\newpage
-\pagenumbering{arabic}
+<!-- \newpage -->
+<!-- \pagenumbering{arabic} -->
 
 ```{r child = '02Background.Rmd'}
 
 ```
 
-\newpage
-
 
 ```{r child = '03InputFormatForTransversalData.Rmd'}
 
 ```
-
 
 
 ```{r child = '04ReferenceLists.Rmd'}
@@ -47,25 +42,21 @@ linkcolor: 'black'
 
 ```
 
-\newpage
 
-```{r child = '06Rscript.Rmd'}
+```{r child = '06RscriptM.Rmd'}
 
 ```
 
-\newpage
 
 ```{r child = '07Diagram.Rmd'}
 
 ```
 
-\newpage
 
 ```{r child = '08Annex.Rmd'}
 
 ```
 
-\newpage
 
 ```{r child = '09ContactPersons.Rmd'}
 

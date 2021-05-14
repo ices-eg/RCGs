@@ -1,7 +1,7 @@
 # Background 
 
 
-In 2018 a DCF Métier workshop was held as a subgroup of the RCG’s. Work was done on writing a historical background of the métiers and why they are needed. Participants of the workshop described the national procedures for assigning métiers, and it was clear that different methods and criteria are used for assigning métier codes by the different nations. During the meeting, major issues and possible best practices were discussed, e.g. that the target species assemblage should reflect the fishing intention, and that a métier should be defined for a fishing sequence. Work was started on the reference lists on métiers, species and gears. A general workflow for assigning métiers was developed, and a repository for storing reference lists and scripts was suggested.  
+In 2018 a DCF Métier workshop was held as a subgroup of the RCG’s. Work was done on writing a historical background of the métiers and why they are needed. Participants of the workshop described the national procedures for assigning métiers, and it was clear that different methods and criteria are used for assigning métier codes by the different nations. During the meeting, major issues and possible best practices were discussed, e.g. that the target species assemblage should reflect the fishing intention, and that a métier should be defined for a fishing sequence. Work was started on the reference lists on métiers, species and gears. A general workflow for assigning métiers was developed, and a repository for storing reference lists and scripts was suggested.
 
 A result of the workshop was the consensus regarding the need to standardize and harmonize métier codes and reference tables, as well as the methods to assign métiers to transversal data.
 
@@ -9,21 +9,22 @@ A result of the workshop was the consensus regarding the need to standardize and
 In 2019 the work was followed up by a pan-regional RCG Intersessional Subgroup on Métier Issues that set up a public repository on GitHub for storing reference lists, scripts, métier descriptions and documentation of procedures. The work performed consisted in:
 
 
- - Suggestion of a system for harmonizing the métier reference lists without overlapping métiers (especially about mesh-size ranges) 
- 
- - Development of an R-script for assigning métiers to transversal data (tested for the Baltic Sea)
- 
- - Development of a template for documenting the method used by countries, including its testing
- 
- - Development of a script for making métier descriptions based on data uploaded to the RDB 
- 
- - Agree on and test a reference list of individual species to be included into species groups 
- 
- - Test and evaluate the impact of using value vs. weight of landings as metric for assigning target species assemblage groups.  
- 
- 
-The RCG’s in 2019 recommended that the work was to be followed up and continued in 2020, with a stronger focus on an operational métier list and R-script to assign métiers. This includes testing reference tables and R-script and making sure that all relevant métiers and reference codes are included.
-  
-The reports from the 2018 workshop and the 2019 and 2020 RCG intersessional work can be found in [the RCG github repository](https://github.com/ices-eg/RCGs/tree/master/Metiers/Reports).
+- Suggestion of a system for harmonizing the métier reference lists without overlapping métiers (especially about mesh-size ranges) 
 
-This document is a practical manual for using the scripts and reference codes created by the ISSG on Métier issues. First, the input data format for transversal data is described in Section 2. The reference lists used in the R-script for métier codes, species codes and area codes are described in Section 3. In Section 4 the R-script is described and it is explained how to use it.
+- Development of an R-script for assigning métiers to transversal data (tested for the Baltic Sea)
+
+- Development of a template for documenting the method used by countries, including its testing  
+
+- Development of a script for making métier descriptions based on data uploaded to the RDB 
+
+- Agree on and test a reference list of individual species to be included into species groups 
+
+- Test and evaluate the impact of using value vs. weight of landings as metric for assigning target species assemblage groups.
+
+The RCG’s in 2019 recommended that the work was to be followed up and continued in 2020 and 2021, with a stronger focus on an operational métier list and R-script to assign métiers. This includes testing reference tables and R-script and making sure that all relevant métiers and reference codes are included. 
+The reports from the 2018 workshop and the 2019, 2020 and 2021 RCG intersessional work can be found in [the RCG github repository](https://github.com/ices-eg/RCGs/tree/master/Metiers/Reports).
+
+
+This document is a practical manual for using the scripts and reference codes created by the ISSG on Métier issues. First, the input data format for transversal data is described in Section 2. The reference lists used in the R-script for métier codes, species codes and area codes are described in Section 3. In Section 4 the metier assignment procedure is described and in Section 5 it is explained how to use the script.
+
+
