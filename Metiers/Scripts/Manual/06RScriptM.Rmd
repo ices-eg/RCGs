@@ -2,7 +2,7 @@
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy.opts=list(width.cutoff=60), tidy=TRUE)
 # Need to set the root directory because the working directory is forced for each chunk to the directory of the rmd
-knitr::opts_knit$set(root.dir = "C:/Users/molla004/OneDrive - Wageningen University & Research/Git/hub/RCGs/Metiers")
+knitr::opts_knit$set(root.dir = "C:/Users/madamowicz/Documents/GitHub/RCGs/Metiers")
 ```
 
 # Description of metier assignment script workflow
@@ -470,38 +470,38 @@ for(level in step.levels){
 }
 ```
 
-<!-- ```{r newtab7, echo=FALSE} -->
-<!-- kable(input.data[order(vessel_id,trip_id,fishing_day,area,ices_rectangle,gear,mesh), -->
-<!--                .(Country,RCG,year,vessel_id,vessel_length,trip_id,haul_id,fishing_day,area,ices_rectangle,gear,gear_FR,mesh,selection,FAO_species, -->
-<!--                  registered_target_assemblage,KG,EUR,metier_level_6,mis_met_level,mis_met_number_of_seq, -->
-<!--                  metier_level_5,metier_level_5_status, -->
-<!--                  metier_level_5_pattern,ves_pat_level,ves_pat_number_of_seq, -->
-<!--                  metier_level_6_pattern,ves_pat_met6_level,ves_pat_met6_number_of_seq,metier_level_6_new, -->
-<!--                  detailed_metier_level_6,det_met6_number_of_seq,det_met6_level)][order(det_met6_number_of_seq)][1:10])%>% -->
-<!--   kable_styling() %>% -->
-<!--   scroll_box(width = "100%") -->
-<!-- ``` -->
+```{r newtab7, echo=FALSE}
+kable(input.data[order(vessel_id,trip_id,fishing_day,area,ices_rectangle,gear,mesh),
+                .(Country,RCG,year,vessel_id,vessel_length,trip_id,haul_id,fishing_day,area,ices_rectangle,gear,gear_FR,mesh,selection,FAO_species,
+                  registered_target_assemblage,KG,EUR,metier_level_6,mis_met_level,mis_met_number_of_seq,
+                  metier_level_5,metier_level_5_status,
+                  metier_level_5_pattern,ves_pat_level,ves_pat_number_of_seq,
+                  metier_level_6_pattern,ves_pat_met6_level,ves_pat_met6_number_of_seq,metier_level_6_new,
+               detailed_metier_level_6,det_met6_number_of_seq,det_met6_level)][order(det_met6_number_of_seq)][1:10])%>% 
+kable_styling() %>%
+scroll_box(width = "100%")
+```
 
 
-<!-- ## Explanation of the result columns -->
+## Explanation of the result columns
 
-<!-- * *metier_level_5* and *metier_level_6* - metier codes assigned in the first step by the *getMetier* function. In the next step the *missingMetiersByLevel* is called which tries to replace "MIS" metier codes with the best matched metier codes using the specified search levels, -->
+* *metier_level_5* and *metier_level_6* - metier codes assigned in the first step by the *getMetier* function. In the next step the *missingMetiersByLevel* is called which tries to replace "MIS" metier codes with the best matched metier codes using the specified search levels,
 
-<!-- * *mis_met_level* and *mis_met_number_of_seq* - if the *missingMetiersByLevel* succeeds to replace "MIS" metier code then it gives the information on the level where the metier was found together with the number of fishing sequences for that metier. Initially assigned non-"MIS" metiers have empty values in these columns. Only "MIS" metiers which have been replaced with new codes have non-empty values in these columns, -->
+* *mis_met_level* and *mis_met_number_of_seq* - if the *missingMetiersByLevel* succeeds to replace "MIS" metier code then it gives the information on the level where the metier was found together with the number of fishing sequences for that metier. Initially assigned non-"MIS" metiers have empty values in these columns. Only "MIS" metiers which have been replaced with new codes have non-empty values in these columns,
 
-<!-- * *metier_level_5_status* - label indicating whether the metier code in the *metier_level_5* column is considered rare given the specified threshold. These is determined by the *rareMetiersLvl5* function, -->
+* *metier_level_5_status* - label indicating whether the metier code in the *metier_level_5* column is considered rare given the specified threshold. These is determined by the *rareMetiersLvl5* function, 
 
-<!-- * *metier_level_5_pattern* - the metier level 5 codes found in the vessel pattern for metiers level 5 labeled as rare in the previous step. This is done by the *vesselPatternByLevel* function,  -->
+* *metier_level_5_pattern* - the metier level 5 codes found in the vessel pattern for metiers level 5 labeled as rare in the previous step. This is done by the *vesselPatternByLevel* function,
 
-<!-- * *ves_pat_level* and *ves_pat_number_of_seq* - if the *vesselPatternByLevel* function succeeds to find the metier in the vessel pattern then it gives the information on the level where the metier was found together with the number of fishing sequences for that metier, -->
+* *ves_pat_level* and *ves_pat_number_of_seq* - if the *vesselPatternByLevel* function succeeds to find the metier in the vessel pattern then it gives the information on the level where the metier was found together with the number of fishing sequences for that metier,
 
-<!-- * *metier_level_6_pattern* - the best matched metier level 6 code from the vessel pattern given the metier level 5 from pattern and the specified search level. The value in this column is returned by the *metierLvl6ForLvl5pattern*, -->
+* *metier_level_6_pattern* - the best matched metier level 6 code from the vessel pattern given the metier level 5 from pattern and the specified search level. The value in this column is returned by the *metierLvl6ForLvl5pattern*,
 
-<!-- * *ves_pat_met6_level* and *ves_pat_met6_number_of_seq* - the *metierLvl6ForLvl5pattern* function returns the information on the level where the metier was found together with the number of fishing sequences for that metier, -->
+* *ves_pat_met6_level* and *ves_pat_met6_number_of_seq* - the *metierLvl6ForLvl5pattern* function returns the information on the level where the metier was found together with the number of fishing sequences for that metier,
 
-<!-- * *metier_level_5_new* and *metier_level_6_new* - values in these columns contain the metiers found by *getMetier* completed by *missingMetiersByLevel* or metiers returned from the vessel pattern which replaced rare metiers, -->
+* *metier_level_5_new* and *metier_level_6_new* - values in these columns contain the metiers found by *getMetier* completed by *missingMetiersByLevel* or metiers returned from the vessel pattern which replaced rare metiers,
 
-<!-- * *detailed_metier_level_6* - the best matched metier level 6 with more precise mesh size ranges which replaces the ">0_0_0" metiers. This step is done by the *detailedMetiersLvl6ForLvl5*, -->
+* *detailed_metier_level_6* - the best matched metier level 6 with more precise mesh size ranges which replaces the ">0_0_0" metiers. This step is done by the *detailedMetiersLvl6ForLvl5*,
 
-<!-- * *det_met6_number_of_seq* and *det_met6_level* - if the *detailedMetiersLvl6ForLvl5* function succeeds to find the metier with more precise mesh size range then it gives the information on the level where the metier was found together with the number of fishing sequences for that metier. -->
+* *det_met6_number_of_seq* and *det_met6_level* - if the *detailedMetiersLvl6ForLvl5* function succeeds to find the metier with more precise mesh size range then it gives the information on the level where the metier was found together with the number of fishing sequences for that metier.
 
