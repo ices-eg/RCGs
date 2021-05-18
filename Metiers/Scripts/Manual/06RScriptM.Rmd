@@ -2,7 +2,8 @@
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy.opts=list(width.cutoff=60), tidy=TRUE)
 # Need to set the root directory because the working directory is forced for each chunk to the directory of the rmd
-knitr::opts_knit$set(root.dir = "C:/Users/madamowicz/Documents/GitHub/RCGs/Metiers")
+# knitr::opts_knit$set(root.dir = "C:/Users/madamowicz/Documents/GitHub/RCGs/Metiers")
+knitr::opts_knit$set(root.dir = "C:/Users/molla004/OneDrive - Wageningen University & Research/Git/hub/RCGs/Metiers")
 ```
 
 # Description of metier assignment script workflow
