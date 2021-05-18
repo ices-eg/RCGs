@@ -2831,7 +2831,7 @@ div.tocify {
 <font size="2"> Method developed by RCG ISSG on Metier issues </font>
 </p>
 <p align="left">
-<font size="2"> Final date </font>
+<font size="2"> 18/05/2021 </font>
 </p>
 <!-- \pagenumbering{gobble} -->
 <!-- \newpage  -->
@@ -2978,7 +2978,7 @@ gear (M)
 <td style="text-align:left;">
 Gear code (FAO ISSCFG code)
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
 OTB
 </td>
 </tr>
@@ -2988,9 +2988,6 @@ gear_FR (O)
 </td>
 <td style="text-align:left;">
 Gear code (FAO ISSCFG code) from fleet register. The first/main gear, used for metier estimation if the gear code is not known from logbooks
-</td>
-<td style="text-align:left;">
-OTB
 </td>
 </tr>
 <tr>
@@ -3005,77 +3002,49 @@ Mesh size (integer)
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;vertical-align: middle !important;" rowspan="8">
 selection (O)
 </td>
 <td style="text-align:left;">
 Selection panel code which combines the selection panel code number (see allowed reference code hereunder) and the selection panel mesh size in the second part of the codification.
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;vertical-align: middle !important;" rowspan="8">
 1_120
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-</td>
-<td style="text-align:left;">
 Allowed selection panel code numbers:
-</td>
-<td style="text-align:left;">
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-</td>
 <td style="text-align:left;">
 0: No selection device
 </td>
-<td style="text-align:left;">
-</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-</td>
 <td style="text-align:left;">
 1: Selection panel
 </td>
-<td style="text-align:left;">
-</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-</td>
 <td style="text-align:left;">
 2: Grid
 </td>
-<td style="text-align:left;">
-</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-</td>
 <td style="text-align:left;">
 3: T90
 </td>
-<td style="text-align:left;">
-</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-</td>
 <td style="text-align:left;">
 4: For the situation when there is both a selection device and escape window (in this case the smallest mesh size should be specified in the second part of the codification).
 </td>
-<td style="text-align:left;">
-</td>
 </tr>
 <tr>
 <td style="text-align:left;">
-</td>
-<td style="text-align:left;">
 e.g. possible options for Kattegat: “1_120”, “1_140”, “1_180”, “1_270” or “1_300”.
-</td>
-<td style="text-align:left;">
 </td>
 </tr>
 <tr>
@@ -3111,23 +3080,19 @@ Should not be filled in (put it as “NA” or “empty field”). The resulting
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
 measure (M)
 </td>
 <td style="text-align:left;">
 In order to decide how the principal target assemblage of species should be calculated on the basis of the weight or of the value.
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
 Accepted values: “weight” or “value”
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-</td>
-<td style="text-align:left;">
 As soon as, for the fishing sequence considered, there is one entry with the modality “value” provided, then all the calculation algorithm will be based on “value” for it.
-</td>
-<td style="text-align:left;">
 </td>
 </tr>
 <tr>
@@ -3137,7 +3102,7 @@ KG (M)
 <td style="text-align:left;">
 Total tonnage of landing in weight (in Kg)
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
 Real number with a precision: of 2 digits after the decimal
 </td>
 </tr>
@@ -3147,9 +3112,6 @@ EUR (O)
 </td>
 <td style="text-align:left;">
 Total tonnage of landing in value ( in euro)
-</td>
-<td style="text-align:left;">
-Real number with a precision: of 2 digits after the decimal
 </td>
 </tr>
 </tbody>

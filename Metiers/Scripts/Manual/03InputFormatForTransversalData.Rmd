@@ -10,7 +10,8 @@ colnames(inpdat) <- c("Column Name", "Description","Example")
 # inpdat[,1] <- gsub("_", " ", inpdat[,1])
 inpdat[is.na(inpdat )] <- " "
 kable(inpdat)%>%
-  kable_styling()
+  kable_styling() %>%
+  collapse_rows(columns = 1:3, valign = "middle")
 
 ```
 
