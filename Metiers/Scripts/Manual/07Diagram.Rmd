@@ -27,4 +27,4 @@ htmlwidgets::saveWidget(p, paste0(getwd(), "/p.html"))
 webshot::webshot("p.html", "p.png")
 ```
 
-![](MetierWorkflow.png)
+![](Metier_Workflow2.png)
