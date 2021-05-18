@@ -15,4 +15,4 @@ kable(inpdat)%>%
 
 ```
 
-An example of the input data format can be found [on the github repository.](https://github.com/ices-eg/RCGs/blob/master/Metiers/Metier_data_format_Example_test_input.csv)
+An example of the input data format can be found on [the github repository.](https://github.com/ices-eg/RCGs/blob/master/Metiers/Metier_data_format_Example_test_input.csv)

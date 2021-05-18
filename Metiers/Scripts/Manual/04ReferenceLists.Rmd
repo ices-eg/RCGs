@@ -17,7 +17,7 @@ If a metier code is missing in the list, it can be requested by sending an email
 
 ## Species list
 
-The R-script dowloads the species list from [the github repository](https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/Metier%20Subgroup%20Species%202020.xlsx)
+The R-script dowloads the species list from [the github repository](https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/Metier%20Subgroup%20Species%202020.xlsx).
 
 
 The species list is a subset from the [ASFIS list of species](http://www.fao.org/fishery/collection/asfis/en) maintained by FAO and include, as far as possible, all the commercial species landed in the RCG fishing areas. FAO species code for the commercial species considered is specified in column A and for each of them some complementary information is available in columns B to G (e.g. “Scientific name”, Taxocode”, “ISSCAAP description”, …). The columns H to T reflect the different ways on grouping the species codes in target assemblage of species  groups developed for different purposes: R data package, fishPi EU project, RCM 2007, DWS regulation and what has been done/referenced within countries. In the end, columns U, V and W contain the latest proposal on species groups at three different levels of aggregation. **These aggregations are used by the R-script:**
