@@ -40,7 +40,7 @@ disclaimer_modal <- modalDialog(
   # --------------------------------  
   
   observe({
-    if (input$navbar == "Sampling vs Landings")  {
+    if (input$navbar == "Sampling vs Landings (beta version)")  {
       showModal(modalDialog(
         title = "Keep in mind",
         includeHTML("data/SamplingVsLandingsInformation.txt"),
