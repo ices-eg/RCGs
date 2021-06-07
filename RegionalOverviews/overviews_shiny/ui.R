@@ -163,7 +163,7 @@ shinyUI(
     # -----------------------------------
     
     tabPanel(
-      "Sampling vs Landings",
+      "Sampling vs Landings (beta version)",
       useShinyalert(),
       br(),p("Upload RDB_RCG_BA/NA/NSEA_CL_YYYY.Rdata, available ", 
              a(href="https://community.ices.dk/ExternalSites/datacollection/Regional%20coordination%20meetings%202017/RCGIntersessionalWork/_layouts/15/start.aspx#/SitePages/HomePage.aspx","here"),
