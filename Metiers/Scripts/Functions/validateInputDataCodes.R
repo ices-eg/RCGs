@@ -1,5 +1,5 @@
 validateInputDataCodes <- function(input.data, gear.list, area.list, species.list){
-  message("Validation of input data format...")
+  message("Validation of input data codes...")
   assemblage.list <- unique(c(species.list$species_group, species.list$dws_group))
   assemblage.list <- assemblage.list[!is.na(assemblage.list)]
   
@@ -7,7 +7,7 @@ validateInputDataCodes <- function(input.data, gear.list, area.list, species.lis
   invalid.gear<-setdiff(unique(input.data$gear), gear.list$gear_code)
   gearFR<-unique(input.data$gear_FR)
   gearFR<-gearFR[!is.na(gearFR)]
-  invalid.gearFR<-setdiff(unique(input.data$gear_FR), gear.list$gear_code)
+  invalid.gearFR<-setdiff(gearFR, gear.list$gear_code)
   selection<-unique(input.data$selection)
   selection<-selection[!is.na(selection)]
   invalid.selection<-selection[grep("[123]_\\d{1,3}",selection,invert=TRUE)]
