@@ -44,6 +44,7 @@ library(dplyr)
 
 source("../../funs/choroplethMap_func.R")
 source("../../funs/func_barplot_var_by_one_var_rmd.r")
+source("../../funs/func_determine_what_to_inset.r")
 
 #Function below from http://michaeljw.com/blog/post/subchunkify/
 subchunkify <- function(g, chunk_name = chunk_name, fig_height=7, fig_width=5) {
@@ -279,9 +280,9 @@ bar_ce <- barplot_var_by_one_var(
             value_of_threshold = 95,
             sorted = T,
             graph_par = eval(parse(text = 'list(oma = c(6,1,1,1), mai = c(1,1,.5,.5), ylab_line=4, col="colour5", mfrow=c(2,1), cex.x=0.7)')),
-            save_plot_to_list=F,
             filter = ''
           )
+          
           subchunkify(bar_ce[[2]],'Figure_effort_by_metier_lvl5',  5, 8)
           
           if (tables == "yes") {
