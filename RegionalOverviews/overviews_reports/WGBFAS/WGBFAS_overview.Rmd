@@ -1,0 +1,304 @@
+---
+title: "WGBFAS"
+output:
+  word_document: default
+  pdf_document: default
+---
+
+Plots and graphs presented in this document have been created on the WGBFAS request. This overview is only for use by WGBFAS.
+
+```{r 1_setup_param_dir, include = F}
+
+#If running outside knitr, then set wd. When knitting the wd is set to the folder where the .rmd is stored
+setwd("D:/RCGs/RegionalOverviews")
+
+#Paramters
+
+target_region <- "RCG_BA"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
+years <- c(2020)
+
+species_code <- 126425
+
+figures <- "yes" #yes / no - all figures outputtet to a folder
+tables <- "yes" #yes / no - all tables outputtet to a folder
+
+data_dir <- paste("../../data/002_prepared/", target_region, "/", sep = '') 
+period <- "2020"
+#Folder for figures and tables
+ table_dir <- paste("../../overviews_reports/WGBFAS/outputs/tables/", sep = "")
+ figur_dir <- paste("../../overviews_reports/WGBFAS/outputs/figures/", sep = "")
+
+```
+
+```{r 2_setup_lib, include = F}
+
+options(scipen = 999)
+
+library(tidyverse)
+library(data.table)
+library(rnaturalearth)
+library(dplyr)
+```
+
+```{r 3_source_ref, include = F}
+
+source("../../funs/choroplethMap_func.R")
+source("../../funs/func_barplot_var_by_one_var_rmd.r")
+
+#Function below from http://michaeljw.com/blog/post/subchunkify/
+subchunkify <- function(g, chunk_name = chunk_name, fig_height=7, fig_width=5) {
+  g_deparsed <- paste0(deparse(
+    function() {g}
+  ), collapse = '')
+  
+  sub_chunk <- paste0("
+  `","``{r fig_", chunk_name, ", fig.height=", fig_height, ", fig.width=", fig_width, ", echo=FALSE, result = \"asis\", warning = F, fig.pos = \"H\"}",
+  "  \n (", 
+    g_deparsed
+    , ")()", "  \n ",
+  "  \n `","``
+  ")
+  
+  cat(knitr::knit(text = knitr::knit_expand(text = sub_chunk), quiet = TRUE))
+  
+}
+colour_table <-
+     read.table(
+         "D:/RCGs/RegionalOverviews/data/aux_colours.txt",
+         header = T,
+         sep = "\t",
+         colClasses = "character",
+         na.strings = "",
+         comment.char = ""
+     )
+```
+
+```{r setup_markdown, include = F}
+
+#Don't set the dpi too high, then the .docx crash
+
+if (figures == "yes") {
+  knitr::opts_chunk$set(
+  fig.width = 9,
+  fig.height = 5,
+  fig.path = figur_dir,
+  dpi = 300,
+  dev = 'png',
+  fig.pos = 'H',
+  echo = F,
+  warning = F,
+  message = F,
+  error = F,
+  comment = F
+)
+} else {
+  knitr::opts_chunk$set(
+  fig.width = 9,
+  fig.height = 5,
+  dpi = 300,
+  dev = 'png',
+  echo = F,
+  warning = F,
+  message = F,
+  error = F,
+  comment = F
+)
+}
+
+```
+
+```{r title, include = F}
+
+if (target_region == "RCG_BA") {
+  front_title <- paste("RDB Catch and Effort Overview Baltic, ",  period, "  \n ","![](../../overviews_shiny/www/logo RCG BALTIC.PNG)", sep = "")
+}
+
+```
+
+```{r data, include = F}
+
+#This needs to be more generic - for easy loading the naming needs to be more generic
+if (target_region == "RCG_BA")
+{
+  load(
+    paste(data_dir, "RDB_RCG_BA_CL_2009_2020_prepared_20210428.Rdata", sep = "")
+  )
+  load(
+    paste(data_dir, "RDB_RCG_BA_CE_2009_2020_prepared_20210428.Rdata", sep = "")
+  )
+}
+
+#Adds IDs [move to preparation]
+cl_rcg[, FlagCountry_Loa := paste(FlagCountry, VesselLengthCategory, sep = "_")]
+ce_rcg[, FlagCountry_Loa := paste(FlagCountry, VesselLengthCategory, sep = "_")]
+
+# for maps of foreign landings 'LandingCountry' is needed
+ce_rcg[,LandingCountry := HarbourCountry]
+
+#Filter
+
+cl <- filter(cl_rcg, Year %in% years)
+
+ce <- filter(ce_rcg, Year %in% years)
+
+
+# filter WGBFAS
+
+cl <- droplevels(cl)
+ce <- droplevels(ce) 
+
+```
+
+```{r map_prep, include = F}
+# Load shapefiles 
+
+if (target_region == "RCG_BA")
+{
+  shp  = sf::st_read("../../data/shapefiles/RCG_BA_FAOareas.shp") %>% filter(F_LEVEL ==
+                                                                    'SUBDIVISION') # for BA maps on DIVISIONS level -> WATCH OUT ...28.1/...28.2
+}
+
+shp %>%
+  mutate(AreaMap = F_CODE, Area = F_CODE) -> shp
+
+# For plotting FishingGrounds
+cl %>% group_by(FishingGround) %>% distinct(Area) -> FishingGround
+shp %>% left_join(FishingGround) %>% group_by(FishingGround) %>% summarise(ID = mean(ID)) -> FAOshpFG
+FAOshpFG = cbind(FAOshpFG,  sf::st_coordinates(sf::st_centroid(FAOshpFG$geometry))) %>% mutate(lon = X, lat = Y)
+
+# For plotting Areas
+# add centroids - to put areas labels there, and to put piecharts there, creates new columns to the dataset named X, Y
+FAOshp = cbind(shp,  sf::st_coordinates(sf::st_centroid(shp$geometry))) %>% mutate(lon = X, lat = Y)
+
+if(target_region=='RCG_BA'){ # fixed wrong calculation of centroid of 27.3.d.30
+  FAOshp = FAOshp %>%   
+    mutate(X = ifelse(AreaMap=='27.3.d.30', 19.5 ,X), Y =  ifelse(AreaMap=='27.3.d.30',62 ,Y)) %>%
+    mutate(lon = X, lat = Y) 
+  
+  FAOshpFG = FAOshpFG %>% 
+    mutate(X = ifelse(FishingGround=='25-32', 20 ,X), Y =  ifelse(FishingGround=='25-32',58 ,Y)) %>% 
+    mutate(lon = X, lat = Y) 
+
+}
+
+if (target_region == "RCG_BA")
+{
+  StatRectshp  = sf::st_read("../../data/shapefiles/RCG_BA_ICESrect.shp")# for BA maps on DIVISIONS level -> WATCH OUT ...28.1/...28.2
+}
+
+StatRectshp %>% mutate(StatisticalRectangle = ICESNAME) -> StatRectshp
+StatRectshp = cbind(StatRectshp,  sf::st_coordinates(sf::st_centroid(StatRectshp$geometry))) %>% mutate(lon = X, lat = Y)
+```
+
+```{r landings, results = "asis", eval = T}
+
+cat('  \n')
+cat(paste0("# ", 'Landings per quarter by Statistical Rectangle  \n'))
+
+res <- choroplethMap_func(
+            df = cl%>%filter(SpeciesAphiaID==species_code),
+            var = 'LandingWeight_1000ton',
+            groupBy = 'StatisticalRectangle',
+            facet = 'Quarter',
+            func = 'sum',
+            type_of_threshold = 'percent',
+            value_of_threshold =  100,
+            points_coord =  eval(parse(text = 'StatRectshp')),
+            plot_labels = FALSE,
+            saveResults = FALSE,
+            outputPath = NA,
+            Catch_group_name = NA,
+            newVarName = 'Landings (1000 t)'
+            )
+
+          subchunkify(res[[2]],'Figure_landings',  10, 9)
+          
+          if (tables == "yes") {
+            write.table(
+              res[[1]],
+              file =  
+                paste(table_dir, 'Figure_landings',
+                ".txt",
+                sep = ""
+              ),
+              sep = '\t',
+              dec = '.',
+              row.names = F
+            )
+            }
+          
+          cat('\n')
+          cat('Figure 1.', res[[3]],'  \n ')
+          
+cat('  \n')
+cat(paste0("# ", 'Effort per quarter by Statistical Rectangle \n'))          
+          
+res_ce <- choroplethMap_func(
+            df = ce,
+            var = 'TripsNumber',
+            groupBy = 'StatisticalRectangle',
+            facet = 'Quarter',
+            func = 'sum',
+            type_of_threshold = 'percent',
+            value_of_threshold =  100,
+            points_coord =  eval(parse(text = 'StatRectshp')),
+            plot_labels = FALSE,
+            saveResults = FALSE,
+            outputPath = NA,
+            Catch_group_name = NA,
+            newVarName = 'Trips Number'
+            )
+
+            subchunkify(res_ce[[2]],'Figure_effort',  10, 9)
+            
+            if (tables == "yes") {
+            write.table(
+              res[[1]],
+              file =  
+                paste(table_dir, 'Figure_effort',
+                ".txt",
+                sep = ""
+              ),
+              sep = '\t',
+              dec = '.',
+              row.names = F
+            )
+              }
+            cat('\n')
+            cat('Figure 2.', res_ce[[3]],'  \n ')
+
+cat('  \n')
+cat(paste0("# ", 'Effort by metier lvl5 \n'))
+
+bar_ce <- barplot_var_by_one_var(
+            x = as.data.frame(ce),
+            Var = 'TripsNumber' ,
+            var1 = 'FishingActivityLvl5',
+            tapply_type = 'sum',
+            type_of_threshold = 'cum_percent',
+            value_of_threshold = 95,
+            sorted = T,
+            graph_par = eval(parse(text = 'list(oma = c(6,1,1,1), mai = c(1,1,.5,.5), ylab_line=4, col="colour5", mfrow=c(2,1), cex.x=0.7)')),
+            save_plot_to_list=F,
+            filter = ''
+          )
+          subchunkify(bar_ce[[2]],'Figure_effort_by_metier_lvl5',  5, 8)
+          
+          if (tables == "yes") {
+            write.table(
+              bar_ce[[1]],
+              file =  
+                paste(table_dir, 'Figure_effort_by_metier_lvl5',
+                ".txt",
+                sep = ""
+              ),
+              sep = '\t',
+              dec = '.',
+              row.names = F
+            )
+            }
+          
+cat('\n')
+cat('Figure 3. Number of trips by Metier Level 5. \n ')
+
+```
