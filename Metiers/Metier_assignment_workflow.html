@@ -386,9 +386,11 @@ rm(url)</code></pre>
 <h3>Input data codes validation</h3>
 <p>The <em>validateInputDataCodes</em> function validates the codes in the columns: area, gear, gearFR, selection, registered_target_assemblage, FAO_species, measure. If any of the above mentioned columns contains invalid etries then the function gives a warning.</p>
 <pre class="r"><code>validateInputDataCodes(input.data, gear.list, area.list, species.list)</code></pre>
-<pre><code>## Validation of input data format...</code></pre>
+<pre><code>## Validation of input data codes...</code></pre>
 <pre><code>## Warning in validateInputDataCodes(input.data, gear.list, area.list,
 ## species.list): Invalid gear codes found: XYZ</code></pre>
+<pre><code>## Warning in validateInputDataCodes(input.data, gear.list, area.list,
+## species.list): Invalid gear_FR codes found: FP</code></pre>
 <pre><code>## Warning in validateInputDataCodes(input.data, gear.list, area.list,
 ## species.list): Invalid species codes found: YYY</code></pre>
 <pre><code>## [1] TRUE</code></pre>
@@ -1699,7 +1701,7 @@ for(level in step.levels){
 <td align="left">NA</td>
 <td align="left">02-12-2018</td>
 <td align="left">37G5</td>
-<td align="left">OTB</td>
+<td align="left">NA</td>
 <td align="right">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
@@ -1735,7 +1737,7 @@ for(level in step.levels){
 <td align="left">NA</td>
 <td align="left">02-12-2018</td>
 <td align="left">37G5</td>
-<td align="left">OTB</td>
+<td align="left">NA</td>
 <td align="right">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
@@ -2162,7 +2164,7 @@ for(level in step.levels){
 <td align="left">NA</td>
 <td align="left">02-12-2018</td>
 <td align="left">37G5</td>
-<td align="left">OTB</td>
+<td align="left">NA</td>
 <td align="right">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
@@ -2200,7 +2202,7 @@ for(level in step.levels){
 <td align="left">NA</td>
 <td align="left">02-12-2018</td>
 <td align="left">37G5</td>
-<td align="left">OTB</td>
+<td align="left">NA</td>
 <td align="right">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
@@ -2541,7 +2543,7 @@ for(level in step.levels){
 <td align="left">27.3.d.25</td>
 <td align="left">37G5</td>
 <td align="left">OTB</td>
-<td align="left">OTB</td>
+<td align="left">NA</td>
 <td align="right">NA</td>
 <td align="left">NA</td>
 <td align="left">COD</td>
@@ -2572,7 +2574,7 @@ for(level in step.levels){
 <td align="left">27.3.d.25</td>
 <td align="left">37G5</td>
 <td align="left">OTB</td>
-<td align="left">OTB</td>
+<td align="left">NA</td>
 <td align="right">NA</td>
 <td align="left">NA</td>
 <td align="left">FLE</td>
@@ -2603,7 +2605,7 @@ for(level in step.levels){
 <td align="left">27.3.d.25</td>
 <td align="left">37G5</td>
 <td align="left">OTB</td>
-<td align="left">OTB</td>
+<td align="left">NA</td>
 <td align="right">NA</td>
 <td align="left">NA</td>
 <td align="left">PLE</td>
@@ -2634,7 +2636,7 @@ for(level in step.levels){
 <td align="left">27.3.d.25</td>
 <td align="left">37G5</td>
 <td align="left">OTB</td>
-<td align="left">OTB</td>
+<td align="left">NA</td>
 <td align="right">NA</td>
 <td align="left">NA</td>
 <td align="left">PLE</td>
@@ -3037,7 +3039,7 @@ for(level in step.levels){
 <td align="left">27.3.d.24</td>
 <td align="left">36G4</td>
 <td align="left">LLD</td>
-<td align="left">FPO</td>
+<td align="left">FP</td>
 <td align="right">NA</td>
 <td align="left">NA</td>
 <td align="left">SAL</td>
@@ -3786,7 +3788,7 @@ for(level in step.levels){
 <td align="left">27.3.d.25</td>
 <td align="left">37G5</td>
 <td align="left">OTB</td>
-<td align="left">OTB</td>
+<td align="left">NA</td>
 <td align="right">NA</td>
 <td align="left">NA</td>
 <td align="left">COD</td>
@@ -3821,7 +3823,7 @@ for(level in step.levels){
 <td align="left">27.3.d.25</td>
 <td align="left">37G5</td>
 <td align="left">OTB</td>
-<td align="left">OTB</td>
+<td align="left">NA</td>
 <td align="right">NA</td>
 <td align="left">NA</td>
 <td align="left">FLE</td>
@@ -3856,7 +3858,7 @@ for(level in step.levels){
 <td align="left">27.3.d.25</td>
 <td align="left">37G5</td>
 <td align="left">OTB</td>
-<td align="left">OTB</td>
+<td align="left">NA</td>
 <td align="right">NA</td>
 <td align="left">NA</td>
 <td align="left">PLE</td>
@@ -3891,7 +3893,7 @@ for(level in step.levels){
 <td align="left">27.3.d.25</td>
 <td align="left">37G5</td>
 <td align="left">OTB</td>
-<td align="left">OTB</td>
+<td align="left">NA</td>
 <td align="right">NA</td>
 <td align="left">NA</td>
 <td align="left">PLE</td>
