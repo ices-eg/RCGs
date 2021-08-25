@@ -10,7 +10,7 @@ There are several ways to get the code from GitHub, three different ways are des
 ![](annex1.png)
  </center>
  
-2.	Unzip the file at your computer. Under the “Metiers” -> “Scripts” folders, you can find the script_metiers_test.R file. Under the “Functions” folder the functions that the script reads are located. In the beginning of the script, make sure that it points to the Functions folder to read the functions.
+2.	Unzip the file at your computer. Under the “Metiers” -> “Scripts” folders, you can find the script_metiers.R file. Under the “Functions” folder the functions that the script reads are located. In the beginning of the script, make sure that it points to the Functions folder to read the functions.
 
 3.	To open the project from your computer under the “Metiers” folder  you should run “Metiers.Rproj”. Then the path to all functions will be valid.
 <center>

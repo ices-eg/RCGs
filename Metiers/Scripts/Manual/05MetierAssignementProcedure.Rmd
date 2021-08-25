@@ -1,7 +1,7 @@
 # Métier assignment procedure
 
 
-An R-script was developed and tested in 2019 for assigning métiers in the Baltic Sea, which has been further developed in 2020 to cover more areas and details. The R-script is available at https://github.com/ices-eg/RCGs/blob/master/Metiers/Scripts/script_metiers_test.R and functions are available at https://github.com/ices-eg/RCGs/tree/master/Metiers/Scripts/Functions.
+An R-script was developed and tested in 2019 for assigning métiers in the Baltic Sea, which has been further developed in 2020 to cover more areas and details. The R-script is available at https://github.com/ices-eg/RCGs/blob/master/Metiers/Scripts/script_metiers.R and functions are available at https://github.com/ices-eg/RCGs/tree/master/Metiers/Scripts/Functions.
 
 
 ## Assigning “metier_level_6”

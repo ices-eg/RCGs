@@ -6,6 +6,7 @@ rareMetiersLvl5 <- function(input.data,sequence.def,rare.threshold){
   input.data <- merge(input.data, pattern,all.x = T ,
                       by=c("year", "vessel_id", "metier_level_5"))
   input.data[,metier_level_5_status:=ifelse(seq_perc_lvl5<rare.threshold,"rare","common")]
-  input.data[,":="(seq_no_lvl5=NULL, seq_perc_lvl5=NULL, metier_level_5_pattern=NA)]
+  input.data[,":="(seq_no_lvl5=NULL, seq_perc_lvl5=NULL, 
+                   metier_level_5_pattern=NA, ves_pat_number_of_seq=NA, ves_pat_level=NA)]
   return(input.data)
 }
