@@ -25,13 +25,13 @@ The variables needed for the work are the working directory, the country code (2
 ##        USER CHOICE (START)                       ##
 ######################################################
 #
-pathIn     <-    'D:/Grupy robocze/RCG/fishnCo/NWP table 2.1'
+pathIn     <-    'Q:/mynd/RCM/RCGs/NWPtools/table_2_1/NWP table 2.1'
 pathOut    <-    paste(pathIn,'outputs',sep='/')
 whatGoesIn <-    list(EUROSTAT      =   FALSE, 
                       FIDES         =   FALSE, 
                       NationalStats =   FALSE,
                       RCGstats      =   TRUE)  # Flag to inform on which source to be used (FIDES=FALSE means the system wil use a public DB instead)
-CTRY       <-    'PL'
+CTRY       <-    'DK'
 refYears   <-    2017:2019
 #
 ######################################################
@@ -44,7 +44,7 @@ refYears   <-    2017:2019
   library(readxl)
   #library(COSTeda) #only for national statistics import and the function which transform ICES rectangle in ICES area
   setwd('.')
-  source(paste(pathIn,'Filling Table 21 functions.r',sep='/'))
+  source(paste("Q:/mynd/RCM/RCGs/NWPtools/table_2_1",'Filling Table 21 functions.r',sep='/'))
 ```
 ## Importing the datasets
 The list of datasets are the following :
@@ -58,7 +58,7 @@ The list of datasets are the following :
 if (whatGoesIn$EUROSTAT) EURO <- loadEurostat(pathIn)
 if (whatGoesIn$FIDES) TAC  <- loadFides(pathIn, ctry = c(CTRY,'UE'), years=refYears+1)  #these are the only FIDES files I have!
 if (whatGoesIn$NationalStats) NAT  <- loadNational(pathIn = 'C:/_PROGRAMME/DCF/2021/CREDO/BUM_stats/Input_data/ObsDeb', years=refYears)  
-if (whatGoesIn$RCGstats) RCG <- loadRCG("D:\\Grupy robocze\\RCG\\fishnCo\\NWP table 2.1")
+if (whatGoesIn$RCGstats) RCG <- loadRCG("Q:/mynd/RCM/RCGs/NWPtools/table_2_1/NWP table 2.1")
 ```
 
 2. Reference tables:
