@@ -71,6 +71,8 @@ GEO     <- read.table(paste(pathIn,'geo.def',sep='/'),header=TRUE,sep=";", as.is
 GEO <- GEO[-1,] #EU (27MS) instead of EU (28MS)
 ASFIS   <- read.table(paste(pathIn,'ASFIS_sp_Feb_2018.txt',sep='/'), header=TRUE, sep="\t", as.is=TRUE)
 table_2.1 <- read.csv(paste(pathIn,'EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final_v02.csv',sep='/'), sep=';', header=TRUE, as.is=TRUE, encoding='UTF-8') #New
+
+table_2.1$areaBis <- gsub(" ", "", linkage$areaBis) #kibi: Remove blanks in area codes - already done for areaRDB
 ```
 
 ## data.frame preparation
