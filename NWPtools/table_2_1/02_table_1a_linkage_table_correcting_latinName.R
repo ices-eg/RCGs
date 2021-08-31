@@ -6,8 +6,8 @@ library(dplyr)
 library(tidyr)
 library(stringr)
 
-input_path <- "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/NWP table 2.1/"
-output_path <- "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/NWP table 2.1/"
+input_path <- "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/"
+output_path <- "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/"
 
 
 linkage <- read.csv(file.path(input_path, 'EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final_v01.csv'), sep = ";", header = T)

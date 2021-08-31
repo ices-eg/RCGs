@@ -25,7 +25,7 @@ The variables needed for the work are the working directory, the country code (2
 ##        USER CHOICE (START)                       ##
 ######################################################
 #
-pathIn     <-    'Q:/mynd/RCM/RCGs/NWPtools/table_2_1/NWP table 2.1'
+pathIn     <-    'Q:/mynd/RCM/RCGs/NWPtools/table_2_1'
 pathOut    <-    paste(pathIn,'outputs',sep='/')
 whatGoesIn <-    list(EUROSTAT      =   FALSE, 
                       FIDES         =   FALSE, 
