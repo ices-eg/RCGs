@@ -6,17 +6,37 @@
 
 library(dplyr)
 library(tidyr)
-library(stringr)
+# library(stringr)
 library(data.table)
 
-input_path <- "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/NWP table 2.1/"
-output_path <- "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/"
+path <- "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/"
+
+test <- "yes" # Testing for duplicated areas
+regions_to_test <- c("Other regions", "Baltic Sea",
+                     "North Sea and Eastern Arctic",
+                     "North-East Atlantic")
 
 
-linkage <- read.csv(file.path(input_path, 'EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final.csv'), sep = ";", header = T)
+linkage <- read.csv(file.path(path, 'EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final.csv'), sep = ";", header = T)
 rdb_areas <- arrange(read.csv(paste0(path, "rdb_area_ref.csv"), sep = ";"), x)
 
 names(linkage)
+
+# Fixing a couple of areaBis errors ----
+
+linkage$areaBis[linkage$latinName == "Merlangius merlangus" & linkage$area == "7a"] <- "27_7_A"
+linkage$areaBis[linkage$area == "6, 7, 8, 9"] <- "27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9"
+linkage$areaBis[linkage$area == "5, 14 (demersal) "] <- "27_5,27_14"
+
+# Fixing duplicated regions in areaBis ----
+# 
+# linkage$areaBis[linkage$area == "3aS" &
+#                   linkage$latinName == "Pleuronectes platessa"] <- " " # Duplicate - already in the Baltic Sea
+# 
+# linkage$areaRDB[linkage$area == "Union waters of 2a, 3a and 4" &
+#                   linkage$latinName == "Solea solea"] <- "27_2_A,27_4" # 3a a duplicate - already in the Baltic Sea
+
+# Coding RDB areas ----
 
 linkage$areaRDB <- gsub(" ", "", linkage$areaBis)
 linkage$areaRDB <- paste0(",", gsub('_', '.', linkage$areaRDB), ",")
@@ -73,14 +93,6 @@ linkage$areaRDB[linkage$area == "3aN" &
 
 linkage$areaRDB[linkage$area == "3aS" &
                   linkage$latinName == "Gadus morhua"] <- "27.3.a.21" # ERROR
-
-linkage$areaRDB[linkage$area == "3aS" &
-                  linkage$latinName == "Pleuronectes platessa"] <- " " # Duplicate - already in the Baltic Sea
-
-linkage$areaRDB[linkage$area == "Union waters of 2a, 3a and 4" &
-                  linkage$latinName == "Solea solea"] <-
-  paste(rdb_areas$x[rdb_areas$x %like% "27.2.a" |
-                      rdb_areas$x %like% "27.4"], collapse = ",") # 3a a duplicate - already in the Baltic Sea
 
 check_3 <- distinct(subset(linkage, region == "North Sea and Eastern Arctic"), latinName, area, areaBis, areaRDB)
 
@@ -228,20 +240,32 @@ check_5 <- distinct(subset(linkage, region == "Other regions" & substr(areaBis, 
 # Tests
 # Duplicated areas and species
 
-test1 <- select(linkage, region, latinName, area, areaRDB)
-
-areaRDB_split <- separate(data = test1, col = areaRDB, sep = ",", into = paste0("var", seq(1:100)))
-
-areaRDB_split_t <- gather(areaRDB_split, key = "areaRDB", value = "areaR", -region, -area, -latinName)
-
-areaRDB_split_t2 <- areaRDB_split_t[!is.na(areaRDB_split_t$areaR) & areaRDB_split_t$areaR != "", ]
-
-areaRDB_split_t2 <- mutate(arrange(areaRDB_split_t2, latinName, areaR), no = 1)
-
-areaRDB_split_t3 <- subset(mutate(group_by(areaRDB_split_t2, latinName, areaR), no_sum = sum(no)), no_sum > 1)
+if (test == "yes"){
+  
+  test <- subset(linkage, region %in% regions_to_test)
+  
+  test1 <- select(test, region, latinName, area, areaRDB)
+  
+  areaRDB_split <- separate(data = test1, col = areaRDB, sep = ",", into = paste0("var", seq(1:100)))
+  
+  areaRDB_split_t <- gather(areaRDB_split, key = "areaR", value = "areaRDB", -region, -area, -latinName)
+  
+  areaRDB_split_t2 <- areaRDB_split_t[!is.na(areaRDB_split_t$areaRDB) & areaRDB_split_t$areaRDB != "", ]
+  
+  areaRDB_split_t2 <- mutate(arrange(areaRDB_split_t2, latinName, areaRDB), no = 1)
+  
+  areaRDB_split_t3 <- subset(mutate(group_by(areaRDB_split_t2, latinName, areaRDB), no_sum = sum(no)), no_sum > 1)
+  
+  dup_areas_full <- distinct(ungroup(areaRDB_split_t3), region, latinName, area, areaRDB)
+  
+  dup_areas <- distinct(ungroup(areaRDB_split_t3), region, latinName, area)
+  
+  write.table(dup_areas, paste0(path, "table_2.1_duplicated_areas.csv"), row.names = F, sep = ";")
+  
+}
 
 # Output
 
 
-write.table(select(linkage, -X, -X.1), paste0(output_path, "EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final_v01.csv"), 
+write.table(select(linkage, -X, -X.1), paste0(path, "EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final_v01.csv"), 
           row.names = F, sep = ";")
