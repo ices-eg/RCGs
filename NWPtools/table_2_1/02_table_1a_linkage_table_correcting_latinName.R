@@ -2,15 +2,14 @@
 
 # Adapting and correcting scientific names - adaptions to the RDB names
 
-library(dplyr)
-library(tidyr)
-library(stringr)
+# library(dplyr)
+# library(tidyr)
+# library(stringr)
 
-input_path <- "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/"
-output_path <- "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/"
+path <- "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/"
 
 
-linkage <- read.csv(file.path(input_path, 'EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final_v01.csv'), sep = ";", header = T)
+linkage <- read.csv(file.path(path, 'EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final_v01.csv'), sep = ";", header = T)
 
 names(linkage)
 
@@ -37,5 +36,5 @@ linkage$latinNameJoin[linkage$latinNameJoin == "Rajidae"] <- "Raja" #Mangler all
 
 
 
-write.table(linkage, paste0(output_path, "EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final_v02.csv"), 
+write.table(linkage, paste0(path, "EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final_v02.csv"), 
           row.names = F, sep = ";")
