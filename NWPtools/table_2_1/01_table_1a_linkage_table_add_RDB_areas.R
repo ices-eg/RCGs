@@ -29,12 +29,12 @@ linkage$areaBis[linkage$area == "6, 7, 8, 9"] <- "27_6,27_7_A,27_7_B,27_7_C,27_7
 linkage$areaBis[linkage$area == "5, 14 (demersal) "] <- "27_5,27_14"
 
 # Fixing duplicated regions in areaBis ----
-# 
-# linkage$areaBis[linkage$area == "3aS" &
-#                   linkage$latinName == "Pleuronectes platessa"] <- " " # Duplicate - already in the Baltic Sea
-# 
-# linkage$areaRDB[linkage$area == "Union waters of 2a, 3a and 4" &
-#                   linkage$latinName == "Solea solea"] <- "27_2_A,27_4" # 3a a duplicate - already in the Baltic Sea
+
+linkage$areaBis[linkage$area == "3aS" &
+                  linkage$latinName == "Pleuronectes platessa"] <- " " # Duplicate - already in the Baltic Sea
+
+linkage$areaRDB[linkage$area == "Union waters of 2a, 3a and 4" &
+                  linkage$latinName == "Solea solea"] <- "27_2_A,27_4" # 3a a duplicate - already in the Baltic Sea
 
 # Coding RDB areas ----
 
