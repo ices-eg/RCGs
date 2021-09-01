@@ -75,7 +75,7 @@ GEO$geo <- toupper(GEO$geo) #2-letter code should be in capitals
 }
 
 if (whatGoesIn$RCGstats){
-  GEO_rdb <- read.csv(paste0(path, "GEO_RDB.csv"), sep = ";")
+  GEO_rdb <- read.csv(paste(pathIn, "GEO_RDB.csv", sep = "/"), sep = ";")
 }
 
 ASFIS   <- read.table(paste(pathIn,'ASFIS_sp_Feb_2018.txt',sep='/'), header=TRUE, sep="\t", as.is=TRUE)
@@ -137,6 +137,10 @@ colnames(RCGS)[c(1,4,7:9, 2)] = c('Scientific_name','area','Y1', 'Y2', 'Y3', 'Le
 
 RCGS = RCGS[,c('X3A_CODE', 'geo', 'area', 'Y1', 'Y2', 'Y3',"Country", 'Level.Description', 'Scientific_name','English_name', 'French_name')]
 }
+
+RCGS$Y1[is.na(RCGS$Y1)] <- 0
+RCGS$Y2[is.na(RCGS$Y2)] <- 0
+RCGS$Y3[is.na(RCGS$Y3)] <- 0
 
 ```
 
@@ -264,7 +268,7 @@ for (i in 1:nrow(table_2.1)) {
             Y3 = rep(NA, 2),
             Country = c(ctry2, 'European union (27 MS)'),
             source = FALSE,
-            Level.Description = GEO$Level.Description[GEO$geo %in% c(CTRY, 'EU27_2020')],
+            Level.Description = GEO_rdb$Level.Description[GEO_rdb$geo %in% c(CTRY, 'EU27_2020')],
             Scientific_name = rep(table_2.1$latinName[i], 2),
             English_name = rep(NA, 2),
             French_name = rep(NA, 2)
@@ -288,7 +292,7 @@ for (i in 1:nrow(table_2.1)) {
             Moy = NA,
             Country = ctry2,
             source = FALSE,
-            Level.Description = GEO$Level.Description[GEO$geo %in% CTRY],
+            Level.Description = GEO_rdb$Level.Description[GEO_rdb$geo %in% CTRY],
             Scientific_name = table_2.1$latinName[i],
             English_name = NA,
             French_name = NA
@@ -440,6 +444,8 @@ tabControl <- rbind.data.frame(tabControl, tbC)
 ##Formatting
 ```{r}
 T2_1 <- T21
+
+# National statistic
 ind <- which(T2_1$landings ==0 & T2_1$natStats>0)
 T2_1$landings[ind] <- T2_1$natStats[ind]
 T2_1$sourceNat <- as.character(T2_1$sourceNat)
@@ -450,13 +456,24 @@ T2_1$landings[ind] <- T2_1$natStats[ind]
 T2_1$sourceNat <- as.character(T2_1$sourceNat)
 T2_1$sourceNat[ind] <- 'National statistics'
 
-T2_1$landings <- round(T2_1$landings,0)
 T2_1$natStats <- round(T2_1$natStats,0)
-T2_1$landings[T2_1$landings == 0] <- 'None'
+
+# landings - country
+T2_1$landings[T2_1$landings == 0] <- NA
+T2_1$landings <- round(T2_1$landings,0)
+T2_1$landings[is.na(T2_1$landings)] <- "None"
+
+# TAC
 T2_1$TAC <- paste(round(100*T2_1$TAC,0),'%',sep='')
 T2_1$TAC[T2_1$TAC %in% c('NA%','NaN%','Inf%')] <- 'None'
+
+# landings - share
+T2_1$shareLanding[T2_1$shareLanding == 0] <- NA
 T2_1$shareLanding <- paste(round(100*T2_1$shareLanding,0),'%',sep='')
 T2_1$shareLanding[T2_1$shareLanding %in% c('NA%','NaN%','Inf%')] <- 'None'
+
+# Treshold
+
 T2_1$thresh[T2_1$landings %in% 'None' & T2_1$TAC %in% 'None'] <- T2_1$shareLanding[T2_1$landings %in% 'None' & T2_1$TAC %in% 'None'] <- 'None'
 ind <- which(T2_1$comments>.25)
 T2_1$comments <- paste(round(100*T2_1$comments,0),'%',sep='')
@@ -485,8 +502,8 @@ T2_1$regCoord[T2_1$landings %in% 'None'] <- '-'
 the rule sum of quotas for coutries <10% (less or more than 25%) is noted in the comments column
 The national statistics (when exists) are on an extra column
 ```{r}
-write.table(T2_1, file=paste(path,paste(CTRY,'_table2_1_filled.csv',sep=''),sep='/'), sep=';',row.names=FALSE, quote=FALSE)
-write.table(tabControl, file=paste(path,paste(CTRY,'_table2_1_control.csv',sep=''),sep='/'), sep=';',row.names=FALSE, quote=FALSE)
+write.table(T2_1, file=paste(pathOut,paste(CTRY,'_table2_1_filled.csv',sep=''),sep='/'), sep=';',row.names=FALSE, quote=FALSE)
+write.table(tabControl, file=paste(pathOut,paste(CTRY,'_table2_1_control.csv',sep=''),sep='/'), sep=';',row.names=FALSE, quote=FALSE)
 ```
 
 
