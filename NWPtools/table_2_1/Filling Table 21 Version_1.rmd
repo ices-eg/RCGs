@@ -67,12 +67,21 @@ if (whatGoesIn$RCGstats) RCG <- loadRCG("Q:/mynd/RCM/RCGs/NWPtools/table_2_1/NWP
   + Linkage table mirroring EU-MAP Table 1A naming of species and stock area, and lining to EUROSTAT and MARE/FIDES species and area naming
 
 ```{r}
+if (whatGoesIn$EUROSTAT) {
 GEO     <- read.table(paste(pathIn,'geo.def',sep='/'),header=TRUE,sep=";", as.is=TRUE)
 GEO <- GEO[-1,] #EU (27MS) instead of EU (28MS)
+names(GEO)[2] <- "Country"
+GEO$geo <- toupper(GEO$geo) #2-letter code should be in capitals
+}
+
+if (whatGoesIn$RCGstats){
+  GEO_rdb <- read.csv(paste0(path, "GEO_RDB.csv"), sep = ";")
+}
+
 ASFIS   <- read.table(paste(pathIn,'ASFIS_sp_Feb_2018.txt',sep='/'), header=TRUE, sep="\t", as.is=TRUE)
 table_2.1 <- read.csv(paste(pathIn,'EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final_v02.csv',sep='/'), sep=';', header=TRUE, as.is=TRUE, encoding='UTF-8') #New
 
-table_2.1$areaBis <- gsub(" ", "", linkage$areaBis) #kibi: Remove blanks in area codes - already done for areaRDB
+table_2.1$areaBis <- gsub(" ", "", table_2.1$areaBis) #kibi: Remove blanks in area codes - already done for areaRDB
 ```
 
 ## data.frame preparation
@@ -84,8 +93,6 @@ The country names are matching between GEO and TAC data.frame, except for UK, so
 The TAC dataset is well structured and thus ready for the analysis.
 
 ```{r warning = FALSE}
-names(GEO)[2] <- "Country"
-GEO$geo <- toupper(GEO$geo) #2-letter code should be in capitals
 
 if (whatGoesIn$EUROSTAT){
 SRG <- strsplit(as.character(EURO$species.fishreg.unit.geo.time),split=",")
@@ -115,19 +122,21 @@ RCG data
 
 if (whatGoesIn$RCGstats) {
 RCGS <- RCG[RCG$Year %in% refYears,]
-RCGS <- merge(RCGS, GEO, all.x = TRUE, by.x = "FlagCountry", by.y = "Level.Description" )
+RCGS <- merge(RCGS, GEO_rdb, all.x = TRUE, by.x = "FlagCountry", by.y = "Level.Description" )
 RCGS <- RCGS[with(RCGS, order(Year)), ]
 RCGS <- pivot_wider(RCGS, names_from = Year, values_from = OfficialLandingCatchWeight_ton)
 ind <- which(is.na(RCGS$Country))
 if (length(ind) >0) RCGS <- RCGS[!is.na(RCGS$Country),]
+
+length(ind)
+unique(RCGS$Country)
+
 RCGS <- merge(RCGS, ASFIS[,c(3:6)], all.x=TRUE, by.x = "Species", by.y = "Scientific_name")
 
 colnames(RCGS)[c(1,4,7:9, 2)] = c('Scientific_name','area','Y1', 'Y2', 'Y3', 'Level.Description')
 
 RCGS = RCGS[,c('X3A_CODE', 'geo', 'area', 'Y1', 'Y2', 'Y3',"Country", 'Level.Description', 'Scientific_name','English_name', 'French_name')]
 }
-
-test <- distinct(RCGS, X3A_CODE, Scientific_name)
 
 ```
 
@@ -226,8 +235,8 @@ for (i in 1:nrow(table_2.1)) {
 # 
 	
   if (whatGoesIn$RCGstats) {
-      ctry2 <- GEO$Country[GEO$geo %in% CTRY]
-      RCGS$area = gsub('[.]', '_', RCGS$area)
+      ctry2 <- GEO_rdb$Country[GEO_rdb$geo %in% CTRY]
+      # RCGS$area = gsub('[.]', '_', RCGS$area) #Kibi: Not needed anymore, since the ref is changed
       
       reg <- strsplit(as.character(table_2.1$areaRDB[i]), split = ',')
       species <- strsplit(as.character(table_2.1$latinNameJoin[i]), split = ',')
@@ -235,13 +244,14 @@ for (i in 1:nrow(table_2.1)) {
       RCGS2 <-
         RCGS[RCGS$Scientific_name %in% species[[1]] &
                tolower(RCGS$area) %in% tolower(reg[[1]]), ]
-      ind <- which(RCGS2$Level.Description %in% 'GBR')
+      
+      ind <- which(RCGS2$geo %in% 'UK')
       
       if (length(ind) > 0)
         RCGS2 <-
         RCGS2[-ind, ]  # UK is not in EU27, so when only UK declares a stock the line EU27 is missing and this case is treated under nrow(EUR) == 0
       if (nrow(RCGS2) == 1)
-        if (RCGS2$Country %in% 'European union (28 MS)')
+        if (RCGS2$Country %in% 'European union (28 MS)') # kibi: could be deleted not relevant for RDB data♠
           RCGS2 <- RCGS2 [-1, ]
       if (nrow(RCGS2) == 0) {
         RCGS2 <-
@@ -475,8 +485,8 @@ T2_1$regCoord[T2_1$landings %in% 'None'] <- '-'
 the rule sum of quotas for coutries <10% (less or more than 25%) is noted in the comments column
 The national statistics (when exists) are on an extra column
 ```{r}
-write.table(T2_1, file=paste(pathOut,paste(CTRY,'_table2_1_filled.csv',sep=''),sep='/'), sep=';',row.names=FALSE, quote=FALSE)
-write.table(tabControl, file=paste(pathOut,paste(CTRY,'_table2_1_control.csv',sep=''),sep='/'), sep=';',row.names=FALSE, quote=FALSE)
+write.table(T2_1, file=paste(path,paste(CTRY,'_table2_1_filled.csv',sep=''),sep='/'), sep=';',row.names=FALSE, quote=FALSE)
+write.table(tabControl, file=paste(path,paste(CTRY,'_table2_1_control.csv',sep=''),sep='/'), sep=';',row.names=FALSE, quote=FALSE)
 ```
 
 
