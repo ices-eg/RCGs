@@ -4,6 +4,10 @@
 # A bit fast and dirty copy / paste coding
 # Kirsten Birch Håkansson, DTU Aqua, Denmark
 
+################################################################################
+# Remember to run "02_table_1a_linkage_table_correcting_latinName.R" after this script
+################################################################################
+
 library(dplyr)
 library(tidyr)
 # library(stringr)
