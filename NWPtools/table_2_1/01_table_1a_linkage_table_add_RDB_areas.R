@@ -12,9 +12,7 @@ library(data.table)
 path <- "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/"
 
 test <- "yes" # Testing for duplicated areas
-regions_to_test <- c("Other regions", "Baltic Sea",
-                     "North Sea and Eastern Arctic",
-                     "North-East Atlantic")
+rfmo_to_test <- c("ICES", "NAFO")
 
 
 linkage <- read.csv(file.path(path, 'EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final.csv'), sep = ";", header = T)
@@ -22,11 +20,21 @@ rdb_areas <- arrange(read.csv(paste0(path, "rdb_area_ref.csv"), sep = ";"), x)
 
 names(linkage)
 
+# Removing blanks from areaBis
+
+unique(linkage$areaBis)
+
+linkage$areaBis <- gsub(" ", "", linkage$areaBis)
+
 # Fixing a couple of areaBis errors ----
 
 linkage$areaBis[linkage$latinName == "Merlangius merlangus" & linkage$area == "7a"] <- "27_7_A"
 linkage$areaBis[linkage$area == "6, 7, 8, 9"] <- "27_6,27_7_A,27_7_B,27_7_C,27_7_E,27_7_F,27_7_G,27_7_H,27_7_J,27_7_K,27_8,27_9"
 linkage$areaBis[linkage$area == "5, 14 (demersal) "] <- "27_5,27_14"
+
+linkage$areaBis[linkage$area == "SA1-6"] <- "21_1,21_2,21_3,21_4,21_5,21_6"
+linkage$areaBis[linkage$area == "SA1-3"] <- "21_1,21_2,21_3"
+
 
 # Fixing duplicated regions in areaBis ----
 
@@ -38,8 +46,9 @@ linkage$areaRDB[linkage$area == "Union waters of 2a, 3a and 4" &
 
 # Coding RDB areas ----
 
-linkage$areaRDB <- gsub(" ", "", linkage$areaBis)
-linkage$areaRDB <- paste0(",", gsub('_', '.', linkage$areaRDB), ",")
+linkage$areaRDB <- linkage$areaBis
+
+linkage$areaRDB <- paste0(",", gsub('_', '.', linkage$areaRDB), ",") # , add to make the gsub a bit easier
 
 
 linkage$areaRDB[linkage$region %in% c("Baltic Sea",
@@ -242,7 +251,7 @@ check_5 <- distinct(subset(linkage, region == "Other regions" & substr(areaBis, 
 
 if (test == "yes"){
   
-  test <- subset(linkage, region %in% regions_to_test)
+  test <- subset(linkage, RFMO %in% rfmo_to_test)
   
   test1 <- select(test, region, latinName, area, areaRDB)
   
@@ -262,10 +271,20 @@ if (test == "yes"){
   
   write.table(dup_areas, paste0(path, "table_2.1_duplicated_areas.csv"), row.names = F, sep = ";")
   
+  test2 <- distinct(test,  area, areaBis, areaRDB)
+  
+  write.table(test2, paste0(path, "table_2.1_distinct_areas.csv"), row.names = F, sep = ";")
+  
 }
+
+# A bit of cleaning
+
+linkage$areaRDB <- gsub("^\\,|\\,$", "", linkage$areaRDB)
+
+unique(linkage$areaRDB)
 
 # Output
 
 
-write.table(select(linkage, -X, -X.1), paste0(path, "EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final_v01.csv"), 
+write.table(select(linkage, -X, -X.1), paste0(path, "EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv"), 
           row.names = F, sep = ";")
