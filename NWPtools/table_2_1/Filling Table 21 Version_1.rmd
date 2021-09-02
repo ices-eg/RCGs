@@ -28,9 +28,11 @@ The variables needed for the work are the working directory, the country code (2
 pathIn     <-    'Q:/mynd/RCM/RCGs/NWPtools/table_2_1'
 pathOut    <-    paste(pathIn,'outputs',sep='/')
 
-output_suffix <- gsub(":", "", paste("_RDB", Sys.time(), sep = "_"))
+output_suffix <- gsub(":", "", paste("_RDB_EUROSTAT", Sys.time(), sep = "_"))
 
-whatGoesIn <-    list(EUROSTAT      =   FALSE, 
+# whatGoesIn - If EUROSTAT = T & RCGstats = T, then the resulting _control will have both stats, but the _filled will be based on RCGstats
+
+whatGoesIn <-    list(EUROSTAT      =   TRUE, 
                       FIDES         =   FALSE, 
                       NationalStats =   FALSE,
                       RCGstats      =   TRUE)  # Flag to inform on which source to be used (FIDES=FALSE means the system wil use a public DB instead)
@@ -82,9 +84,9 @@ if (whatGoesIn$RCGstats){
 }
 
 ASFIS   <- read.table(paste(pathIn,'ASFIS_sp_Feb_2018.txt',sep='/'), header=TRUE, sep="\t", as.is=TRUE)
-table_2.1 <- read.csv(paste(pathIn,'EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final_v02.csv',sep='/'), sep=';', header=TRUE, as.is=TRUE, encoding='UTF-8') #New
+table_2.1 <- read.csv(paste(pathIn,'EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv',sep='/'), sep=';', header=TRUE, as.is=TRUE, encoding='UTF-8') #New
 
-table_2.1$areaBis <- gsub(" ", "", table_2.1$areaBis) #kibi: Remove blanks in area codes - already done for areaRDB
+# table_2.1$areaBis <- gsub(" ", "", table_2.1$areaBis) #kibi: Remove blanks in area codes - moved to linkage script
 ```
 
 ## data.frame preparation
@@ -139,11 +141,13 @@ RCGS <- merge(RCGS, ASFIS[,c(3:6)], all.x=TRUE, by.x = "Species", by.y = "Scient
 colnames(RCGS)[c(1,4,7:9, 2)] = c('Scientific_name','area','Y1', 'Y2', 'Y3', 'Level.Description')
 
 RCGS = RCGS[,c('X3A_CODE', 'geo', 'area', 'Y1', 'Y2', 'Y3',"Country", 'Level.Description', 'Scientific_name','English_name', 'French_name')]
-}
 
-RCGS$Y1[is.na(RCGS$Y1)] <- 0
+RCGS$Y1[is.na(RCGS$Y1)] <- 0  # Assuming that NA are TRUE ZEROS
 RCGS$Y2[is.na(RCGS$Y2)] <- 0
 RCGS$Y3[is.na(RCGS$Y3)] <- 0
+}
+
+
 
 ```
 
@@ -258,7 +262,7 @@ for (i in 1:nrow(table_2.1)) {
         RCGS2 <-
         RCGS2[-ind, ]  # UK is not in EU27, so when only UK declares a stock the line EU27 is missing and this case is treated under nrow(EUR) == 0
       if (nrow(RCGS2) == 1)
-        if (RCGS2$Country %in% 'European union (28 MS)') # kibi: could be deleted not relevant for RDB data♠
+        if (RCGS2$Country %in% 'European union (28 MS)') # kibi: could be deleted not relevant for RDB data
           RCGS2 <- RCGS2 [-1, ]
       if (nrow(RCGS2) == 0) {
         RCGS2 <-
@@ -345,10 +349,11 @@ for (i in 1:nrow(table_2.1)) {
         T1$shareLanding <- 0
       }
     
-      	tbC <- data.frame(spp=table_2.1$latinName[i], geo=rep(CTRY, each=3), area=table_2.1$area[i], year=refYears,
+      	tbC1 <- data.frame(spp=table_2.1$latinName[i], geo=rep(CTRY, each=3), area=table_2.1$area[i], year=refYears,
 	                  RCG.CTRY=apply(RCGS2_C[,c('Y1','Y2','Y3')],2,sum,na.rm=TRUE),
 	                  RCG.EU=  apply(RCGS2[,c('Y1','Y2','Y3')],2,sum,na.rm=TRUE)) 
-
+      
+      	tbC <- merge(tbC, tbC1, all=TRUE)
 
     } #end of the part of whatGoesIn$RCGstats
 
