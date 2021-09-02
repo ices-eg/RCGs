@@ -27,6 +27,9 @@ The variables needed for the work are the working directory, the country code (2
 #
 pathIn     <-    'Q:/mynd/RCM/RCGs/NWPtools/table_2_1'
 pathOut    <-    paste(pathIn,'outputs',sep='/')
+
+output_suffix <- gsub(":", "", paste("_RDB", Sys.time(), sep = "_"))
+
 whatGoesIn <-    list(EUROSTAT      =   FALSE, 
                       FIDES         =   FALSE, 
                       NationalStats =   FALSE,
@@ -502,8 +505,8 @@ T2_1$regCoord[T2_1$landings %in% 'None'] <- '-'
 the rule sum of quotas for coutries <10% (less or more than 25%) is noted in the comments column
 The national statistics (when exists) are on an extra column
 ```{r}
-write.table(T2_1, file=paste(pathOut,paste(CTRY,'_table2_1_filled.csv',sep=''),sep='/'), sep=';',row.names=FALSE, quote=FALSE)
-write.table(tabControl, file=paste(pathOut,paste(CTRY,'_table2_1_control.csv',sep=''),sep='/'), sep=';',row.names=FALSE, quote=FALSE)
+write.table(T2_1, file=paste(pathOut,paste(CTRY,"_table2_1_filled", output_suffix, ".csv",sep=''),sep='/'), sep=';',row.names=FALSE, quote=FALSE)
+write.table(tabControl, file=paste(pathOut,paste(CTRY,"_table2_1_control", output_suffix, ".csv",sep=''),sep='/'), sep=';',row.names=FALSE, quote=FALSE)
 ```
 
 
