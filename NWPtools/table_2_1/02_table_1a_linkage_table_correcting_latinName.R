@@ -1,6 +1,12 @@
 
 
 # Adapting and correcting scientific names - adaptions to the RDB names
+# Kirsten Birch Håkansson, DTU Aqua, Denmark
+
+################################################################################
+# Remember to run "01_table_1a_linkage_table_correcting_latinName.R" before this script
+################################################################################
+
 
 library(dplyr)
 library(data.table)
@@ -11,7 +17,7 @@ path <- "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/"
 
 rfmo_to_test <- c("ICES", "NAFO", "CACAF", "SPRFMO")
 
-linkage <- read.csv(file.path(path, 'EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final_v01.csv'), sep = ";", header = T)
+linkage <- read.csv(file.path(path, 'EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv'), sep = ";", header = T)
 
 rdb_spp <- read.csv(paste(path, "rdb_spp.csv", sep = "/"), sep = ";")
 
@@ -172,5 +178,5 @@ linkage$latinNameJoin[linkage$region == "North-East Atlantic" &
 
 # Output ----
 
-write.table(linkage, paste0(path, "EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final_v02.csv"), 
+write.table(linkage, paste0(path, "EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv"), 
           row.names = F, sep = ";")
