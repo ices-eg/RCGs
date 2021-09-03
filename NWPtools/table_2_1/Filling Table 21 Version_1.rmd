@@ -47,7 +47,11 @@ table_2.1_ref <- "EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv"
 output_suffix <- gsub(":", "", paste("_RDB_EUROSTAT", Sys.time(), sep = "_")) # This may be overkill, but nice when testing
 
 # Output content - only controls the _filled not the _control
-## Use All | a list of RFMO's eg. c("ICES", "NAFO")
+## Use c() for all | a list of RFMO's eg. c("ICES", "NAFO")
+
+## RCGstats are only reliable in c("ICES", "NAFO") and have only been tested in these
+
+rfmos_in_output <- c()
 
 #
 ######################################################
@@ -561,7 +565,34 @@ T2_1$regCoord[T2_1$landings %in% 'None'] <- '-'
 the rule sum of quotas for coutries <10% (less or more than 25%) is noted in the comments column
 The national statistics (when exists) are on an extra column
 ```{r}
-write.table(T2_1, file=paste(pathOut,paste(CTRY,"_table2_1_filled", output_suffix, ".csv",sep=''),sep='/'), sep=';',row.names=FALSE, quote=FALSE)
+
+if (length(rfmos_in_output) == 0) {
+  write.table(
+    T2_1,
+    file = paste(
+      pathOut,
+      paste(CTRY, "_table2_1_filled", output_suffix, ".csv", sep = ''),
+      sep = '/'
+    ),
+    sep = ';',
+    row.names = FALSE,
+    quote = FALSE
+  )
+} else {
+  write.table(
+    subset(T2_1, RFMO %in% rfmos_in_output),
+    file = paste(
+      pathOut,
+      paste(CTRY, "_table2_1_filled", output_suffix, ".csv", sep = ''),
+      sep = '/'
+    ),
+    sep = ';',
+    row.names = FALSE,
+    quote = FALSE
+  )
+  
+}
+
 write.table(tabControl, file=paste(pathOut,paste(CTRY,"_table2_1_control", output_suffix, ".csv",sep=''),sep='/'), sep=';',row.names=FALSE, quote=FALSE)
 ```
 
