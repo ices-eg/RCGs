@@ -36,4 +36,7 @@ rdb_spp$Family<-worms_extra[worms_extra$rank=="Family","scientificname"][match(r
 rdb_spp$Order<-worms_extra[worms_extra$rank=="Order","scientificname"][match(rdb_spp$SpeciesAphiaID, worms_extra[worms_extra$rank=="Order",]$id)]
 rdb_spp$Class<-worms_extra[worms_extra$rank=="Class","scientificname"][match(rdb_spp$SpeciesAphiaID, worms_extra[worms_extra$rank=="Class",]$id)]
 
+# removes a few duplicates generated during call to worms
+rdb_spp<-unique(rdb_spp)
+
 write.table(rdb_spp, paste0(path, "rdb_spp.csv"), sep = ";", row.names = F)
