@@ -130,7 +130,7 @@ dir_output_all<-paste("002_prepared/2020/",time_tag, sep="/"); dir.create(dir_ou
 			ce[Harbour=="*HS-*HS",]			
 	
 	# issue in Area
-		cl[Area=="27.3.d.28" & cl$FlagCountry=="SWE","Area"]<-"27.3.d.28.1"
+		cl[Area=="27.3.d.28" & cl$FlagCountry=="SWE","Area"]<-"27.3.d.28.2"
 			
 # ========================
 # subsets data and RCG specific preparations
