@@ -172,7 +172,7 @@ loadRCG <- function(path){
 	# the area of catches is "27.3.d.28" - In the RDB prep script the catches were wrongly missassigned to "27.3.d.28.1"
 	# the issue has been corrected in the script but a new prepared file has not been produced, so a tweak is put here
 	# This code segment can be deleted if a new file is produced
-	rcgDF[rcgDF$FlagCountry=="SWE" & rcgDF$Area=="27.3.d.28.1" & rcgDF$Year %in% c(2009:2020),"Area"]<-"27.3.d.28.2"]
+	rcgDF[rcgDF$FlagCountry=="SWE" & rcgDF$Area=="27.3.d.28.1" & rcgDF$Year %in% c(2009:2020),"Area"]<-"27.3.d.28.2"
   
   rm(cl)
   return(rcgDF)
