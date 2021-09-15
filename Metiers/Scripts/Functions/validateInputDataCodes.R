@@ -2,6 +2,7 @@ validateInputDataCodes <- function(input.data, gear.list, area.list, species.lis
   message("Validation of input data codes...")
   assemblage.list <- unique(c(species.list$species_group, species.list$dws_group))
   assemblage.list <- assemblage.list[!is.na(assemblage.list)]
+  assemblage.list <- c(assemblage.list,c("MCD","FIF"))
   
   invalid.area<-setdiff(unique(input.data$area), area.list$area)
   invalid.gear<-setdiff(unique(input.data$gear), gear.list$gear_code)
@@ -10,7 +11,7 @@ validateInputDataCodes <- function(input.data, gear.list, area.list, species.lis
   invalid.gearFR<-setdiff(gearFR, gear.list$gear_code)
   selection<-unique(input.data$selection)
   selection<-selection[!is.na(selection)]
-  invalid.selection<-selection[grep("[123]_\\d{1,3}",selection,invert=TRUE)]
+  invalid.selection<-selection[grep("[01234]_\\d{1,3}",selection,invert=TRUE)]
   reg.tar.assemblage<-unique(input.data$registered_target_assemblage)
   reg.tar.assemblage<-reg.tar.assemblage[!is.na(reg.tar.assemblage)]
   invalid.reg.target.assemblage<-setdiff(reg.tar.assemblage,assemblage.list)

@@ -37,7 +37,7 @@ whatGoesIn <-    list(EUROSTAT      =   TRUE,
                       RCGstats      =   TRUE)  # Flag to inform on which source to be used (FIDES=FALSE means the system wil use a public DB instead)
 
 CTRY       <-    'DK'
-refYears   <-    2017:2019
+refYears   <-    2017:2020
 
 # Linkage version EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv | EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final.csv
 
@@ -52,7 +52,7 @@ output_suffix <- gsub(":", "", paste("_RDB_EUROSTAT", Sys.time(), sep = "_")) # 
 
 ## RCGstats are only reliable in c("ICES", "NAFO") and have only been tested in these
 
-rfmos_in_output <- c()
+rfmos_in_output <- c("ICES", "NAFO")
 
 #
 ######################################################
@@ -262,6 +262,9 @@ for (i in 1:nrow(table_2.1)) {
 	    EURO.CTRY = apply(EUR_C[, c('Y1', 'Y2', 'Y3')], 2, sum, na.rm = TRUE),
 	    EURO.EU =  apply(EUR_UE[, c('Y1', 'Y2', 'Y3')], 2, sum, na.rm = TRUE)
 	  ) 
+} else {
+  
+  tbC <- c()
 } # end of the part of whatGoesIn$EUROSTAT
   
 
@@ -384,7 +387,14 @@ for (i in 1:nrow(table_2.1)) {
         RCG.EU =  apply(RCGS2[, c('Y1', 'Y2', 'Y3')], 2, sum, na.rm = TRUE)
       ) 
       
-      	tbC <- merge(tbC, tbC1, all=TRUE)
+      if (length(tbC) > 0) {
+        
+        tbC <- merge(tbC, tbC1, all=TRUE)
+      } else {
+        
+        tbC <- tbC1
+      }
+      
 
     } #end of the part of whatGoesIn$RCGstats
 
