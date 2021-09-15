@@ -1,0 +1,2 @@
+Catch_group	Section	Subsection	Subsubsection	Graph_type	Graph_variant	var	groupBy	groupBy2	facet	func	type_of_threshold	value_of_threshold	points_coord	plot_labels	png_dir	png_name	txt_dir	txt_name	newVarName	addExtraShp	extraShp
+NULL	6	6.1	6.1.1	4		KWDays	StatisticalRectangle		Year	sum	percent	100	StatRectshp	FALSE	outputs\RCG_NA\Multiannual_Overview\figures	6.1.1_4	outputs\RCG_NA\Multiannual_Overview\tables	6.1.1_4		TRUE	FAOshp
