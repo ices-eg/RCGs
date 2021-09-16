@@ -587,7 +587,7 @@ if (length(rfmos_in_output) == 0) {
     T2_1,
     file = paste(
       pathOut,
-      paste(CTRY, "_table2_1_filled", output_suffix, ".csv", sep = ''),
+      paste(CTRY, "_table_2_1_filled", output_suffix, ".csv", sep = ''),
       sep = '/'
     ),
     sep = ';',
@@ -599,7 +599,7 @@ if (length(rfmos_in_output) == 0) {
     subset(T2_1, RFMO %in% rfmos_in_output),
     file = paste(
       pathOut,
-      paste(CTRY, "_table2_1_filled", output_suffix, ".csv", sep = ''),
+      paste(CTRY, "_table_2_1_filled", output_suffix, ".csv", sep = ''),
       sep = '/'
     ),
     sep = ';',
@@ -609,7 +609,7 @@ if (length(rfmos_in_output) == 0) {
   
 }
 
-write.table(tabControl, file=paste(pathOut,paste(CTRY,"_table2_1_control", output_suffix, ".csv",sep=''),sep='/'), sep=';',row.names=FALSE, quote=FALSE)
+write.table(tabControl, file=paste(pathOut,paste(CTRY,"_table_2_1_control", output_suffix, ".csv",sep=''),sep='/'), sep=';',row.names=FALSE, quote=FALSE)
 ```
 
 
