@@ -4,10 +4,6 @@ author: Joel Vigneau, with the collaboration of Matt Elliott, Jon Elson, Kirsten
   Marie Storr-Paulsen, Nuno Prista, Katja Ringhdal, Lies Vansteenbrugge, Sieto Verver, Manon Troucelier
 date: "July 2021"
 output: word_document
-params:
-  ref_years_min: 2017
-  ref_years_max: 2019
-  ctry: "DK"
 ---
 
 ```{r setup, include=FALSE}
@@ -39,10 +35,8 @@ whatGoesIn <-    list(EUROSTAT      =   TRUE,
                       NationalStats =   FALSE,
                       RCGstats      =   TRUE)  # Flag to inform on which source to be used (FIDES=FALSE means the system wil use a public DB instead)
 
-# Change country and reference years in params in the YAML (this is so the report can be rendered)
-
-CTRY       <-    params$ctry
-refYears   <-    c(params$ref_years_min:params$ref_years_max)
+CTRY       <-    'DK'
+refYears   <-    2017:2020
 
 # Linkage version EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv | EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final.csv
 
