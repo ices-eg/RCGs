@@ -15,6 +15,7 @@ render_report <-
            ctry = "DK",
            EUROSTAT = TRUE,
            FIDES = FALSE,
+           FIDEScommon = TRUE,
            NationalStats = FALSE,
            RCGstats = TRUE,
            output_suffix = "RDB_EURO_1719") {
@@ -26,6 +27,7 @@ render_report <-
         ctry = ctry,
         EUROSTAT = EUROSTAT,
         FIDES = FIDES,
+        FIDEScommon = FIDEScommon,
         NationalStats = NationalStats,
         RCGstats = RCGstats,
         output_suffix = output_suffix
@@ -37,19 +39,33 @@ render_report <-
 
 ctry <- c("BE", "DE", "DK", "ES", "EE", "FI", "FR", "IE", "IT", "LT", "LV", "NL", "PL", "PT", "SE")
 
+  
 for (i in ctry) {
 
-render_report(ref_years_min = 2017,
-           ref_years_max = 2019,
+render_report(ref_years_min = 2018,
+           ref_years_max = 2020,
            ctry = i,
-           EUROSTAT = TRUE,
+           EUROSTAT = FALSE,
            FIDES = FALSE,
+           FIDEScommon = TRUE,
            NationalStats = FALSE,
            RCGstats = TRUE,
-           output_suffix = "_RDB_vs_EURO_1719")
+           output_suffix = "_RDB_1820")
 
 
 }
+
+# for (i in ctry) {
+# 
+# render_report(ref_years_min = 2017,
+#            ref_years_max = 2019,
+#            ctry = i,
+#            EUROSTAT = TRUE,
+#            FIDES = FALSE,
+#            NationalStats = FALSE,
+#            RCGstats = TRUE,
+#            output_suffix = "_RDB_vs_EURO_1719")
+# }
 
 # for (i in ctry) {
 #   
