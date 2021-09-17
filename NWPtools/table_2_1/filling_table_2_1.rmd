@@ -578,6 +578,21 @@ T2_1$regCoord[T2_1$landings %in% 'None'] <- '-'
 
 ```
 
+
+```{r ctry_code}
+
+# This is a slightly ugly fix, but I don't dare changing the coding before. It may affect FIDES
+
+T2_1 <- merge(T2_1, GEO_rdb[, c(1:2)], by.x = "MS", by.y = "geo")
+
+T2_1$MS <- T2_1$Level.Description
+
+T2_1 <- T2_1[, c(1:17)]
+
+```
+
+
+
 ## Export of Table 2.1
 the rule sum of quotas for coutries <10% (less or more than 25%) is noted in the comments column
 The national statistics (when exists) are on an extra column
