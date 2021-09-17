@@ -8,6 +8,11 @@ params:
   ref_years_min: 2017
   ref_years_max: 2019
   ctry: "DK"
+  EUROSTAT: TRUE
+  FIDES: FALSE
+  NationalStats: FALSE
+  RCGstats: TRUE
+  output_suffix: "_RDB_no_TAC_1820"
 ---
 
 ```{r setup, include=FALSE}
@@ -34,10 +39,12 @@ pathOut    <-    paste(pathIn,'outputs',sep='/')
 
 # whatGoesIn - If EUROSTAT = T & RCGstats = T, then the resulting _control will have both stats, but the _filled will be based on RCGstats due to the ordering in the production
 
-whatGoesIn <-    list(EUROSTAT      =   TRUE, 
-                      FIDES         =   FALSE, 
-                      NationalStats =   FALSE,
-                      RCGstats      =   TRUE)  # Flag to inform on which source to be used (FIDES=FALSE means the system wil use a public DB instead)
+# Change country and refence years in params in the YAML
+
+whatGoesIn <-    list(EUROSTAT      =   params$EUROSTAT, 
+                      FIDES         =   params$FIDES, 
+                      NationalStats =   params$NationalStats,
+                      RCGstats      =   params$RCGstats)  # Flag to inform on which source to be used (FIDES=FALSE means the system wil use a public DB instead)
 
 # Change country and refence years in params in the YAML
 
@@ -50,7 +57,9 @@ table_2.1_ref <- "EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv"
 
 # Output name
 
-output_suffix <- gsub(":", "", paste("_RDB_EUROSTAT_new_rdbdata", Sys.time(), sep = "_")) # This may be overkill, but nice when testing
+output_suffix <- params$output_suffix
+
+# output_suffix <- gsub(":", "", paste("_RDB_EUROSTAT_new_rdbdata", Sys.time(), sep = "_")) # This may be overkill, but nice when testing
 
 # Output content - only controls the _filled not the _control
 ## Use c() for all | a list of RFMO's eg. c("ICES", "NAFO")
