@@ -5,15 +5,15 @@ author: Joel Vigneau, with the collaboration of Matt Elliott, Jon Elson, Kirsten
 date: "July 2021"
 output: word_document
 params:
-  ref_years_min: 2017
-  ref_years_max: 2019
-  ctry: "DK"
+  ref_years_min: 2018
+  ref_years_max: 2020
+  ctry: "BE"
   EUROSTAT: FALSE
   FIDES: FALSE
   FIDEScommon: TRUE
   NationalStats: FALSE
   RCGstats: TRUE
-  output_suffix: "_NEW_FIDES"
+  output_suffix: "_1820"
 ---
 
 ```{r setup, include=FALSE}
@@ -482,7 +482,7 @@ for (i in 1:nrow(table_2.1)) {
 	  }#end of the initial condition on TAC
   } #end of the part of whatGoesIn$FIDES
 
-# From FIDEScommon
+# From FIDEScommon # Kirsten update 17/9/20
 # -----------------------------------------------------------------------
   if (whatGoesIn$FIDEScommon) {
     if (!(table_2.1$FIDES_stockID[i] %in% 'No TAC')) {
@@ -526,8 +526,7 @@ for (i in 1:nrow(table_2.1)) {
       if (length(ind.ct) == 1)
         T1$TAC <- ind.ct / ind.eu
       
-      T1$Comments <- NA # Dette skal ændres ......
-      
+      T1$Comments <- NA 
       TT <-
         tapply(TACsum$Initial.Quantity,
                TACsum$Level.Description,
@@ -633,8 +632,8 @@ for (i in 1:nrow(table_2.1)) {
     #Some formatting on the final data.frame (T21)
     T21$thresh <- as.character(T21$thresh)
     #Threshold ruling specified like the EU Reg
-    T21$thresh[T21$TAC < .1 & T21$TAC > 0] <- 'TAC < 10%'  #rule (a)
-    T21$thresh[is.na(T21$TAC) &
+    T21$thresh[T21$TAC < .1 & T21$TAC > -1] <- 'TAC < 10%'  #rule (a)
+    T21$thresh[T21$TAC < -1 &
                  T21$shareLanding < .1] <- 'Landings < 10%' #rule (b)
     T21$thresh[T21$landings > 0 &
                  T21$landings < 200] <- 'Landings < 200t.'  #rule (c)
