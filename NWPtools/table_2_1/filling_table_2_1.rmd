@@ -50,7 +50,7 @@ table_2.1_ref <- "EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv"
 
 # Output name
 
-output_suffix <- gsub(":", "", paste("_RDB_EUROSTAT_all_use_latinNameJoin", Sys.time(), sep = "_")) # This may be overkill, but nice when testing
+output_suffix <- gsub(":", "", paste("_RDB_EUROSTAT_new_rdbdata", Sys.time(), sep = "_")) # This may be overkill, but nice when testing
 
 # Output content - only controls the _filled not the _control
 ## Use c() for all | a list of RFMO's eg. c("ICES", "NAFO")
@@ -84,7 +84,7 @@ The list of datasets are the following :
 if (whatGoesIn$EUROSTAT) EURO <- loadEurostat(pathIn)
 if (whatGoesIn$FIDES) TAC  <- loadFides(pathIn, ctry = c(CTRY,'UE'), years=refYears+1)  #these are the only FIDES files I have!
 if (whatGoesIn$NationalStats) NAT  <- loadNational(pathIn = 'C:/_PROGRAMME/DCF/2021/CREDO/BUM_stats/Input_data/ObsDeb', years=refYears)  
-if (whatGoesIn$RCGstats) RCG <- loadRCG("Q:/mynd/RCM/RCGs/NWPtools/table_2_1/NWP table 2.1")
+if (whatGoesIn$RCGstats) RCG <- loadRCG(pathIn)
 ```
 
 2. Reference tables:
