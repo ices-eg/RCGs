@@ -50,7 +50,7 @@ table_2.1_ref <- "EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv"
 
 # Output name
 
-output_suffix <- gsub(":", "", paste("_RDB_EUROSTAT_years", Sys.time(), sep = "_")) # This may be overkill, but nice when testing
+output_suffix <- gsub(":", "", paste("_RDB_EUROSTAT_all_use_latinNameJoin", Sys.time(), sep = "_")) # This may be overkill, but nice when testing
 
 # Output content - only controls the _filled not the _control
 ## Use c() for all | a list of RFMO's eg. c("ICES", "NAFO")
@@ -168,8 +168,6 @@ RCGS$Y2[is.na(RCGS$Y2)] <- 0
 RCGS$Y3[is.na(RCGS$Y3)] <- 0
 }
 
-
-
 ```
 
 
@@ -201,8 +199,11 @@ for (i in 1:nrow(table_2.1)) {
   #
   if (whatGoesIn$EUROSTAT) {
   ctry2 <- GEO$Country[GEO$geo %in% CTRY]
-	reg <- strsplit(as.character(table_2.1$areaBis[i]), split=',')
-  EUR <- EUROS[EUROS$Scientific_name %in% table_2.1$latinName[i] & tolower(EUROS$area) %in% tolower(reg[[1]]),]
+	
+  reg <- strsplit(as.character(table_2.1$areaBis[i]), split=',')
+	species <- strsplit(as.character(table_2.1$latinNameJoin[i]), split = ',')
+	
+  EUR <- EUROS[EUROS$Scientific_name %in% species[[1]] & tolower(EUROS$area) %in% tolower(reg[[1]]),]
   ind <- which(EUR$Level.Description %in% 'GBR')
   if (length(ind) >0) EUR <- EUR[-ind,]  # UK is not in EU27, so when only UK declares a stock the line EU27 is missing and this case is treated under nrow(EUR) == 0
   if (nrow(EUR) == 1) if (EUR$Country %in% 'European union (28 MS)') EUR <- EUR [-1,]
