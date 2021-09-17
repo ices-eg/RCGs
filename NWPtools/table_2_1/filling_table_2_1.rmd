@@ -7,19 +7,53 @@ output: word_document
 params:
   ref_years_min: 2018
   ref_years_max: 2020
-  ctry: "BE"
+  ctry: "DK"
   EUROSTAT: FALSE
+  RCGstats: TRUE
+  NationalStats: FALSE
   FIDES: FALSE
   FIDEScommon: TRUE
-  NationalStats: FALSE
-  RCGstats: TRUE
   output_suffix: "_1820"
 ---
 
-```{r setup, include=FALSE}
+```{r setup, warning = F}
 knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyr)
+library(readxl)
+# library(COSTeda) #only for national statistics import and the function which transform ICES rectangle in ICES area. If need, ask Joel
+setwd('.')
+source(paste("Q:/mynd/RCM/RCGs/NWPtools/table_2_1",'Filling Table 21 functions.r',sep='/'))
+
 ```
 
+# Settings
+## How
+All setting are done in the YAML in the R markdown
+
+**Reference years:**
+
+Controlled with ref_years_min and ref_year_max. The script needs 3 years to run due to present way of coding
+
+**Country of interest:**
+
+Contolled by ctry. Use 2-alpha country
+
+**Sources of landings statistics:**
+
+Controlled with EUROSTAT, RCGstats and NationalStats. If e.g. EUROSTAT = TRUE & RCGstats = TRUE, then the resulting _control will have both stats, but the _filled will be based on RCGstats due to the ordering in the script. RCGstats is considered confidential data and can not be shared at GitHub
+
+**Source of TAC / quota:**
+
+Controlled with FIDES and FIDEScommon. FIDES is a national extract from FIDES including a country and EEC, if needed ask Joel for an example. FIDEScommon is a RCG extract from FIDES including all EU countries. These are both confidential. If FIDES=FALSE and FIDEScommon = FALSE, then the system will use a public source instead (see /input/Record of European TACs.xlsx)
+
+
+## Current setttings
+```{r}
+str(params)
+```
+
+# Introduction
 Filling of the EU-MAP table 1A requires to report on country shares of landings and shares of EU TAC when relevant, for all the stocks listed in table 1A of the EU-MAP Regulation (EU Decision 1254/2016). This process necessitates to gather information on landings and EU TAC from an official database, namely EUROSTAT for EU landings and MARE/FIDES for EU TAC.
 
 Two datasets were added to complete the references, (1) the Nephrops FU landings provided by ICES and (2) the Mediterranean and Black Sea landings fisgures put together by 2016 RCM Mediterranean and Black Sea.
@@ -32,15 +66,14 @@ The variables needed for the work are the working directory, the country code (2
 
 ```{r echo=FALSE}
 ######################################################
-##        USER CHOICE (START)                       ##
+##        USER CHOICE ARE GIVEN IN THE YALM         ##
 ######################################################
-#
-pathIn     <-    'Q:/mynd/RCM/RCGs/NWPtools/table_2_1/inputs'
-pathOut    <-    "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/outputs"
-
-# whatGoesIn - If EUROSTAT = T & RCGstats = T, then the resulting _control will have both stats, but the _filled will be based on RCGstats due to the ordering in the production
 
 # Change country and refence years in params in the YAML
+
+
+refYears   <-    c(params$ref_years_min:params$ref_years_max)
+CTRY       <-    params$ctry
 
 whatGoesIn <- list(
   EUROSTAT = params$EUROSTAT,
@@ -48,20 +81,8 @@ whatGoesIn <- list(
   FIDEScommon = params$FIDEScommon,
   NationalStats = params$NationalStats,
   RCGstats = params$RCGstats
-)  # Flag to inform on which source to be used (FIDES=FALSE means the system will use a public DB instead)
+) 
 
-# Change country and refence years in params in the YAML
-
-CTRY       <-    params$ctry
-refYears   <-    c(params$ref_years_min:params$ref_years_max)
-
-# Linkage version EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv | EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final.csv
-
-table_2.1_ref <- "EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv"
-
-# Output name
-
-output_suffix <- params$output_suffix
 
 # output_suffix <- gsub(":", "", paste("_RDB_EUROSTAT_new_rdbdata", Sys.time(), sep = "_")) # This may be overkill, but nice when testing
 
@@ -72,19 +93,26 @@ output_suffix <- params$output_suffix
 
 rfmos_in_output <- c("ICES", "NAFO")
 
+pathIn     <-    'Q:/mynd/RCM/RCGs/NWPtools/table_2_1/inputs'
+pathOut    <-    "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/outputs"
+
+
+output_suffix <- params$output_suffix
+
+# Linkage version EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv | EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final.csv
+
+table_2.1_ref <- "EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv"
+
+# Output name
+
+
+
 #
 ######################################################
 ##        USER CHOICE (END)                         ##
 ######################################################
 ```
 
-```{r warning=FALSE}
-  library(tidyr)
-  library(readxl)
-  #library(COSTeda) #only for national statistics import and the function which transform ICES rectangle in ICES area
-  setwd('.')
-  source(paste("Q:/mynd/RCM/RCGs/NWPtools/table_2_1",'Filling Table 21 functions.r',sep='/'))
-```
 
 ## Importing the datasets
 
