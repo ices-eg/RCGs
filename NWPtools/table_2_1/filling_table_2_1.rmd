@@ -50,7 +50,7 @@ table_2.1_ref <- "EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv"
 
 # Output name
 
-output_suffix <- gsub(":", "", paste("_RDB_EUROSTAT", Sys.time(), sep = "_")) # This may be overkill, but nice when testing
+output_suffix <- gsub(":", "", paste("_RDB_EUROSTAT_source", Sys.time(), sep = "_")) # This may be overkill, but nice when testing
 
 # Output content - only controls the _filled not the _control
 ## Use c() for all | a list of RFMO's eg. c("ICES", "NAFO")
@@ -210,7 +210,7 @@ for (i in 1:nrow(table_2.1)) {
    if (nrow(EUR) == 0) {
    EUR <- data.frame(X3A_CODE = rep(table_2.1$X3A_CODE[i],2), geo = c(CTRY,'EU27_2020'), area = rep(table_2.1$area[i],2),
                      Y1=rep(NA,2), Y2=rep(NA,2),Y3=rep(NA,2),
-                     Country=c(ctry2,'European union (27 MS)'), source=FALSE,
+                     Country=c(ctry2,'European union (27 MS)'), source=T,
                      Level.Description = GEO$Level.Description[GEO$geo %in% c(CTRY,'EU27_2020')], 
                      Scientific_name = rep(table_2.1$latinName[i],2), English_name=rep(NA,2), French_name=rep(NA,2))
    } else {
@@ -222,7 +222,7 @@ for (i in 1:nrow(table_2.1)) {
 	# if there's info for CTRY
 	if (nrow(EUR_C) == 0) {
    EUR_C <- data.frame(X3A_CODE = table_2.1$X3A_CODE[i], geo = CTRY, area = table_2.1$area[i],
-                     Y1=NA, Y2=NA,Y3=NA, Moy=NA, Country=ctry2, source=FALSE,
+                     Y1=NA, Y2=NA,Y3=NA, Moy=NA, Country=ctry2, source=T,
                      Level.Description = GEO$Level.Description[GEO$geo %in% CTRY], 
                      Scientific_name = table_2.1$latinName[i], English_name=NA, French_name=NA)
   }
@@ -306,7 +306,7 @@ for (i in 1:nrow(table_2.1)) {
             Y2 = rep(NA, 2),
             Y3 = rep(NA, 2),
             Country = c(ctry2, 'European union (27 MS)'),
-            source = FALSE,
+            source = T,
             Level.Description = GEO_rdb$Level.Description[GEO_rdb$geo %in% c(CTRY, 'EU27_2020')],
             Scientific_name = rep(table_2.1$latinName[i], 2),
             English_name = rep(NA, 2),
@@ -330,7 +330,7 @@ for (i in 1:nrow(table_2.1)) {
             Y3 = NA,
             Moy = NA,
             Country = ctry2,
-            source = FALSE,
+            source = T,
             Level.Description = GEO_rdb$Level.Description[GEO_rdb$geo %in% CTRY],
             Scientific_name = table_2.1$latinName[i],
             English_name = NA,
