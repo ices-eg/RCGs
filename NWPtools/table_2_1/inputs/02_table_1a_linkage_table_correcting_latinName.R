@@ -61,7 +61,9 @@ linkage$latinNameJoin <- gsub(" spp.", " spp", linkage$latinName)
 
 # Single species - different naming | misspellings ----
 
-linkage$latinNameJoin[linkage$latinNameJoin == "Scophtalmus maximus"] <- "Scophtalmus maximus,Scophthalmus maximus"
+linkage$latinNameJoin[linkage$latinNameJoin == "Scophtalmus maximus"] <- "Scophtalmus maximus,Scophthalmus maximus,Psetta maxima"
+
+linkage$latinNameJoin[linkage$latinNameJoin == "Scophthalmus maximus"] <- "Scophthalmus maximus,Psetta maxima"
 
 linkage$latinNameJoin[linkage$latinNameJoin == "Aspitrigla cuculus"] <- "Aspitrigla cuculus,Chelidonichthys cuculus"
 

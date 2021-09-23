@@ -19,7 +19,7 @@ test <- "yes" # Testing for duplicated areas or not
 rfmo_to_test <- c("ICES", "NAFO") # Which RFMO's to include - the script only handles areas from ICES and NAFO
 
 
-linkage <- read.csv(file.path(path, 'EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final.csv'), sep = ";", header = T)
+linkage <- read.csv(file.path(path, "EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv"), sep = ";", header = T)
 rdb_areas <- arrange(read.csv(paste0(path, "rdb_area_ref.csv"), sep = ";"), x)
 
 names(linkage)
@@ -49,13 +49,13 @@ linkage$areaRDB[linkage$area == "3aN" &
 linkage$areaRDB[linkage$area == "20-24" &
                   linkage$latinName == "Solea solea"] <- "27_3_A,27_3_C_22,27_3_B_23,27_3_D_24"  #Safer to use 27_3_A, before subdivision
 
-# Fixing duplicated regions in areaBis ----
-
-linkage$areaBis[linkage$area == "3aS" &
-                  linkage$latinName == "Pleuronectes platessa"] <- " " # Duplicate - already in the Baltic Sea
-
-linkage$areaRDB[linkage$area == "Union waters of 2a, 3a and 4" &
-                  linkage$latinName == "Solea solea"] <- "27_2_A,27_4" # 3a a duplicate - already in the Baltic Sea
+# # Fixing duplicated regions in areaBis ----
+# 
+# linkage$areaBis[linkage$area == "3aS" &
+#                   linkage$latinName == "Pleuronectes platessa"] <- " " # Duplicate - already in the Baltic Sea
+# 
+# linkage$areaRDB[linkage$area == "Union waters of 2a, 3a and 4" &
+#                   linkage$latinName == "Solea solea"] <- "27_2_A,27_4" # 3a a duplicate - already in the Baltic Sea
 
 # Coding RDB areas ----
 
@@ -297,5 +297,5 @@ unique(linkage$areaRDB)
 # Output
 
 
-write.table(select(linkage, -X, -X.1), paste0(path, "EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv"), 
+write.table(linkage, paste0(path, "EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv"), 
           row.names = F, sep = ";")

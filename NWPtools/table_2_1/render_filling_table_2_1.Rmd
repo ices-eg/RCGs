@@ -1,0 +1,85 @@
+---
+title: "render_filling_table_2_1"
+author: "Kirsten Birch Håkansson, DTU Aqua"
+date: \today
+output: html_document
+---
+
+```{r render}
+
+path <- "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/"
+
+render_report <-
+  function(ref_years_min = 2017,
+           ref_years_max = 2019,
+           ctry = "DK",
+           EUROSTAT = TRUE,
+           FIDES = FALSE,
+           FIDEScommon = TRUE,
+           NationalStats = FALSE,
+           RCGstats = TRUE,
+           output_suffix = "RDB_EURO_1719") {
+    rmarkdown::render(
+      paste(path, "filling_table_2_1.Rmd", sep = ""),
+      params = list(
+        ref_years_min = ref_years_min,
+        ref_years_max = ref_years_max,
+        ctry = ctry,
+        EUROSTAT = EUROSTAT,
+        FIDES = FIDES,
+        FIDEScommon = FIDEScommon,
+        NationalStats = NationalStats,
+        RCGstats = RCGstats,
+        output_suffix = output_suffix
+      ),
+      output_file = paste0("filling_table_2_1_", ctry, ".docx", sep = ""),
+      encoding = 'UTF-8'
+    )
+  }
+
+ctry <- c("BE", "DE", "DK", "ES", "EE", "FI", "FR", "IE", "IT", "LT", "LV", "NL", "PL", "PT", "SE")
+
+  
+for (i in ctry) {
+
+render_report(ref_years_min = 2018,
+           ref_years_max = 2020,
+           ctry = i,
+           EUROSTAT = FALSE,
+           FIDES = FALSE,
+           FIDEScommon = TRUE,
+           NationalStats = FALSE,
+           RCGstats = TRUE,
+           output_suffix = "_RDB_1820")
+
+
+}
+
+# for (i in ctry) {
+# 
+# render_report(ref_years_min = 2017,
+#            ref_years_max = 2019,
+#            ctry = i,
+#            EUROSTAT = TRUE,
+#            FIDES = FALSE,
+#            NationalStats = FALSE,
+#            RCGstats = TRUE,
+#            output_suffix = "_RDB_vs_EURO_1719")
+# }
+
+# for (i in ctry) {
+#   
+# render_report(ref_years_min = 2018,
+#            ref_years_max = 2020,
+#            ctry = i,
+#            EUROSTAT = FALSE,
+#            FIDES = FALSE,
+#            NationalStats = FALSE,
+#            RCGstats = TRUE,
+#            output_suffix = "_RDB_no_TAC_1820")
+#   
+#   
+# }
+
+
+```

@@ -160,8 +160,20 @@ loadNational <- function(pathIn, years) {
 loadRCG <- function(path){
   
   # data prepared by the iSSG on Catch, effort and sampling overviews -> https://community.ices.dk/ExternalSites/datacollection/Regional%20coordination%20meetings%202017/RCGIntersessionalWork/_layouts/15/start.aspx#/SitePages/HomePage.aspx?RootFolder=%2FExternalSites%2Fdatacollection%2FRegional%20coordination%20meetings%202017%2FRCGIntersessionalWork%2F2021%20Meeting%20docs%2F06%2E%20Data%2FRDB%20data%2FPrepared%5FData&FolderCTID=0x01200012FE02F9A107C74AB6D1BF2EA07B1474&View=%7B3D371B98%2DB1E5%2D455D%2D9EA9%2D06746B7D2B5B%7D
-  load(paste(path,'/RDB_All_Regions_CL_2009_2020_prepared_20210428.Rdata' ,sep = ''))
+  # load(paste(path,'/RDB_All_Regions_CL_2009_2020_prepared_20210428.Rdata' ,sep = ''))
+  # 
+  # cl <- read.csv(paste0(path, "CL landing.csv"))
+  # saveRDS(cl, paste0(path, "cl.rds"))
+  # 
+  # cl <- readRDS(paste0(path, "/cl.rds"))
+  # 
+  # cl_sub <- subset(cl, Year %in% c(2017, 2018, 2019, 2020))
+  # 
+  # saveRDS(cl_sub, paste0(path, "cl_2017_2020.rds"))
   
+  cl <- readRDS(paste0(path, "/cl_2017_2020.rds"))
+  
+  cl$OfficialLandingCatchWeight_ton <- cl$OfficialLandingCatchWeight/1000
   
   # aggregate
   #rcgDF = aggregate(OfficialLandingCatchWeight_ton ~Year + FlagCountry + Species + SpeciesAphiaID + Area, data = cl, FUN = sum, na.rm = TRUE)  
@@ -172,7 +184,7 @@ loadRCG <- function(path){
 	# the area of catches is "27.3.d.28" - In the RDB prep script the catches were wrongly missassigned to "27.3.d.28.1"
 	# the issue has been corrected in the script but a new prepared file has not been produced, so a tweak is put here
 	# This code segment can be deleted if a new file is produced
-	rcgDF[rcgDF$FlagCountry=="SWE" & rcgDF$Area=="27.3.d.28.1" & rcgDF$Year %in% c(2009:2020),"Area"]<-"27.3.d.28.2"
+	# rcgDF[rcgDF$FlagCountry=="SWE" & rcgDF$Area=="27.3.d.28.1" & rcgDF$Year %in% c(2009:2020),"Area"]<-"27.3.d.28.2"
   
   rm(cl)
   return(rcgDF)
