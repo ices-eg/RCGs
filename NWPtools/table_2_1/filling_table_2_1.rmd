@@ -14,8 +14,9 @@ params:
   FIDES: FALSE
   FIDEScommon: TRUE
   RFMO: "ICES,NAFO"
-  output_suffix: "_1820_test_parms"
+  output_suffix: "_1820_test_parms_2"
   pathIn: "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/inputs"
+  pathInConf: "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/inputs/confidential_data"
   pathOut: "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/outputs"
 ---
 
@@ -82,8 +83,8 @@ The variables needed for the work are the working directory, the country code (2
 ##        USER CHOICE ARE GIVEN IN THE YALM         ##
 ######################################################
 
-refYears   <-    c(params$ref_years_min:params$ref_years_max)
-CTRY       <-    params$ctry
+refYears <- c(params$ref_years_min:params$ref_years_max)
+CTRY <- params$ctry
 
 whatGoesIn <- list(
   EUROSTAT = params$EUROSTAT,
@@ -97,13 +98,14 @@ rfmos_in_output <- gsub('\\"', "", params$RFMO)
 
 # output_suffix <- gsub(":", "", paste("_RDB_EUROSTAT_new_rdbdata", Sys.time(), sep = "_")) # This may be overkill, but nice when testing
 
-
-rfmos_in_output <- strsplit(gsub(" ", "", params$RFMO), split = (","))[[1]]
+rfmos_in_output <-
+  strsplit(gsub(" ", "", params$RFMO), split = (","))[[1]]
 
 output_suffix <- params$output_suffix
 
-pathIn     <-    params$pathIn
-pathOut    <-    params$pathOut
+pathIn <- params$pathIn
+pathInConf <- params$pathInConf
+pathOut <- params$pathOut
 
 # Linkage version EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv | EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final.csv
 
@@ -125,7 +127,7 @@ The list of datasets are the following :
 #Importation of all input files
 if (whatGoesIn$EUROSTAT) EURO <- loadEurostat(pathIn)
 if (whatGoesIn$FIDES) TAC  <- loadFides(pathIn, ctry = c(CTRY,'UE'), years=refYears+1)  #these are the only FIDES files I have!
-if (whatGoesIn$FIDEScommon) TAC <- read.csv(paste0(pathIn, "/confidential_data/Quotas2018-2020.csv"), sep=";", header=TRUE)
+if (whatGoesIn$FIDEScommon) TAC <- read.csv(paste0(pathInConf, "/Quotas2018-2020.csv"), sep=";", header=TRUE)
 if (whatGoesIn$NationalStats) NAT  <- loadNational(pathIn = 'C:/_PROGRAMME/DCF/2021/CREDO/BUM_stats/Input_data/ObsDeb', years=refYears)  
 if (whatGoesIn$RCGstats) RCG <- loadRCG(path = paste0(pathIn, "/confidential_data"))
 ```
