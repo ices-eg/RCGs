@@ -13,7 +13,10 @@ params:
   NationalStats: FALSE
   FIDES: FALSE
   FIDEScommon: TRUE
-  output_suffix: "_1820"
+  RFMO: "ICES,NAFO"
+  output_suffix: "_1820_test_parms"
+  pathIn: "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/inputs"
+  pathOut: "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/outputs"
 ---
 
 ```{r setup, warning = F}
@@ -45,7 +48,17 @@ Controlled with EUROSTAT, RCGstats and NationalStats. If e.g. EUROSTAT = TRUE & 
 
 **Source of TAC / quota:**
 
-Controlled with FIDES and FIDEScommon. FIDES is a national extract from FIDES including a country and EEC, if needed ask Joel for an example. FIDEScommon is a RCG extract from FIDES including all EU countries. These are both confidential. If FIDES=FALSE and FIDEScommon = FALSE, then the system will use a public source instead (see /input/Record of European TACs.xlsx)
+Controlled with FIDES or FIDEScommon. FIDES is a national extract from FIDES including a country and EEC, if needed ask Joel for an example. FIDEScommon is a RCG extract from FIDES including all EU countries. These are both confidential. If FIDES=FALSE and FIDEScommon = FALSE, then the system will use a public source instead (see /input/Record of European TACs.xlsx)
+
+**RFMO's to include in output:**
+Controlled by RFMO - only subset the _filled not the _control. RCGstats are only reliable in c("ICES", "NAFO") and have only been tested in these. Use "" for all | a list of RFMO's eg. "ICES,NAFO"
+
+**Naming of output files:**
+Controlled by output_suffix. Mainly added for the sake of testing. If no need then use ""
+
+**Paths:**
+Controlled by pathIn and pathInConf.  latter holds the confidential data e.g. 
+
 
 
 ## Current setttings
@@ -69,9 +82,6 @@ The variables needed for the work are the working directory, the country code (2
 ##        USER CHOICE ARE GIVEN IN THE YALM         ##
 ######################################################
 
-# Change country and refence years in params in the YAML
-
-
 refYears   <-    c(params$ref_years_min:params$ref_years_max)
 CTRY       <-    params$ctry
 
@@ -83,34 +93,22 @@ whatGoesIn <- list(
   RCGstats = params$RCGstats
 ) 
 
+rfmos_in_output <- gsub('\\"', "", params$RFMO)
 
 # output_suffix <- gsub(":", "", paste("_RDB_EUROSTAT_new_rdbdata", Sys.time(), sep = "_")) # This may be overkill, but nice when testing
 
-# Output content - only controls the _filled not the _control
-## Use c() for all | a list of RFMO's eg. c("ICES", "NAFO")
 
-## RCGstats are only reliable in c("ICES", "NAFO") and have only been tested in these
-
-rfmos_in_output <- c("ICES", "NAFO")
-
-pathIn     <-    'Q:/mynd/RCM/RCGs/NWPtools/table_2_1/inputs'
-pathOut    <-    "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/outputs"
-
+rfmos_in_output <- strsplit(gsub(" ", "", params$RFMO), split = (","))[[1]]
 
 output_suffix <- params$output_suffix
 
+pathIn     <-    params$pathIn
+pathOut    <-    params$pathOut
+
 # Linkage version EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv | EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final.csv
 
-table_2.1_ref <- "EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv"
+table_2.1_ref <- "EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv" # Move to reference section
 
-# Output name
-
-
-
-#
-######################################################
-##        USER CHOICE (END)                         ##
-######################################################
 ```
 
 
