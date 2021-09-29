@@ -6,18 +6,22 @@ author: Joel Vigneau, with the collaboration of Matt Elliott, Jon Elson, Kirsten
 date: "July 2021"
 output: word_document
 params:
-  ref_years_min: 2018
-  ref_years_max: 2020
-  ctry: "DK"
+  refYearMin: 2018
+  refYearMax: 2020
+  CTRY: "DK"
   EUROSTAT: FALSE
   RCGstats: TRUE
   NationalStats: FALSE
   FIDES: FALSE
   FIDEScommon: TRUE
-  output_suffix: "_1820"
+  RFMO: "ICES,NAFO"
+  outputSuffix: "_1820_test_naming_5"
+  pathIn: "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/inputs"
+  pathInConf: "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/inputs/confidential_data"
+  pathOut: "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/outputs"
 ---
 
-```{r setup, warning = F}
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyr)
@@ -29,25 +33,38 @@ source(paste("Q:/mynd/RCM/RCGs/NWPtools/table_2_1",'Filling Table 21 functions.r
 ```
 
 # Settings
-## How
-All setting are done in the YAML in the R markdown
 
-**Reference years:**
+All setting are done in the YAML of this R markdown
 
-Controlled with ref_years_min and ref_year_max. The script needs 3 years to run due to present way of coding
+**refYearMin:** Start of reference period.
 
-**Country of interest:**
+**refYearMax:** End of reference period. The script needs 3 years to run due to present way of coding
 
-Contolled by ctry. Use 2-alpha country
+**CTRY:** Country of interest. Use 2-alpha country
 
-**Sources of landings statistics:**
+**EUROSTAT:** Landing statistics downloaded from EUROSTAT
 
-Controlled with EUROSTAT, RCGstats and NationalStats. If e.g. EUROSTAT = TRUE & RCGstats = TRUE, then the resulting _control will have both stats, but the _filled will be based on RCGstats due to the ordering in the script. RCGstats is considered confidential data and can not be shared at GitHub
+**RCGstats:** Landing statistics from the RDB. RCGstats is considered confidential data and can not be shared at GitHub
 
-**Source of TAC / quota:**
+**NationalStats:** National landing statistics, if needed ask Joel for an example.
 
-Controlled with FIDES and FIDEScommon. FIDES is a national extract from FIDES including a country and EEC, if needed ask Joel for an example. FIDEScommon is a RCG extract from FIDES including all EU countries. These are both confidential. If FIDES=FALSE and FIDEScommon = FALSE, then the system will use a public source instead (see /input/Record of European TACs.xlsx)
+If e.g. EUROSTAT = TRUE & RCGstats = TRUE, then the resulting _control will have both stats, but the _filled will be based on RCGstats due to the ordering in the script. RCGstats is considered confidential data and can not be shared at GitHub
 
+**FIDES:** FIDES is a national extract from FIDES including a country and EEC, if needed ask Joel for an example.
+
+**FIDEScommon:** FIDEScommon is a RCG extract from FIDES including all EU countries. This file is confidential.
+
+If FIDES=FALSE and FIDEScommon = FALSE, then the system will use a public source instead (see /input/Record of European TACs.xlsx)
+
+**RFMO:** RFMO's to include in output. This only subset the _filled not the _control. RCGstats are only reliable in c("ICES", "NAFO") and have only been tested in these. Use "" for all | a list of RFMO's eg. "ICES,NAFO"
+
+**outputSuffix:** Add an suffic to the output name. Mainly added for the sake of testing. If no need then use ""
+
+**pathIn:** Path for sharable input data
+
+**pathInConf:** Path for confidential input data
+
+**pathOut:** Path for outputs
 
 ## Current setttings
 ```{r}
@@ -61,20 +78,14 @@ Two datasets were added to complete the references, (1) the Nephrops FU landings
 
 First of all, the datasets listed above contain information from all EU Member States, which means that the script has the potential to be used by all Member States, and by STECF for control of the NWP submitted for 2017.
 
-## Setting the parameters for the analysis
-
-The variables needed for the work are the working directory, the country code (2-letter code) and the reference years
 
 ```{r echo=FALSE}
 ######################################################
 ##        USER CHOICE ARE GIVEN IN THE YALM         ##
 ######################################################
 
-# Change country and refence years in params in the YAML
-
-
-refYears   <-    c(params$ref_years_min:params$ref_years_max)
-CTRY       <-    params$ctry
+refYears <- c(params$refYearMin:params$refYearMax)
+CTRY <- params$CTRY
 
 whatGoesIn <- list(
   EUROSTAT = params$EUROSTAT,
@@ -84,34 +95,23 @@ whatGoesIn <- list(
   RCGstats = params$RCGstats
 ) 
 
+rfmos_in_output <- gsub('\\"', "", params$RFMO)
 
-# output_suffix <- gsub(":", "", paste("_RDB_EUROSTAT_new_rdbdata", Sys.time(), sep = "_")) # This may be overkill, but nice when testing
+# outputSuffix <- gsub(":", "", paste("_RDB_EUROSTAT_new_rdbdata", Sys.time(), sep = "_")) # This may be overkill, but nice when testing
 
-# Output content - only controls the _filled not the _control
-## Use c() for all | a list of RFMO's eg. c("ICES", "NAFO")
+rfmos_in_output <-
+  strsplit(gsub(" ", "", params$RFMO), split = (","))[[1]]
 
-## RCGstats are only reliable in c("ICES", "NAFO") and have only been tested in these
+outputSuffix <- params$outputSuffix
 
-rfmos_in_output <- c("ICES", "NAFO")
-
-pathIn     <-    'Q:/mynd/RCM/RCGs/NWPtools/table_2_1/inputs'
-pathOut    <-    "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/outputs"
-
-
-output_suffix <- params$output_suffix
+pathIn <- params$pathIn
+pathInConf <- params$pathInConf
+pathOut <- params$pathOut
 
 # Linkage version EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv | EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final.csv
 
-table_2.1_ref <- "EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv"
+table_2.1_ref <- "EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv" # Move to reference section
 
-# Output name
-
-
-
-#
-######################################################
-##        USER CHOICE (END)                         ##
-######################################################
 ```
 
 
@@ -128,7 +128,7 @@ The list of datasets are the following :
 #Importation of all input files
 if (whatGoesIn$EUROSTAT) EURO <- loadEurostat(pathIn)
 if (whatGoesIn$FIDES) TAC  <- loadFides(pathIn, ctry = c(CTRY,'UE'), years=refYears+1)  #these are the only FIDES files I have!
-if (whatGoesIn$FIDEScommon) TAC <- read.csv(paste0(pathIn, "/confidential_data/Quotas2018-2020.csv"), sep=";", header=TRUE)
+if (whatGoesIn$FIDEScommon) TAC <- read.csv(paste0(pathInConf, "/Quotas2018-2020.csv"), sep=";", header=TRUE)
 if (whatGoesIn$NationalStats) NAT  <- loadNational(pathIn = 'C:/_PROGRAMME/DCF/2021/CREDO/BUM_stats/Input_data/ObsDeb', years=refYears)  
 if (whatGoesIn$RCGstats) RCG <- loadRCG(path = paste0(pathIn, "/confidential_data"))
 ```
@@ -768,7 +768,7 @@ if (length(rfmos_in_output) == 0) {
     T2_1,
     file = paste(
       pathOut,
-      paste(CTRY, "_table_2_1_filled", output_suffix, ".csv", sep = ''),
+      paste(CTRY, "_table_2_1_filled", outputSuffix, ".csv", sep = ''),
       sep = '/'
     ),
     sep = ';',
@@ -780,7 +780,7 @@ if (length(rfmos_in_output) == 0) {
     subset(T2_1, RFMO %in% rfmos_in_output),
     file = paste(
       pathOut,
-      paste(CTRY, "_table_2_1_filled", output_suffix, ".csv", sep = ''),
+      paste(CTRY, "_table_2_1_filled", outputSuffix, ".csv", sep = ''),
       sep = '/'
     ),
     sep = ';',
@@ -790,7 +790,7 @@ if (length(rfmos_in_output) == 0) {
   
 }
 
-write.table(tabControl, file=paste(pathOut,paste(CTRY,"_table_2_1_control", output_suffix, ".csv",sep=''),sep='/'), sep=';',row.names=FALSE, quote=FALSE)
+write.table(tabControl, file=paste(pathOut,paste(CTRY,"_table_2_1_control", outputSuffix, ".csv",sep=''),sep='/'), sep=';',row.names=FALSE, quote=FALSE)
 ```
 
 \`\`\`
