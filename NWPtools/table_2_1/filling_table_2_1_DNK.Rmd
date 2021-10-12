@@ -14,7 +14,7 @@ params:
   FIDES: FALSE
   FIDEScommon: TRUE
   RFMO: "ICES,NAFO"
-  outputSuffix: "_1820_new_location"
+  outputSuffix: "_1820_dnk_linkage_2"
   pathIn: "Q:/scientific-projects/eu-data-collection/Work_Plan/2022/Scripts/Table_2_1/RCGs/NWPtools/table_2_1/inputs"
   pathInConf: "Q:/scientific-projects/eu-data-collection/Work_Plan/2022/Scripts/Table_2_1/RCGs/NWPtools/table_2_1/inputs/confidential_data"
   pathOut: "Q:/scientific-projects/eu-data-collection/Work_Plan/2022/Scripts/Table_2_1/RCGs/NWPtools/table_2_1/outputs"
@@ -109,7 +109,7 @@ pathOut <- params$pathOut
 
 # Linkage version EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv | EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final.csv
 
-table_2.1_ref <- "EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv" # Move to reference section
+table_2.1_ref <- "EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC_DNK.csv" # Move to reference section
 
 ```
 
