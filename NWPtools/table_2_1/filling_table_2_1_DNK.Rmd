@@ -423,7 +423,7 @@ for (i in 1:nrow(table_2.1)) {
           regCoord = NA,
           coveredLength = NA,
           selectedBio = NA,
-          comments = NA,
+          comments = table_2.1$Comments[i],
           natStats = NA
         )
       
