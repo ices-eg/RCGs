@@ -14,10 +14,10 @@ params:
   FIDES: FALSE
   FIDEScommon: TRUE
   RFMO: "ICES,NAFO"
-  outputSuffix: "_1820_test_naming_5"
-  pathIn: "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/inputs"
-  pathInConf: "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/inputs/confidential_data"
-  pathOut: "Q:/mynd/RCM/RCGs/NWPtools/table_2_1/outputs"
+  outputSuffix: "_1820_new_location"
+  pathIn: "Q:/scientific-projects/eu-data-collection/Work_Plan/2022/Scripts/Table_2_1/RCGs/NWPtools/table_2_1/inputs"
+  pathInConf: "Q:/scientific-projects/eu-data-collection/Work_Plan/2022/Scripts/Table_2_1/RCGs/NWPtools/table_2_1/inputs/confidential_data"
+  pathOut: "Q:/scientific-projects/eu-data-collection/Work_Plan/2022/Scripts/Table_2_1/RCGs/NWPtools/table_2_1/outputs"
 ---
 
 ```{r setup, include=FALSE}
@@ -27,7 +27,7 @@ library(tidyr)
 library(readxl)
 # library(COSTeda) #only for national statistics import and the function which transform ICES rectangle in ICES area. If need, ask Joel
 setwd('.')
-source(paste("Q:/mynd/RCM/RCGs/NWPtools/table_2_1",'Filling Table 21 functions.r',sep='/'))
+source(paste("Q:/scientific-projects/eu-data-collection/Work_Plan/2022/Scripts/Table_2_1/RCGs/NWPtools/table_2_1",'Filling Table 21 functions.r',sep='/'))
 
 ```
 
@@ -217,6 +217,10 @@ RCGS$Y1[is.na(RCGS$Y1)] <- 0  # Assuming that NA are TRUE ZEROS
 RCGS$Y2[is.na(RCGS$Y2)] <- 0
 RCGS$Y3[is.na(RCGS$Y3)] <- 0
 }
+
+# Danish modification to landings from 27.3.a
+
+RCGS$area[RCGS$area == "27.3.a" & !(RCGS$Level.Description %in% c("DEU", "DNK", "SWE"))] <- "27.3.a.20"
 
 ```
 
