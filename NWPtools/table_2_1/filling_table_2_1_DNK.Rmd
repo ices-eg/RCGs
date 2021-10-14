@@ -710,10 +710,10 @@ T2_1$natStats <- round(T2_1$natStats,0)
 # landings - country
 
 T2_1$landings[T2_1$landings == 0] <- NA
-T2_1$Comment_0[round(T2_1$landings,0) == 0 & !is.na(T2_1$landings)] <- paste0("National landings rounded to 0 and set to None - TRUE mean = ", round(T2_1$landings[round(T2_1$landings,0) == 0 & !is.na(T2_1$landings)], digits = 3))
+T2_1$Comment_0[round(T2_1$landings,0) == 0 & !is.na(T2_1$landings)] <- paste0("National landings rounded to 0 - TRUE mean = ", round(T2_1$landings[round(T2_1$landings,0) == 0 & !is.na(T2_1$landings)], digits = 3))
 
 T2_1$landings <- round(T2_1$landings,0)
-T2_1$landings[is.na(T2_1$landings) | T2_1$landings == 0] <- "None"
+T2_1$landings[is.na(T2_1$landings)] <- "None"
 
 # TAC
 T2_1$TAC <- paste(round(100*T2_1$TAC,0),'%',sep='')
@@ -729,7 +729,7 @@ T2_1$shareLanding[T2_1$shareLanding %in% c('NA%','NaN%','Inf%')] <- 'None'
 
 T2_1$thresh[T2_1$landings %in% 'None' & T2_1$TAC %in% 'None']  <- 'None'
 
-# <- T2_1$shareLanding[T2_1$landings %in% 'None' & T2_1$TAC %in% 'None'] <- 'None'
+T2_1$shareLanding[T2_1$landings %in% 'None' & T2_1$TAC %in% 'None'] <- 'None'
 
 T2_1$comments[is.na(T2_1$comments)] <- "-"
 T2_1$Comments[is.na(T2_1$Comments)] <- "-"
@@ -751,13 +751,13 @@ T2_1$thresh[T2_1$landings %in% 'None'] <- 'None'
 T2_1$coveredLength[!(T2_1$landings %in% 'None')] <- 'Y'
 T2_1$coveredLength[nchar(T2_1$thresh) >4] <- 'N'
 
-T2_1$coveredLength[T2_1$RFMO %in% c('ICCAT','IOTC','WCPFC') & !(T2_1$landings %in% c(0, "None"))] <- 'Y'
-T2_1$thresh[T2_1$RFMO %in% c('ICCAT','IOTC','WCPFC') & !(T2_1$landings %in% c(0, "None"))] <- 'None'
+T2_1$coveredLength[T2_1$RFMO %in% c('ICCAT','IOTC','WCPFC') & !(T2_1$landings %in% c("None"))] <- 'Y'
+T2_1$thresh[T2_1$RFMO %in% c('ICCAT','IOTC','WCPFC') & !(T2_1$landings %in% c("None"))] <- 'None'
 
-T2_1$thresh[T2_1$spp == 'Anguilla anguilla' & !(T2_1$landings %in% c(0, "None"))] <- 'None'
-T2_1$coveredLength[T2_1$spp == 'Anguilla anguilla' & !(T2_1$landings %in% c(0, "None"))] <- 'Y'
-T2_1$thresh[T2_1$spp == 'Salmo salar' & !(T2_1$landings %in% c(0, "None"))] <- 'None'
-T2_1$coveredLength[T2_1$spp == 'Salmo salar' & !(T2_1$landings %in% c(0, "None"))] <- 'Y'
+T2_1$thresh[T2_1$spp == 'Anguilla anguilla' & !(T2_1$landings %in% c("None"))] <- 'None'
+T2_1$coveredLength[T2_1$spp == 'Anguilla anguilla' & !(T2_1$landings %in% c("None"))] <- 'Y'
+T2_1$thresh[T2_1$spp == 'Salmo salar' & !(T2_1$landings %in% c("None"))] <- 'None'
+T2_1$coveredLength[T2_1$spp == 'Salmo salar' & !(T2_1$landings %in% c("None"))] <- 'Y'
 
 # T2_1[T2_1$spp %in% 'Nephrops norvegicus' & !(grepl('TAC', T2_1$area)),'TAC'] <- 'None'
 
