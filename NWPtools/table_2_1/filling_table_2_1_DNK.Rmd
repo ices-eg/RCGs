@@ -13,8 +13,8 @@ params:
   NationalStats: FALSE
   FIDES: FALSE
   FIDEScommon: TRUE
-  RFMO: "ICES,NAFO"
-  outputSuffix: "_1820_dnk_linkage_2"
+  RFMO: ""
+  outputSuffix: "_1719_all_rfmos"
   pathIn: "Q:/scientific-projects/eu-data-collection/Work_Plan/2022/Scripts/Table_2_1/RCGs/NWPtools/table_2_1/inputs"
   pathInConf: "Q:/scientific-projects/eu-data-collection/Work_Plan/2022/Scripts/Table_2_1/RCGs/NWPtools/table_2_1/inputs/confidential_data"
   pathOut: "Q:/scientific-projects/eu-data-collection/Work_Plan/2022/Scripts/Table_2_1/RCGs/NWPtools/table_2_1/outputs"
@@ -103,6 +103,8 @@ rfmos_in_output <-
 
 outputSuffix <- params$outputSuffix
 
+type <- params$type
+
 pathIn <- params$pathIn
 pathInConf <- params$pathInConf
 pathOut <- params$pathOut
@@ -146,9 +148,7 @@ names(GEO)[2] <- "Country"
 GEO$geo <- toupper(GEO$geo) #2-letter code should be in capitals
 }
 
-if (whatGoesIn$RCGstats){
-  GEO_rdb <- read.csv(paste(pathIn, "GEO_RDB.csv", sep = "/"), sep = ";")
-}
+GEO_rdb <- read.csv(paste(pathIn, "GEO_RDB.csv", sep = "/"), sep = ";")
 
 ASFIS   <- read.table(paste(pathIn,'ASFIS_sp_Feb_2018.txt',sep='/'), header=TRUE, sep="\t", as.is=TRUE)
 table_2.1 <- read.csv(paste(pathIn, table_2.1_ref, sep='/'), sep=';', header=TRUE, as.is=TRUE, encoding='UTF-8') #New
@@ -216,11 +216,13 @@ RCGS = RCGS[,c('X3A_CODE', 'geo', 'area', 'Y1', 'Y2', 'Y3',"Country", 'Level.Des
 RCGS$Y1[is.na(RCGS$Y1)] <- 0  # Assuming that NA are TRUE ZEROS
 RCGS$Y2[is.na(RCGS$Y2)] <- 0
 RCGS$Y3[is.na(RCGS$Y3)] <- 0
-}
+
 
 # Danish modification to landings from 27.3.a
 
 RCGS$area[RCGS$area == "27.3.a" & !(RCGS$Level.Description %in% c("DEU", "DNK", "SWE"))] <- "27.3.a.20"
+}
+
 
 ```
 
@@ -282,11 +284,11 @@ for (i in 1:nrow(table_2.1)) {
   }
 
 	EUR_UE <- EUR[EUR$geo %in% 'EU27_2020',]
-	if(EUR_UE$source[1]) { sourceEU <- 'Eurostat'
+	if(EUR_UE$source[1]) { sourceEU <- 'EUROSTAT'
 	} else {
 	  sourceEU <- '-'
 	}
-	if(EUR_C$source[1]) { sourceNat <- 'Eurostat'
+	if(EUR_C$source[1]) { sourceNat <- 'EUROSTAT'
 	} else {
 	  sourceNat <- '-'
 	}
@@ -338,9 +340,17 @@ for (i in 1:nrow(table_2.1)) {
       reg <- strsplit(as.character(table_2.1$areaRDB[i]), split = ',')
       species <- strsplit(as.character(table_2.1$latinNameJoin[i]), split = ',')
       
-      RCGS2 <-
+      if (table_2.1$areaRDB[i] != "ICCAT") {
+        RCGS2 <-
         RCGS[RCGS$Scientific_name %in% species[[1]] &
                tolower(RCGS$area) %in% tolower(reg[[1]]), ]
+      } 
+      if (table_2.1$areaRDB[i] == "ICCAT") {
+        RCGS2 <-
+        RCGS[RCGS$Scientific_name %in% species[[1]] &
+               substr(RCGS$area, 1, 2) %in% c(21, 27, 31, 37, 41, 47, 34, 48), ]
+      } 
+      
       
       ind <- which(RCGS2$geo %in% 'UK')
       
@@ -392,11 +402,11 @@ for (i in 1:nrow(table_2.1)) {
           )
       }
       
-  if(RCGS2$source[1]) { sourceEU <- 'RCG'
+  if(RCGS2$source[1]) { sourceEU <- 'RCG agreed statistics'
 	} else {
 	  sourceEU <- '-'
 	}
-	if(RCGS2_C$source[1]) { sourceNat <- 'RCG'
+	if(RCGS2_C$source[1]) { sourceNat <- 'RCG agreed statistics'
 	} else {
 	  sourceNat <- '-'
 	}
@@ -698,9 +708,12 @@ T2_1$sourceNat[ind] <- 'National statistics'
 T2_1$natStats <- round(T2_1$natStats,0)
 
 # landings - country
+
 T2_1$landings[T2_1$landings == 0] <- NA
+T2_1$Comment_0[round(T2_1$landings,0) == 0 & !is.na(T2_1$landings)] <- paste0("National landings rounded to 0 and set to None - TRUE mean = ", round(T2_1$landings[round(T2_1$landings,0) == 0 & !is.na(T2_1$landings)], digits = 3))
+
 T2_1$landings <- round(T2_1$landings,0)
-T2_1$landings[is.na(T2_1$landings)] <- "None"
+T2_1$landings[is.na(T2_1$landings) | T2_1$landings == 0] <- "None"
 
 # TAC
 T2_1$TAC <- paste(round(100*T2_1$TAC,0),'%',sep='')
@@ -714,15 +727,16 @@ T2_1$shareLanding[T2_1$shareLanding %in% c('NA%','NaN%','Inf%')] <- 'None'
 
 # Treshold
 
-T2_1$thresh[T2_1$landings %in% 'None' & T2_1$TAC %in% 'None'] <- T2_1$shareLanding[T2_1$landings %in% 'None' & T2_1$TAC %in% 'None'] <- 'None'
+T2_1$thresh[T2_1$landings %in% 'None' & T2_1$TAC %in% 'None']  <- 'None'
+
+# <- T2_1$shareLanding[T2_1$landings %in% 'None' & T2_1$TAC %in% 'None'] <- 'None'
 
 T2_1$comments[is.na(T2_1$comments)] <- "-"
 T2_1$Comments[is.na(T2_1$Comments)] <- "-"
 T2_1$Comments2[is.na(T2_1$Comments2)] <- "-"
 T2_1$Comment_25rule[is.na(T2_1$Comment_25rule)] <- "-"
 
-T2_1$comments <- paste(T2_1$comments, T2_1$Comments2, T2_1$Comment_25rule, sep = "/ ")
-
+T2_1$comments <- paste(T2_1$Comments2, T2_1$Comment_25rule, T2_1$Comment_0, T2_1$comments, sep = "/ ")
 
 # ind <- which(T2_1$comments>.25)
 # T2_1$comments <- paste(round(100*T2_1$comments,0),'%',sep='')
@@ -736,9 +750,17 @@ T2_1$selectedBio <- '-'
 T2_1$thresh[T2_1$landings %in% 'None'] <- 'None'
 T2_1$coveredLength[!(T2_1$landings %in% 'None')] <- 'Y'
 T2_1$coveredLength[nchar(T2_1$thresh) >4] <- 'N'
-T2_1[T2_1$RFMO %in% c('ICCAT','IOTC','WCPFC') & T2_1$landings>0,c('coveredLength','thresh')] <- c('Y','None')
-T2_1[T2_1$spp %in% 'Anguilla anguilla' & T2_1$landings !='None',c('coveredLength','thresh')] <- c('Y','None')
-T2_1[T2_1$spp %in% 'Nephrops norvegicus' & !(grepl('TAC', T2_1$area)),'TAC'] <- 'None'
+
+T2_1$coveredLength[T2_1$RFMO %in% c('ICCAT','IOTC','WCPFC') & !(T2_1$landings %in% c(0, "None"))] <- 'Y'
+T2_1$thresh[T2_1$RFMO %in% c('ICCAT','IOTC','WCPFC') & !(T2_1$landings %in% c(0, "None"))] <- 'None'
+
+T2_1$thresh[T2_1$spp == 'Anguilla anguilla' & !(T2_1$landings %in% c(0, "None"))] <- 'None'
+T2_1$coveredLength[T2_1$spp == 'Anguilla anguilla' & !(T2_1$landings %in% c(0, "None"))] <- 'Y'
+T2_1$thresh[T2_1$spp == 'Salmo salar' & !(T2_1$landings %in% c(0, "None"))] <- 'None'
+T2_1$coveredLength[T2_1$spp == 'Salmo salar' & !(T2_1$landings %in% c(0, "None"))] <- 'Y'
+
+# T2_1[T2_1$spp %in% 'Nephrops norvegicus' & !(grepl('TAC', T2_1$area)),'TAC'] <- 'None'
+
 T2_1$refYears <- as.character(T2_1$refYears)
 T2_1$refYears[T2_1$sourceNat %in% 'National statistics'] <- paste(range(refYears),collapse='-')
 nchaY <- unlist(lapply(strsplit(T2_1$refYears,split=','),length))
