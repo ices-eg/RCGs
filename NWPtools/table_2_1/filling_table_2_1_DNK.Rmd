@@ -1,0 +1,821 @@
+---
+title: "R script to construct Table 2.1 by country"
+author: Joel Vigneau, with the collaboration of Matt Elliott, Jon Elson, Kirsten Birch   Hakansson,
+  Marie Storr-Paulsen, Nuno Prista, Katja Ringhdal, Lies Vansteenbrugge, Sieto Verver, Manon Troucelier
+date: "July 2021"
+output: word_document
+params:
+  refYearMin: 2018
+  refYearMax: 2020
+  CTRY: "DK"
+  EUROSTAT: FALSE
+  RCGstats: TRUE
+  NationalStats: FALSE
+  FIDES: FALSE
+  FIDEScommon: TRUE
+  RFMO: ""
+  outputSuffix: "_1719_all_rfmos"
+  pathIn: "Q:/scientific-projects/eu-data-collection/Work_Plan/2022/Scripts/Table_2_1/RCGs/NWPtools/table_2_1/inputs"
+  pathInConf: "Q:/scientific-projects/eu-data-collection/Work_Plan/2022/Scripts/Table_2_1/RCGs/NWPtools/table_2_1/inputs/confidential_data"
+  pathOut: "Q:/scientific-projects/eu-data-collection/Work_Plan/2022/Scripts/Table_2_1/RCGs/NWPtools/table_2_1/outputs"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyr)
+library(readxl)
+# library(COSTeda) #only for national statistics import and the function which transform ICES rectangle in ICES area. If need, ask Joel
+setwd('.')
+source(paste("Q:/scientific-projects/eu-data-collection/Work_Plan/2022/Scripts/Table_2_1/RCGs/NWPtools/table_2_1",'Filling Table 21 functions.r',sep='/'))
+
+```
+
+# Settings
+
+All setting are done in the YAML of this R markdown
+
+**refYearMin:** Start of reference period.
+
+**refYearMax:** End of reference period. The script needs 3 years to run due to present way of coding
+
+**CTRY:** Country of interest. Use 2-alpha country
+
+**EUROSTAT:** Landing statistics downloaded from EUROSTAT
+
+**RCGstats:** Landing statistics from the RDB. RCGstats is considered confidential data and can not be shared at GitHub
+
+**NationalStats:** National landing statistics, if needed ask Joel for an example.
+
+If e.g. EUROSTAT = TRUE & RCGstats = TRUE, then the resulting _control will have both stats, but the _filled will be based on RCGstats due to the ordering in the script. RCGstats is considered confidential data and can not be shared at GitHub
+
+**FIDES:** FIDES is a national extract from FIDES including a country and EEC, if needed ask Joel for an example.
+
+**FIDEScommon:** FIDEScommon is a RCG extract from FIDES including all EU countries. This file is confidential.
+
+If FIDES=FALSE and FIDEScommon = FALSE, then the system will use a public source instead (see /input/Record of European TACs.xlsx)
+
+**RFMO:** RFMO's to include in output. This only subset the _filled not the _control. RCGstats are only reliable in c("ICES", "NAFO") and have only been tested in these. Use "" for all | a list of RFMO's eg. "ICES,NAFO"
+
+**outputSuffix:** Add an suffic to the output name. Mainly added for the sake of testing. If no need then use ""
+
+**pathIn:** Path for sharable input data
+
+**pathInConf:** Path for confidential input data
+
+**pathOut:** Path for outputs
+
+## Current setttings
+```{r}
+str(params)
+```
+
+# Introduction
+Filling of the EU-MAP table 1A requires to report on country shares of landings and shares of EU TAC when relevant, for all the stocks listed in table 1A of the EU-MAP Regulation (EU Decision 1254/2016). This process necessitates to gather information on landings and EU TAC from an official database, namely EUROSTAT for EU landings and MARE/FIDES for EU TAC.
+
+Two datasets were added to complete the references, (1) the Nephrops FU landings provided by ICES and (2) the Mediterranean and Black Sea landings fisgures put together by 2016 RCM Mediterranean and Black Sea.
+
+First of all, the datasets listed above contain information from all EU Member States, which means that the script has the potential to be used by all Member States, and by STECF for control of the NWP submitted for 2017.
+
+
+```{r echo=FALSE}
+######################################################
+##        USER CHOICE ARE GIVEN IN THE YALM         ##
+######################################################
+
+refYears <- c(params$refYearMin:params$refYearMax)
+CTRY <- params$CTRY
+
+whatGoesIn <- list(
+  EUROSTAT = params$EUROSTAT,
+  FIDES = params$FIDES,
+  FIDEScommon = params$FIDEScommon,
+  NationalStats = params$NationalStats,
+  RCGstats = params$RCGstats
+) 
+
+rfmos_in_output <- gsub('\\"', "", params$RFMO)
+
+# outputSuffix <- gsub(":", "", paste("_RDB_EUROSTAT_new_rdbdata", Sys.time(), sep = "_")) # This may be overkill, but nice when testing
+
+rfmos_in_output <-
+  strsplit(gsub(" ", "", params$RFMO), split = (","))[[1]]
+
+outputSuffix <- params$outputSuffix
+
+type <- params$type
+
+pathIn <- params$pathIn
+pathInConf <- params$pathInConf
+pathOut <- params$pathOut
+
+# Linkage version EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC.csv | EUMAP_Table_2_1_Linkage_EUROSTAT and EC_TAC_version_2021_final.csv
+
+table_2.1_ref <- "EUMAP_Table_2_1_Linkage_EUROSTAT_RDB and EC_TAC_DNK.csv" # Move to reference section
+
+```
+
+
+## Importing the datasets
+
+The list of datasets are the following :
+
+1.  Landings and TAC shares files:
+
+-   EUROSTAT landings files: <http://ec.europa.eu/eurostat/web/fisheries/data/database>
+-   MARE/FIDES TAC file: <https://webgate.ec.europa.eu/fides/index.cfm>
+
+```{r}
+#Importation of all input files
+if (whatGoesIn$EUROSTAT) EURO <- loadEurostat(pathIn)
+if (whatGoesIn$FIDES) TAC  <- loadFides(pathIn, ctry = c(CTRY,'UE'), years=refYears+1)  #these are the only FIDES files I have!
+if (whatGoesIn$FIDEScommon) TAC <- read.csv(paste0(pathInConf, "/Quotas2018-2020.csv"), sep=";", header=TRUE)
+if (whatGoesIn$NationalStats) NAT  <- loadNational(pathIn = 'C:/_PROGRAMME/DCF/2021/CREDO/BUM_stats/Input_data/ObsDeb', years=refYears)  
+if (whatGoesIn$RCGstats) RCG <- loadRCG(path = paste0(pathIn, "/confidential_data"))
+```
+
+2.  Reference tables:
+
+-   EuroStat Geo.def: full names of countries
+-   ASFIS file : FAO species naming and coding
+-   Linkage table mirroring EU-MAP Table 1A naming of species and stock area, and lining to EUROSTAT and MARE/FIDES species and area naming
+
+```{r}
+if (whatGoesIn$EUROSTAT) {
+GEO     <- read.table(paste(pathIn,'geo.def',sep='/'),header=TRUE,sep=";", as.is=TRUE)
+GEO <- GEO[-1,] #EU (27MS) instead of EU (28MS)
+names(GEO)[2] <- "Country"
+GEO$geo <- toupper(GEO$geo) #2-letter code should be in capitals
+}
+
+GEO_rdb <- read.csv(paste(pathIn, "GEO_RDB.csv", sep = "/"), sep = ";")
+
+ASFIS   <- read.table(paste(pathIn,'ASFIS_sp_Feb_2018.txt',sep='/'), header=TRUE, sep="\t", as.is=TRUE)
+table_2.1 <- read.csv(paste(pathIn, table_2.1_ref, sep='/'), sep=';', header=TRUE, as.is=TRUE, encoding='UTF-8') #New
+
+# table_2.1$areaBis <- gsub(" ", "", table_2.1$areaBis) #kibi: Remove blanks in area codes - moved to linkage script
+```
+
+## data.frame preparation
+
+The country names are matching between GEO and TAC data.frame, except for UK, so the following lines enables the full match.
+
+```{r warning = FALSE}
+#TAC$Level.Description[substring(TAC$Level.Description,1,3) %in% 'U.K'] <- 'United Kingdom'
+```
+
+The TAC dataset is well structured and thus ready for the analysis.
+
+```{r warning = FALSE}
+
+if (whatGoesIn$EUROSTAT){
+SRG <- strsplit(as.character(EURO$species.fishreg.unit.geo.time),split=",")
+SRG.m <- matrix(unlist(SRG), ncol=4, byrow=TRUE)
+coln <- sapply(refYears, function(x) which(grepl(x,names(EURO))))
+EUROS <- data.frame(X3A_CODE = SRG.m[,1], area = SRG.m[,2], geo = SRG.m[,4],
+                  Y1 = EURO[,coln[1]], Y2 = EURO[,coln[2]], Y3 = EURO[,coln[3]])
+EUROS <- merge(EUROS, GEO, all.x=TRUE)
+EUROS$Y1 <- as.numeric(as.character(EUROS$Y1))
+EUROS$Y2 <- as.numeric(as.character(EUROS$Y2))
+EUROS$Y3 <- as.numeric(as.character(EUROS$Y3))
+ind <- which(is.na(EUROS$Country))
+if (length(ind) >0) EUROS <- EUROS[!is.na(EUROS$Country),]
+EUROS <- merge(EUROS, ASFIS[,c(3:6)], all.x=TRUE)
+}
+```
+
+Let's have a look at the workable structure of EuroStat dataset. Note that Y1, Y2 and Y3 are the 3-year period demanded, and the presence of NA's. The assumption made here (further in the Construction of the table section) is to exclude NA from the average, i.e. like if MS had omitted to report, instead of a NA which would mean 0. The confusion comes because lots of 0 are reported in EuroStat (implicitely meaning that NA is not a 0). This point may be subject of a STECF agreement or suggestion for modification.
+
+```{r warning = FALSE}
+if (whatGoesIn$EUROSTAT){
+head(EUROS,3)
+}
+```
+
+RCG data
+
+```{r warning = FALSE}
+
+if (whatGoesIn$RCGstats) {
+RCGS <- RCG[RCG$Year %in% refYears,]
+RCGS <- merge(RCGS, GEO_rdb, all.x = TRUE, by.x = "FlagCountry", by.y = "Level.Description" )
+RCGS <- RCGS[with(RCGS, order(Year)), ]
+RCGS <- pivot_wider(RCGS, names_from = Year, values_from = OfficialLandingCatchWeight_ton)
+ind <- which(is.na(RCGS$Country))
+if (length(ind) >0) RCGS <- RCGS[!is.na(RCGS$Country),]
+
+length(ind)
+unique(RCGS$Country)
+
+RCGS <- merge(RCGS, ASFIS[,c(3:6)], all.x=TRUE, by.x = "Species", by.y = "Scientific_name") # Not needed - the X3A_CODE are only used for the FIDES and this is controled by the linkage file
+
+colnames(RCGS)[c(1,4,7:9, 2)] = c('Scientific_name','area','Y1', 'Y2', 'Y3', 'Level.Description')
+
+RCGS = RCGS[,c('X3A_CODE', 'geo', 'area', 'Y1', 'Y2', 'Y3',"Country", 'Level.Description', 'Scientific_name','English_name', 'French_name')]
+
+RCGS$Y1[is.na(RCGS$Y1)] <- 0  # Assuming that NA are TRUE ZEROS
+RCGS$Y2[is.na(RCGS$Y2)] <- 0
+RCGS$Y3[is.na(RCGS$Y3)] <- 0
+
+
+# Danish modification to landings from 27.3.a
+
+RCGS$area[RCGS$area == "27.3.a" & !(RCGS$Level.Description %in% c("DEU", "DNK", "SWE"))] <- "27.3.a.20"
+}
+
+
+```
+
+## Construction of the table
+
+The main part of the code
+
+```{r}
+#########################################################
+##                                                     ##
+##             CONSTRUCTION OF THE TABLE               ##
+##                                                     ##
+#########################################################
+# Preamble
+T21 <- data.frame()
+tabControl <- data.frame(region=NA, RFMO=NA, spp=NA, geo=NA, area=NA, year=NA)
+if (whatGoesIn$EUROSTAT) {tabControl$EURO.CTRY=NA; tabControl$EURO.EU=NA}
+if (whatGoesIn$FIDES)    {tabControl$FIDES.CTRY=NA;  tabControl$FIDES.EU = NA; tabControl$FIDES.SHARE=NA}
+if (whatGoesIn$NationalStats) tabControl$NAT.CTRY=NA
+if (whatGoesIn$RCGstats) {tabControl$RCG.CTRY=NA; tabControl$RCG.EU=NA}
+colnames(table_2.1)[1]<- "region"
+colnames(table_2.1)[7]<- "FIDES_stockID"
+
+# From EUROSTAT
+# ---------------------------------------------------
+for (i in 1:nrow(table_2.1)) {
+  #
+  # -----> start here with a value of i for a line by line check  <-------
+  #
+  if (whatGoesIn$EUROSTAT) {
+  ctry2 <- GEO$Country[GEO$geo %in% CTRY]
+	
+  reg <- strsplit(as.character(table_2.1$areaBis[i]), split=',')
+	species <- strsplit(as.character(table_2.1$latinNameJoin[i]), split = ',')
+	
+  EUR <- EUROS[EUROS$Scientific_name %in% species[[1]] & tolower(EUROS$area) %in% tolower(reg[[1]]),]
+  ind <- which(EUR$Level.Description %in% 'GBR')
+  if (length(ind) >0) EUR <- EUR[-ind,]  # UK is not in EU27, so when only UK declares a stock the line EU27 is missing and this case is treated under nrow(EUR) == 0
+  if (nrow(EUR) == 1) if (EUR$Country %in% 'European union (28 MS)') EUR <- EUR [-1,]
+  
+   if (nrow(EUR) == 0) {
+   EUR <- data.frame(X3A_CODE = rep(table_2.1$X3A_CODE[i],2), geo = c(CTRY,'EU27_2020'), area = rep(table_2.1$area[i],2),
+                     Y1=rep(NA,2), Y2=rep(NA,2),Y3=rep(NA,2),
+                     Country=c(ctry2,'European union (27 MS)'), source=T,
+                     Level.Description = GEO$Level.Description[GEO$geo %in% c(CTRY,'EU27_2020')], 
+                     Scientific_name = rep(table_2.1$latinName[i],2), English_name=rep(NA,2), French_name=rep(NA,2))
+   } else {
+    EUR$source <- TRUE
+   }
+  
+ 	EUR$MOY <- apply(EUR[,4:6],1,mean,na.rm=TRUE)
+	EUR_C <- EUR[EUR$geo %in% CTRY,]
+	# if there's info for CTRY
+	if (nrow(EUR_C) == 0) {
+   EUR_C <- data.frame(X3A_CODE = table_2.1$X3A_CODE[i], geo = CTRY, area = table_2.1$area[i],
+                     Y1=NA, Y2=NA,Y3=NA, Moy=NA, Country=ctry2, source=T,
+                     Level.Description = GEO$Level.Description[GEO$geo %in% CTRY], 
+                     Scientific_name = table_2.1$latinName[i], English_name=NA, French_name=NA)
+  }
+
+	EUR_UE <- EUR[EUR$geo %in% 'EU27_2020',]
+	if(EUR_UE$source[1]) { sourceEU <- 'EUROSTAT'
+	} else {
+	  sourceEU <- '-'
+	}
+	if(EUR_C$source[1]) { sourceNat <- 'EUROSTAT'
+	} else {
+	  sourceNat <- '-'
+	}
+
+	# Identification of reference years (Eurostat may be missing the most recent years)
+	N <- nrow(EUR[EUR$geo %in% CTRY,])
+	yrRange <- apply(is.na(EUR_C[,c('Y1','Y2','Y3')]),2,sum)
+	names(yrRange) <- substring(names(EURO)[coln],2,5)
+	referenceYears <- paste(names(which(yrRange<N)),collapse = ', ')
+ #Construction of the table 2.1 line of information
+	T1 <- data.frame(MS=CTRY, refYears=referenceYears,region=table_2.1$region[i],
+		RFMO=table_2.1$RFMO[i], spp=table_2.1$latinName[i], area = table_2.1$area[i], landings=NA,
+		sourceNat=sourceNat, TAC=NA,shareLanding=NA,sourceEU=sourceEU, thresh='None', regCoord=NA,
+		coveredLength=NA, selectedBio=NA, comments=NA, natStats=NA)
+	
+	if (sum(is.na(EUR_C$MOY)) < nrow(EUR_C)) {
+		T1$landings <- sum(EUR_C$MOY,na.rm=TRUE)
+		T1$shareLanding <- T1$landings/sum(EUR_UE$MOY,na.rm=TRUE)
+		} else {
+		T1$landings <- 0
+		T1$shareLanding <- 0
+		}
+	#construction of the control table
+	tbC <-
+	  data.frame(
+	    region = table_2.1$region[i],
+	    RFMO = table_2.1$RFMO[i],
+	    spp = table_2.1$latinName[i],
+	    geo = rep(CTRY, each = 3),
+	    area = table_2.1$area[i],
+	    year = refYears,
+	    EURO.CTRY = apply(EUR_C[, c('Y1', 'Y2', 'Y3')], 2, sum, na.rm = TRUE),
+	    EURO.EU =  apply(EUR_UE[, c('Y1', 'Y2', 'Y3')], 2, sum, na.rm = TRUE)
+	  ) 
+} else {
+  
+  tbC <- c()
+} # end of the part of whatGoesIn$EUROSTAT
+  
+
+# RCG - Marta, update 13.08.2021
+# ----------------------------------------------
+# 
+	
+  if (whatGoesIn$RCGstats) {
+      ctry2 <- GEO_rdb$Country[GEO_rdb$geo %in% CTRY]
+      # RCGS$area = gsub('[.]', '_', RCGS$area) #Kibi: Not needed anymore, since the ref is changed
+      
+      reg <- strsplit(as.character(table_2.1$areaRDB[i]), split = ',')
+      species <- strsplit(as.character(table_2.1$latinNameJoin[i]), split = ',')
+      
+      if (table_2.1$areaRDB[i] != "ICCAT") {
+        RCGS2 <-
+        RCGS[RCGS$Scientific_name %in% species[[1]] &
+               tolower(RCGS$area) %in% tolower(reg[[1]]), ]
+      } 
+      if (table_2.1$areaRDB[i] == "ICCAT") {
+        RCGS2 <-
+        RCGS[RCGS$Scientific_name %in% species[[1]] &
+               substr(RCGS$area, 1, 2) %in% c(21, 27, 31, 37, 41, 47, 34, 48), ]
+      } 
+      
+      
+      ind <- which(RCGS2$geo %in% 'UK')
+      
+      if (length(ind) > 0)
+        RCGS2 <-
+        RCGS2[-ind, ]  # UK is not in EU27, so when only UK declares a stock the line EU27 is missing and this case is treated under nrow(EUR) == 0
+      if (nrow(RCGS2) == 1)
+        if (RCGS2$Country %in% 'European union (28 MS)') # kibi: could be deleted not relevant for RDB data
+          RCGS2 <- RCGS2 [-1, ]
+      if (nrow(RCGS2) == 0) {
+        RCGS2 <-
+          data.frame(
+            X3A_CODE = rep(table_2.1$X3A_CODE[i], 2),
+            geo = c(CTRY, 'EU27_2020'),
+            area = rep(table_2.1$area[i], 2),
+            Y1 = rep(0, 2),
+            Y2 = rep(0, 2),
+            Y3 = rep(0, 2),
+            Country = c(ctry2, 'European union (27 MS)'),
+            source = T,
+            Level.Description = GEO_rdb$Level.Description[GEO_rdb$geo %in% c(CTRY, 'EU27_2020')],
+            Scientific_name = rep(table_2.1$latinName[i], 2),
+            English_name = rep(NA, 2),
+            French_name = rep(NA, 2)
+          )
+      } else {
+        RCGS2$source <- TRUE
+      }
+      
+      RCGS2$MOY <- apply(RCGS2[, 4:6], 1, mean, na.rm = TRUE)
+      RCGS2_C <- RCGS2[RCGS2$geo %in% CTRY, ]
+      # if there's info for CTRY
+      if (nrow(RCGS2_C) == 0) {
+        RCGS2_C <-
+          data.frame(
+            X3A_CODE = table_2.1$X3A_CODE[i],
+            geo = CTRY,
+            area = table_2.1$area[i],
+            Y1 = 0,
+            Y2 = 0,
+            Y3 = 0,
+            Moy = NA,
+            Country = ctry2,
+            source = T,
+            Level.Description = GEO_rdb$Level.Description[GEO_rdb$geo %in% CTRY],
+            Scientific_name = table_2.1$latinName[i],
+            English_name = NA,
+            French_name = NA
+          )
+      }
+      
+  if(RCGS2$source[1]) { sourceEU <- 'RCG agreed statistics'
+	} else {
+	  sourceEU <- '-'
+	}
+	if(RCGS2_C$source[1]) { sourceNat <- 'RCG agreed statistics'
+	} else {
+	  sourceNat <- '-'
+	}
+      
+      N <- nrow(RCGS2_C)
+      yrRange <- apply(is.na(RCGS2_C[, c('Y1', 'Y2', 'Y3')]), 2, sum)
+      names(yrRange) <- refYears
+      referenceYears <- paste(names(which(yrRange < N)), collapse = ', ')
+      #Construction of the table 2.1 line of information
+      T1 <-
+        data.frame(
+          MS = CTRY,
+          refYears = referenceYears,
+          region = table_2.1$region[i],
+          RFMO = table_2.1$RFMO[i],
+          spp = table_2.1$latinName[i],
+          area = table_2.1$area[i],
+          landings = NA,
+          sourceNat = sourceNat,
+          TAC = NA,
+          shareLanding = NA,
+          sourceEU = sourceEU,
+          thresh = 'None',
+          regCoord = NA,
+          coveredLength = NA,
+          selectedBio = NA,
+          comments = table_2.1$Comments[i],
+          natStats = NA
+        )
+      
+      if (sum(is.na(RCGS2_C$MOY)) < nrow(RCGS2_C)) {
+        T1$landings <- sum(RCGS2_C$MOY, na.rm = TRUE)
+        T1$shareLanding <- T1$landings / sum(RCGS2$MOY, na.rm = TRUE)
+      } else {
+        T1$landings <- 0
+        T1$shareLanding <- 0
+      }
+    
+      tbC1 <- data.frame(
+        region = table_2.1$region[i],
+        RFMO = table_2.1$RFMO[i],
+        spp = table_2.1$latinName[i],
+        geo = rep(CTRY, each = 3),
+        area = table_2.1$area[i],
+        year = refYears,
+        RCG.CTRY = apply(RCGS2_C[, c('Y1', 'Y2', 'Y3')], 2, sum, na.rm = TRUE),
+        RCG.EU =  apply(RCGS2[, c('Y1', 'Y2', 'Y3')], 2, sum, na.rm = TRUE)
+      ) 
+      
+      if (length(tbC) > 0) {
+        
+        tbC <- merge(tbC, tbC1, all=TRUE)
+      } else {
+        
+        tbC <- tbC1
+      }
+      
+
+    } #end of the part of whatGoesIn$RCGstats
+
+
+# From FIDES
+# -----------------------------------------------------------------------
+  if (whatGoesIn$FIDES) {
+		aa<-strsplit(as.character(table_2.1$FIDES_stockID[i]),split=',')[[1]]
+	  spp <- strsplit(as.character(table_2.1$X3A_CODE[i]), split=',')[[1]]
+		TACii <- TAC[TAC$Species %in% spp & TAC$Area %in% aa,]
+		names(TACii)[c(1,8,10)] <- c('Level.Description','adaptedQuota','Catches')
+		TACii <- merge(TACii, GEO[,c(1,3)], all.x=TRUE)
+		names(TACii)[16] <- 'CTRY'
+		N <- nrow(TACii)
+		flagTAC <- !(table_2.1$FIDES_stockID %in% c('No TAC',''))
+
+		if (flagTAC[i] & N>0) {
+		if (length(aa)>1) {
+			TACii <- aggregate(list(adaptedQuota = TACii$adaptedQuota, Catches=TACii$Catches), 
+				by=list(CTRY = TACii$CTRY, year=TACii$year), sum, na.rm=TRUE)
+		  }
+		# 
+		TACim <- aggregate(list(adaptedQuota = TACii$adaptedQuota, Catches=TACii$Catches), 
+				by=list(CTRY = TACii$CTRY), mean, na.rm=TRUE)
+		
+		ind.ct <- TACim$adaptedQuota[which(TACim$CTRY %in% CTRY)]
+		ind.eu <- TACim$adaptedQuota[TACim$CTRY %in% 'EU27_2020']
+		sourceTAC <- c('FIDES','Public TAC DB')
+		names(sourceTAC) <- c('TRUE','FALSE')
+		if (length(ind.ct) == 1) {T1$TAC <- ind.ct/ind.eu; T1$sourceEU <- sourceTAC[paste0(isFides)]}
+		T1$comments<-NA
+		#with the actual French only FIDES file, this does not work!
+		TT <- tapply(TACim$adaptedQuota, TACim$CTRY,sum,na.rm=TRUE)/TACim$adaptedQuota[TACim$Ctry %in% 'EEC']
+		TT <-  TT[names(TT) %in% GEO$Level.Description]  #Keep only the EU countries to calculate the 25% rule
+		if (!(is.na(T1$TAC)) & T1$TAC <0.1 & T1$TAC>0) 	T1$comments <- sum(TT[which(TT<0.1)])
+		if (!(is.na(T1$comments)) & T1$comments >=.25)	{
+			print(T1)
+			print(TT[TT<.1])
+			cat('\n')
+		}
+		TACii$CTRY <- factor(TACii$CTRY,levels=c('EU27_2020',CTRY))
+		fides.quota <- tapply(TACii$adaptedQuota,list(TACii$year,TACii$CTRY), mean,na.rm=TRUE)
+		
+		tbC2 <- data.frame(
+		  region = table_2.1$region[i],
+		  RFMO = table_2.1$RFMO[i],
+		  spp = table_2.1$latinName[i],
+		  geo = rep(CTRY, 3),
+		  area = table_2.1$area[i],
+		  year = sort(unique(TACii$year)),
+		  FIDES.CTRY = fides.quota[, CTRY],
+		  FIDES.EU = fides.quota[, 'EU27_2020'],
+		  FIDES.SHARE = fides.quota[, CTRY] / fides.quota[, 'EU27_2020']
+		)
+		tbC <- merge(tbC, tbC2, all = TRUE)
+		} else {
+		  tbC$FIDES.CTRY <- tbC$FIDES.EU <- tbC$FIDES.SHARE <- NA
+	  }#end of the initial condition on TAC
+  } #end of the part of whatGoesIn$FIDES
+
+# From FIDEScommon # Kirsten update 17/9/20
+# -----------------------------------------------------------------------
+  if (whatGoesIn$FIDEScommon) {
+    if (!(table_2.1$FIDES_stockID[i] %in% 'No TAC')) {
+    ind.ct <- NULL
+
+          aa <-
+        strsplit(as.character(table_2.1$FIDES_stockID[i]), split = ',')[[1]]
+      spp <-
+        strsplit(as.character(table_2.1$X3A_CODE[i]), split = ',')[[1]]
+      TACi <- TAC[TAC$Species.Code %in% spp & TAC$Area.Code %in% aa,]
+		N <- nrow(TACi)
+		flagTAC <- !(table_2.1$FIDES_stockID %in% c('No TAC',''))
+
+		if (flagTAC[i] & N>0) {      
+      if (length(aa) > 1) {
+        TACi <-
+          aggregate(
+            list(Initial.Quantity = TACi$Initial.Quantity),
+            by = list(
+              Level.Code = TACi$Level.Code,
+              Level.Description = TACi$Level.Description,
+              Definition.Year = TACi$Definition.Year
+            ),
+            sum
+          )
+      }
+      
+      TACsum <- aggregate(
+        list(Initial.Quantity = TACi$Initial.Quantity),
+        by = list(
+          Level.Code = TACi$Level.Code,
+          Level.Description = TACi$Level.Description
+        ),
+        sum
+      )
+      
+      ind.ct <-
+        TACsum$Initial.Quantity[which(TACsum$Level.Description %in% ctry2)]
+      ind.eu <-
+        TACsum$Initial.Quantity[which(TACsum$Level.Code %in% 'EEC')]
+      if (length(ind.ct) == 1)
+        T1$TAC <- ind.ct / ind.eu
+      
+      T1$Comments <- NA 
+      TT <-
+        tapply(TACsum$Initial.Quantity,
+               TACsum$Level.Description,
+               sum,
+               na.rm = TRUE) /
+        TACsum$Initial.Quantity[TACsum$Level.Code %in% 'EEC']
+      TT <-
+        TT[names(TT) %in% GEO_rdb$Country &
+             names(TT) != "United Kingdom"]  #Keep only the EU countries to calculate the 25% rule
+      if (!(is.na(T1$TAC)) &
+          T1$TAC < 0.1 &
+          T1$TAC > 0)
+        T1$Comments <- sum(TT[which(TT < 0.1)])
+      if (!(is.na(T1$Comments)) & T1$Comments >= .25)	{
+        print(T1)
+        print(TT[TT < .1])
+        cat('\n')
+      }
+      
+      T1$Comments2 <- NA
+      if (length(ind.ct) > 0) {
+        if (!is.na(ind.ct))  {
+          T1$Comments2 <- paste('FIDES Initial.Quantity.Mean =', round(ind.ct / 3, digits = 0))
+        }
+      }
+      
+      T1$Comment_25rule <- NA
+      if (!is.na(T1$Comments)) {
+        T1$Comment_25rule <-
+          paste0("Sum of MS TAC's below 10% = ",
+                 round(as.numeric(T1$Comments) * 100, digits = 0),
+                 "%")
+      }
+    } else {
+      
+      T1$Comments <- NA
+      T1$Comments2 <- NA
+      T1$Comment_25rule <- NA
+      
+    }} else {
+      
+      T1$TAC <- -999
+      T1$Comments <- NA
+      T1$Comments2 <- NA
+      T1$Comment_25rule <- NA
+      
+    }}  #end of the part of whatGoesIn$FIDEScommon
+    
+    
+    # National statistics
+    # ----------------------------------------------
+    #
+    if (whatGoesIn$NationalStats) {
+      # nat stats are not organised like EUROSTAT, if seeked area is '27_2' and is '27_2_a' then it won't match
+      # how to deal in such a case with search of landings in areas like '27_4' and '27_7-d' ?
+      tmp <- data.frame()
+      lnc <- split(reg[[1]], nchar(reg[[1]]))
+      spp <-
+        strsplit(as.character(table_2.1$X3A_CODE[i]), split = ',')[[1]]
+      
+      for (j in 1:length(lnc)) {
+        ncha <- as.numeric(names(lnc[j]))
+        tmp_j <-
+          NAT[NAT$ESP_COD_FAO %in% spp &
+                substring(NAT$SECTEUR, 1, ncha) %in% lnc[[j]], ]
+        tmp <- rbind.data.frame(tmp, tmp_j)
+      }
+      
+      nat.ctry <-
+        round(tapply(tmp$CAPTURES_KG, tmp$ANNEE, sum, na.rm = TRUE) / 1000,
+              0)
+      T1$natStats <- round(mean(nat.ctry, na.rm = TRUE), 0)
+      if (nrow(tmp) == 0) {
+        tbC3 <- data.frame(
+          region = table_2.1$region[i],
+          RFMO = table_2.1$RFMO[i],
+          spp = table_2.1$latinName[i],
+          geo = CTRY,
+          area = table_2.1$area[i],
+          year = refYears,
+          NAT.CTRY = NA
+        )
+      } else {
+        tbC3 <- data.frame(
+          region = table_2.1$region[i],
+          RFMO = table_2.1$RFMO[i],
+          spp = table_2.1$latinName[i],
+          geo = CTRY,
+          area = table_2.1$area[i],
+          year = names(nat.ctry),
+          NAT.CTRY = nat.ctry
+        )
+      }
+      tbC <- merge(tbC, tbC3, all = TRUE)
+    } #end of the part of whatGoesIn$NationalStats
+    
+    # ----------------------------------------------
+    #
+    T21 <- rbind.data.frame(T21, T1)
+    
+    tabControl <- rbind.data.frame(tabControl, tbC)
+    
+    #Some formatting on the final data.frame (T21)
+    T21$thresh <- as.character(T21$thresh)
+    #Threshold ruling specified like the EU Reg
+    T21$thresh[T21$TAC < .1 & T21$TAC > -1] <- 'TAC < 10%'  #rule (a)
+    T21$thresh[T21$TAC < -1 &
+                 T21$shareLanding < .1] <- 'Landings < 10%' #rule (b)
+    T21$thresh[T21$landings > 0 &
+                 T21$landings < 200] <- 'Landings < 200t.'  #rule (c)
+    T21$thresh[T21$TAC < .1 &
+                 T21$Comments >= .25] <-
+      'N'   # 25% rule, sampling to be coordinated between MS
+    
+  
+	
+}  #end of the loop on table_2.1 rows
+```
+
+\#\#Formatting
+
+```{r}
+
+T2_1 <- T21
+
+# National statistic
+ind <- which(T2_1$landings ==0 & T2_1$natStats>0)
+T2_1$landings[ind] <- T2_1$natStats[ind]
+T2_1$sourceNat <- as.character(T2_1$sourceNat)
+T2_1$sourceNat[ind] <- 'National statistics'
+
+ind <- which(1-T21$landings/T21$natStats>0.5)
+T2_1$landings[ind] <- T2_1$natStats[ind]
+T2_1$sourceNat <- as.character(T2_1$sourceNat)
+T2_1$sourceNat[ind] <- 'National statistics'
+
+T2_1$natStats <- round(T2_1$natStats,0)
+
+# landings - country
+
+T2_1$landings[T2_1$landings == 0] <- NA
+T2_1$Comment_0[round(T2_1$landings,0) == 0 & !is.na(T2_1$landings)] <- paste0("National landings rounded to 0 - TRUE mean = ", round(T2_1$landings[round(T2_1$landings,0) == 0 & !is.na(T2_1$landings)], digits = 3))
+
+T2_1$landings <- round(T2_1$landings,0)
+T2_1$landings[is.na(T2_1$landings)] <- "None"
+
+# TAC
+T2_1$TAC <- paste(round(100*T2_1$TAC,0),'%',sep='')
+T2_1$TAC[T2_1$TAC %in% c('NA%','NaN%','Inf%')] <- 'None'
+T2_1$TAC[T2_1$TAC == "-99900%"] <- "NA"
+
+# landings - share
+T2_1$shareLanding[T2_1$shareLanding == 0] <- NA
+T2_1$shareLanding <- paste(round(100*T2_1$shareLanding,0),'%',sep='')
+T2_1$shareLanding[T2_1$shareLanding %in% c('NA%','NaN%','Inf%')] <- 'None'
+
+# Treshold
+
+T2_1$thresh[T2_1$landings %in% 'None' & T2_1$TAC %in% 'None']  <- 'None'
+
+T2_1$shareLanding[T2_1$landings %in% 'None' & T2_1$TAC %in% 'None'] <- 'None'
+
+T2_1$comments[is.na(T2_1$comments)] <- "-"
+T2_1$Comments[is.na(T2_1$Comments)] <- "-"
+T2_1$Comments2[is.na(T2_1$Comments2)] <- "-"
+T2_1$Comment_25rule[is.na(T2_1$Comment_25rule)] <- "-"
+
+T2_1$comments <- paste(T2_1$Comments2, T2_1$Comment_25rule, T2_1$Comment_0, T2_1$comments, sep = "/ ")
+
+# ind <- which(T2_1$comments>.25)
+# T2_1$comments <- paste(round(100*T2_1$comments,0),'%',sep='')
+# T2_1$comments[T2_1$comments<.25] <- '-'
+# T2_1$comments[T2_1$comments %in% c('NA%','NaN%','Inf%')] <- '-'
+# T2_1$comments[ind] <- paste('Sum of MS shares <10% = ',T2_1$comments[ind],sep='')
+# T2_1[!ind]<-'-'
+
+T2_1$coveredLength <- '-'
+T2_1$selectedBio <- '-'
+T2_1$thresh[T2_1$landings %in% 'None'] <- 'None'
+T2_1$coveredLength[!(T2_1$landings %in% 'None')] <- 'Y'
+T2_1$coveredLength[nchar(T2_1$thresh) >4] <- 'N'
+
+T2_1$coveredLength[T2_1$RFMO %in% c('ICCAT','IOTC','WCPFC') & !(T2_1$landings %in% c("None"))] <- 'Y'
+T2_1$thresh[T2_1$RFMO %in% c('ICCAT','IOTC','WCPFC') & !(T2_1$landings %in% c("None"))] <- 'None'
+
+T2_1$thresh[T2_1$spp == 'Anguilla anguilla' & !(T2_1$landings %in% c("None"))] <- 'None'
+T2_1$coveredLength[T2_1$spp == 'Anguilla anguilla' & !(T2_1$landings %in% c("None"))] <- 'Y'
+T2_1$thresh[T2_1$spp == 'Salmo salar' & !(T2_1$landings %in% c("None"))] <- 'None'
+T2_1$coveredLength[T2_1$spp == 'Salmo salar' & !(T2_1$landings %in% c("None"))] <- 'Y'
+
+# T2_1[T2_1$spp %in% 'Nephrops norvegicus' & !(grepl('TAC', T2_1$area)),'TAC'] <- 'None'
+
+T2_1$refYears <- as.character(T2_1$refYears)
+T2_1$refYears[T2_1$sourceNat %in% 'National statistics'] <- paste(range(refYears),collapse='-')
+nchaY <- unlist(lapply(strsplit(T2_1$refYears,split=','),length))
+T2_1$refYears[nchaY == 3] <- unlist(lapply(T2_1$refYears[nchaY == 3], function(x) paste(range(as.numeric(strsplit(x,split=',')[[1]])), collapse='-')))
+T2_1$regCoord <- 'N'
+T2_1$regCoord[T2_1$landings %in% 'None'] <- '-'
+
+```
+
+```{r ctry_code}
+
+# This is a slightly ugly fix, but I don't dare changing the coding before. It may affect FIDES
+
+T2_1 <- merge(T2_1, GEO_rdb[, c(1:2)], by.x = "MS", by.y = "geo")
+
+T2_1$MS <- T2_1$Level.Description
+
+T2_1 <- T2_1[, c(1:17)]
+
+```
+
+## Export of Table 2.1
+
+the rule sum of quotas for coutries \<10% (less or more than 25%) is noted in the comments column The national statistics (when exists) are on an extra column
+
+```{r}
+
+if (length(rfmos_in_output) == 0) {
+  write.table(
+    T2_1,
+    file = paste(
+      pathOut,
+      paste(CTRY, "_table_2_1_filled", outputSuffix, ".csv", sep = ''),
+      sep = '/'
+    ),
+    sep = ';',
+    row.names = FALSE,
+    quote = FALSE
+  )
+} else {
+  write.table(
+    subset(T2_1, RFMO %in% rfmos_in_output),
+    file = paste(
+      pathOut,
+      paste(CTRY, "_table_2_1_filled", outputSuffix, ".csv", sep = ''),
+      sep = '/'
+    ),
+    sep = ';',
+    row.names = FALSE,
+    quote = FALSE
+  )
+  
+}
+
+write.table(tabControl, file=paste(pathOut,paste(CTRY,"_table_2_1_control", outputSuffix, ".csv",sep=''),sep='/'), sep=';',row.names=FALSE, quote=FALSE)
+```
+
+\`\`\`
