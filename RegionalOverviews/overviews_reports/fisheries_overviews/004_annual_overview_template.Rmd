@@ -41,17 +41,17 @@ figures <- "yes" #yes / no - all figures outputtet to a folder
 tables <- "yes" #yes / no - all tables outputtet to a folder
 
 #data_dir <-data_dir <- paste("../../data/002_prepared/", target_region, "/", sep = '') # "Q:/dfad/users/kibi/data/RCG/from_share_point/"
-data_dir <-data_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Data/2020 data/", target_region, "/", sep = '') # 
+data_dir <-data_dir <- paste("D:/Grupy robocze/RCG/RCGs Data/2020 data/", target_region, "/", sep = '') # 
 
 #Folder for figures and tables
 # table_dir <- paste("../../outputs/", target_region, "/tables/", sep = "")
 # figur_dir <- paste("../../outputs/", target_region, "/figures/", sep = "")
-table_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Outputs/",period,"/", target_region, "/tables/", sep = "")
-figur_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Outputs/",period,"/", target_region, "/figures/", sep = "")
+table_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/",period,"/", target_region, "/tables/", sep = "")
+figur_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/",period,"/", target_region, "/figures/", sep = "")
 
 # for SSF
-#table_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Outputs/SSF_", target_region, "/tables/", sep = "")
-#figur_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Outputs/SSF_", target_region, "/figures/", sep = "")
+#table_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/SSF_", target_region, "/tables/", sep = "")
+#figur_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/SSF_", target_region, "/figures/", sep = "")
 
 
 #Landings per stock settings
@@ -74,7 +74,7 @@ library(dplyr)
 library(data.table)
 library(knitr)
 library(stringr)
-library(RCMfunctions) #sharepoint -> RCG Data Group -> R packages
+#library(RCMfunctions) #sharepoint -> RCG Data Group -> R packages
 library(rnaturalearth)
 library(flextable) # R version 3.6.3
 library(TeachingDemos)
@@ -409,7 +409,8 @@ ft
 # Prepare the dataset with coordinates <-----------------------  WORK on this part
 # Harbour list
 
-data(UNLOCODE)
+load("../../data/UNLOCODE.rData")
+
 UNLOCODE %>%
   mutate(Harbour = loCode) %>%
   filter(!is.na(Harbour)) %>%
@@ -520,9 +521,9 @@ for (a in unique(param$Section)) {
       
       #Select data input
       
-      if (unique(graph_det$Data == "CL")) {
+      if (unique(graph_det$Data) == "CL") {
         df <- cl
-      } else if (unique(graph_det$Data == "CE")) {
+      } else if (unique(graph_det$Data) == "CE") {
         df <- ce
       }
       
