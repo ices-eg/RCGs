@@ -340,6 +340,8 @@ if(groupBy_name %in% c('Area','AreaMap', 'FishingGround')){
       )
     )->p
     
+    color_palette= color_palette[names(color_palette)%in%unique(mdf2$FlagCountry)]
+    
     p +
     #Optional. this hides some tiles of the corresponding color scale BEHIND the
     #pie charts, in order to create a legend for them

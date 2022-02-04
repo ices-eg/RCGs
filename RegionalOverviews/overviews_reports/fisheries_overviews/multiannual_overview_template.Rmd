@@ -71,7 +71,9 @@ source("../../funs/fun_theme_flextable.r")
 year <- 2020 # fleet register
 #data_dir <- paste("../../data/002_prepared/RCG_", RCG, "/", sep = '')
 #data_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Data/2020 data/RCG_", RCG, "/", sep = '') #Marta's path
-data_dir <- paste("Q:/mynd/RDB/RDB_fisheries_overviews/data/002_prepared/RCG_", RCG, "/", sep = '')
+#data_dir <- paste("Q:/mynd/RDB/RDB_fisheries_overviews/data/002_prepared/RCG_", RCG, "/", sep = '')
+# Lucia's path
+data_dir <- paste("RegionalOverviews/store_data/002_prepared/RCG_", RCG, "/", sep = '')
 load(paste(data_dir,"RDB_RCG_",RCG,"_CE_2009_2020_prepared_20210428.Rdata", sep=""))
 load(paste(data_dir,"RDB_RCG_",RCG,"_CL_2009_2020_prepared_20210428.Rdata", sep=""))
 #Nuno file with stocks

@@ -32,7 +32,7 @@ output:
 #Paramters
 RDB_download_date <- "23/04/2019"
 
-target_region <- "RCG_BA"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
+target_region <- "RCG_NA"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
 years <- c(2020)
 
 period <- "2020"
@@ -41,13 +41,16 @@ figures <- "yes" #yes / no - all figures outputtet to a folder
 tables <- "yes" #yes / no - all tables outputtet to a folder
 
 #data_dir <-data_dir <- paste("../../data/002_prepared/", target_region, "/", sep = '') # "Q:/dfad/users/kibi/data/RCG/from_share_point/"
-data_dir <-data_dir <- paste("D:/Grupy robocze/RCG/RCGs Data/2020 data/", target_region, "/", sep = '') # 
+#data_dir <-data_dir <- paste("D:/Grupy robocze/RCG/RCGs Data/2020 data/", target_region, "/", sep = '') # 
+data_dir <-data_dir <- paste("C:/use/0_GitHub/RCGs/RegionalOverviews/store_data/002_prepared/", target_region, "/", sep = '') # 
 
 #Folder for figures and tables
 # table_dir <- paste("../../outputs/", target_region, "/tables/", sep = "")
 # figur_dir <- paste("../../outputs/", target_region, "/figures/", sep = "")
-table_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/",period,"/", target_region, "/tables/", sep = "")
-figur_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/",period,"/", target_region, "/figures/", sep = "")
+# table_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/",period,"/", target_region, "/tables/", sep = "")
+# figur_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/",period,"/", target_region, "/figures/", sep = "")
+table_dir <- paste("C:/use/0_GitHub/RCGs/RegionalOverviews/", "tables/", sep = "")
+figur_dir <- paste("C:/use/0_GitHub/RCGs/RegionalOverviews/", "figures/", sep = "")
 
 # for SSF
 #table_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/SSF_", target_region, "/tables/", sep = "")
@@ -68,6 +71,7 @@ Date_previous<-20190101
 ```{r 2_setup_lib, include = F}
 
 options(scipen = 999)
+
 
 library(tidyverse)
 library(dplyr)
@@ -261,9 +265,11 @@ ce_rcg[, FlagCountry_Loa := paste(FlagCountry, VesselLengthCategory, sep = "_")]
 ce_rcg[,LandingCountry := HarbourCountry]
 
 #Filter
-
+cl_rcg <- as.data.frame(cl_rcg)
 cl <- filter(cl_rcg, Year %in% years)
 cl <- mutate(cl, Period = period)
+
+ce_rcg <- as.data.frame(ce_rcg)
 ce <- filter(ce_rcg, Year %in% years)
 ce <- mutate(ce, Period = period)
 
@@ -485,6 +491,7 @@ adm_unit %>% filter(ADMIN=='United Kingdom')-> adm_unit
 adm_country %>%  mutate(LandingCountry = gu_a3) %>%  select(LandingCountry)-> countries 
 adm_unit %>%  mutate(LandingCountry = GU_A3) %>%  select(LandingCountry)-> units
 CTRshp = rbind(countries, units)
+sf::sf_use_s2(FALSE)
 CTRshp = cbind(CTRshp,  sf::st_coordinates(sf::st_centroid(CTRshp$geometry,of_largest_polygon = TRUE))) %>% mutate(lon = X, lat = Y)
 		
 
