@@ -72,8 +72,8 @@ year <- 2020 # fleet register
 #data_dir <- paste("../../data/002_prepared/RCG_", RCG, "/", sep = '')
 #data_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Data/2020 data/RCG_", RCG, "/", sep = '') #Marta's path
 #data_dir <- paste("Q:/mynd/RDB/RDB_fisheries_overviews/data/002_prepared/RCG_", RCG, "/", sep = '')
-# Lucia's path
-data_dir <- paste("RegionalOverviews/store_data/002_prepared/RCG_", RCG, "/", sep = '')
+data_dir <- paste("C:/use/0_Lucia/6_Working groups/RCG_ISSG/RDB_Data/", RCG, "/", sep = '') # Lucia's path
+
 load(paste(data_dir,"RDB_RCG_",RCG,"_CE_2009_2020_prepared_20210428.Rdata", sep=""))
 load(paste(data_dir,"RDB_RCG_",RCG,"_CL_2009_2020_prepared_20210428.Rdata", sep=""))
 #Nuno file with stocks
@@ -100,8 +100,9 @@ Landings_country$gear <- substr(Landings_country$FishingActivityLvl5,1,3)
 
 		# based on full history
 	
-	dir<-paste("Q:\\mynd\\RDB\\RDB_fisheries_overviews\\RegionalOverviews\\data\\fleet_reg\\output\\",year,"\\",sep="")
+	#dir<-paste("Q:\\mynd\\RDB\\RDB_fisheries_overviews\\RegionalOverviews\\data\\fleet_reg\\output\\",year,"\\",sep="")
 	#dir<-paste("..\\..\\data\\fleet_reg\\output\\",year,"\\",sep="") #Marta's path
+	dir<-paste("C:\\use\\0_GitHub\\RCGs\\RegionalOverviews\\data\\fleet_reg\\output\\", year,"/", sep = "")
 	
 	for (ctry in c("BEL","DEU","DNK","ESP","EST","FIN","FRA","GBR","IRL","LTU","LVA","NLD","POL","PRT","SWE"))
 		{

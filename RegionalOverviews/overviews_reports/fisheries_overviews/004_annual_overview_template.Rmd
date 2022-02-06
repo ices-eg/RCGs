@@ -32,7 +32,7 @@ output:
 #Paramters
 RDB_download_date <- "23/04/2019"
 
-target_region <- "RCG_NA"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
+target_region <- "RCG_NSEA"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
 years <- c(2020)
 
 period <- "2020"
@@ -42,15 +42,16 @@ tables <- "yes" #yes / no - all tables outputtet to a folder
 
 #data_dir <-data_dir <- paste("../../data/002_prepared/", target_region, "/", sep = '') # "Q:/dfad/users/kibi/data/RCG/from_share_point/"
 #data_dir <-data_dir <- paste("D:/Grupy robocze/RCG/RCGs Data/2020 data/", target_region, "/", sep = '') # 
-data_dir <-data_dir <- paste("C:/use/0_GitHub/RCGs/RegionalOverviews/store_data/002_prepared/", target_region, "/", sep = '') # 
+data_dir <-data_dir <- paste("C:/use/0_Lucia/6_Working groups/RCG_ISSG/RDB_Data/", target_region, "/", sep = '') # Lucia
+
 
 #Folder for figures and tables
 # table_dir <- paste("../../outputs/", target_region, "/tables/", sep = "")
 # figur_dir <- paste("../../outputs/", target_region, "/figures/", sep = "")
 # table_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/",period,"/", target_region, "/tables/", sep = "")
 # figur_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/",period,"/", target_region, "/figures/", sep = "")
-table_dir <- paste("C:/use/0_GitHub/RCGs/RegionalOverviews/", "tables/", sep = "")
-figur_dir <- paste("C:/use/0_GitHub/RCGs/RegionalOverviews/", "figures/", sep = "")
+ table_dir <- paste("C:/use/0_Lucia/6_Working groups/RCG_ISSG/Overviews/CatchEffort/",period,"/", target_region, "/tables/", sep = "")  # Lucia
+ figur_dir <- paste("C:/use/0_Lucia/6_Working groups/RCG_ISSG/Overviews/CatchEffort/",period,"/", target_region, "/figures/", sep = "") # Lucia
 
 # for SSF
 #table_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/SSF_", target_region, "/tables/", sep = "")
@@ -491,7 +492,7 @@ adm_unit %>% filter(ADMIN=='United Kingdom')-> adm_unit
 adm_country %>%  mutate(LandingCountry = gu_a3) %>%  select(LandingCountry)-> countries 
 adm_unit %>%  mutate(LandingCountry = GU_A3) %>%  select(LandingCountry)-> units
 CTRshp = rbind(countries, units)
-sf::sf_use_s2(FALSE)
+try(sf::sf_use_s2(FALSE), silent = TRUE) # in the future it may be a good idea to fix CTRshp so it does not causes an error
 CTRshp = cbind(CTRshp,  sf::st_coordinates(sf::st_centroid(CTRshp$geometry,of_largest_polygon = TRUE))) %>% mutate(lon = X, lat = Y)
 		
 

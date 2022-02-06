@@ -340,7 +340,7 @@ if(groupBy_name %in% c('Area','AreaMap', 'FishingGround')){
       )
     )->p
     
-    color_palette= color_palette[names(color_palette)%in%unique(mdf2$FlagCountry)]
+    #color_palette= color_palette[names(color_palette)%in%unique(mdf2$FlagCountry)]
     
     p +
     #Optional. this hides some tiles of the corresponding color scale BEHIND the
@@ -352,7 +352,7 @@ if(groupBy_name %in% c('Area','AreaMap', 'FishingGround')){
                 aes(x = lon,  y = lat, fill = groupBy2),
               color = "black", width = 0.01, height = 0.01,
               inherit.aes = FALSE)+
-      scale_fill_manual(values = color_palette)+
+      scale_fill_manual(values = color_palette, limits = force) +
     pie.list$subgrob+
       facet_wrap(~facet)+
       guides(fill=guide_legend(title=groupBy2_name))-> plot
