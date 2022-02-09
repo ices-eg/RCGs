@@ -1,0 +1,51 @@
+ISSCAAP	Group of species	RCM_NSEA_categ	Notes
+11	Carps, barbels and other cyprinids	other	
+12	Tilapias and other cichlids	other	
+13	Miscellaneous freshwater fishes	other	
+21	Sturgeons, paddlefishes	other	
+22	River eels	diadromous	
+23	Salmons, trouts, smelts	diadromous	
+24	Shads	diadromous	
+25	Miscellaneous diadromous fishes	diadromous	
+31	Flounders, halibuts, soles	flatfish	
+32	Cods, hakes, haddocks	demersal	
+33	Miscellaneous coastal fishes	demersal	except Ammodytes
+34	Miscellaneous demersal fishes	demersal	
+35	Herrings, sardines, anchovies	small pelagic	
+36	Tunas, bonitos, billfishes	large pelagic	
+37	Miscellaneous pelagic fishes	small pelagic	
+38	Sharks, rays, chimaeras	elasmobranchs	
+39	Marine fishes not identified	other	
+41	Freshwater crustaceans	crustaceans	
+42	Crabs, sea-spiders	crustaceans	
+43	Lobsters, spiny-rock lobsters	crustaceans	
+44	King crabs, squat-lobsters	crustaceans	
+45	Shrimps, prawns	crustaceans	
+46	Krill, planktonic crustaceans	crustaceans	
+47	Miscellaneous marine crustaceans	crustaceans	
+51	Freshwater molluscs	molluscs	
+52	Abalones, winkles, conchs	molluscs	
+53	Oysters	molluscs	
+54	Mussels	molluscs	
+55	Scallops, pectens	molluscs	
+56	Clams, cockles, arkshells	molluscs	
+57	Squids, cuttlefishes, octopuses	molluscs	
+58	Miscellaneous marine molluscs	molluscs	
+61	Blue-whales, fin-whales	incidental by-catch	
+62	Sperm-whales, pilot-whales	incidental by-catch	
+63	Eared seals, hair seals, walruses	incidental by-catch	
+64	Miscellaneous aquatic mammals	incidental by-catch	
+71	Frogs and other amphibians	incidental by-catch	
+72	Turtles	incidental by-catch	
+73	Crocodiles and alligators	incidental by-catch	
+74	Sea-squirts and other tunicates	other	
+75	Horseshoe crabs and other arachnoids	other	
+76	Sea-urchins and other echinoderms	other	
+77	Miscellaneous aquatic invertebrates	other	
+81	Pearls, mother-of-pearl, shells	other	
+82	Corals	other	
+83	Sponges	other	
+91	Brown seaweeds	other	
+92	Red seaweeds	other	
+93	Green seaweeds	other	
+94	Miscellaneous aquatic plants	other	
