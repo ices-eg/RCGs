@@ -8,3 +8,5 @@ RegionalOverviews/RegionalOverviews.Rproj
 /RegionalOverviews/store_data/
 /RegionalOverviews/tables/
 /RegionalOverviews/figures/
+*.docx
+*.html
