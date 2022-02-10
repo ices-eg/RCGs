@@ -52,6 +52,7 @@ data_dir <-data_dir <- paste("C:/use/0_Lucia/6_Working groups/RCG_ISSG/RDB_Data/
 # figur_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/",period,"/", target_region, "/figures/", sep = "")
  table_dir <- paste("C:/use/0_Lucia/6_Working groups/RCG_ISSG/Overviews/CatchEffort/",period,"/", target_region, "/tables/", sep = "")  # Lucia
  figur_dir <- paste("C:/use/0_Lucia/6_Working groups/RCG_ISSG/Overviews/CatchEffort/",period,"/", target_region, "/figures/", sep = "") # Lucia
+ 
 
 # for SSF
 #table_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/SSF_", target_region, "/tables/", sep = "")
