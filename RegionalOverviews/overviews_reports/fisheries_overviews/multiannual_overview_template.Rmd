@@ -1,15 +1,15 @@
 ```{r title, include = F}
-RCG <- "NA" # RCG_NA, RCG_BA or RCG_NSEA
+RCG <- "RCG_NA" # RCG_NA, RCG_BA or RCG_NSEA
 years <- c(2016,2017,2018,2019,2020)
-if (RCG == "NA") {
+if (RCG == "RCG_NA") {
   front_title <- paste("RDB Catch and Effort Overview North Atlantic ", sep = "")
   title_stock <- c('North Atlantic region')
   warning_stock<-c('')
-} else if (RCG == "BA") {
+} else if (RCG == "RCG_BA") {
   front_title <- paste("RDB Catch and Effort Overview Baltic ", sep = "")
   title_stock <- c('Baltic region')
   warning_stock<-c("Moreover some countries reported landings of herring from area 27.3.d.28. The group was not able to identify whether it was stock 'her.27.28' or 'her.27.25-2932'. As a temporary solution, all these landings were assigned to 'her.27.25-2932'.")
-} else if (RCG == "NSEA") {
+} else if (RCG == "RCG_NSEA") {
   front_title <- paste("RDB Catch and Effort Overview North Sea and Eastern Arctic ", sep = "")
   title_stock <- c('North Sea and Eastern Arctic regions')
   warning_stock<-c('')
@@ -37,15 +37,15 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
 
 ```{r, echo=FALSE}
-if (RCG == "NA") {
+if (RCG == "RCG_NA") {
   htmltools::img(src = knitr::image_uri(file.path("../../overviews_shiny/www/logo RCG NA NS_EA.png")), 
                alt = 'logo', 
                style = 'position:absolute; top:0; right:0; padding:10px;',width="300px", height="100px")
-} else if (RCG == "BA") {
+} else if (RCG == "RCG_BA") {
   htmltools::img(src = knitr::image_uri(file.path("../../overviews_shiny/www/logo RCG BALTIC.PNG")), 
                alt = 'logo', 
                style = 'position:absolute; top:0; right:0; padding:10px;',width="300px", height="100px")
-} else if (RCG == "NSEA") {
+} else if (RCG == "RCG_NSEA") {
   htmltools::img(src = knitr::image_uri(file.path("../../overviews_shiny/www/logo RCG NA NS_EA.png")), 
                alt = 'logo', 
                style = 'position:absolute; top:0; right:0; padding:10px;',width="300px", height="100px")
@@ -65,8 +65,8 @@ library(flextable)
 library(scales)
 library(DT)
 source("../../funs/fun_theme_flextable.r")
-#Choose RCG. Options: BA, NA, NSEA
-#RCG <- "BA"
+#Choose RCG. Options: RCG_NA, RCG_BA or RCG_NSEA
+#RCG <- "RCG_BA"
 #years <- c(2015,2016,2017,2018,2019)
 year <- 2020 # fleet register
 #data_dir <- paste("../../data/002_prepared/RCG_", RCG, "/", sep = '')
@@ -74,8 +74,8 @@ year <- 2020 # fleet register
 #data_dir <- paste("Q:/mynd/RDB/RDB_fisheries_overviews/data/002_prepared/RCG_", RCG, "/", sep = '')
 data_dir <- paste("C:/use/0_Lucia/6_Working groups/RCG_ISSG/RDB_Data/", RCG, "/", sep = '') # Lucia's path
 
-load(paste(data_dir,"RDB_RCG_",RCG,"_CE_2009_2020_prepared_20210428.Rdata", sep=""))
-load(paste(data_dir,"RDB_RCG_",RCG,"_CL_2009_2020_prepared_20210428.Rdata", sep=""))
+load(paste(data_dir,"RDB_",RCG,"_CE_2009_2020_prepared_20210428.Rdata", sep=""))
+load(paste(data_dir,"RDB_",RCG,"_CL_2009_2020_prepared_20210428.Rdata", sep=""))
 #Nuno file with stocks
 Def_stock<-read.delim("../../data/aux_stocks.txt")
 
