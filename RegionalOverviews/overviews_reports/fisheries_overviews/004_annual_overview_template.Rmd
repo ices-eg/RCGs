@@ -32,7 +32,7 @@ output:
 #Paramters
 RDB_download_date <- "23/04/2019"
 
-target_region <- "RCG_BA"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
+target_region <- "RCG_NSEA"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
 years <- c(2020)
 
 period <- "2020"
@@ -41,17 +41,22 @@ figures <- "yes" #yes / no - all figures outputtet to a folder
 tables <- "yes" #yes / no - all tables outputtet to a folder
 
 #data_dir <-data_dir <- paste("../../data/002_prepared/", target_region, "/", sep = '') # "Q:/dfad/users/kibi/data/RCG/from_share_point/"
-data_dir <-data_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Data/2020 data/", target_region, "/", sep = '') # 
+#data_dir <-data_dir <- paste("D:/Grupy robocze/RCG/RCGs Data/2020 data/", target_region, "/", sep = '') # 
+data_dir <-data_dir <- paste("C:/use/0_Lucia/6_Working groups/RCG_ISSG/RDB_Data/", target_region, "/", sep = '') # Lucia
+
 
 #Folder for figures and tables
 # table_dir <- paste("../../outputs/", target_region, "/tables/", sep = "")
 # figur_dir <- paste("../../outputs/", target_region, "/figures/", sep = "")
-table_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Outputs/",period,"/", target_region, "/tables/", sep = "")
-figur_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Outputs/",period,"/", target_region, "/figures/", sep = "")
+# table_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/",period,"/", target_region, "/tables/", sep = "")
+# figur_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/",period,"/", target_region, "/figures/", sep = "")
+ table_dir <- paste("C:/use/0_Lucia/6_Working groups/RCG_ISSG/Overviews/CatchEffort/",period,"/", target_region, "/tables/", sep = "")  # Lucia
+ figur_dir <- paste("C:/use/0_Lucia/6_Working groups/RCG_ISSG/Overviews/CatchEffort/",period,"/", target_region, "/figures/", sep = "") # Lucia
+ 
 
 # for SSF
-#table_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Outputs/SSF_", target_region, "/tables/", sep = "")
-#figur_dir <- paste("D:/Do przegrania na PC/IntersessionalWork/RCGs Outputs/SSF_", target_region, "/figures/", sep = "")
+#table_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/SSF_", target_region, "/tables/", sep = "")
+#figur_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/SSF_", target_region, "/figures/", sep = "")
 
 
 #Landings per stock settings
@@ -69,12 +74,13 @@ Date_previous<-20190101
 
 options(scipen = 999)
 
+
 library(tidyverse)
 library(dplyr)
 library(data.table)
 library(knitr)
 library(stringr)
-library(RCMfunctions) #sharepoint -> RCG Data Group -> R packages
+#library(RCMfunctions) #sharepoint -> RCG Data Group -> R packages
 library(rnaturalearth)
 library(flextable) # R version 3.6.3
 library(TeachingDemos)
@@ -261,9 +267,11 @@ ce_rcg[, FlagCountry_Loa := paste(FlagCountry, VesselLengthCategory, sep = "_")]
 ce_rcg[,LandingCountry := HarbourCountry]
 
 #Filter
-
+cl_rcg <- as.data.frame(cl_rcg)
 cl <- filter(cl_rcg, Year %in% years)
 cl <- mutate(cl, Period = period)
+
+ce_rcg <- as.data.frame(ce_rcg)
 ce <- filter(ce_rcg, Year %in% years)
 ce <- mutate(ce, Period = period)
 
@@ -409,7 +417,8 @@ ft
 # Prepare the dataset with coordinates <-----------------------  WORK on this part
 # Harbour list
 
-data(UNLOCODE)
+load("../../data/UNLOCODE.rData")
+
 UNLOCODE %>%
   mutate(Harbour = loCode) %>%
   filter(!is.na(Harbour)) %>%
@@ -484,6 +493,7 @@ adm_unit %>% filter(ADMIN=='United Kingdom')-> adm_unit
 adm_country %>%  mutate(LandingCountry = gu_a3) %>%  select(LandingCountry)-> countries 
 adm_unit %>%  mutate(LandingCountry = GU_A3) %>%  select(LandingCountry)-> units
 CTRshp = rbind(countries, units)
+try(sf::sf_use_s2(FALSE), silent = TRUE) # in the future it may be a good idea to fix CTRshp so it does not causes an error
 CTRshp = cbind(CTRshp,  sf::st_coordinates(sf::st_centroid(CTRshp$geometry,of_largest_polygon = TRUE))) %>% mutate(lon = X, lat = Y)
 		
 
@@ -520,9 +530,9 @@ for (a in unique(param$Section)) {
       
       #Select data input
       
-      if (unique(graph_det$Data == "CL")) {
+      if (unique(graph_det$Data) == "CL") {
         df <- cl
-      } else if (unique(graph_det$Data == "CE")) {
+      } else if (unique(graph_det$Data) == "CE") {
         df <- ce
       }
       

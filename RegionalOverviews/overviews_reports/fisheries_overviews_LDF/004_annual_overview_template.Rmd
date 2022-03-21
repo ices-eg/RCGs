@@ -1,0 +1,1524 @@
+---
+header-includes: \usepackage{float} \floatplacement{figure}{H} \floatplacement{table}{H}
+output:
+  word_document:
+    fig_caption: yes
+    reference_docx: word_template.docx
+    toc: yes
+    toc_depth: 5
+---
+
+```{r guide, include = F}
+
+#Run render_overviews.rmd 
+
+#This script is controlled by the param.csv and the chunks before Title is declared. 
+
+#The style of the docx is controlled by the 
+
+#Title is declared a bit down, so it will fit the filter
+
+#Be aware of all the /n - these controls linebraks and are needed for proper headings
+
+#Maps are created in their own chock to allow for bigger plots. The plot are imported in the general plot chunk
+
+```
+
+```{r 1_setup_param_dir, include = F}
+
+#If running outside knitr, then set wd. When knitting the wd is set to the folder where the .rmd is stored
+#setwd("RegionalOverviews")
+
+#Paramters
+RDB_download_date <- "02/07/2021"
+
+target_region <- "RCG_LDF"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
+years <- c(2020)
+
+period <- "2020"
+
+figures <- "yes" #yes / no - all figures outputtet to a folder
+tables <- "yes" #yes / no - all tables outputtet to a folder
+
+#data_dir <-data_dir <- paste("../../data/002_prepared/", target_region, "/", sep = '') # "Q:/dfad/users/kibi/data/RCG/from_share_point/"
+data_dir <-data_dir <- paste("D:/Grupy robocze/RCG/RCG LDF Data/2021", "/", sep = '') # 
+
+#Folder for figures and tables
+# table_dir <- paste("../../outputs/", target_region, "/tables/", sep = "")
+# figur_dir <- paste("../../outputs/", target_region, "/figures/", sep = "")
+table_dir <- paste("D:/Grupy robocze/RCG/RCG LDF Outputs/2021/", "/tables/", sep = "")
+figur_dir <- paste("D:/Grupy robocze/RCG/RCG LDF Outputs/2021/", "/figures/", sep = "")
+
+```
+
+```{r 2_setup_lib, include = F}
+
+options(scipen = 999)
+#options(knitr.table.format = 'markdown')
+options(knitr.kable.NA = '')
+
+library(tidyverse)
+library(dplyr)
+library(data.table)
+library(knitr)
+library(stringr)
+#library(RCMfunctions) #sharepoint -> RCG Data Group -> R packages
+library(rnaturalearth)
+library(flextable) # R version 3.6.3
+library(TeachingDemos)
+```
+
+```{r 3_setup_markdown, include = F}
+
+#Don't set the dpi too high, then the .docx crash
+
+if (figures == "yes") {
+  knitr::opts_chunk$set(
+  fig.width = 9,
+  fig.height = 5,
+  fig.path = figur_dir,
+  dpi = 300,
+  dev = 'png',
+  fig.pos = 'H',
+  echo = F,
+  warning = F,
+  message = F,
+  error = F,
+  comment = F
+)
+} else {
+  knitr::opts_chunk$set(
+  fig.width = 9,
+  fig.height = 5,
+  dpi = 300,
+  dev = 'png',
+  echo = F,
+  warning = F,
+  message = F,
+  error = F,
+  comment = F
+)
+}
+
+```
+
+
+```{r 4_source_ref, include = F}
+
+source("../../funs/func_barplot_var_by_one_var_rmd.r")
+source("../../funs/func_barplot_var_by_two_var_stacked_rmd.r")
+source("../../funs/pointsMap_func.R")
+source("../../funs/choroplethMap_func.R")
+source("../../funs/scatterpieMap_func.R")
+source("../../funs/func_riverplotfun.R")
+source("../../funs/FAZ_SEGMENTACAO_COMPRIMENTO_DCF2.R")
+source("../../funs/fun_table.R")
+source("../../funs/func_determine_what_to_inset.R")
+
+param <-
+  read.table(
+    paste(
+      "graphical_parameters/",
+      target_region,
+      "/Annual_Overview/AnnualOverview_",
+      target_region,
+      "_parameters.csv",
+      sep = ""
+    ),
+    sep = ",",
+    stringsAsFactors = FALSE,
+    header = T
+  )
+
+param <- arrange(param, Order)
+param$value_of_threshold <- as.numeric(param$value_of_threshold)
+param$width <- as.numeric(param$width)
+param$height <- as.numeric(param$height)
+
+colour_table <-
+  read.table(
+    "../../data/aux_colours_LDF.txt",
+    header = T,
+    sep = "\t",
+    colClasses = "character",
+    na.strings = "",
+    comment.char = ""
+  )
+
+```
+
+```{r funs, include = F}
+
+filter_df <-
+  function(df = df,
+           filter_var = filter_var,
+           filter = filter) {
+    
+    if (filter == "" | is.na(filter)) {
+
+      df <- df
+    } else {
+           filter <- unlist(str_split(filter, ","))
+      
+      df <- filter(df, !!rlang::sym(filter_var) %in% filter)
+      
+    }
+  }
+
+#Function below from http://michaeljw.com/blog/post/subchunkify/
+subchunkify <- function(g, chunk_name = chunk_name, fig_height=7, fig_width=5) {
+  g_deparsed <- paste0(deparse(
+    function() {g}
+  ), collapse = '')
+  
+  sub_chunk <- paste0("
+  `","``{r fig_", chunk_name, ", fig.height=", fig_height, ", fig.width=", fig_width, ", echo=FALSE, result = \"asis\", warning = F, fig.pos = \"H\"}",
+  "  \n (", 
+    g_deparsed
+    , ")()", "  \n ",
+  "  \n `","``
+  ")
+  
+  cat(knitr::knit(text = knitr::knit_expand(text = sub_chunk), quiet = TRUE))
+  
+}
+
+```
+
+
+```{r title, include = F}
+
+front_title <- paste("RDB Catch and Effort Overview Long Distance Fisheries, ",  period, "  \n ", sep = "") #"  \n ","![](logo.png)",
+
+
+```
+
+---
+title: `r front_title`
+date: `r Sys.Date()`
+---
+
+
+```{r data, include = F}
+
+#This needs to be more generic - for easy loading the naming needs to be more generic
+
+load(
+    paste(data_dir, "RDB_LDF_CL_2014_2020_prepared_202107090915.Rdata", sep = "")
+  )
+load(
+    paste(data_dir, "RDB_LDF_CE_2014_2020_prepared_202107090915.Rdata", sep = "")
+    )
+  
+
+#Adds IDs [move to preparation]
+cl[, FlagCountry_Loa := paste(FlagCountry, VesselLengthCategory, sep = "_")]
+ce[, FlagCountry_Loa := paste(FlagCountry, VesselLengthCategory, sep = "_")]
+
+
+# Fix for LVA data <------------------------------------------------------------------------------------------------- NOTE
+# Wrong landing country reported, fixed based on the Harbour code in 2020
+# LVA has already uploaded new data to rhe RDB, in 2022 it will not be necessary to fix it here
+cl %>% 
+  mutate(LandingCountry = ifelse(FlagCountry == 'LVA' & Year == 2020 & Harbour=='MRNDB','MRT', as.character(LandingCountry))) %>% as.data.table()->cl
+  
+
+
+# Add to preparation [and convert 2-letter code to 3-letter code]
+#colnames(ce_rcg)[colnames(ce_rcg) == "LandingCountry"] <-
+#  "LandingCountry2" # <-------------------------------------------------- No more LandingCountry in ce,lines to delete?
+
+# for maps of foreign landings 'LandingCountry' is needed
+ce[,LandingCountry := HarbourCountry]
+
+ceOrg = ce
+clOrg = cl
+
+clOrg <- droplevels(clOrg)
+ceOrg <- droplevels(ceOrg) 
+
+
+#Filter
+
+cl <- filter(cl, Year %in% years)
+cl <- mutate(cl, Period = period)
+ce <- filter(ce, Year %in% years)
+ce <- mutate(ce, Period = period)
+
+cl <- droplevels(cl)
+ce <- droplevels(ce) 
+
+```
+
+# Introduction
+
+The present Catch and Effort Overview displays summary figures and tables of the 2019 landings and effort data found in tables CL and CE of the Regional Data Base (RDB). The RDB is a main resource used by the Regional Coordination Groups to coordinate data collection of EU fisheries. The RDB is hosted at the International Council for Exploration of the Sea (ICES) and its data is property of EU Member States with usage governed by the RDB data policy (https://www.ices.dk/data/Documents/Data_Policy_RDB.pdf). The data referring to the present year was collected under the RCG 2020 data call for the 2019 data for the Long Distance regions and download from the system on the 9th of July 2020. Information how to read the main types of graphs and maps is displayed in Annex A.
+
+<!-- fleet register deleted for now -->
+
+
+```{r map_prep, include = F}
+
+#Setting up all the files needed for the maps ---- copied directly from script 002
+
+# Load shapefiles and Harbour Lists
+########################################################################################################################################################################
+# Prepare the dataset with coordinates <-----------------------  WORK on this part
+# Harbour list
+
+load("../../data/UNLOCODE.rData")
+
+UNLOCODE %>%
+  mutate(Harbour = loCode) %>%
+  filter(!is.na(Harbour)) %>%
+  select(Harbour, lat, lon) %>% 
+      mutate(lat = ifelse(Harbour=='MRNDB',20.909,
+                                      ifelse(Harbour == 'MAAGA',30.4215,
+                                                          ifelse(Harbour == 'FKPSY', -51.6875,
+                                                                             ifelse(Harbour == 'AOBUG',-12.591,
+                                                                                                  ifelse(Harbour == 'AOLOB', -12.333, 
+                                                                                                          ifelse(Harbour == 'MAVIL', 23.6775, 
+                                                                                                                 ifelse(Harbour == 'ESLPA', 28.141, 
+                                                                                                                         ifelse(Harbour == 'NAWVB', -22.94, 
+                                                                                                                                ifelse(Harbour == 'MRNKC', 17.989, 
+                                                                                                                                       ifelse(Harbour == "SNDKR", 14.681, 
+                                                                                                                                              ifelse(Harbour == "AOLAD",-8.7665, 
+                                                                                                                                                     ifelse(Harbour == "GNCKY", 9.517, 
+                                                                                                                                                            ifelse(Harbour == "CGPNR",  -4.7864475, 
+                                                                                                                                                                   ifelse(Harbour == "MALAR",   35.201735, lat)))))))))))))),
+           lon = ifelse(Harbour=='MRNDB',-17.0415,
+                        ifelse(Harbour == 'MAAGA', -9.634,
+                               ifelse(Harbour == 'FKPSY',-57.86,
+                                      ifelse(Harbour == 'AOBUG',13.379 ,
+                                             ifelse(Harbour == 'AOLOB', 13.574,
+                                                    ifelse(Harbour == 'MAVIL', -15.933,
+                                                           ifelse(Harbour == 'ESLPA', -15.41635,
+                                                                  ifelse(Harbour == 'NAWVB', 14.502,
+                                                                         ifelse(Harbour == 'MRNKC', -16.0305,
+                                                                                ifelse(Harbour == "SNDKR",  -17.4275, 
+                                                                                       ifelse(Harbour == "AOLAD",  13.273, 
+                                                                                              ifelse(Harbour == "GNCKY",-13.7115, 
+                                                                                                     ifelse(Harbour == "CGPNR",  11.833135, 
+                                                                                                            ifelse(Harbour == "MALAR",    -6.1476475, lon)))))))))))))))-> Harbours
+
+
+shpDivisions  = sf::st_read("../../data/shapefiles/RCG_LDF_FAOareas.shp") %>%  filter(
+F_LEVEL == 'DIVISION'  # potential problem with 34.2.0 because it's subarea not division
+)
+shpDivisions %>%
+  mutate(Division = F_CODE) -> shpDivisions
+
+shpAreas  = sf::st_read("../../data/shapefiles/RCG_LDF_FAOareasMajor.shp") 
+shpAreas %>%
+  mutate(Area = F_CODE) -> shpAreas
+
+# For plotting Areas
+# add centroids - to put areas labels there, and to put piecharts there, creates new columns to the dataset named X, Y
+shpDivisions = cbind(shpDivisions,  sf::st_coordinates(sf::st_centroid(shpDivisions$geometry))) %>% mutate(lon = X, lat = Y)
+shpAreas = cbind(shpAreas,  sf::st_coordinates(sf::st_centroid(shpAreas$geometry))) %>% mutate(lon = X, lat = Y)
+
+
+# adjust color palette to the ggplot maps
+aux_colours_ggplot = c(colour_table$colour5)
+names(aux_colours_ggplot) = c(colour_table$Country)
+aux_colours_ggplot_rp <- colour_table
+aux_colours_ggplot_rp$colour <- aux_colours_ggplot_rp$colour5
+
+
+```
+
+###### Page break
+
+```{r plots, results = "asis", eval = T}
+
+
+for (a in unique(param$Section)) {
+  param_sec <- filter(param, Section == a)
+  cat('  \n')
+  cat(paste0("# ", unique(param_sec$Section_name), '  \n'))
+  
+  for (b in unique(param_sec$Subsection)) {
+    param_subsection <- filter(param_sec, Subsection == b)
+    
+    cat('  \n')
+    cat(paste0("## ", unique(param_subsection$Subsection_name), '  \n'))
+    
+    for (c in unique(param_subsection$Subsubsection)) {
+      graph_det <- filter(param_subsection, Subsubsection == c)
+      
+      cat('  \n')
+      cat(paste0("### ", unique(graph_det$Subsubsection_name), '  \n'))
+      
+      #Select data input
+      
+      if (unique(graph_det$Data) == "CL") {
+        df <- cl
+      } else if (unique(graph_det$Data) == "CE") {
+        df <- ce
+      }
+      
+      #Filter input
+      
+      df <-
+        filter_df(
+          df = df,
+          filter_var = unique(graph_det$Filter_var),
+          filter = unique(graph_det$Filter)
+        )
+      
+      # bar plots
+      if(nrow(df)>0){
+      for (i in 1:nrow(graph_det))
+      {
+        
+      	pngtxt_name = paste(graph_det$Subsubsection[i], '_',i, '_', graph_det$Graph_type[i], graph_det$Graph_variant[i], sep = '') # added i in case there are two the same graph types in the one subsubsection
+  
+        if (graph_det$Graph_type[i] == 1)
+        {
+          res <- barplot_var_by_one_var(
+            x = as.data.frame(df),
+            Var = graph_det$Var[i] ,
+            var1 = graph_det$var1[i],
+            tapply_type = graph_det$tapply_type[i],
+            type_of_threshold = graph_det$type_of_threshold[i],
+            value_of_threshold = graph_det$value_of_threshold[i],
+            sorted = graph_det$sorted[i],
+            graph_par = eval(parse(text = graph_det$graph_par[i])),
+            save_plot_to_list = T,
+            filter=graph_det$Filter[i]
+          )
+          
+         subchunkify(res[[2]], pngtxt_name, graph_det$height[i], graph_det$width[i])
+          
+          if (tables == "yes") {
+            write.table(
+              res[[1]],
+              file =  
+                paste(table_dir, pngtxt_name,
+                ".txt",
+                sep = ""
+              ),
+              sep = '\t',
+              dec = '.',
+              row.names = F
+            )
+          }
+    
+cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',' ',res[[3]] ,'\n ',sep='')
+        }
+        
+        cat('  \n ')
+        
+        if (graph_det$Graph_type[i] == 2)
+        {
+          res <- barplot_var_by_two_var_stacked(
+            x = as.data.frame(df),
+            Var = graph_det$Var[i] ,
+            var1 = graph_det$var1[i],
+            var2 = graph_det$var2[i],
+            tapply_type = graph_det$tapply_type[i],
+            proportion = graph_det$proportion[i],
+            type_of_threshold = graph_det$type_of_threshold[i],
+            value_of_threshold = graph_det$value_of_threshold[i],
+            sorted = graph_det$sorted[i],
+            graph_par = eval(parse(text = graph_det$graph_par[i])),
+            legend_par = graph_det$legend_par[i],
+            save_plot_to_list = T,
+            filter=graph_det$Filter[i]
+          )
+          
+          subchunkify(res[[2]], pngtxt_name, graph_det$height[i], graph_det$width[i])
+          
+          if (tables == "yes") {
+            write.table(
+              res[[1]],
+              file =
+                paste(table_dir, pngtxt_name,
+                      ".txt",
+                      sep = ""),
+              sep = '\t',
+              dec = '.',
+              row.names = F
+            )
+          }
+
+          cat('Figure ',graph_det$Subsubsection[i],'.',i ,'. ',res[[3]],'  \n ',sep='')
+        }
+        
+         cat('  \n')
+
+        if (graph_det$Graph_type[i] == 3)
+        {
+          res <- pointsMap_func(
+            df = df,
+            var = graph_det$var[i],
+            groupBy = graph_det$groupBy[i],
+            facet = graph_det$facet[i],
+            func = graph_det$func[i],
+            type_of_threshold = graph_det$type_of_threshold[i],
+            value_of_threshold =  graph_det$value_of_threshold[i],
+            points_coord =  eval(parse(text = graph_det$points_coord[i])),
+            plot_labels = graph_det$plot_labels[i],
+            saveResults = FALSE,
+            outputPath = NA,
+            Catch_group_name = NA,
+            newVarName = graph_det$newVarName[i],
+            addExtraShp = graph_det$addExtraShp[i],
+            extraShp = eval(parse(text = graph_det$extraShp[i])),
+            addToTitle = graph_det$addToTitle[i]
+          )
+
+          subchunkify(res[[2]], pngtxt_name, graph_det$height[i], graph_det$width[i])
+          
+          if (tables == "yes") {
+            write.table(
+              res[[1]],
+              file =
+                paste(table_dir, pngtxt_name,
+                      ".txt",
+                      sep = ""),
+              sep = '\t',
+              dec = '.',
+              row.names = F
+            )
+          }
+
+          cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',res[[3]],'  \n ',sep='')
+        }
+
+        cat('  \n ')
+
+        if (graph_det$Graph_type[i] == 4)
+        {
+          res <- choroplethMap_func(
+            df = df,
+            var = graph_det$var[i],
+            groupBy = graph_det$groupBy[i],
+            facet = graph_det$facet[i],
+            func = graph_det$func[i],
+            type_of_threshold = graph_det$type_of_threshold[i],
+            value_of_threshold =  graph_det$value_of_threshold[i],
+            points_coord =  eval(parse(text = graph_det$points_coord[i])),
+            plot_labels = graph_det$plot_labels[i],
+            saveResults = FALSE,
+            outputPath = NA,
+            Catch_group_name = NA,
+            newVarName = graph_det$newVarName[i],
+            addExtraShp = graph_det$addExtraShp[i],
+            extraShp = eval(parse(text = graph_det$extraShp[i])),
+            addToTitle = graph_det$addToTitle[i],
+            filter_ON = graph_det$filter_ON[i],
+            filter_column = graph_det$filter_column[i],
+            filter_type = graph_det$filter_type[i],
+            filter_func = graph_det$filter_func[i],
+            filter_threshold = graph_det$filter_threshold[i],
+            filter_facet = graph_det$filter_facet[i]
+          )
+
+          subchunkify(res[[2]], pngtxt_name, graph_det$height[i], graph_det$width[i])
+          if (tables == "yes") {
+            write.table(
+              res[[1]],
+              file =
+                paste(table_dir, pngtxt_name,
+                      ".txt",
+                      sep = ""),
+              sep = '\t',
+              dec = '.',
+              row.names = F
+            )
+          }
+
+        cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',res[[3]],' \n ',sep='')
+        }
+
+        cat('  \n ')
+
+
+        if (graph_det$Graph_type[i] == 5)
+        {
+          res <- scatterpieMap_func(
+            df = df,
+            var = graph_det$var[i],
+            groupBy = graph_det$groupBy[i],
+            groupBy2 = graph_det$groupBy2[i] ,
+            facet = graph_det$facet[i],
+            func = graph_det$func[i],
+            type_of_threshold = graph_det$type_of_threshold[i],
+            value_of_threshold =  graph_det$value_of_threshold[i],
+            points_coord =  eval(parse(text = graph_det$points_coord[i])),
+            plot_labels = graph_det$plot_labels[i],
+            saveResults = FALSE,
+            outputPath = NA,
+            Catch_group_name = NA,
+            newVarName = graph_det$newVarName[i],
+            addExtraShp = graph_det$addExtraShp[i],
+            extraShp = eval(parse(text = graph_det$extraShp[i])),
+            color_palette = eval(parse(text = ifelse(graph_det$color_palette[i]=='none',NA, graph_det$color_palette[i]))),
+            addToTitle = graph_det$addToTitle[i],
+            filter_ON = graph_det$filter_ON[i],
+            filter_column = graph_det$filter_column[i],
+            filter_type = graph_det$filter_type[i],
+            filter_func = graph_det$filter_func[i],
+            filter_threshold = graph_det$filter_threshold[i]
+          )
+
+          subchunkify(res[[2]], pngtxt_name, graph_det$height[i], graph_det$width[i])
+          
+          if (tables == "yes") {
+            write.table(
+              res[[1]],
+              file =
+                paste(table_dir, pngtxt_name,
+                      ".txt",
+                      sep = ""),
+              sep = '\t',
+              dec = '.',
+              row.names = F
+            )
+          }
+
+        cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',res[[3]],'\n ',sep='')
+        }
+
+        cat('  \n ')
+        
+       if(graph_det$Graph_type[i] == 6){
+                res <- riverplotfun(
+                 df, 
+                 palette=aux_colours_ggplot_rp, 
+                 title=paste(graph_det$var1[i]," (left) to ",graph_det$var2[i]," (right) - ",graph_det$newVarName[i]," - ",graph_det$addToTitle[i],sep=""),
+                 value=graph_det$Var[i],
+                 save=TRUE,
+                 addToTitle = graph_det$addToTitle[i],
+                 newVarName=graph_det$newVarName[i],
+                 var1=graph_det$var1[i],
+                 var2=graph_det$var2[i],
+                 filename=paste(figur_dir, pngtxt_name,
+                          ".png",
+                          sep = ""))
+                
+cat('![plot of chunk ',pngtxt_name,'](',figur_dir,pngtxt_name,'.png)',sep="")
+cat('  \n ') 
+
+         cat('Figure ',graph_det$Subsubsection[i],'.',i,'.', res[[2]],'\n ',sep='')
+        }
+         cat('  \n ') 
+      }
+      }
+    }
+  }
+}
+
+```
+
+###### Page break
+#### Tables for the report
+
+```{r, results = "asis", eval = T}
+# Combination of RDB and excel data in the RDB format (some countries sent it like this instead of uploadig it into RDB)
+
+# Load excel data in the RDB format
+
+dataPath = "D:/Grupy robocze/RCG/RCG LDF Data/2021"
+# All commented data below, were finally uploaded to the RDB, so there is no need to load it separately and join with rdb data
+# Only ESP data from other regions were not uploaded to the RDB, so it's left below as excel file
+#
+# # LTU
+# CL_LTU = read_csv(paste(dataPath, '/LTU_2020_Landings_CL.csv', sep= ''), col_names = FALSE)
+# CE_LTU = read_csv(paste(dataPath, '/LTU_2020_Effort_CE.csv', sep = ''), col_names = FALSE)
+# 
+# # PRT
+# CL_PRT = read_csv(paste(dataPath, '/20210706_LDF_2020_CL.csv', sep= ''), col_names = FALSE)
+# CE_PRT = read_csv(paste(dataPath, '/20210706_LDF_2020_CE.csv', sep = ''), col_names = FALSE)
+# 
+# # ITA
+# CL_ITA = read_csv(paste(dataPath, '/ITA_2020_Q1234_34_CL.csv', sep= ''), col_names = FALSE)
+# CL_ITA %>% filter(X4 %in% c(2019, 2020))-> CL_ITA # not to have duplicates between excel and RDB
+
+# ESP
+CL_ESP = read_csv(paste(dataPath, '/ESP_IEO_P5_2014-2020_CL.csv', sep= ''), col_names = FALSE, skip =1)
+CE_ESP = read_csv(paste(dataPath, '/ESP_IEO_P5_2014-2020_CE.csv', sep = ''), col_names = FALSE, skip = 1)
+
+CL_ESP %>% select(-X24)-> CL_ESP
+CE_ESP %>% select(-X20)-> CE_ESP
+
+# CL_excel = rbind(CL_LTU, CL_ESP, CL_PRT, CL_ITA)
+# CE_excel = rbind(CE_LTU, CE_ESP, CE_PRT)
+CL_excel = CL_ESP
+CE_excel = CE_ESP
+
+clOrg %>% 
+  select(FlagCountry, Year, Area, Subpolygon, Species, FishingActivityCategoryEuropeanLvl6, LandingWeight_ton, SpeciesAphiaID)-> clOrg
+
+ceOrg %>% 
+  select(FlagCountry, Year, Area,  Subpolygon, FishingActivityCategoryEuropeanLvl6, DaysAtSea)-> ceOrg
+
+
+CL_excel %>% 
+  select(FlagCountry = X3, Year = X4, Area = X7, Subpolygon = X9, Species = X10, FishingActivityCategoryEuropeanLvl6 = X16, LandingWeight_ton = X21) %>% 
+  mutate(Area = stringr::str_sub(Area, end = 2),
+         LandingWeight_ton = LandingWeight_ton/1000)-> CL_excel
+
+CE_excel %>%
+  select(FlagCountry = X2, Year = X3, Area = X6, Subpolygon = X8, FishingActivityCategoryEuropeanLvl6 = X11, DaysAtSea = X19) %>%
+  mutate(Area = stringr::str_sub(Area, end = 2))-> CE_excel
+
+wormsScientific = read_csv("../../data/worms_3alpha.csv")
+wormsScientific %>%
+  filter(!is.na(AphiaID)) %>%
+  group_by(AphiaID) %>% 
+  mutate(duplikaty = rank(Scientific_name, ties.method = "first")) %>% # in this file there are duplicated values for worms codes, maybe better to try with fishpi
+  filter(duplikaty ==1) %>% 
+  select(AphiaID, Scientific_name, Alpha = '3A_CODE') -> wormsScientific
+
+# CL_excel %>% 
+#   filter(Year == 2020) %>% nrow()
+# CL_excel %>% 
+#   filter(Year == 2020)%>% left_join(wormsScientific, by = c("Species" = "AphiaID"))  %>% nrow()
+
+CL_excel %>% 
+  left_join(wormsScientific, by = c("Species" = "AphiaID")) %>% 
+  mutate(SpeciesAphiaID = Species) %>% 
+  mutate(Species = Scientific_name) %>% 
+  select(-Scientific_name, -Alpha)-> CL_excel
+
+
+clOrg %>% 
+  rbind(CL_excel)->clOrg
+
+ceOrg %>% 
+  rbind(CE_excel)->ceOrg
+
+# Angola for LTU
+clOrg %>% 
+  mutate(Subpolygon = ifelse(FlagCountry=='LTU' & Area==47 & is.na(Subpolygon) & 
+                               Year %in% c(2015, 2016), 'Angola',Subpolygon
+                             ) )->clOrg
+
+clOrg %>% 
+  left_join(wormsScientific, by = c("SpeciesAphiaID" = "AphiaID")) %>%
+ # filter(is.na(Alpha)) %>% distinct(Species, SpeciesAphiaID) %>% arrange(Species)
+  mutate(Alpha = case_when(
+    SpeciesAphiaID==299565~'MKW',# Muraena augusti (MKW)
+    SpeciesAphiaID==151174~'VMA',# Scomber colias (VMA)
+    TRUE~Alpha
+  )) %>% 
+  mutate(Species2 = ifelse(!is.na(Alpha),
+                           paste(Species, ' (', Alpha, ')', sep = ''), 
+                           paste(Species))
+  )->cl2 # datat for annex
+```
+
+##### Section 4.1
+
+West Africa
+
+```{r, results = "asis", eval = T}
+cat('CL records with missing Subplygon and Area 34')
+
+clOrg %>% filter(Area==34 & is.na(Subpolygon)) %>% 
+  group_by(FlagCountry, Year) %>% 
+  summarise(numRecords = n(),
+            Landings = sum(LandingWeight_ton, na.rm = TRUE)) -> CLmissing
+
+kable(CLmissing)
+
+
+```
+
+```{r, results = "asis", eval = T}
+cat('CE records with missing Subplygon and Area 34')
+
+ceOrg %>% filter(Area==34 & is.na(Subpolygon)) %>% 
+  group_by(FlagCountry, Year) %>% 
+  summarise(numRecords = n(),
+            FishingDays = sum(DaysAtSea, na.rm = TRUE))->CEmissing
+
+kable(CEmissing)
+
+
+```
+
+All records with Area 34 and Subpolygon missing were assigned to the West Africa. Angola is included in the West Africa (CECAF), even though it is FAO area 47 not 34. 
+
+Table 4.1
+General types of fisheries in relevant CECAF areas by MS (2020 data) 
+
+```{r, results = "asis", eval = T}
+clOrg %>% 
+  mutate(FisheryTemp = FishingActivityCategoryEuropeanLvl6) %>% 
+  separate(FisheryTemp, c('x1', 'Fishery', 'x2', 'x3', 'x4')) %>% 
+  select(-c(x1, x2, x3, x4)) %>% 
+  filter((Area==34 & Subpolygon!='Canaries'  & Subpolygon!='Madeira' )|Subpolygon=='Angola') %>% 
+  filter(Year == 2020) %>% 
+  distinct(Fishery, Subpolygon, FlagCountry) %>% 
+  group_by(Fishery, Subpolygon) %>%
+  mutate(Countries = paste(FlagCountry, collapse = ", ")) %>% 
+  distinct(Fishery, Subpolygon, Countries) %>% 
+  arrange(desc(Fishery), Subpolygon)->table_4_1
+
+kable(table_4_1)
+
+```
+
+
+Table 4.2
+Effort (fishing days) by country and metiers from 2018 to 2020 (Fishing ground: West Africa)
+
+
+```{r, results = "asis", eval = T}
+
+ceOrg %>%
+  filter((Area==34 & Subpolygon!='Canaries'  & Subpolygon!='Madeira' ) | (Area == '34' & is.na(Subpolygon))|Subpolygon=='Angola' ) %>%
+  filter(Year %in% c(2018:2020))  %>% 
+  filter(is.na(DaysAtSea)) -> brakDanych
+
+ceOrg %>%
+  filter((Area==34 & Subpolygon!='Canaries'  & Subpolygon!='Madeira' ) | (Area == '34' & is.na(Subpolygon)) | Subpolygon=='Angola'  ) %>%
+  filter(Year %in% c(2018:2020))  %>% 
+  group_by( FishingActivityCategoryEuropeanLvl6, FlagCountry,Year ) %>% 
+  summarise(FishingDays = sum(DaysAtSea, na.rm = TRUE)) %>% 
+  ungroup() %>%
+  # replace 0 with NA where the record were submitted - data not porivded because of confidentiality reasons
+  mutate(FishingDays = as.character(FishingDays)) %>% 
+  mutate(FishingDays =  ifelse(FishingDays=='0' | is.na(FishingDays), 'NA', FishingDays)) %>% 
+  pivot_wider(names_from = Year, values_from = c(FishingDays)#,
+             # values_fill = list(FishingDays = 0)
+              ) %>% 
+   rename(Metier_lvl6 = FishingActivityCategoryEuropeanLvl6, Country = FlagCountry)-> table_4_2
+
+
+kable(table_4_2)
+
+if(nrow(brakDanych)>0){
+  cat('Number of records with missing FishingDays per FlagCountry' )
+
+ceOrg %>%
+  filter((Area==34 & Subpolygon!='Canaries'  & Subpolygon!='Madeira' ) | (Area == '34' & is.na(Subpolygon)) | Subpolygon=='Angola'  ) %>%
+  filter(Year %in% c(2018:2020))  %>% 
+  filter(is.na(DaysAtSea)) %>% # KWDays FishingActivityCategoryEuropeanLvl6
+  group_by(FlagCountry) %>%
+  summarise(numRecords = n()) -> tabela
+
+kable(tabela)
+
+}else{
+  cat('No missing data for FishingDays')
+
+}
+
+```
+
+
+Table 4.3
+Landings (tons) by country and metiers from 2014 to 2020 (Fishing ground: West Africa)
+
+
+```{r, results = "asis", eval = T}
+
+
+clOrg %>%
+  filter((Area==34 & Subpolygon!='Canaries'  & Subpolygon!='Madeira' ) | (Area == '34' & is.na(Subpolygon)) |Subpolygon=='Angola'  ) %>%
+  filter(Year %in% c(2014:2020)) %>% 
+  filter(is.na(LandingWeight_ton)) -> brakDanych
+
+for(i in unique(clOrg$Year)){
+clOrg %>%
+  filter((Area==34 & Subpolygon!='Canaries'  & Subpolygon!='Madeira' ) | (Area == '34' & is.na(Subpolygon)) | Subpolygon=='Angola'  ) %>%
+   filter(Year==i) %>%  
+  #filter(Year %in% c(2014:2020)) %>% 
+  group_by(Year, FlagCountry, FishingActivityCategoryEuropeanLvl6 ) %>% 
+  summarise(LandingWeight_ton = round(sum(LandingWeight_ton, na.rm = TRUE))) %>% 
+    # replace 0 with NA where the record were submitted - data not porivded because of confidentiality reasons
+  mutate(LandingWeight_ton = as.character(LandingWeight_ton)) %>% 
+  mutate(LandingWeight_ton =  ifelse(LandingWeight_ton=='0' | is.na(LandingWeight_ton), 'NA', LandingWeight_ton)) %>% 
+  ungroup() %>% 
+  pivot_wider(names_from = FlagCountry, values_from = LandingWeight_ton) %>% 
+    arrange(FishingActivityCategoryEuropeanLvl6) %>% 
+    rename( !!paste('Metier',i, sep = ' ') := FishingActivityCategoryEuropeanLvl6) %>% 
+    select(-Year)-> table_4_3
+
+
+print(kable(table_4_3))
+cat("\n")
+}
+
+if(nrow(brakDanych)>0){
+  cat('Number of records with missing LandingWeight per FlagCountry' )
+  
+clOrg %>%
+  filter((Area==34 & Subpolygon!='Canaries'  & Subpolygon!='Madeira' ) | (Area == '34' & is.na(Subpolygon)) | Subpolygon=='Angola'  ) %>%
+  filter(Year %in% c(2014:2020)) %>% 
+  filter(is.na(LandingWeight_ton)) %>% # KWDays FishingActivityCategoryEuropeanLvl6
+  group_by(FlagCountry) %>% 
+  summarise(numRecords = n())-> tabela
+
+kable(tabela)
+  
+}else{
+  cat('No missing data for LandingWeight')
+  
+}
+
+
+```
+
+Table 4.4
+Total EU landings (tons) in the West Africa waters of the CECAF area from 2014 to 2020. Data provided through the RDB
+
+```{r, results = "asis", eval = T}
+
+clOrg %>%
+  filter((Area==34 & Subpolygon!='Canaries'  & Subpolygon!='Madeira' ) | (Area == '34' & is.na(Subpolygon)) | Subpolygon=='Angola' ) %>%
+  filter(Year %in% c(2014:2020)) %>% 
+  group_by(Year) %>% 
+  summarise(LandingWeight_ton = sum(LandingWeight_ton, na.rm = TRUE)) %>% 
+  rename(Total_EU_landings_t = LandingWeight_ton)->table_4_4
+
+kable(table_4_4)
+
+
+```
+
+Table 4.5
+Percentage of average effort of different metiers operating in the CECAF area (West Africa) (period 2018-2020). 
+
+```{r, results = "asis", eval = T}
+
+ceOrg %>%
+  filter((Area==34 & Subpolygon!='Canaries'  & Subpolygon!='Madeira' ) | (Area == '34' & is.na(Subpolygon)) | Subpolygon=='Angola' ) %>% 
+  filter(Year %in% c(2018:2020)) %>% 
+  group_by(FishingActivityCategoryEuropeanLvl6) %>% 
+  summarise(FishingDays = sum(DaysAtSea, na.rm = TRUE)/3) %>% 
+  ungroup() %>% 
+  mutate(EffortPerc = round(FishingDays/sum(FishingDays)*100, 2)) %>% 
+  arrange(EffortPerc) %>% 
+  rename(Metier = FishingActivityCategoryEuropeanLvl6)-> table_4_5
+
+kable(table_4_5)
+
+```
+
+Table 4.6
+Percentage of average landings (period 2018-2020) of different métiers operating in the CECAF area (West Africa).
+
+```{r, results = "asis", eval = T}
+
+
+clOrg %>%
+  filter((Area==34 & Subpolygon!='Canaries'  & Subpolygon!='Madeira' ) | (Area == '34' & is.na(Subpolygon)) | Subpolygon=='Angola' )%>%
+  filter(Year %in% c(2018:2020)) %>% 
+  group_by(FishingActivityCategoryEuropeanLvl6) %>% 
+  summarise(LandingWeight_ton = round(sum(LandingWeight_ton, na.rm = TRUE))/3) %>% 
+  ungroup() %>% 
+  mutate(LandingsPerc = round(LandingWeight_ton/sum(LandingWeight_ton)*100, 2)) %>% 
+  arrange(LandingsPerc)%>% 
+  rename(Metier = FishingActivityCategoryEuropeanLvl6) -> table_4_6
+
+kable(table_4_6)
+
+```
+
+<!-- Table 4.7 -->
+<!-- Average landings (tonnes) of main demersal species jointly exploited by EU demersal fleets in CECAF - West Africa fishing grounds -->
+
+<!-- ```{r, results = "asis", eval = T} -->
+<!-- clOrg %>%  -->
+<!--     filter((Area==34 & Subpolygon!='Canaries'  & Subpolygon!='Madeira' ) | (Area == '34' & is.na(Subpolygon)) | Subpolygon=='Angola' )%>% -->
+<!--   filter(grepl('Penaeus|Sepia|Octopus', Species) | Species == 'Penaeidae' | Species == 'Sepiidae') %>%  -->
+<!--   filter(Year %in% c(2018, 2019, 2020) ) %>% distinct(Species) -> SpeciesUsed -->
+
+<!-- cat('Species included in the tables below') -->
+<!-- kable(SpeciesUsed) -->
+
+<!-- ```   -->
+
+
+
+<!-- ```{r, results = "asis", eval = T} -->
+<!-- clOrg %>% -->
+<!--   filter(grepl('Penaeus|Sepia|Octopus', Species)| Species == 'Penaeidae' | Species == 'Sepiidae') %>%  -->
+<!--   filter(Year %in% c(2018, 2019, 2020) ) %>%  -->
+<!--   mutate(MainStocks = case_when(grepl('Penaeus', Species)~'Penaeus spp', -->
+<!--                                 grepl('Sepia', Species)~'Sepia spp', -->
+<!--                                 grepl('Octopus vulgaris', Species)~'Octopus vulgaris', -->
+<!--                                 Species== 'Penaeidae'~'Penaeus spp', -->
+<!--                                 Species == 'Sepiidae'~'Sepia spp')) %>%  -->
+<!--   filter((Area==34 & Subpolygon!='Canaries'  & Subpolygon!='Madeira' ) | (Area == '34' & is.na(Subpolygon)) | Subpolygon=='Angola' )%>% -->
+<!--   group_by(MainStocks, FlagCountry) %>% -->
+<!--   summarise(LandingWeight_ton = sum(LandingWeight_ton, na.rm = TRUE)/3) %>% -->
+<!--   ungroup() %>%  -->
+<!--   arrange(desc(LandingWeight_ton)) %>%  -->
+<!--   pivot_wider(names_from = FlagCountry, values_from = LandingWeight_ton) %>%  -->
+<!--   arrange(MainStocks)-> table_4_7 -->
+
+<!-- kable(table_4_7) -->
+
+<!-- ``` -->
+
+<!-- Table 4.8 -->
+<!-- Average landings (%) of main demersal species jointly exploited by EU demersal fleets in CECAF - West Africa fishing grounds -->
+
+<!-- ```{r, results = "asis", eval = T} -->
+<!-- clOrg %>% -->
+<!--   filter(grepl('Penaeus|Sepia|Octopus', Species)| Species == 'Penaeidae' | Species == 'Sepiidae') %>%  -->
+<!--   filter(Year %in% c(2018, 2019, 2020) ) %>%  -->
+<!--   mutate(MainStocks = case_when(grepl('Penaeus', Species)~'Panaeus spp', -->
+<!--                                 grepl('Sepia', Species)~'Sepia spp', -->
+<!--                                 grepl('Octopus vulgaris', Species)~'Octopus vulgaris', -->
+<!--                                 Species== 'Penaeidae'~'Panaeus spp', -->
+<!--                                 Species == 'Sepiidae'~'Sepia spp')) %>%  -->
+<!--   filter((Area==34 & Subpolygon!='Canaries'  & Subpolygon!='Madeira' ) | (Area == '34' & is.na(Subpolygon)) | Subpolygon=='Angola' )%>% -->
+<!--   group_by(MainStocks, FlagCountry) %>% -->
+<!--   summarise(LandingWeight_ton = sum(LandingWeight_ton, na.rm = TRUE)/3) %>% -->
+<!--   ungroup() %>%  -->
+<!--   arrange(desc(LandingWeight_ton)) %>%  -->
+<!--   pivot_wider(names_from = FlagCountry, values_from = LandingWeight_ton) %>%  -->
+<!--   arrange(MainStocks) %>%  -->
+<!--   mutate(ESP2 = ESP/(ESP+ITA)*100, -->
+<!--          ITA2 = ITA/(ESP+ITA)*100) %>% -->
+<!--   select(MainStocks, ESP=ESP2, ITA = ITA2)->table_4_8 -->
+
+<!-- kable(table_4_8) -->
+
+<!-- ``` -->
+
+```{r, results = "asis", eval = T}
+# Tabele 4.9, 4.10 - Canaries - in 2019 it was in a separate file on the sharepoint, in 2020 no data for Canaries were available
+```
+
+No data for the Canaries available.
+
+Table 4.11
+Effort (fishing days) by metiers for Madeira 2014-2020
+
+```{r, results = "asis", eval = T}
+
+ceOrg %>%
+  filter( Subpolygon=='Madeira' ) %>% 
+  filter(Year %in% c(2014:2020))  %>% 
+  filter(is.na(DaysAtSea)) -> brakDanych
+
+ceOrg %>%
+  filter( Subpolygon=='Madeira' ) %>% 
+  filter(Year %in% c(2014:2020))  %>% 
+  group_by(FlagCountry, Year, FishingActivityCategoryEuropeanLvl6, Area ) %>% 
+  summarise(FishingDays = sum(DaysAtSea, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+      # replace 0 with NA where the record were submitted - data not porivded because of confidentiality reasons
+  mutate(FishingDays = as.character(FishingDays)) %>% 
+  mutate(FishingDays =  ifelse(FishingDays=='0' | is.na(FishingDays), 'NA', FishingDays)) %>% 
+  pivot_wider(names_from = Year, values_from = c(FishingDays)) %>% 
+  rename(Metier = FishingActivityCategoryEuropeanLvl6,
+         Country = FlagCountry) %>% 
+  select(-Area)-> table_4_11
+
+
+
+kable(table_4_11)
+
+if(nrow(brakDanych)>0){
+  cat('Number of records with missing FishingDays per FlagCountry' )
+
+ceOrg %>%
+  filter( Subpolygon=='Madeira' ) %>% 
+  filter(Year %in% c(2014:2020))  %>% 
+  filter(is.na(DaysAtSea)) %>% # KWDays FishingActivityCategoryEuropeanLvl6
+  group_by(FlagCountry) %>%
+  summarise(numRecords = n()) -> tabela
+
+kable(tabela)
+
+}else{
+  cat('No missing data for FishingDays')
+
+}
+
+```
+
+Table 4.12
+Landings (tons) by metier for Madeira 2014-2020
+
+```{r, results = "asis", eval = T}
+
+
+clOrg %>%
+  filter( Subpolygon=='Madeira' ) %>% 
+  filter(Year %in% c(2014:2020))  %>% 
+  filter(is.na(LandingWeight_ton)) -> brakDanych
+
+clOrg %>%
+  filter( Subpolygon=='Madeira' ) %>% 
+  filter(Year %in% c(2014:2020))  %>% 
+  group_by(Year, Area, FlagCountry, FishingActivityCategoryEuropeanLvl6 ) %>% 
+  summarise(LandingWeight_ton = round(sum(LandingWeight_ton, na.rm = TRUE))) %>% 
+  ungroup() %>% 
+        # replace 0 with NA where the record were submitted - data not porivded because of confidentiality reasons
+  mutate(LandingWeight_ton = as.character(LandingWeight_ton)) %>% 
+  mutate(LandingWeight_ton =  ifelse(LandingWeight_ton=='0' | is.na(LandingWeight_ton), 'NA', LandingWeight_ton)) %>% 
+  pivot_wider(names_from = Year, values_from = LandingWeight_ton) %>% 
+  rename(Metier = FishingActivityCategoryEuropeanLvl6,
+         Country = FlagCountry) %>% 
+  select(-Area)-> table_4_12
+
+
+kable(table_4_12)
+
+if(nrow(brakDanych)>0){
+  cat('Number of records with missing LandingWeight per FlagCountry' )
+  
+
+clOrg %>%
+  filter( Subpolygon=='Madeira' ) %>% 
+  filter(Year %in% c(2014:2020))  %>% 
+  filter(is.na(LandingWeight_ton)) %>% # KWDays FishingActivityCategoryEuropeanLvl6
+  group_by(FlagCountry) %>% 
+  summarise(numRecords = n())-> tabela
+
+kable(tabela)
+  
+}else{
+  cat('No missing data for LandingWeight')
+  
+}
+
+
+```
+
+##### Section 4.2
+
+Table 4.13
+SPRFMO small pelagic fishery effort (fishing days) by country from 2014 to 2020. 
+
+```{r, results = "asis", eval = T}
+# SPRFMO i small pelagic, no filtering of catch group=small pelagic, because large pelagics are really minor case and in ce we would not be able to select small pelagic catch group
+
+# Comments 2020
+#KWdays always given
+#DayAtSea not given - Poland not reported
+
+# Comments 2021 - in this datacall it was clarified that in the column DayAtSea, Fishing days should be reported
+
+
+ceOrg %>%
+  filter(Year %in% c(2014:2020)) %>% 
+  filter(Area %in% c(87)) %>% 
+  filter(is.na(DaysAtSea))  -> brakDanych
+
+ceOrg %>%
+  filter(Year %in% c(2014:2020)) %>% 
+  group_by(Year, Area, FlagCountry ) %>% #FishingActivityCategoryEuropeanLvl6
+  summarise(FishingDays = sum(DaysAtSea, na.rm = TRUE)
+            #KWDays_1000x = sum(KWDays_1000x, na.rm = TRUE)
+            ) %>% 
+  ungroup() %>% 
+          # replace 0 with NA where the record were submitted - data not porivded because of confidentiality reasons
+  mutate(FishingDays = as.character(FishingDays)) %>% 
+  mutate(FishingDays =  ifelse(FishingDays=='0' | is.na(FishingDays), 'NA', FishingDays)) %>% 
+  pivot_wider(names_from = Year, values_from = c(FishingDays)) %>% 
+  filter(Area %in% c(87)) %>% 
+  select(-Area) %>% 
+  rename(Country=FlagCountry)-> table313_section42
+
+
+kable(table313_section42)
+
+if(nrow(brakDanych)>0){
+  cat('Number of records with missing FishingDays per FlagCountry' )
+
+  ceOrg %>%
+  filter(Year %in% c(2014:2020)) %>%
+  filter(Area %in% c(87)) %>%
+  filter(is.na(DaysAtSea)) %>% # KWDays FishingActivityCategoryEuropeanLvl6
+  group_by(FlagCountry) %>%
+  summarise(numRecords = n()) -> tabela
+
+kable(tabela)
+
+}else{
+  cat('No missing data for FishingDays')
+
+}
+
+
+```
+
+Table 4.14
+SPRFMO small pelagic fishery total landings (tons) by country from 2014 to 2020.
+
+```{r, results = "asis", eval = T}
+
+
+clOrg %>%
+  filter(Year %in% c(2014:2020)) %>% 
+  filter(Area %in% c(87))%>% 
+  filter(is.na(LandingWeight_ton)) -> brakDanych
+
+clOrg %>%
+  filter(Year %in% c(2014:2020))  %>% 
+  group_by(Year, Area, FlagCountry ) %>% #FishingActivityCategoryEuropeanLvl6
+  summarise(LandingWeight_ton = round(sum(LandingWeight_ton, na.rm = TRUE))) %>% 
+  ungroup() %>% 
+            # replace 0 with NA where the record were submitted - data not porivded because of confidentiality reasons
+  mutate(LandingWeight_ton = as.character(LandingWeight_ton)) %>% 
+  mutate(LandingWeight_ton =  ifelse(LandingWeight_ton=='0' | is.na(LandingWeight_ton), 'NA', LandingWeight_ton)) %>% 
+  pivot_wider(names_from = Year, values_from = LandingWeight_ton)%>% 
+  filter(Area %in% c(87) ) %>% 
+  select(-Area) %>% 
+  rename(Country=FlagCountry)-> tabela
+
+kable(tabela)
+
+if(nrow(brakDanych)>0){
+  cat('Number of records with missing LandingWeight per FlagCountry' )
+  
+  clOrg %>%
+  filter(Year %in% c(2014:2020)) %>% 
+  filter(Area %in% c(87)) %>% 
+  filter(is.na(LandingWeight_ton)) %>% # KWDays FishingActivityCategoryEuropeanLvl6
+  group_by(FlagCountry) %>% 
+  summarise(numRecords = n())-> tabela
+
+kable(tabela)
+  
+}else{
+  cat('No missing data for LandingWeight')
+  
+}
+
+
+```
+
+
+##### Section 4.3
+
+Table 4.15  Effort (fishing days) from other regions by country from 2014 to 2020
+
+```{r, results = "asis", eval = T}
+
+ceOrg %>%
+  filter(Year %in% c(2014:2020)) %>% 
+  filter(Area %in% c(41, 47, 21, 88, 51, 58, 48, 57) & (Subpolygon!='Angola' | is.na(Subpolygon) )) %>% 
+  filter(is.na(DaysAtSea)) -> brakDanych
+  
+# ceOrg %>%
+#   filter((Subpolygon!='Angola' | is.na(Subpolygon) )) %>% 
+#   filter(Year %in% c(2014:2020))  %>% 
+#   group_by(Area, FlagCountry, FishingActivityCategoryEuropeanLvl6, Year ) %>% 
+#   summarise(FishingDays = sum(DaysAtSea, na.rm = TRUE)) %>% 
+#   ungroup() %>% 
+#   pivot_wider(names_from = Year, values_from = c(FishingDays))%>% 
+#   filter(Area %in% c(41, 47, 21, 88, 51, 58, 48, 57))-> table313
+
+# modified after reveiving mail from Begona 08.07.2021
+ceOrg %>%
+  filter((Subpolygon!='Angola' | is.na(Subpolygon) )) %>% 
+  filter(Year %in% c(2014:2020))  %>% 
+  group_by(Area, FlagCountry, FishingActivityCategoryEuropeanLvl6, Year ) %>% 
+  summarise(FishingDays = sum(DaysAtSea, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  # replace 0 with NA where the record were submitted - data not porivded because of confidentiality reasons
+  mutate(FishingDays = as.character(FishingDays)) %>% 
+  mutate(FishingDays =  ifelse(FishingDays=='0' | is.na(FishingDays) , 'NA', FishingDays)) %>% 
+  pivot_wider(names_from = Year, values_from = c(FishingDays))%>% 
+  filter(Area %in% c(41, 47, 21, 88, 51, 58, 48, 57)) %>% 
+  rename(Country = FlagCountry,
+         Metier_level_6 = FishingActivityCategoryEuropeanLvl6)-> table313
+
+
+kable(table313)
+
+if(nrow(brakDanych)>0){
+  cat('Number of records with missing FishingDays per FlagCountry' )
+  
+  ceOrg %>%
+  filter(Year %in% c(2014:2020)) %>% 
+  filter(Area %in% c(41, 47, 21, 88, 51, 58, 48, 57) & (Subpolygon!='Angola' | is.na(Subpolygon))) %>% 
+  filter(is.na(DaysAtSea)) %>% # KWDays FishingActivityCategoryEuropeanLvl6
+  group_by(FlagCountry) %>% 
+  summarise(numRecords = n())-> tabela
+
+kable(tabela)
+  
+}else{
+  
+  cat('No missing data for Fishing Days')
+  
+}
+
+```
+
+Table 4.16 Landings (tons) from other regions by country from 2014 to 2020.
+
+```{r, results = "asis", eval = T}
+
+clOrg %>%
+  filter(Year %in% c(2014:2020)) %>% 
+  filter(Area %in% c(41, 47, 21, 88, 51, 58, 48, 57)& (Subpolygon!='Angola' | is.na(Subpolygon) ) )%>% 
+  filter(is.na(LandingWeight_ton)) -> brakDanych
+
+# clOrg %>%
+#   filter((Subpolygon!='Angola' | is.na(Subpolygon) )) %>% 
+#   filter(Year %in% c(2014:2020)) %>% 
+#   group_by(Area, FlagCountry, FishingActivityCategoryEuropeanLvl6, Year ) %>% 
+#   summarise(LandingWeight_ton = round(sum(LandingWeight_ton))) %>% 
+#   ungroup() %>% 
+#   pivot_wider(names_from = Year, values_from = LandingWeight_ton) %>% 
+#   filter(Area %in% c(41, 47, 21) )-> table314
+
+# modified after reveiving mail from Begona 08.07.2021
+clOrg %>%
+  filter((Subpolygon!='Angola' | is.na(Subpolygon) )) %>% 
+  filter(Year %in% c(2014:2020)) %>% 
+  group_by(Area, FlagCountry, FishingActivityCategoryEuropeanLvl6, Year ) %>% 
+  summarise(LandingWeight_ton = round(sum(LandingWeight_ton, na.rm = TRUE))) %>% 
+  ungroup() %>% 
+  # replace 0 with NA where the record were submitted - data not porivded because of confidentiality reasons
+  mutate(LandingWeight_ton = as.character(LandingWeight_ton)) %>% 
+  mutate(LandingWeight_ton =  ifelse(LandingWeight_ton=='0' | is.na(LandingWeight_ton), 'NA', LandingWeight_ton)) %>% 
+  pivot_wider(names_from = Year, values_from = LandingWeight_ton) %>% 
+  filter(Area %in% c(41, 47, 21, 88, 51, 58, 48, 57) ) %>% 
+    rename(Country = FlagCountry,
+         Metier_level_6 = FishingActivityCategoryEuropeanLvl6)-> table314
+
+
+kable(table314)
+
+if(nrow(brakDanych)>0){
+  
+  cat('Number of records with missing LandingWeight per FlagCountry' )
+  
+clOrg %>%
+  filter((Subpolygon!='Angola' | is.na(Subpolygon) )) %>% 
+  filter(Year %in% c(2014:2020)) %>% 
+  filter(Area %in% c(41, 47, 21, 88, 51, 58, 48, 57))%>% 
+  filter(is.na(LandingWeight_ton)) %>% # KWDays FishingActivityCategoryEuropeanLvl6
+  group_by(FlagCountry) %>% 
+  summarise(numRecords = n())-> tabela
+
+kable(tabela)
+  
+}else{
+  
+  cat('No missing data for LandingWeight')
+  
+}
+
+```
+
+
+##### Annex 2 - Landings by species by area reported by MS
+
+
+```{r, results = "asis", eval = T}
+# wormsAlpha = read_csv("D:/Do przegrania na PC/IntersessionalWork/RCG LDF/data/worms_3alpha.csv")
+# wormsAlpha %>%
+#   filter(!is.na(AphiaID)) %>%
+#   group_by(AphiaID) %>% 
+#   mutate(duplikaty = rank(Scientific_name, ties.method = "first")) %>% # w pliku sa duplikaty dla kodow wormsowych, w przyszlym roku sprobowac z fishpi
+#   filter(duplikaty ==1) %>% 
+#   select(AphiaID, Alpha = '3A_CODE') -> wormsAlpha
+# 
+# cl %>% 
+#   filter(Year == 2020) %>% nrow()-> clTest
+# cl %>% 
+#   filter(Year == 2020)%>% left_join(wormsAlpha, by = c("SpeciesAphiaID" = "AphiaID"))  %>% nrow()->clWormsTest
+# 
+# if (clTest!= clWormsTest){
+#   cat('Sth wrong when mergind CL with Worms codes file. To be checked!')
+# }
+# 
+# cl %>% 
+#   filter(Year == 2020)%>% 
+#   left_join(wormsAlpha, by = c("SpeciesAphiaID" = "AphiaID")) %>%
+#  # filter(is.na(Alpha)) %>% distinct(Species, SpeciesAphiaID) %>% arrange(Species)
+#   mutate(Alpha = case_when(
+#     SpeciesAphiaID==299565~'MKW',# Muraena augusti (MKW)
+#     SpeciesAphiaID==151174~'VMA',# Scomber colias (VMA)
+#     TRUE~Alpha
+#   )) %>% 
+#   mutate(Species2 = ifelse(!is.na(Alpha),
+#                            paste(Species, ' (', Alpha, ')', sep = ''), 
+#                            paste(Species))
+#   )-> cl2
+```
+
+Landings by species (tons) in West Africa (CECAF area).  Data from 2020.
+
+```{r, results = "asis", eval = T}
+
+# 34 without Madera i Canaries
+cl2 %>% 
+  filter(Year==2020) %>% 
+  filter((Area==34 & Subpolygon!='Canaries'  & Subpolygon!='Madeira' ) | (Area == '34' & is.na(Subpolygon)) | Subpolygon == 'Angola' )%>%
+  group_by(FlagCountry, Species2, Alpha) %>% 
+  summarise(LandingWeight_ton = sum(LandingWeight_ton)) %>%
+  ungroup() %>% 
+  mutate(LandingWeight_ton2 = ifelse(LandingWeight_ton<1, '<1', paste(round(LandingWeight_ton)))) %>% 
+  select(FlagCountry, Species2, LandingWeight_ton2, Alpha) %>% 
+              # replace 0 with NA where the record were submitted - data not porivded because of confidentiality reasons
+  mutate(LandingWeight_ton2 = as.character(LandingWeight_ton2)) %>% 
+  mutate(LandingWeight_ton2 =  ifelse(LandingWeight_ton2=='0' | is.na(LandingWeight_ton2), 'NA', LandingWeight_ton2)) %>% 
+  pivot_wider(names_from = FlagCountry, values_from = LandingWeight_ton2, values_fill = list(NA)) %>% 
+  arrange(Species2) %>% 
+  select(-Alpha)-> annex2_1
+
+kable(annex2_1)
+
+```
+
+Landings by species (tons) in Madeira (CECAF area).  Data from 2020.
+
+```{r, results = "asis", eval = T}
+cl2 %>% 
+  filter(Year==2020) %>% 
+  filter( Subpolygon=='Madeira' ) %>% 
+  group_by(FlagCountry, Species2) %>% 
+  summarise(LandingWeight_ton = sum(LandingWeight_ton)) %>%
+  ungroup() %>% 
+  mutate(LandingWeight_ton2 = ifelse(LandingWeight_ton<1, '<1', paste(round(LandingWeight_ton)))) %>% 
+  select(FlagCountry, Species2, LandingWeight_ton2) %>% 
+                # replace 0 with NA where the record were submitted - data not porivded because of confidentiality reasons
+  mutate(LandingWeight_ton2 = as.character(LandingWeight_ton2)) %>% 
+  mutate(LandingWeight_ton2 =  ifelse(LandingWeight_ton2=='0' | is.na(LandingWeight_ton2), 'NA', LandingWeight_ton2)) %>% 
+  pivot_wider(names_from = FlagCountry, values_from = LandingWeight_ton2, values_fill = list(NA)) %>% 
+  arrange(Species2) -> annex2_2
+
+kable(annex2_2)
+```
+
+<!-- Landings by species (tons) in SPRFMO area (CECAF area).  Data from 2020. -->
+
+<!-- ```{r, results = "asis", eval = T} -->
+<!-- cl2 %>%  -->
+<!--   filter(Area == 87) %>%  -->
+<!--   group_by(FlagCountry, Species2) %>%  -->
+<!--   summarise(LandingWeight_ton = sum(LandingWeight_ton)) %>% -->
+<!--   ungroup() %>%  -->
+<!--   mutate(LandingWeight_ton2 = ifelse(LandingWeight_ton<1, '<1', paste(round(LandingWeight_ton)))) %>%  -->
+<!--   select(FlagCountry, Species2, LandingWeight_ton2) %>%  -->
+<!--   pivot_wider(names_from = FlagCountry, values_from = LandingWeight_ton2, values_fill = list(NA)) %>%  -->
+<!--   arrange(Species2)-> annex2_3 -->
+
+<!-- kable(annex2_3) -->
+<!-- ``` -->
+
+Landings by species (tons) in 47 (Atlantic, Southeast) area (CECAF area).  Data from 2020.
+
+```{r, results = "asis", eval = T}
+cl2 %>% 
+  filter(Year==2020) %>% 
+  filter(Area == 47 & (Subpolygon!='Angola' | is.na(Subpolygon) )) %>% 
+  group_by(FlagCountry, Species2) %>% 
+  summarise(LandingWeight_ton = sum(LandingWeight_ton)) %>%
+  ungroup() %>% 
+  mutate(LandingWeight_ton2 = ifelse(LandingWeight_ton<1, '<1', paste(round(LandingWeight_ton)))) %>% 
+  select(FlagCountry, Species2, LandingWeight_ton2) %>% 
+                # replace 0 with NA where the record were submitted - data not porivded because of confidentiality reasons
+  mutate(LandingWeight_ton2 = as.character(LandingWeight_ton2)) %>% 
+  mutate(LandingWeight_ton2 =  ifelse(LandingWeight_ton2=='0' | is.na(LandingWeight_ton2), 'NA', LandingWeight_ton2)) %>% 
+  pivot_wider(names_from = FlagCountry, values_from = LandingWeight_ton2, values_fill = list(NA)) %>% 
+  arrange(Species2)-> annex2_5
+
+kable(annex2_5)
+```
+
+###### Page break
+#### Reading the graphs
+##### Barplots
+
+In (bar)plots, subtitles indicate if all RDB data could be used and are displayed.  Some data can not be displayed in the plots, e.g. due to missing or incorrect values or due to missing referring data (e.g. if no statistical rectangle is given or harbor names are missing, landings in the respective plots can’t be displayed).
+The factor x:% in subtitle indicates the percentage of RDB data that are displayed  in the x-variable. y:% in subtitle indicates the percentage of RDB data in the respective y-variable. z:% in subtitle indicate the percentage of complete (i.e., non-missing) RDB rows in variable. 
+
+##### Maps
+
+The maps are generated based on complete and available data from the RDB. The subtitles of the header state the subselection that is displayed (e.g. “all Data”, “pelagics”, etc.).  if data cannot be shown on a map (e.g. due to missing information on the area or harbor code), the missing values is given in the figure text below. 
+
+<!-- #### Catch groups -->
+
+<!-- ```{r, results = 'asis'} -->
+
+<!-- kable(arrange(summarise( -->
+<!--   group_by(cl, Region, Period, Species, Catch_group), -->
+<!--   tons = round(sum(LandingWeight_ton), digits = 0) -->
+<!-- ), Catch_group)) -->
+
+<!-- ``` -->
+
+#### Area - Species - Flag country
+
+Landings (tons) by species, area, flag country
+```{r, results = 'asis'}
+cl2 %>% filter(Year==years) %>% 
+  group_by(Year, Species, Area = str_sub(Area, end = 4), FlagCountry) %>% 
+  summarise(LandingWeight_ton = round(sum(LandingWeight_ton, na.rm = TRUE), digits = 0)) %>% 
+                  # replace 0 with NA where the record were submitted - data not porivded because of confidentiality reasons
+  mutate(LandingWeight_ton = as.character(LandingWeight_ton)) %>% 
+  mutate(LandingWeight_ton =  ifelse(LandingWeight_ton=='0' | is.na(LandingWeight_ton), 'NA', LandingWeight_ton)) %>% 
+  spread(FlagCountry, LandingWeight_ton, fill = NA) %>% 
+  arrange(Area, Species) -> AreaSpeciesFlagcountry
+
+kable(AreaSpeciesFlagcountry)
+write_csv(AreaSpeciesFlagcountry,  paste(table_dir,'AreaSpeciesFlagcountry_LandingWeight_ton.csv',
+                      sep = ""))  
+
+```
+
+#### Area - Metier - Flag country Landings
+
+Landings (tons) by metier, area, flag country
+```{r, results = 'asis'}
+cl2 %>% filter(Year==years) %>% 
+  group_by(Year, FishingActivityCategoryEuropeanLvl6, Area = str_sub(Area, end = 4), FlagCountry) %>% 
+  summarise(LandingWeight_ton = round(sum(LandingWeight_ton, na.rm = TRUE), digits = 0)) %>% 
+                    # replace 0 with NA where the record were submitted - data not porivded because of confidentiality reasons
+  mutate(LandingWeight_ton = as.character(LandingWeight_ton)) %>% 
+  mutate(LandingWeight_ton =  ifelse(LandingWeight_ton=='0' | is.na(LandingWeight_ton), 'NA', LandingWeight_ton)) %>% 
+  #pivot_wider(names_from = FlagCountry, values_from = LandingWeight_ton, values_fill = list(NA)) %>% 
+  spread(FlagCountry, LandingWeight_ton, fill = NA) %>% 
+  arrange(Area, FishingActivityCategoryEuropeanLvl6) -> AreaMetierFlagcountry
+
+kable(AreaMetierFlagcountry)
+write_csv(AreaMetierFlagcountry,  paste(table_dir,'AreaMetierFlagcountry_LandingWeight_ton.csv',
+                      sep = ""))  
+
+```
+
+<!-- #### Area - Metier - Flag country Effort -->
+
+<!-- Effort (trip number) by metier, area, flag country -->
+<!-- ```{r, results = 'asis'} -->
+<!-- ce %>% filter(Year==years) %>%  -->
+<!--   group_by(Year, FishingActivityLvl6, Area = str_sub(Area, end = 4), FlagCountry) %>%  -->
+<!--   summarise(TripsNumber = round(sum(TripsNumber, na.rm = TRUE), digits = 0)) %>%  -->
+<!--   spread(FlagCountry, TripsNumber, fill = 0) %>%  -->
+<!--   arrange(Area, FishingActivityLvl6) -> AreaMetierFlagcountryEffort -->
+
+<!-- kable(AreaMetierFlagcountryEffort) -->
+<!-- write_csv(AreaMetierFlagcountryEffort,  paste(table_dir,'AreaMetierFlagcountry_Effort.csv', -->
+<!--                       sep = ""))   -->
+
+<!-- ``` -->
+
+
+```{r notes}
+
+#TODO ---- 
+
+#Have a look at the barplot function and how to output the figures - espcially for the grouped plots
+
+#Notes ----
+#The names of parameter vars could be cleaned up
+#Change file names of prep data, so the script is more generic
+
+```
+
+
+```{r todo, include = F}
+
+
+
+
+
+```
