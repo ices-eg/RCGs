@@ -48,6 +48,9 @@ input.data <- merge(input.data, area.list, all.x = T, by = "area")
 # Assign species category to the input data
 input.data <- merge(input.data, species.list, all.x = T, by = "FAO_species")
 
+# Optional step - use fleet register gear in case when logbook registered gear is missing
+input.data[is.na(gear) & !is.na(gear_FR),gear:=gear_FR]
+
 # Assign gear group and re-coded gear name to the input data
 input.data<-merge(input.data, gear.list, all.x = T, by.x = "gear", by.y = "gear_code")
 
