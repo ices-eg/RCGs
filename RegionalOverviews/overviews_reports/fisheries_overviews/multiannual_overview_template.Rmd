@@ -19,7 +19,7 @@ if (RCG == "RCG_NA") {
 
 ---
 title: `r front_title`
-author: "RCG ISSG Regional overviews"
+author: "RCG ISSG on RDB catch, effort and sampling overviews"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
 ---
