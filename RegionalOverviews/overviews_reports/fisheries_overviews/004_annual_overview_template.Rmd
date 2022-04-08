@@ -29,13 +29,13 @@ output:
 #If running outside knitr, then set wd. When knitting the wd is set to the folder where the .rmd is stored
 #setwd("RegionalOverviews")
 
-#Paramters
-RDB_download_date <- "23/04/2019"
+#Paramters 
+RDB_download_date <- "23/04/2022" # update the day
 
 target_region <- "RCG_NSEA"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
-years <- c(2020)
+years <- c(2020) # 2021
 
-period <- "2020"
+period <- "2020" # 2021
 
 figures <- "yes" #yes / no - all figures outputtet to a folder
 tables <- "yes" #yes / no - all tables outputtet to a folder
@@ -66,8 +66,8 @@ period_stock <- "2018-2020"
 
 
 #Fleet register		
-Date_0<-20200101
-Date_previous<-20190101
+Date_0<-20210101
+Date_previous<-20200101
 ```
 
 ```{r 2_setup_lib, include = F}
@@ -119,7 +119,6 @@ if (figures == "yes") {
 }
 
 ```
-
 
 ```{r 4_source_ref, include = F}
 
@@ -283,7 +282,7 @@ ce <- droplevels(ce)
 **Disclaimer**
 
 Tables, plots and graphs presented in this document and overviews are made for the coordination purposes of regional fisheries data collection and are not designed for any other use. Data used for the outputs are extracted from the Regional Database (RDB) and EU Fleet Register. Dates of data extractions are stated in Appendix A. Due to different aggregations and reporting authorities, data can differ to those e.g. used for assessments or technical reports.
-Member States (MS) are responsible for uploading latest data and the latest year should be viewed as provisional. Data can be resubmitted by a MS for more than one previous year so there might be differences in earlier year reports if countries update back in time. Responsibility for the quality of the data and comparability to other data sources lies with the MS that provided these data.
+Member States (MS) are responsible for uploading latest data and the latest year should be viewed as provisional. Data can be resubmitted by a MS for more than one previous year so there might be differences in earlier year reports if countries update back in time. Responsibility for the quality of the data and comparability to other data sources lies with the MS that provided these data. The upload logs presented by MS can be found in the ISSG Data Quality report.
 
 The respective scripts and calculations used for data displaying are publicly available via the RCG github (https://github.com/ices-eg/RCGs) and subject to change as the work of the group progresses. 
 
@@ -311,7 +310,7 @@ The maps are generated based on complete and available data from the RDB. The su
 
 # Overall fleet evolution (All RCGs)
 ## Number of vessels
-Number of vessels by flag country and length class in the EU vessel register (licence indicator == “Y” in 1st January `r years`. Parentesis: variation relative to `r years-1`; red = number decreases; green = number increases; white = number maintains).
+Number of vessels with fishing license, by flag country and length class in the EU vessel register (licence indicator == “Y” in 1st January `r years`. Parentesis: variation relative to `r years-1`; red = number decreases; green = number increases; white = number maintains).
 
 ```{r table, include=FALSE}
 #fleet register
@@ -385,7 +384,7 @@ ft
 ```
 
 ## Power
-Power (1000*kW) by flag country and length class in the EU vessel register (licence indicator == “Y” in 1st January `r years`. Parentesis: variation relative to `r years-1`).
+Power (1000*kW) of licensed vessels, by flag country and length class in the EU vessel register (licence indicator == “Y” in 1st January `r years`. Parentesis: variation relative to `r years-1`).
 
 ```{r, results = 'asis'}
   pyear<-as.data.frame.matrix(round(rbind(res_fleetreg_pwr[,,1],apply(res_fleetreg_pwr[,,1],2,sum))/1000,1))
@@ -397,7 +396,7 @@ ft
 ```
 
 ## Gross tonnage
-Gross Tonnage(1000*GT) by flag country and length class in the EU vessel register (licence indicator == “Y” in 1st January `r years`. Parentesis: variation relative to `r years-1`).
+Gross Tonnage(1000*GT) of licensed vessels, by flag country and length class in the EU vessel register (licence indicator == “Y” in 1st January `r years`. Parentesis: variation relative to `r years-1`).
 
 
 ```{r, results = 'asis'}
