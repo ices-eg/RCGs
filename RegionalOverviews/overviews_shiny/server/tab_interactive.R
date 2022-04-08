@@ -208,19 +208,19 @@ output$absolute <- renderUI({
 
 # Pop up box in interactive map 
 observeEvent(input$N_var2, {
-    if(input$N_var2 %in% "NoAge"){
+    if(input$N_var2 %in% "NumAgeFish"){
       addPopover(session, "N_var2", "", content = "Number of fish with age recorded", trigger = "hover" , placement = "right")
-      }else if(input$N_var2 %in% "NoAgeTrips"){
+      }else if(input$N_var2 %in% "NumAgeTrips"){
         addPopover(session, "N_var2", "", content =  "Numbers of trips with age samples", trigger = "hover" , placement = "right")
-      }else if(input$N_var2 %in% "NoWeight"){
+      }else if(input$N_var2 %in% "NumWeightFish"){
         addPopover(session, "N_var2",  "", content = "Number of weight measurements", trigger = "hover" , placement = "right")
-      }else if(input$N_var2 %in% "NoWeightTrips"){
+      }else if(input$N_var2 %in% "NumWeightTrips"){
         addPopover(session, "N_var2",  "", content = "Numbers of trips with recorded weight", trigger = "hover" , placement = "right")
-      }else if(input$N_var2 %in% "NoMaturityStage"){
+      }else if(input$N_var2 %in% "NumMaturityStageFish"){
         addPopover(session, "N_var2",  "", content = "Numbers of fish with maturity stage readings", trigger = "hover" , placement = "right")
-      }else if(input$N_var2 %in% "NoMaturityStageTrips"){
+      }else if(input$N_var2 %in% "NumMaturityStageTrips"){
         addPopover(session, "N_var2",  "", content = "Numbers of trips with recorded maturity stage", trigger = "hover" , placement = "right")
-      }else if(input$N_var2 %in% "NoLength"){
+      }else if(input$N_var2 %in% "NumLengthFish"){
         addPopover(session, "N_var2",  "", content = "Numbers of fish with length measurements", trigger = "hover" , placement = "right")
       }else{
         addPopover(session, "N_var2",  "", content = "Numbers of trips with length samples", trigger = "hover" , placement = "right")

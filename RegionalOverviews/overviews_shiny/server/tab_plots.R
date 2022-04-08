@@ -77,7 +77,7 @@ output$summary <- renderUI({
                                               "FishingActivityCategoryEuropeanLvl6", 
                                               "CatchCategory")),
                   selectInput ("N_varY", "Y axis",
-                                choices = c("NoLength", "NoLengthTrips"), multiple = F), 
+                                choices = c("NumLengthFish", "NumLengthTrips"), multiple = F), 
                   hr(),
                   div(style="display: inline-block;vertical-align:top;", actionButton ("view4", "View")),
                   div(style="display: inline-block;vertical-align:top;",downloadButton ("down4", "Download plot"))

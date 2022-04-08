@@ -90,14 +90,14 @@ facetvar2 <-
 
 var <-
  c(
-    "NoAge",
-    "NoAgeTrips",
-    "NoLength",
-    "NoLengthTrips",
-    "NoWeight",
-    "NoWeightTrips",
-    "NoMaturityStage",
-    "NoMaturityStageTrips"
+    "NumAgeFish",
+    "NumAgeTrips",
+    "NumLengthFish",
+    "NumLengthTrips",
+    "NumWeightFish",
+    "NumWeightTrips",
+    "NumMaturityStageFish",
+    "NumMaturityStageTrips"
   )
 
  #group <-
