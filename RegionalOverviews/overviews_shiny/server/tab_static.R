@@ -62,6 +62,15 @@ output$static <- renderUI({
     column(4, 
            singleton(tags$head(tags$script(src = "code.js"))),
            selectInput(
+             "yearg",
+             "Year",
+             choices =
+               #c("All", levels(data_list()[[3]]$Region)),
+               c(as.character(data_list()[[4]]$Year)),
+             multiple = F,
+             selected = "All"
+           ), 
+           selectInput(
                 "regiong",
                 "Region",
                 choices =

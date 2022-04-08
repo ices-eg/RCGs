@@ -135,6 +135,15 @@ output$absolute <- renderUI({
     h2("Sampling explorer", align = "center"),
     # uiOutput("countryui"),uiOutput("speciesui"),uiOutput("samptypeui"),uiOutput("quarterui"),
     selectInput(
+      "year",
+      "Year",
+      choices =
+        #c("All", levels(data_list()[[3]]$Region)),
+        c(as.character(data_list()[[4]]$Year)),
+      multiple = F,
+      selected = "All"
+    ),
+    selectInput(
       "region",
       "Region",
       choices =

@@ -144,7 +144,7 @@ data_list<-reactive({
   ca_map2<-ca_map2[!(is.na(StatisticalRectangle)|StatisticalRectangle=='99u9'),]
   ca_map2$lat<- ices.rect(ca_map2$StatisticalRectangle)$lat
   ca_map2$lon <- ices.rect(ca_map2$StatisticalRectangle)$lon
-  ca_map2<-ca_map2[,.(NumMaturityStageFish=sum(!is.na(MaturityStage)),NumMaturityStageTrips=length(unique(Trip[!is.na(MaturityStage)])),NumAgeFish=sum(!is.na(Age)),NumAgeTrips=length(unique(Trip[!is.na(Age)])),NumLengthFish=sum(!is.na(LengthClass)),NumLengthTrips=length(unique(Trip[!is.na(LengthClass)])),NumWeightFish=sum(!is.na(Weight)),NumWeightTrips=length(unique(Trip[!is.na(Weight)]))),by=c("Region","FlagCountry","Species","SamplingType","Quarter","CatchCategory","lat","lon")]
+  ca_map2<-ca_map2[,.(NumMaturityStageFish=sum(!is.na(MaturityStage)),NumMaturityStageTrips=length(unique(Trip[!is.na(MaturityStage)])),NumAgeFish=sum(!is.na(Age)),NumAgeTrips=length(unique(Trip[!is.na(Age)])),NumLengthFish=sum(!is.na(LengthClass)),NumLengthTrips=length(unique(Trip[!is.na(LengthClass)])),NumWeightFish=sum(!is.na(Weight)),NumWeightTrips=length(unique(Trip[!is.na(Weight)]))),by=c("Year" ,"Region","FlagCountry","Species","SamplingType","Quarter","CatchCategory","lat","lon")]
   #
 
   ca_map$SamplingType<-as.factor(ca_map$SamplingType)
