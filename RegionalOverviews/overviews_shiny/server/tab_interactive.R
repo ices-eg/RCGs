@@ -30,6 +30,7 @@ observe({
   
   })
 
+
 # -------------------------
 # Updating selectize input == species
 # -------------------------
@@ -52,6 +53,65 @@ observe({
   # Updating selectize input
   updateSelectInput(session, "species", choices =c("All", as.character(unique(vars()))), selected = "All") 
 })
+
+# -------------------------
+# Updating selectize input : 
+# Remove All when another value is selected
+# Remove other values when All is selected again 
+# -------------------------
+# Country 
+selected <- reactiveValues(v = NULL)
+observeEvent(input$country, {
+  selected$v <- input$country 
+  if(selected$v[1] %in% "All" & length(selected$v) > 1){
+    newSelection <- subset(input$country, !input$country %in% "All")
+    updateSelectizeInput(session, "country", choices = c("All",as.character(unique(dd()$FlagCountry))), selected = newSelection)
+  }else if(!selected$v[1] %in% "All" & sum(str_detect(selected$v, "All")) %in% 1){
+    newSelection <- subset(input$country, input$country %in% "All")
+    updateSelectizeInput(session, "country", choices = c("All",as.character(unique(dd()$FlagCountry))), selected = newSelection)
+    }
+})
+#Species 
+observeEvent(input$species, {
+  selected$v <- input$species
+  if(selected$v[1] %in% "All" & length(selected$v) > 1){
+    newSelection <- subset(input$species, !input$species %in% "All")
+    updateSelectizeInput(session, "species", choices = c("All",as.character(unique(vars()))), selected = newSelection)
+  }else if(!selected$v[1] %in% "All" & sum(str_detect(selected$v, "All")) %in% 1){
+    newSelection <- subset(input$species, input$species %in% "All")
+    updateSelectizeInput(session, "species", choices = c("All",as.character(unique(vars()))), selected = newSelection)
+  }
+})
+#Sampling type 
+observeEvent(input$samtype, {
+  selected$v <- input$samtype
+  if(selected$v[1] %in% "All" & length(selected$v) > 1){
+    newSelection <- subset(input$samtype, !input$samtype %in% "All")
+    updateSelectizeInput(session, "samtype", choices = c("All", levels(data_list()[[4]]$SamplingType)), selected = newSelection)
+  }else if(!selected$v[1] %in% "All" & sum(str_detect(selected$v, "All")) %in% 1){
+    newSelection <- subset(input$samtype, input$samtype %in% "All")
+    updateSelectizeInput(session, "samtype", choices = c("All", levels(data_list()[[4]]$SamplingType)), selected = newSelection)
+  }
+})
+#Quarter
+observeEvent(input$quarter, {
+  selected$v <- input$quarter
+  if(selected$v[1] %in% "All" & length(selected$v) > 1){
+    newSelection <- subset(input$quarter, !input$quarter %in% "All")
+    updateSelectizeInput(session, "quarter", choices =  c("All", levels(data_list()[[4]]$Quarter)), selected = newSelection)
+  }else if(!selected$v[1] %in% "All" & sum(str_detect(selected$v, "All")) %in% 1){
+    newSelection <- subset(input$quarter, input$quarter %in% "All")
+    updateSelectizeInput(session, "quarter", choices =  c("All", levels(data_list()[[4]]$Quarter)), selected = newSelection)
+  }
+})
+
+# observe({
+#   if(input$country != "All"){
+#     # Updating selectize input
+#     updateSelectizeInput(session, "country", choices =c(as.character(unique(vars()))), selected = "") 
+#   }
+# 
+# })
 
 
 # -------------------------
