@@ -264,6 +264,39 @@ dasTotal <- dasTotal + scale_color_manual(values=issgPalette)
 ggplotly(dasTotal)
 ```
 
+
+```{r echo=FALSE, message=FALSE, warning = FALSE, message=FALSE, out.width="90%", out.height="90%" }
+
+## Days at sea Total fisheries -  Annual total fishing effort by country  (Laura's table)
+# missing data (Days at Sea) 
+Missing <- CE_years %>% 
+  group_by(Year, FlagCountry , is.na(DaysAtSea)) %>% 
+  summarise(missing = n()) %>% 
+  filter(`is.na(DaysAtSea)` == TRUE) %>% 
+  select(FlagCountry, missing)
+
+MissingDaysAtSea <- CE_years %>% 
+  group_by(Year, FlagCountry) %>%  
+  summarise(Total = n()) %>% 
+  full_join(Missing)
+
+PercentageMissingDaysAtSea <- MissingDaysAtSea %>% 
+  group_by(Year, FlagCountry) %>% 
+  summarise('%missingRecords (DaysAtSea)' = as.integer((missing/Total)*100)) %>% 
+  arrange(FlagCountry) 
+
+# Countries with no effort data 
+PercentageMissingDaysAtSea2 <- subset(PercentageMissingDaysAtSea, !is.na(`%missingRecords (DaysAtSea)`))
+PercentageMissingDaysAtSea2 <- PercentageMissingDaysAtSea %>% 
+  filter(!is.na(`%missingRecords (DaysAtSea)`)) %>% 
+  arrange(Year)
+
+ft<-theme_flextable(PercentageMissingDaysAtSea2)
+ft
+
+```
+
+
 ### Days at sea Bottom trawl fisheries
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 DAS_country_OTB <- droplevels(DAS_country[!is.na(DAS_country$DaysAtSea) & DAS_country$gear %in% c('OTB'),])
