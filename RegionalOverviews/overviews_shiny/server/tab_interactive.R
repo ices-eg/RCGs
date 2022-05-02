@@ -56,7 +56,7 @@ observe({
 
 # -------------------------
 # Updating selectize input : 
-# Remove All when another value is selected
+# Remove All when another value is selected !!!All needs to be selected initially for the code to work!!! 
 # Remove other values when All is selected again 
 # -------------------------
 # Country 
@@ -286,6 +286,7 @@ df <- reactive({
   #                  "lat", "lon", "aux")
   names(data) <- c("FlagCountry", "Quarter",  "Species", "SamplingType",
                    "lat", "lon", "aux")
+  data$FlagCountry <- droplevels(data$FlagCountry)
   data
 })
 
@@ -423,7 +424,6 @@ observe({
 output$plot2 <- renderPlot ({
   #input$view2
   if (input$view2==0) return()
-  
   #validate(need(input$plottype=="Barplot", message=FALSE))
   ColorsBAR <- colour_table$colour4
   names(ColorsBAR) <- colour_table$Country

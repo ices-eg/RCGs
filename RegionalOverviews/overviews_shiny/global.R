@@ -26,7 +26,8 @@ library(shinyWidgets)
 library(ggrepel) # requiered by shinyappsio
 library(dplyr)
 library(rgeos) # requiered by shinyappsio
-library(rintrojs)
+library(rintrojs) 
+library(plotly) # added 2022
 
 library(shinyalert)
 

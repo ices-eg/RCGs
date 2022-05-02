@@ -46,6 +46,56 @@ gars <- reactive ({
   data
 })
 
+# -------------------------
+# Updating selectize input : 
+# Remove All when another value is selected !!!All needs to be selected initially for the code to work!!! 
+# Remove other values when All is selected again 
+# -------------------------
+# Country 
+selected <- reactiveValues(v = NULL)
+observeEvent(input$countryg, {
+  selected$v <- input$countryg 
+  if(selected$v[1] %in% "All" & length(selected$v) > 1){
+    newSelection <- subset(input$countryg, !input$countryg %in% "All")
+    updateSelectizeInput(session, "countryg", choices = c("All",as.character(unique(dg()$FlagCountry))), selected = newSelection)
+  }else if(!selected$v[1] %in% "All" & sum(str_detect(selected$v, "All")) %in% 1){
+    newSelection <- subset(input$countryg, input$countryg %in% "All")
+    updateSelectizeInput(session, "countryg", choices = c("All",as.character(unique(dg()$FlagCountry))), selected = newSelection)
+  }
+})
+#Species 
+observeEvent(input$speciesg, {
+  selected$v <- input$speciesg
+  if(selected$v[1] %in% "All" & length(selected$v) > 1){
+    newSelection <- subset(input$speciesg, !input$speciesg %in% "All")
+    updateSelectizeInput(session, "speciesg", choices = c("All",as.character(unique(gars()))), selected = newSelection)
+  }else if(!selected$v[1] %in% "All" & sum(str_detect(selected$v, "All")) %in% 1){
+    newSelection <- subset(input$speciesg, input$speciesg %in% "All")
+    updateSelectizeInput(session, "speciesg", choices = c("All",as.character(unique(gars()))), selected = newSelection)
+  }
+})
+#Sampling type 
+observeEvent(input$samtypeg, {
+  selected$v <- input$samtypeg
+  if(selected$v[1] %in% "All" & length(selected$v) > 1){
+    newSelection <- subset(input$samtypeg, !input$samtypeg %in% "All")
+    updateSelectizeInput(session, "samtypeg", choices = c("All", levels(data_list()[[4]]$SamplingType)), selected = newSelection)
+  }else if(!selected$v[1] %in% "All" & sum(str_detect(selected$v, "All")) %in% 1){
+    newSelection <- subset(input$samtypeg, input$samtypeg %in% "All")
+    updateSelectizeInput(session, "samtypeg", choices = c("All", levels(data_list()[[4]]$SamplingType)), selected = newSelection)
+  }
+})
+#Quarter
+observeEvent(input$quarterg, {
+  selected$v <- input$quarterg
+  if(selected$v[1] %in% "All" & length(selected$v) > 1){
+    newSelection <- subset(input$quarterg, !input$quarterg %in% "All")
+    updateSelectizeInput(session, "quarterg", choices =  c("All", levels(data_list()[[4]]$Quarter)), selected = newSelection)
+  }else if(!selected$v[1] %in% "All" & sum(str_detect(selected$v, "All")) %in% 1){
+    newSelection <- subset(input$quarterg, input$quarterg %in% "All")
+    updateSelectizeInput(session, "quarterg", choices =  c("All", levels(data_list()[[4]]$Quarter)), selected = newSelection)
+  }
+})
 
 observe({
   # Updating selectize input
@@ -151,7 +201,7 @@ output$static <- renderUI({
 
 # Pop up box in static map 
 observeEvent(input$N_var3, {
-  if(input$N_var2 %in% "NumAgeFish"){
+  if(input$N_var3 %in% "NumAgeFish"){
     addPopover(session, "N_var3",  "", content = "Number of fish with age recorded", trigger = "hover" , placement = "right")
   }else if(input$N_var3 %in% "NumAgeTrips"){
     addPopover(session, "N_var3",  "", content = "Numbers of trips with age samples", trigger = "hover" , placement = "right")

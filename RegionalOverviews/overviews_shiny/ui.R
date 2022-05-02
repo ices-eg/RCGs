@@ -152,7 +152,7 @@ shinyUI(
     # -----------------------------------
     
     tabPanel(
-      "Interactive plots", 
+      "Static plots", 
         uiOutput("summary"),
         add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
       

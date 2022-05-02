@@ -178,7 +178,7 @@ output$sumplot <- renderPlot ({
     ggplot(dfp(), aes(x=auxX, y=auxY, fill=auxG)) +
       geom_bar(position = "stack", stat="identity")+
       #scale_fill_manual(safe_colorblind_palette) +
-      labs(y = input$N_varY, x = input$N_varX, fill = input$groupX)+
+      labs(y = input$N_varY, x = input$N_varX, fill = input$groupX, title = "")+
       theme_bw()+
       theme(axis.text.x = element_text(angle = 90, hjust = 1),
             axis.text=element_text(size=12),
