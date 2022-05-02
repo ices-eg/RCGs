@@ -30,6 +30,7 @@ observe({
   
   })
 
+
 # -------------------------
 # Updating selectize input == species
 # -------------------------
@@ -53,6 +54,65 @@ observe({
   updateSelectInput(session, "species", choices =c("All", as.character(unique(vars()))), selected = "All") 
 })
 
+# -------------------------
+# Updating selectize input : 
+# Remove All when another value is selected !!!All needs to be selected initially for the code to work!!! 
+# Remove other values when All is selected again 
+# -------------------------
+# Country 
+selected <- reactiveValues(v = NULL)
+observeEvent(input$country, {
+  selected$v <- input$country 
+  if(selected$v[1] %in% "All" & length(selected$v) > 1){
+    newSelection <- subset(input$country, !input$country %in% "All")
+    updateSelectizeInput(session, "country", choices = c("All",as.character(unique(dd()$FlagCountry))), selected = newSelection)
+  }else if(!selected$v[1] %in% "All" & sum(str_detect(selected$v, "All")) %in% 1){
+    newSelection <- subset(input$country, input$country %in% "All")
+    updateSelectizeInput(session, "country", choices = c("All",as.character(unique(dd()$FlagCountry))), selected = newSelection)
+    }
+})
+#Species 
+observeEvent(input$species, {
+  selected$v <- input$species
+  if(selected$v[1] %in% "All" & length(selected$v) > 1){
+    newSelection <- subset(input$species, !input$species %in% "All")
+    updateSelectizeInput(session, "species", choices = c("All",as.character(unique(vars()))), selected = newSelection)
+  }else if(!selected$v[1] %in% "All" & sum(str_detect(selected$v, "All")) %in% 1){
+    newSelection <- subset(input$species, input$species %in% "All")
+    updateSelectizeInput(session, "species", choices = c("All",as.character(unique(vars()))), selected = newSelection)
+  }
+})
+#Sampling type 
+observeEvent(input$samtype, {
+  selected$v <- input$samtype
+  if(selected$v[1] %in% "All" & length(selected$v) > 1){
+    newSelection <- subset(input$samtype, !input$samtype %in% "All")
+    updateSelectizeInput(session, "samtype", choices = c("All", levels(data_list()[[4]]$SamplingType)), selected = newSelection)
+  }else if(!selected$v[1] %in% "All" & sum(str_detect(selected$v, "All")) %in% 1){
+    newSelection <- subset(input$samtype, input$samtype %in% "All")
+    updateSelectizeInput(session, "samtype", choices = c("All", levels(data_list()[[4]]$SamplingType)), selected = newSelection)
+  }
+})
+#Quarter
+observeEvent(input$quarter, {
+  selected$v <- input$quarter
+  if(selected$v[1] %in% "All" & length(selected$v) > 1){
+    newSelection <- subset(input$quarter, !input$quarter %in% "All")
+    updateSelectizeInput(session, "quarter", choices =  c("All", levels(data_list()[[4]]$Quarter)), selected = newSelection)
+  }else if(!selected$v[1] %in% "All" & sum(str_detect(selected$v, "All")) %in% 1){
+    newSelection <- subset(input$quarter, input$quarter %in% "All")
+    updateSelectizeInput(session, "quarter", choices =  c("All", levels(data_list()[[4]]$Quarter)), selected = newSelection)
+  }
+})
+
+# observe({
+#   if(input$country != "All"){
+#     # Updating selectize input
+#     updateSelectizeInput(session, "country", choices =c(as.character(unique(vars()))), selected = "") 
+#   }
+# 
+# })
+
 
 # -------------------------
 # AbsolutePanel uiOutput
@@ -74,6 +134,15 @@ output$absolute <- renderUI({
     height = "auto",
     h2("Sampling explorer", align = "center"),
     # uiOutput("countryui"),uiOutput("speciesui"),uiOutput("samptypeui"),uiOutput("quarterui"),
+    selectInput(
+      "year",
+      "Year",
+      choices =
+        #c("All", levels(data_list()[[3]]$Region)),
+        c(as.character(data_list()[[4]]$Year)),
+      multiple = F,
+      selected = "All"
+    ),
     selectInput(
       "region",
       "Region",
@@ -148,19 +217,19 @@ output$absolute <- renderUI({
 
 # Pop up box in interactive map 
 observeEvent(input$N_var2, {
-    if(input$N_var2 %in% "NoAge"){
+    if(input$N_var2 %in% "NumAgeFish"){
       addPopover(session, "N_var2", "", content = "Number of fish with age recorded", trigger = "hover" , placement = "right")
-      }else if(input$N_var2 %in% "NoAgeTrips"){
+      }else if(input$N_var2 %in% "NumAgeTrips"){
         addPopover(session, "N_var2", "", content =  "Numbers of trips with age samples", trigger = "hover" , placement = "right")
-      }else if(input$N_var2 %in% "NoWeight"){
+      }else if(input$N_var2 %in% "NumWeightFish"){
         addPopover(session, "N_var2",  "", content = "Number of weight measurements", trigger = "hover" , placement = "right")
-      }else if(input$N_var2 %in% "NoWeightTrips"){
+      }else if(input$N_var2 %in% "NumWeightTrips"){
         addPopover(session, "N_var2",  "", content = "Numbers of trips with recorded weight", trigger = "hover" , placement = "right")
-      }else if(input$N_var2 %in% "NoMaturityStage"){
+      }else if(input$N_var2 %in% "NumMaturityStageFish"){
         addPopover(session, "N_var2",  "", content = "Numbers of fish with maturity stage readings", trigger = "hover" , placement = "right")
-      }else if(input$N_var2 %in% "NoMaturityStageTrips"){
+      }else if(input$N_var2 %in% "NumMaturityStageTrips"){
         addPopover(session, "N_var2",  "", content = "Numbers of trips with recorded maturity stage", trigger = "hover" , placement = "right")
-      }else if(input$N_var2 %in% "NoLength"){
+      }else if(input$N_var2 %in% "NumLengthFish"){
         addPopover(session, "N_var2",  "", content = "Numbers of fish with length measurements", trigger = "hover" , placement = "right")
       }else{
         addPopover(session, "N_var2",  "", content = "Numbers of trips with length samples", trigger = "hover" , placement = "right")
@@ -217,6 +286,7 @@ df <- reactive({
   #                  "lat", "lon", "aux")
   names(data) <- c("FlagCountry", "Quarter",  "Species", "SamplingType",
                    "lat", "lon", "aux")
+  data$FlagCountry <- droplevels(data$FlagCountry)
   data
 })
 
@@ -354,7 +424,6 @@ observe({
 output$plot2 <- renderPlot ({
   #input$view2
   if (input$view2==0) return()
-  
   #validate(need(input$plottype=="Barplot", message=FALSE))
   ColorsBAR <- colour_table$colour4
   names(ColorsBAR) <- colour_table$Country

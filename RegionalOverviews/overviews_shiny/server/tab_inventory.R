@@ -22,7 +22,7 @@ data_list<-reactive({
   #ca<-fread(file)
   ca$Region[ca$Region=="NA"|is.na(ca$Region)]<-'NATL'
   
-  cainventory<-ca[,.(NoMaturityStage=sum(!is.na(MaturityStage)),NoMaturityStageTrips=length(unique(Trip[!is.na(MaturityStage)])),NoAge=sum(!is.na(Age)),NoAgeTrips=length(unique(Trip[!is.na(Age)])),NoLength=sum(!is.na(LengthClass)),NoLengthTrips=length(unique(Trip[!is.na(LengthClass)])),NoWeight=sum(!is.na(Weight)),NoWeightTrips=length(unique(Trip[!is.na(Weight)]))),by=c("Year","Region","FlagCountry","LandingCountry","Stock","Species","SamplingType","Quarter","CatchCategory","Sex")]
+  cainventory<-ca[,.(NumMaturityStageFish=sum(!is.na(MaturityStage)),NumMaturityStageTrips=length(unique(Trip[!is.na(MaturityStage)])),NumAgeFish=sum(!is.na(Age)),NumAgeTrips=length(unique(Trip[!is.na(Age)])),NumLengthFish=sum(!is.na(LengthClass)),NumLengthTrips=length(unique(Trip[!is.na(LengthClass)])),NumWeightFish=sum(!is.na(Weight)),NumWeightTrips=length(unique(Trip[!is.na(Weight)]))),by=c("Year","Region","FlagCountry","LandingCountry","Stock","Species","SamplingType","Quarter","CatchCategory","Sex")]
   
   # datatable wants factors for filter = 
   cainventory$FlagCountry<-as.factor(cainventory$FlagCountry)
@@ -70,7 +70,7 @@ data_list<-reactive({
   
   #class(sl_master)
   
-  slinventory<-sl_master[,.(NoLength=sum(NoInSubSample),NoLengthTrips=length(unique(Trip[NoInSubSample>0])),WeigthKg=sum(SubSampleWeight_kg)),by=c("Year","Region","FlagCountry","LandingCountry","Stock","Species","SamplingType","StartQuarter","FishingGround","Area" ,"FishingActivityCategoryEuropeanLvl6", "CatchCategory","VesselLengthCategory")][NoLength>0|NoLengthTrips>0,]
+  slinventory<-sl_master[,.(NumLengthFish=sum(NoInSubSample),NumLengthTrips=length(unique(Trip[NoInSubSample>0])),WeigthKg=sum(SubSampleWeight_kg)),by=c("Year","Region","FlagCountry","LandingCountry","Stock","Species","SamplingType","StartQuarter","FishingGround","Area" ,"FishingActivityCategoryEuropeanLvl6", "CatchCategory","VesselLengthCategory")][NumLengthFish>0|NumLengthTrips>0,]
   
   slinventory$Region[slinventory$Region=="NA"|is.na(slinventory$Region)]<-'NATL'
   
@@ -137,14 +137,14 @@ data_list<-reactive({
   # 
   # ca_map<-ca_map[,.(NoMaturityStage=sum(!is.na(MaturityStage)),NoMaturityStageTrips=length(unique(Trip[!is.na(MaturityStage)])),NoAge=sum(!is.na(Age)),NoAgeTrips=length(unique(Trip[!is.na(Age)])),NoLength=sum(!is.na(LengthClass)),NoLengthTrips=length(unique(Trip[!is.na(LengthClass)])),NoWeight=sum(!is.na(Weight)),NoWeightTrips=length(unique(Trip[!is.na(Weight)]))),by=c("Region","LandingCountry","Species","SamplingType","Quarter","CatchCategory","lat","lon")]
   
-  ca_map <- ca_map[,.(NoMaturityStage=sum(!is.na(MaturityStage)),NoMaturityStageTrips=length(unique(Trip[!is.na(MaturityStage)])),NoAge=sum(!is.na(Age)),NoAgeTrips=length(unique(Trip[!is.na(Age)])), NoWeight=sum(!is.na(Weight)),NoWeightTrips=length(unique(Trip[!is.na(Weight)])), NoLength = sum(!is.na(NoAtLengthInSample)), NoLengthTrips = length(unique(Trip[!is.na(NoAtLengthInSample)]))),by=c("Region","LandingCountry","Species","SamplingType","Quarter","CatchCategory","lat","lon")]
+  ca_map <- ca_map[,.(NumMaturityStageFish=sum(!is.na(MaturityStage)),NumMaturityStageTrips=length(unique(Trip[!is.na(MaturityStage)])),NumAgeFish=sum(!is.na(Age)),NumAgeTrips=length(unique(Trip[!is.na(Age)])), NumWeightFish=sum(!is.na(Weight)),NumWeightTrips=length(unique(Trip[!is.na(Weight)])), NumLengthFish = sum(!is.na(NoAtLengthInSample)), NumLengthTrips = length(unique(Trip[!is.na(NoAtLengthInSample)]))),by=c("Region","LandingCountry","Species","SamplingType","Quarter","CatchCategory","lat","lon")]
   # 
   
   ca_map2<-ca
   ca_map2<-ca_map2[!(is.na(StatisticalRectangle)|StatisticalRectangle=='99u9'),]
   ca_map2$lat<- ices.rect(ca_map2$StatisticalRectangle)$lat
   ca_map2$lon <- ices.rect(ca_map2$StatisticalRectangle)$lon
-  ca_map2<-ca_map2[,.(NoMaturityStage=sum(!is.na(MaturityStage)),NoMaturityStageTrips=length(unique(Trip[!is.na(MaturityStage)])),NoAge=sum(!is.na(Age)),NoAgeTrips=length(unique(Trip[!is.na(Age)])),NoLength=sum(!is.na(LengthClass)),NoLengthTrips=length(unique(Trip[!is.na(LengthClass)])),NoWeight=sum(!is.na(Weight)),NoWeightTrips=length(unique(Trip[!is.na(Weight)]))),by=c("Region","FlagCountry","Species","SamplingType","Quarter","CatchCategory","lat","lon")]
+  ca_map2<-ca_map2[,.(NumMaturityStageFish=sum(!is.na(MaturityStage)),NumMaturityStageTrips=length(unique(Trip[!is.na(MaturityStage)])),NumAgeFish=sum(!is.na(Age)),NumAgeTrips=length(unique(Trip[!is.na(Age)])),NumLengthFish=sum(!is.na(LengthClass)),NumLengthTrips=length(unique(Trip[!is.na(LengthClass)])),NumWeightFish=sum(!is.na(Weight)),NumWeightTrips=length(unique(Trip[!is.na(Weight)]))),by=c("Year" ,"Region","FlagCountry","Species","SamplingType","Quarter","CatchCategory","lat","lon")]
   #
 
   ca_map$SamplingType<-as.factor(ca_map$SamplingType)

@@ -41,6 +41,10 @@ output$summary <- renderUI({
            br(),
            column(4,
                   p("Barplot"),
+                  selectizeInput("yearp","Year",
+                                 choices =c(as.character(data_list()[[2]]$Year)),
+                                 multiple = FALSE,
+                                 selected = "All"),
                   selectizeInput("fishgroundp","Fishing Ground",
                                  choices =c("All", levels(data_list()[[2]]$FishingGround)),
                                  multiple = TRUE,
@@ -77,7 +81,7 @@ output$summary <- renderUI({
                                               "FishingActivityCategoryEuropeanLvl6", 
                                               "CatchCategory")),
                   selectInput ("N_varY", "Y axis",
-                                choices = c("NoLength", "NoLengthTrips"), multiple = F), 
+                                choices = c("NumLengthFish", "NumLengthTrips"), multiple = F), 
                   hr(),
                   div(style="display: inline-block;vertical-align:top;", actionButton ("view4", "View")),
                   div(style="display: inline-block;vertical-align:top;",downloadButton ("down4", "Download plot"))
@@ -174,7 +178,7 @@ output$sumplot <- renderPlot ({
     ggplot(dfp(), aes(x=auxX, y=auxY, fill=auxG)) +
       geom_bar(position = "stack", stat="identity")+
       #scale_fill_manual(safe_colorblind_palette) +
-      labs(y = input$N_varY, x = input$N_varX, fill = input$groupX)+
+      labs(y = input$N_varY, x = input$N_varX, fill = input$groupX, title = "")+
       theme_bw()+
       theme(axis.text.x = element_text(angle = 90, hjust = 1),
             axis.text=element_text(size=12),
