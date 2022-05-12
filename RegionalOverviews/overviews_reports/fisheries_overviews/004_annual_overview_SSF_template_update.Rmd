@@ -1,0 +1,928 @@
+---
+header-includes: \usepackage{float} \floatplacement{figure}{H} \floatplacement{table}{H}
+output:
+  word_document:
+    fig_caption: yes
+    reference_docx: word_template.docx
+    toc: yes
+    toc_depth: 5
+---
+
+```{r guide, include = F}
+
+#Run render_overviews.rmd 
+
+#This script is controlled by the param.csv and the chunks before Title is declared. 
+
+#The style of the docx is controlled by the 
+
+#Title is declared a bit down, so it will fit the filter
+
+#Be aware of all the /n - these controls linebreaks and are needed for proper headings
+
+#Maps are created in their own chock to allow for bigger plots. The plot are imported in the general plot chunk
+
+```
+
+```{r 1_setup_param_dir, include = F}
+
+#If running outside knitr, then set wd. When knitting the wd is set to the folder where the .rmd is stored
+#setwd("RegionalOverviews")
+
+#Paramters
+RDB_download_date <- "17/04/2022"
+
+target_region <- "RCG_NSEA"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
+years <- c(2021)
+
+period <- "2021"
+
+figures <- "yes" #yes / no - all figures outputted to a folder
+tables <- "yes" #yes / no - all tables outputted to a folder
+
+#data_dir <-data_dir <- paste("../../data/002_prepared/", target_region, "/", sep = '') # "Q:/dfad/users/kibi/data/RCG/from_share_point/"
+#data_dir <-data_dir <- paste("D:/Grupy robocze/RCG/RCGs Data/2020 data/", target_region, "/", sep = '') # 
+
+data_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/input_data/2021/RDB_Per_Region_CLCE_SSF_2009_2021_prepared/", target_region, "/", sep = '') # Ana PC
+
+
+# Folder for figures and tables
+# table_dir <- paste("../../outputs/", target_region, "/tables/", sep = "")
+# figur_dir <- paste("../../outputs/", target_region, "/figures/", sep = "")
+# table_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/",period,"/", target_region, "/tables/", sep = "")
+# figur_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/",period,"/", target_region, "/figures/", sep = "")
+ 
+
+table_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/outputs/",period,"/SSF/", target_region, "/tables/", sep = "")  # PC Ana
+
+figur_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/outputs/",period,"/SSF/", target_region, "/figures/", sep = "") # PC Ana
+ 
+# for SSF
+#table_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/SSF_", target_region, "/tables/", sep = "")
+#figur_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/SSF_", target_region, "/figures/", sep = "")
+
+
+#Landings per stock settings
+
+years_stock <- c(2018, 2019, 2020, 2021)
+period_stock <- "2018-2021"
+
+
+#Fleet register		
+Date_0<-20210101
+Date_previous<-20200101
+```
+
+```{r 2_setup_lib, include = F}
+
+options(scipen = 999)
+
+
+library(tidyverse)
+library(dplyr)
+library(data.table)
+library(knitr)
+library(stringr)
+#library(RCMfunctions) #sharepoint -> RCG Data Group -> R packages
+library(rnaturalearth)
+library(flextable) # R version 3.6.3
+library(TeachingDemos)
+library(riverplot)
+
+```
+
+```{r 3_setup_markdown, include = F}
+
+#Don't set the dpi too high, then the .docx crash
+
+if (figures == "yes") {
+  knitr::opts_chunk$set(
+  fig.width = 9,
+  fig.height = 5,
+  fig.path = figur_dir,
+  dpi = 300,
+  dev = 'png',
+  fig.pos = 'H',
+  echo = F,
+  warning = F,
+  message = F,
+  error = F,
+  comment = F
+)
+} else {
+  knitr::opts_chunk$set(
+  fig.width = 9,
+  fig.height = 5,
+  dpi = 300,
+  dev = 'png',
+  echo = F,
+  warning = F,
+  message = F,
+  error = F,
+  comment = F
+)
+}
+
+```
+
+
+```{r 4_source_ref, include = F}
+
+source("../../funs/func_barplot_var_by_one_var_rmd.r")
+source("../../funs/func_barplot_var_by_two_var_stacked_rmd.r")
+source("../../funs/pointsMap_func.R")
+source("../../funs/choroplethMap_func.R")
+source("../../funs/scatterpieMap_func.R")
+source("../../funs/func_riverplotfun.R")
+source("../../funs/FAZ_SEGMENTACAO_COMPRIMENTO_DCF2.R")
+source("../../funs/fun_table.R")
+source("../../funs/func_determine_what_to_inset.R")
+
+param <-
+  read.table(
+    paste(
+      "graphical_parameters/",
+      target_region,
+      "/Annual_Overview/AnnualOverview_",
+      target_region,
+      "_parameters.csv",
+      sep = ""
+    ),
+    sep = ",",
+    stringsAsFactors = FALSE,
+    header = T
+  )
+
+param <- arrange(param, Order)
+param$value_of_threshold <- as.numeric(param$value_of_threshold)
+param$width <- as.numeric(param$width)
+param$height <- as.numeric(param$height)
+
+colour_table <-
+  read.table(
+    "../../data/aux_colours.txt",
+    header = T,
+    sep = "\t",
+    colClasses = "character",
+    na.strings = "",
+    comment.char = ""
+  )
+
+```
+
+```{r funs, include = F}
+
+filter_df <-
+  function(df = df,
+           filter_var = filter_var,
+           filter = filter) {
+    
+    if (filter == "" | is.na(filter)) {
+
+      df <- df
+    } else {
+           filter <- unlist(str_split(filter, ","))
+      
+      df <- filter(df, !!rlang::sym(filter_var) %in% filter)
+      
+    }
+  }
+
+#Function below from http://michaeljw.com/blog/post/subchunkify/
+subchunkify <- function(g, chunk_name = chunk_name, fig_height=7, fig_width=5) {
+  g_deparsed <- paste0(deparse(
+    function() {g}
+  ), collapse = '')
+  
+  sub_chunk <- paste0("
+  `","``{r fig_", chunk_name, ", fig.height=", fig_height, ", fig.width=", fig_width, ", echo=FALSE, result = \"asis\", warning = F, fig.pos = \"H\"}",
+  "  \n (", 
+    g_deparsed
+    , ")()", "  \n ",
+  "  \n `","``
+  ")
+  
+  cat(knitr::knit(text = knitr::knit_expand(text = sub_chunk), quiet = TRUE))
+  
+}
+
+```
+
+
+```{r title, include = F}
+
+if (target_region == "RCG_NA") {
+  front_title <- paste("RDB Catch and Effort Overview North Atlantic - SSF, ",  period, "  \n ","![](../../overviews_shiny/www/logo RCG NA NS_EA.png)", sep = "")
+  
+} else if (target_region == "RCG_BA") {
+  front_title <- paste("RDB Catch and Effort Overview Baltic - SSF, ",  period, "  \n ","![](../../overviews_shiny/www/logo RCG BALTIC.PNG)", sep = "")
+
+} else if (target_region == "RCG_NSEA") {
+  front_title <- paste("RDB Catch and Effort Overview North Sea and Eastern Arctic - SSF, ",  period, "  \n ","![](../../overviews_shiny/www/logo RCG NA NS_EA.png)", sep = "")
+
+}
+
+```
+
+---
+title: `r front_title`
+date: `r Sys.Date()`
+---
+
+
+```{r data, include = F}
+
+#This needs to be more generic - for easy loading the naming needs to be more generic
+
+if (target_region == "RCG_NA")
+{
+  load(
+    paste(data_dir, "RDB_RCG_NA_CL_SSF_2009_2021_prepared_20220422.Rdata", sep = "")
+  )
+  load(
+    paste(data_dir, "RDB_RCG_NA_CE_SSF_2009_2021_prepared_20220422.Rdata", sep = "")
+  )
+}
+
+if (target_region == "RCG_BA")
+{
+  load(
+    paste(data_dir, "RDB_RCG_BA_CL_SSF_2009_2021_prepared_20220422.Rdata", sep = "")
+  )
+  load(
+    paste(data_dir, "RDB_RCG_BA_CE_SSF_2009_2021_prepared_20220422.Rdata", sep = "")
+  )
+}
+if (target_region == "RCG_NSEA")
+{
+  load(
+    paste(data_dir, "RDB_RCG_NSEA_CL_SSF_2009_2021_prepared_20220422.Rdata", sep = "")
+  )
+  load(
+    paste(data_dir, "RDB_RCG_NSEA_CE_SSF_2009_2021_prepared_20220422.Rdata", sep = "")
+    )
+			}	
+
+#Adds IDs [move to preparation]
+cl_rcg[, FlagCountry_Loa := paste(FlagCountry, VesselLengthCategory, sep = "_")]
+ce_rcg[, FlagCountry_Loa := paste(FlagCountry, VesselLengthCategory, sep = "_")]
+
+# Add to preparation [and convert 2-letter code to 3-letter code]
+#colnames(ce_rcg)[colnames(ce_rcg) == "LandingCountry"] <-
+#  "LandingCountry2" # <-------------------------------------------------- No more LandingCountry in ce,lines to delete?
+
+# for maps of foreign landings 'LandingCountry' is needed
+ce_rcg[,LandingCountry := HarbourCountry]
+
+#Filter
+cl_rcg <- as.data.frame(cl_rcg)
+cl <- filter(cl_rcg, Year %in% years)
+cl <- mutate(cl, Period = period)
+
+ce_rcg <- as.data.frame(ce_rcg)
+ce <- filter(ce_rcg, Year %in% years)
+ce <- mutate(ce, Period = period)
+
+cl <- droplevels(cl)
+ce <- droplevels(ce) 
+
+```
+
+**Disclaimer**
+
+The tables and figures of the overviews presented in this document are made for the coordination of EU regional fisheries data collection purposes and are not designed for any other use. Data used for producing the outputs are extracted from the Regional Database (RDB) and EU Fleet Register. Dates of data extractions are stated in Appendix A. Due to different aggregations and reporting authorities, data can differ from those used e.g. for assessments or technical reports.
+Member States (MS) are responsible for uploading latest data and the latest year should be viewed as provisional. Data can be resubmitted by a MS for more than one previous year so there might be differences in earlier year reports, if countries update back in time. Responsibility for the quality of the data and comparability to other data sources lies with the MS that provided these data. The upload logs presented by MS regarding the data submitted to RDB can be found in the ISSG Data Quality report.
+
+The respective scripts and calculations used for data displaying are publicly available via the RCG GitHub (https://github.com/ices-eg/RCGs) and subject to change as the work of the group progresses. 
+
+
+# Introduction
+
+The present Catch and Effort Overview displays summary information on the EU commercial landings (CL) and commercial effort (CE) statistics included in the Regional Data Base (RDB), which is used to store detailed commercial fisheries and sampling data.
+
+Before the subgroup on catch, effort and sampling overviews was set up, the different RCGs conducted data analysis and overviews separately with minimal exchange, resulting in redundancies and efficiency loss. Furthermore, a substantial part of the work was being carried out during the RCG meetings themselves and so not readily available to inform RCG preparation and meeting discussions. This group was established to streamline and facilitate the work on the fisheries and sampling data of the MS and prepare data overviews in advance of the RCG meetings.
+
+The RDB is hosted at the International Council for Exploration of the Sea (ICES) and its data is property of EU Member States with usage governed by the RDB data policy (https://www.ices.dk/data/Documents/Data_Policy_RDB.pdf). It is a regionally coordinated database platform covering fisheries by region (e.g. North Atlantic Ocean, North Sea, Baltic Sea) and is a main resource used by the Regional Coordination Groups to coordinate data collection of EU fisheries. This database aims also: 1) To ensure that data can be made available for the coordination of regional fisheries data sampling plans, in particular for the DCF Regional Coordination Groups (RCGs); 2) To provide a regional estimation system such that statistical estimates of quantities of interest can be produced from sample data, in order to deliver data for ICES stock assessments and advice, 3) To serve and facilitate the production of fisheries management advice and status reports, 4) To increase the awareness of fisheries data collected by the users of the RDB and the overall usage of these data. 5) Addresses fishery management needs related to the European Union Common Fisheries
+
+However, it has been recognized for many years that there is a need to have a new version of the RDB which would also store details about how the sampling was performed and enable statistical estimations to be made.
+
+In fact, the current Regional Data Base stores the commercial catch and sample data at detailed level, and here the data format and estimations do not support statistical estimations, even though most of the countries’ sampling are not done in a statistical way, the countries never used the RDB for raising/estimating their data. The countries have raised/estimated the data nationally at the institutes and uploaded the data to InterCatch for the stock assessment Expert Groups. That means the stock assessment EG have no information of how the data have been raised/estimated until the data is uploaded into InterCatch, from that point and through the international raising the data and processes are fully documented. InterCatch does neither support statistical estimations. 
+The incoming "Regional DataBase and Estimation System" (RDBES) is taking the place of the RDB (and InterCatch) to improve those aspects. It is expected that RDBES will fill the gaps of the RDB and, in the near future, will also allow the improvement of the information reported in these fisheries overviews.
+
+
+## Reading the graphs
+### Barplots
+
+In the (bar)plots displayed, the subtitles also give the indication of the completeness of the RDB information presented because some data cannot be displayed in the plots (e.g. due to missing or incorrect values or due to missing referring data). For example, if no statistical rectangle is given or the harbour names are missing, landings in the respective plots can’t be displayed.
+The factor x:% in subtitle indicates the percentage of RDB data that is displayed in the x-variable. y:% in subtitle indicates the percentage of RDB data in the respective y-variable. z:% in subtitle indicate the percentage of completeness (i.e., non-missing) RDB rows in variable. 
+
+### Maps
+
+The maps are generated based on complete and available data from the RDB. The subtitles of the header refer to the sub-selection that is displayed (e.g. “all Data”, “pelagics”, etc.).  If the data cannot be shown on a map (e.g. due to missing information on the area or harbour code), the missing values are given in the figure text below. 
+
+# Overall fleet evolution (All RCGs)
+## Number of vessels
+Number of EU licensed vessels by flag country and vessel length class present in the EU fleet register (license indicator == “Y” in 1st January `r years`. Parentheses: variation relative to `r years-1`; red = number decreases; green = number increases; white = number maintains).
+
+```{r table, include=FALSE}
+#fleet register
+# functions and packages
+	require(data.table)
+
+	fleetreg<-data.table()
+
+		# based on full history
+	
+	dir_data<-paste("../../data/fleet_reg/output/",years,"/",sep="")
+		
+	for (ctry in c("BEL","DEU","DNK","ESP","EST","FIN","FRA","IRL","LTU","LVA","NLD","POL","PRT","SWE"))
+		{
+		print(ctry)
+		fleetreg<-rbind(fleetreg,fread(paste(dir_data,ctry,"_export.csv", sep = ""), sep = ";",stringsAsFactors=FALSE, verbose=FALSE))
+		}	
+
+	# subsets data
+		fleetreg<-fleetreg[License_Ind=="Y",]
+
+		
+	# creates status date and combines data
+	
+		fleetreg$year<-0
+		fleetreg$previousyear<-0
+
+		fleetreg[Event_Start_Date<=Date_0 & Event_End_Date>=Date_0,year:=Date_0,]
+		fleetreg[Event_Start_Date<=Date_previous & Event_End_Date>=Date_previous,previousyear:=Date_previous,]
+
+		fleetreg$Status_date<-0
+	
+		target_cols<-c("Country_Code","CFR","Event_Code","Event_Start_Date","Event_End_Date","License_Ind","Loa","Ton_Gt","Ton_Oth","Ton_Gts","Power_Main","Power_Aux","Status_date")
+	
+		dfy<-as.data.frame(fleetreg[year==Date_0,])
+		dfy$Status_date<-Date_0
+		dfy<-dfy[target_cols]
+			
+		dfpy<-as.data.frame(fleetreg[previousyear==Date_previous,])
+		dfpy$Status_date<-Date_previous
+		dfpy<-dfpy[target_cols]
+
+		fleetreg<-as.data.table(rbind(dfy, dfpy))
+	
+	# a few formats and quality checks
+		fleetreg$Power_Main<-as.numeric(fleetreg$Power_Main)
+		fleetreg$Ton_Gt<-as.numeric(fleetreg$Ton_Gt)
+		# QCA: should yield 0
+   	sum(is.na(fleetreg$Power_Main))
+		sum(is.na(fleetreg$Ton_Gt))
+
+	# adds Loa classes
+		fleetreg<-FAZ_SEGMENTACAO_COMPRIMENTO_DCF2(dados = as.data.frame(fleetreg), coluna = "Loa")
+		# QCA: should yield 0
+		sum(is.na(fleetreg$SEG_DCF))
+		res_fleetreg<-table(fleetreg$SEG_DCF, fleetreg$Country_Code, fleetreg$Status_date)
+		res_fleetreg_pwr<-tapply(fleetreg$Power_Main, list(fleetreg$SEG_DCF,fleetreg$Country_Code, fleetreg$Status_date), sum)
+		res_fleetreg_gt<-tapply(fleetreg$Ton_Gt, list(fleetreg$SEG_DCF,fleetreg$Country_Code, fleetreg$Status_date), sum)
+		res_fleetreg_pwr[is.na(res_fleetreg_pwr)]<-0
+		res_fleetreg_gt[is.na(res_fleetreg_gt)]<-0
+```
+
+
+
+```{r, results = 'asis'}
+  pyear<-as.data.frame.matrix(rbind(res_fleetreg[,,1],apply(res_fleetreg[,,1],2,sum)))
+  year<-as.data.frame.matrix(rbind(res_fleetreg[,,2],apply(res_fleetreg[,,2],2,sum)))
+  year_pyear<-as.data.frame.matrix(rbind((res_fleetreg[,,2]-res_fleetreg[,,1]),apply((res_fleetreg[,,2]-res_fleetreg[,,1]),2,sum)))
+ft<-fun_table(year,year_pyear)
+ft
+```
+
+## Power
+Power (1000*kW) of EU licensed vessels by flag country and vessel length class present in the EU fleet register (license indicator == “Y” in 1st January `r years`. Parentheses: variation relative to `r years-1`).
+
+```{r, results = 'asis'}
+  pyear<-as.data.frame.matrix(round(rbind(res_fleetreg_pwr[,,1],apply(res_fleetreg_pwr[,,1],2,sum))/1000,1))
+  year<-as.data.frame.matrix(round(rbind(res_fleetreg_pwr[,,2],apply(res_fleetreg_pwr[,,2],2,sum))/1000,1))
+  year_pyear<-as.data.frame.matrix(round(rbind((res_fleetreg_pwr[,,2]-res_fleetreg_pwr[,,1]),apply((res_fleetreg_pwr[,,2]-res_fleetreg_pwr[,,1]),2,sum))/1000,1))
+ft<-fun_table(year,year_pyear)
+ft
+
+```
+
+## Gross tonnage
+Gross Tonnage(1000*GT) of EU licensed vessels by flag country and vessel length class present in the EU fleet register (license indicator == “Y” in 1st January `r years`. Parentheses: variation relative to `r years-1`).
+
+
+```{r, results = 'asis'}
+  pyear<-as.data.frame.matrix(round(rbind(res_fleetreg_gt[,,1],apply(res_fleetreg_gt[,,1],2,sum))/1000,1))
+  year<-as.data.frame.matrix(round(rbind(res_fleetreg_gt[,,2],apply(res_fleetreg_gt[,,2],2,sum))/1000,1))
+  year_pyear<-as.data.frame.matrix(round(rbind((res_fleetreg_gt[,,2]-res_fleetreg_gt[,,1]),apply((res_fleetreg_gt[,,2]-res_fleetreg_gt[,,1]),2,sum))/1000,1))
+ft<-fun_table(year,year_pyear)
+ft
+```
+
+```{r map_prep, include = F}
+
+#Setting up all the files needed for the maps ---- copied directly from script 002
+
+# Load shapefiles and Harbour Lists
+########################################################################################################################################################################
+# Prepare the dataset with coordinates <-----------------------  WORK on this part
+# Harbour list
+
+load("../../data/UNLOCODE.rData")
+
+UNLOCODE %>%
+  mutate(Harbour = loCode) %>%
+  filter(!is.na(Harbour)) %>%
+  select(Harbour, lat, lon) -> Harbours
+
+# load shapefile
+if (target_region == "RCG_NA")
+{
+  shp  = sf::st_read("../../data/shapefiles/RCG_NA_FAOareas.shp") %>% filter(F_LEVEL ==
+                                                                    'DIVISION') # for NA maps on DIVISIONS level
+}
+
+if (target_region == "RCG_BA")
+{
+  shp  = sf::st_read("../../data/shapefiles/RCG_BA_FAOareas.shp") %>% filter(F_LEVEL ==
+                                                                    'SUBDIVISION') # for BA maps on DIVISIONS level -> WATCH OUT ...28.1/...28.2
+}
+if (target_region == "RCG_NSEA")
+{
+  shp  = sf::st_read("../../data/shapefiles/RCG_NSEA_FAOareas.shp") %>%  filter(
+    F_LEVEL == 'DIVISION' |
+      F_LEVEL == 'SUBAREA' |
+      F_CODE == '27.3.a.20' | F_CODE == '27.3.a.21'
+  )
+}
+
+shp %>%
+  mutate(AreaMap = F_CODE, Area = F_CODE) -> shp
+
+# For plotting FishingGrounds
+cl %>% group_by(FishingGround) %>% distinct(Area) -> FishingGround
+shp %>% left_join(FishingGround) %>% group_by(FishingGround) %>% summarise(ID = mean(ID)) -> FAOshpFG
+FAOshpFG = cbind(FAOshpFG,  sf::st_coordinates(sf::st_centroid(FAOshpFG$geometry))) %>% mutate(lon = X, lat = Y)
+
+# For plotting Areas
+# add centroids - to put areas labels there, and to put piecharts there, creates new columns to the dataset named X, Y
+FAOshp = cbind(shp,  sf::st_coordinates(sf::st_centroid(shp$geometry))) %>% mutate(lon = X, lat = Y)
+
+if(target_region=='RCG_BA'){ # fixed wrong calculation of centroid of 27.3.d.30
+  FAOshp = FAOshp %>%   
+    mutate(X = ifelse(AreaMap=='27.3.d.30', 19.5 ,X), Y =  ifelse(AreaMap=='27.3.d.30',62 ,Y)) %>%
+    mutate(lon = X, lat = Y) 
+  
+  FAOshpFG = FAOshpFG %>% 
+    mutate(X = ifelse(FishingGround=='25-32', 20 ,X), Y =  ifelse(FishingGround=='25-32',58 ,Y)) %>% 
+    mutate(lon = X, lat = Y) 
+}
+
+if (target_region == "RCG_NA")
+{
+  StatRectshp  = sf::st_read("../../data/shapefiles/RCG_NA_ICESrect.shp")
+}
+
+if (target_region == "RCG_BA")
+{
+  StatRectshp  = sf::st_read("../../data/shapefiles/RCG_BA_ICESrect.shp")# for BA maps on DIVISIONS level -> WATCH OUT ...28.1/...28.2
+}
+if (target_region == "RCG_NSEA")
+{
+  StatRectshp  = sf::st_read("../../data/shapefiles/RCG_NSEA_ICESrect.shp")
+}
+
+StatRectshp %>% mutate(StatisticalRectangle = ICESNAME) -> StatRectshp
+StatRectshp = cbind(StatRectshp,  sf::st_coordinates(sf::st_centroid(StatRectshp$geometry))) %>% mutate(lon = X, lat = Y)
+
+adm_country <- ne_countries(scale = "medium", returnclass = "sf")
+adm_unit  = sf::st_read( # needed for GBT because of GBT, ANG, SCT, WLS,...
+  '../../data/shapefiles/countries shp/ne_10m_admin_0_map_units.shp'
+)
+adm_unit %>% filter(ADMIN=='United Kingdom')-> adm_unit
+adm_country %>%  mutate(LandingCountry = gu_a3) %>%  select(LandingCountry)-> countries 
+adm_unit %>%  mutate(LandingCountry = GU_A3) %>%  select(LandingCountry)-> units
+CTRshp = rbind(countries, units)
+try(sf::sf_use_s2(FALSE), silent = TRUE) # in the future it may be a good idea to fix CTRshp so it does not causes an error
+CTRshp = cbind(CTRshp,  sf::st_coordinates(sf::st_centroid(CTRshp$geometry,of_largest_polygon = TRUE))) %>% mutate(lon = X, lat = Y)
+		
+
+# adjust color palette to the ggplot maps
+aux_colours_ggplot = c(colour_table$colour5)
+names(aux_colours_ggplot) = c(colour_table$Country)
+aux_colours_ggplot_rp <- colour_table
+aux_colours_ggplot_rp$colour <- aux_colours_ggplot_rp$colour5
+
+
+```
+
+###### Page break
+
+```{r plots, results = "asis", eval = T}
+
+
+for (a in unique(param$Section)) {
+  param_sec <- filter(param, Section == a)
+  cat('  \n')
+  cat(paste0("# ", unique(param_sec$Section_name), '  \n'))
+  
+  for (b in unique(param_sec$Subsection)) {
+    param_subsection <- filter(param_sec, Subsection == b)
+    
+    cat('  \n')
+    cat(paste0("## ", unique(param_subsection$Subsection_name), '  \n'))
+    
+    for (c in unique(param_subsection$Subsubsection)) {
+      graph_det <- filter(param_subsection, Subsubsection == c)
+      
+      cat('  \n')
+      cat(paste0("### ", unique(graph_det$Subsubsection_name), '  \n'))
+      
+      #Select data input
+      
+      if (unique(graph_det$Data) == "CL") {
+        df <- cl
+      } else if (unique(graph_det$Data) == "CE") {
+        df <- ce
+      }
+      
+      #Filter input
+      
+      df <-
+        filter_df(
+          df = df,
+          filter_var = unique(graph_det$Filter_var),
+          filter = unique(graph_det$Filter)
+        )
+      
+      # bar plots
+      for (i in 1:nrow(graph_det))
+      {
+        
+      	pngtxt_name = paste(graph_det$Subsubsection[i], '_',i, '_', graph_det$Graph_type[i], graph_det$Graph_variant[i], sep = '') # added i in case there are two the same graph types in the one subsubsection
+  
+        if (graph_det$Graph_type[i] == 1)
+        {
+          res <- barplot_var_by_one_var(
+            x = as.data.frame(df),
+            Var = graph_det$Var[i] ,
+            var1 = graph_det$var1[i],
+            tapply_type = graph_det$tapply_type[i],
+            type_of_threshold = graph_det$type_of_threshold[i],
+            value_of_threshold = graph_det$value_of_threshold[i],
+            sorted = graph_det$sorted[i],
+            graph_par = eval(parse(text = graph_det$graph_par[i])),
+            save_plot_to_list = T,
+            filter=graph_det$Filter[i]
+          )
+          
+         subchunkify(res[[2]], pngtxt_name, graph_det$height[i], graph_det$width[i])
+          
+          if (tables == "yes") {
+            write.table(
+              res[[1]],
+              file =  
+                paste(table_dir, pngtxt_name,
+                ".txt",
+                sep = ""
+              ),
+              sep = '\t',
+              dec = '.',
+              row.names = F
+            )
+          }
+    
+cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',' ',res[[3]] ,'\n ',sep='')
+        }
+        
+        cat('  \n ')
+        
+        if (graph_det$Graph_type[i] == 2)
+        {
+          res <- barplot_var_by_two_var_stacked(
+            x = as.data.frame(df),
+            Var = graph_det$Var[i] ,
+            var1 = graph_det$var1[i],
+            var2 = graph_det$var2[i],
+            tapply_type = graph_det$tapply_type[i],
+            proportion = graph_det$proportion[i],
+            type_of_threshold = graph_det$type_of_threshold[i],
+            value_of_threshold = graph_det$value_of_threshold[i],
+            sorted = graph_det$sorted[i],
+            graph_par = eval(parse(text = graph_det$graph_par[i])),
+            legend_par = graph_det$legend_par[i],
+            save_plot_to_list = T,
+            filter=graph_det$Filter[i]
+          )
+          
+          subchunkify(res[[2]], pngtxt_name, graph_det$height[i], graph_det$width[i])
+          
+          if (tables == "yes") {
+            write.table(
+              res[[1]],
+              file =
+                paste(table_dir, pngtxt_name,
+                      ".txt",
+                      sep = ""),
+              sep = '\t',
+              dec = '.',
+              row.names = F
+            )
+          }
+
+          cat('Figure ',graph_det$Subsubsection[i],'.',i ,'. ',res[[3]],'  \n ',sep='')
+        }
+        
+         cat('  \n')
+
+        if (graph_det$Graph_type[i] == 3)
+        {
+          res <- pointsMap_func(
+            df = df,
+            var = graph_det$var[i],
+            groupBy = graph_det$groupBy[i],
+            facet = graph_det$facet[i],
+            func = graph_det$func[i],
+            type_of_threshold = graph_det$type_of_threshold[i],
+            value_of_threshold =  graph_det$value_of_threshold[i],
+            points_coord =  eval(parse(text = graph_det$points_coord[i])),
+            plot_labels = graph_det$plot_labels[i],
+            saveResults = FALSE,
+            outputPath = NA,
+            Catch_group_name = NA,
+            newVarName = graph_det$newVarName[i],
+            addExtraShp = graph_det$addExtraShp[i],
+            extraShp = eval(parse(text = graph_det$extraShp[i])),
+            addToTitle = graph_det$addToTitle[i]
+          )
+
+          subchunkify(res[[2]], pngtxt_name, graph_det$height[i], graph_det$width[i])
+          
+          if (tables == "yes") {
+            write.table(
+              res[[1]],
+              file =
+                paste(table_dir, pngtxt_name,
+                      ".txt",
+                      sep = ""),
+              sep = '\t',
+              dec = '.',
+              row.names = F
+            )
+          }
+
+          cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',res[[3]],'  \n ',sep='')
+        }
+
+        cat('  \n ')
+
+        if (graph_det$Graph_type[i] == 4)
+        {
+          res <- choroplethMap_func(
+            df = df,
+            var = graph_det$var[i],
+            groupBy = graph_det$groupBy[i],
+            facet = graph_det$facet[i],
+            func = graph_det$func[i],
+            type_of_threshold = graph_det$type_of_threshold[i],
+            value_of_threshold =  graph_det$value_of_threshold[i],
+            points_coord =  eval(parse(text = graph_det$points_coord[i])),
+            plot_labels = graph_det$plot_labels[i],
+            saveResults = FALSE,
+            outputPath = NA,
+            Catch_group_name = NA,
+            newVarName = graph_det$newVarName[i],
+            addExtraShp = graph_det$addExtraShp[i],
+            extraShp = eval(parse(text = graph_det$extraShp[i])),
+            addToTitle = graph_det$addToTitle[i],
+            filter_ON = graph_det$filter_ON[i],
+            filter_column = graph_det$filter_column[i],
+            filter_type = graph_det$filter_type[i],
+            filter_func = graph_det$filter_func[i],
+            filter_threshold = graph_det$filter_threshold[i],
+            filter_facet = graph_det$filter_facet[i]
+          )
+
+          subchunkify(res[[2]], pngtxt_name, graph_det$height[i], graph_det$width[i])
+          if (tables == "yes") {
+            write.table(
+              res[[1]],
+              file =
+                paste(table_dir, pngtxt_name,
+                      ".txt",
+                      sep = ""),
+              sep = '\t',
+              dec = '.',
+              row.names = F
+            )
+          }
+
+        cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',res[[3]],' \n ',sep='')
+        }
+
+        cat('  \n ')
+
+
+        if (graph_det$Graph_type[i] == 5)
+        {
+          res <- scatterpieMap_func(
+            df = df,
+            var = graph_det$var[i],
+            groupBy = graph_det$groupBy[i],
+            groupBy2 = graph_det$groupBy2[i] ,
+            facet = graph_det$facet[i],
+            func = graph_det$func[i],
+            type_of_threshold = graph_det$type_of_threshold[i],
+            value_of_threshold =  graph_det$value_of_threshold[i],
+            points_coord =  eval(parse(text = graph_det$points_coord[i])),
+            plot_labels = graph_det$plot_labels[i],
+            saveResults = FALSE,
+            outputPath = NA,
+            Catch_group_name = NA,
+            newVarName = graph_det$newVarName[i],
+            addExtraShp = graph_det$addExtraShp[i],
+            extraShp = eval(parse(text = graph_det$extraShp[i])),
+            color_palette = eval(parse(text = ifelse(graph_det$color_palette[i]=='none',NA, graph_det$color_palette[i]))),
+            addToTitle = graph_det$addToTitle[i],
+            filter_ON = graph_det$filter_ON[i],
+            filter_column = graph_det$filter_column[i],
+            filter_type = graph_det$filter_type[i],
+            filter_func = graph_det$filter_func[i],
+            filter_threshold = graph_det$filter_threshold[i]
+          )
+
+          subchunkify(res[[2]], pngtxt_name, graph_det$height[i], graph_det$width[i])
+          
+          if (tables == "yes") {
+            write.table(
+              res[[1]],
+              file =
+                paste(table_dir, pngtxt_name,
+                      ".txt",
+                      sep = ""),
+              sep = '\t',
+              dec = '.',
+              row.names = F
+            )
+          }
+
+        cat('Figure ',graph_det$Subsubsection[i],'.',i,'. ',res[[3]],'\n ',sep='')
+        }
+
+        cat('  \n ')
+        
+       if(graph_det$Graph_type[i] == 6){
+                res <- riverplotfun(
+                 df, 
+                 palette=aux_colours_ggplot_rp, 
+                 title=paste(graph_det$var1[i]," (left) to ",graph_det$var2[i]," (right) - ",graph_det$newVarName[i]," - ",graph_det$addToTitle[i],sep=""),
+                 value=graph_det$Var[i],
+                 save=TRUE,
+                 addToTitle = graph_det$addToTitle[i],
+                 newVarName=graph_det$newVarName[i],
+                 var1=graph_det$var1[i],
+                 var2=graph_det$var2[i],
+                 filename=paste(figur_dir, pngtxt_name,
+                          ".png",
+                          sep = ""))
+                
+cat('![plot of chunk ',pngtxt_name,'](',figur_dir,pngtxt_name,'.png)',sep="")
+cat('  \n ') 
+
+         cat('Figure ',graph_det$Subsubsection[i],'.',i,'.', res[[2]],'\n ',sep='')
+        }
+         cat('  \n ') 
+      }
+    }
+  }
+}
+
+```
+
+###### Page break
+
+#### Dates of data extraction
+
+The data referring to the present year was collected under the RCG 2022 data call for the 2021 data for the Baltic Sea, North Sea, Eastern Arctic and the North Atlantic regions and downloaded from the system on the 17th of April 2022 with the exception of information detailed in section “2. Overall Fleet Evolution” which was extracted from the EU Fleet Register (https://webgate.ec.europa.eu/fleet-europa/index_en) on the 11th of March 2022.
+
+
+
+#### Catch groups
+
+```{r, results = 'asis'}
+
+kable(arrange(summarise(
+  group_by(cl, Region, Period, Species, Catch_group),
+  tons = round(sum(OfficialLandingCatchWeight_ton), digits = 0)
+), Catch_group))
+
+```
+
+
+## {-}
+
+###### Page break
+
+
+#### Mean Landings per stock, `r period_stock`
+
+Landings per year, stock, species, area and vessel flag country can be found in `r paste("\"landings_per_stock_", min(years_stock), "_", max(years_stock), ".csv\"", sep = "")` for `r period_stock`.
+
+Warning: This stock allocation represents variable stock from the RDB and does not represent the currently assessed stock units. The stock variable in the RDB is currently being updated.
+
+```{r}
+
+cl_stock <- mutate(filter(cl_rcg, Year %in% years_stock), period = period_stock)
+cl_stock <- droplevels(cl_stock)
+
+kable(spread(summarise(
+  group_by(cl_stock, Region, stockNew, FlagCountry),
+  tons = round(sum(OfficialLandingCatchWeight_ton)/length(years_stock), digits = 0)), 
+  FlagCountry, tons, fill = "-"))
+
+cl_stock_csv <- summarise(
+  group_by(cl_stock, Region, period, Year, stockNew, Species, Area, FlagCountry),
+  tons = sum(OfficialLandingCatchWeight_ton))
+
+write.csv(cl_stock_csv, paste(table_dir, "landings_per_stock_", min(years_stock), "_", max(years_stock), ".csv", sep = ""), row.names = F)
+
+```
+
+## {-}
+
+###### Page break
+
+#### Summary information of the landings abroad (ton), by country and area.
+
+```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
+
+totLandFlagC <- cl %>% group_by(FlagCountry,Area) %>% summarise(LandWeighTon=sum(OfficialLandingCatchWeight_ton)) %>% data.frame
+
+cl$FlagCountry <- as.character(cl$FlagCountry); cl$LandingCountry <- as.character(cl$LandingCountry)
+
+foreignLand <- cl[!cl$FlagCountry==cl$LandingCountry,]
+
+foreignLandSum <- foreignLand %>% group_by(FlagCountry, Area, LandingCountry) %>% summarise(foreignland= sum(OfficialLandingCatchWeight_ton)) %>% data.frame
+
+foreignLandSum$totalLand <- totLandFlagC$LandWeighTon[match(paste(foreignLandSum$Year,foreignLandSum$Area,foreignLandSum$FlagCountry), paste(totLandFlagC$Year,totLandFlagC$Area,totLandFlagC$FlagCountry))]
+
+tableForeign <- foreignLandSum %>% mutate(perc_foreignLand=round((foreignland/totalLand)*100,1))
+
+# Rename some of the variables for the table
+tableForeign <- tableForeign %>% rename(ForeignLandings=foreignland, NationalLandings=totalLand, Percentage=perc_foreignLand)
+
+tableForeign$ForeignLandings <- round(tableForeign$ForeignLandings,1)
+tableForeign$NationalLandings <- round(tableForeign$NationalLandings,1)
+kable(tableForeign)
+
+#DT::datatable(tableForeign, filter = list(
+ # position = 'top', clear = FALSE
+#))
+
+```
+
+
+## {-}
+
+###### Page break
+
+
+#### Glossary for the country codes
+
+```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
+
+country_table <-  read.table(
+    "D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/data/aux_countries.txt",
+    header = T,
+    sep = ",",
+    colClasses = "character",
+    na.strings = "",
+    comment.char = ""
+  )
+ 
+
+table_out <- droplevels(country_table[country_table$ISO3Code %in% cl$FlagCountry | country_table$ISO3Code %in% cl$LandingCountry,])
+
+table_out <- table_out[,c('Country','ISO3Code')]
+
+kable(table_out, row.names=F, col.names = c('Name','Code'),table.attr = "style='width:30%;'")
+
+```
+
+```{r notes}
+
+#TO DO ---- 
+
+#Have a look at the barplot function and how to output the figures - especially for the grouped plots
+
+#Notes ----
+#The names of parameter vars could be cleaned up
+#Change file names of prep data, so the script is more generic
+
+```
+
+
+```{r todo, include = F}
+
+
+```
