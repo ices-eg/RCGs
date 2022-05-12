@@ -169,27 +169,36 @@ Landings_country$gear <- substr(Landings_country$FishingActivityLvl5,1,3)
 #    	sum(is.na(fleetreg$Power_Main))
 # 		sum(is.na(fleetreg$Ton_Gt))
 		
-		
- # Assign colors to countries - this line of code is putting a block with this information in the report - we don´t want this to happen...
-		
-  #  mapply(assign, c("BEL", "DEU", "DNK", "ENG", "ESP", "EST", "FRA", "GBR", "IRL", "LTU", "LVA", "NIR", "NLD", "POL", "PRT", "SCT", "SWE", "WLS", "FRO", "GRL", "ISL", "ITA", "NOR", "RUS", "CHA", "CAN"), c("#E6696A", "#9A9600", "#779F00", "#3EA600", "#00AC3D", "#00B06D", "#00B0B1", "#00A3E2", "#D362E3", "#fffac8", "#800000", "#aaffc3", "#808000", "#a9a9a9", "#ffffff", "#000000", "#00FF00", "#FF0000","#E7298A", "#0096F0", "#9A6324", "#ffd8b1", "#000075", "#ffd8b1", "#3cb44b", "#DA7635"), MoreArgs = list(envir = .GlobalEnv))
-		
+## For the harmonization of the country colours between Annual and Multiannual overviews		
+colour_table <-
+  read.table(
+    "D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews//data/aux_colours.txt",
+    header = T,
+    sep = "\t",
+    colClasses = "character",
+    na.strings = "",
+    comment.char = ""
+  )
+aux_colours_ggplot =  colour_table[,c("Country","colour5")]
+		  		
 ```
 
 **Disclaimer**
 
-The tables and figures of the overviews presented in this document are made for the coordination of regional fisheries data collection purposes and are not designed for any other use. Data used for producing the outputs are extracted from the Regional Database (RDB) and EU Fleet Register. Dates of data extractions are stated in Appendix A. Due to different aggregations and reporting authorities, data can differ from those used e.g. for assessments or technical reports.
+The tables and figures of the overviews presented in this document are made for the coordination of EU regional fisheries data collection purposes and are not designed for any other use. Data used for producing the outputs are extracted from the Regional Database (RDB) and EU Fleet Register. Dates of data extractions are stated in Appendix A. Due to different aggregations and reporting authorities, data can differ from those used e.g. for assessments or technical reports.
 Member States (MS) are responsible for uploading latest data and the latest year should be viewed as provisional. Data can be resubmitted by a MS for more than one previous year so there might be differences in earlier year reports, if countries update back in time. Responsibility for the quality of the data and comparability to other data sources lies with the MS that provided these data. The upload logs presented by MS regarding the data submitted to RDB can be found in the ISSG Data Quality report.
 
-The respective scripts and calculations used for data displaying are publicly available via the RCG github (https://github.com/ices-eg/RCGs) and subject to change as the work of the group progresses.
+The respective scripts and calculations used for data displaying are publicly available via the RCG GitHub (https://github.com/ices-eg/RCGs) and subject to change as the work of the group progresses.
+
+
 
 # **RCG Multiannual overviews**
 
 The present Catch and Effort Overview displays summary information on EU commercial landings (CL) and fishing effort (CE) statistics included in the Regional Data Base (RDB), which is used to store detailed commercial fisheries and sampling data. These multiannual reports are important in the way they allow the analyses of the variation in time of the fleets, landings volume and composition and fishing effort of the European fisheries by region.
 
-Before the subgroup on Catch, effort and sampling overviews was set up, the different RCGs conducted data analysis and overviews separately with minimal exchange, resulting in redundancies and efficiency loss. Furthermore, a substantial part of the work was being carried out during the RCG meetings themselves and so not readily available to inform RCG preparation and meeting discussions. This group was established to streamline and facilitate the work on the fisheries and sampling data of the MS and prepare data overviews in advance of the RCG meetings. 
+Before the subgroup on catch, effort and sampling overviews was set up, the different RCGs conducted data analysis and overviews separately with minimal exchange, resulting in redundancies and efficiency loss. Furthermore, a substantial part of the work was being carried out during the RCG meetings themselves and so not readily available to inform RCG preparation and meeting discussions. This group was established to streamline and facilitate the work on the fisheries and sampling data of the MS and prepare data overviews in advance of the RCG meetings. 
 
-The RDB is hosted at the International Council for Exploration of the Sea (ICES) and its data is property of EU Member States with usage governed by the RDB data policy. It’s a regionally coordinated database platform covering fisheries in the North Atlantic Ocean, the North Sea and the Baltic Sea and is a main resource used by the Regional Coordination Groups to coordinate data collection of EU fisheries. This database aims also:
+The RDB is hosted at the International Council for Exploration of the Sea (ICES) and its data is property of EU Member States with usage governed by the RDB data policy. It’s a regionally coordinated database platform covering fisheries  by region (e.g. North Atlantic Ocean, North Sea, Baltic Sea) and is a main resource used by the Regional Coordination Groups to coordinate data collection of EU fisheries. This database aims also:
 1)	To ensure that data can be made available for the coordination of regional fisheries data sampling plans, in particular for the DCF Regional Coordination Groups (RCGs);
 2)	To provide a regional estimation system such that statistical estimates of quantities of interest can be produced from sample data, in order to deliver data for ICES stock assessments and advice,
 3)	To serve and facilitate the production of fisheries management advice and status reports,
@@ -237,11 +246,11 @@ The figures below are based on RDB effort (CE) and landings (CL) data.
 ## Effort {.tabset}
 
 The annual fishing effort in number of days at sea for the `r title_stock`, is presented in the interactive figures below. Since this is not a mandatory field in the reported CE data, there is some missing information for some countries/years (see Table 4). 
-The first panel ('Days at sea Total fisheries') gives a general idea on the annual total fishing effort by flag country. 
-The following panels present the annual fishing effort distribution among the different gear groups by flag country, where the "Fishing activity level 5" data is grouped according to métier level 3 definition: the "Pelagic trawl fisheries" include the mid-water otter trawl (OTM) and pelagic pair trawl (PTM); the "Surrounding nets fisheries" include the lampara nets (LA) and purse seine (PS); the "Seine fisheries" include the beach and boat seines (SB and SV), the fly shooting seine (SSC), anchored seine (SDN) and pair seine (SPR); the "Net fisheries" include set gillnet (GNS), driftnet (GND) and trammel net (GTR); the "Longline fisheries" include set and drifting longlines (LLS and LLD); the "Rods and lines fisheries" include the hand and pole lines (LHP and LHM) and the trolling lines (LTL); the "Dredge fisheries" include boat and hand dredges (DRB and HMD); and "Traps fisheries" include the pots and traps (FPO), the stationary uncovered pound nets (FPN) and fyke nets (FYK). In the case of the bottom trawls, the panels are presented by metier level 4 due to the higher number of metiers level 5 present in this group: "Bottom otter trawl fisheries" (OTB); "Multi-rig otter trawl fisheries" (OTT); "Bottom pair trawl fisheries" (PTB); "Beam trawl fisheries" (TBB). Note that the presence of "blank plots" is related to single year data in a particular gear group.
+The first panel ('Days at sea Total fisheries') compiles the annual total fishing effort by flag country. 
+The following panels present the annual fishing effort by flag country for the different fisheries ("Fishing activity level 5"). Fisheries are grouped according to métier level 3 definition: the "Pelagic trawl fisheries" include the mid-water otter trawl (OTM) and pelagic pair trawl (PTM); the "Surrounding nets fisheries" include the lampara nets (LA) and purse seine (PS); the "Seine fisheries" include the beach and boat seines (SB and SV), the fly shooting seine (SSC), anchored seine (SDN) and pair seine (SPR); the "Net fisheries" include set gillnet (GNS), driftnet (GND) and trammel net (GTR); the "Longline fisheries" include set and drifting longlines (LLS and LLD); the "Rods and lines fisheries" include the hand and pole lines (LHP and LHM) and the trolling lines (LTL); the "Dredge fisheries" include boat and hand dredges (DRB and HMD). In the case of the bottom trawls and traps, the panels are presented by metier level 4 due to the higher number of metiers level 5 present in these groups: "Bottom otter trawl fisheries" (OTB); "Multi-rig otter trawl fisheries" (OTT); "Bottom pair trawl fisheries" (PTB); "Beam trawl fisheries" (TBB); "Pots and traps" (FPO); "Stationary uncovered pound nets" (FPN); "Fyke nets" (FYK). Note that the presence of empty or single value plots is related to single year data in a particular gear group.
 
 
-**Table 4.** Summary of the missing information on the days at sea reported by country/year.
+**Table 4.** Summary of the missing information on the days at sea reported by country and year.
 ```{r echo=FALSE, message=FALSE, warning = FALSE, message=FALSE, out.width="90%", out.height="90%" }
 ## Days at sea Total fisheries -  Annual total fishing effort by country  
 # missing data (Days at Sea) (Laura's table)
@@ -286,12 +295,8 @@ dasTotal <- ggplot(data=DAS_total, aes(Year, round(DaysAtSea/1000,0), colour=Fla
   labs(title=paste("Days at sea by country - Total fisheries -", RCG), x="year", y="Days at sea (thousands)", colour="Country") +
  theme(axis.text = element_text(size=9),plot.title=element_text(size=11), axis.title = element_text(size=9))
 
-issgPalette <- unique(CE_years$FlagCountry) # we just want the the countries in each region
-  
-  #c("FRO", "GRL", "ISL", "ITA", "NOR", "RUS", "CHA", "CAN", "BEL", "DEU", "DNK", "ENG", "ESP", "EST", "FRA", "GBR", "IRL", "LTU","LVA", "NIR", "NLD", "POL", "PRT", "SCT", "SWE", "WLS")
-#issgPalette <- c(BEL, CHA, DEU, DNK, ENG, ESP, EST, FRA, GBR, IRL, LTU, LVA, NIR, NLD, POL, PRT, SCT, SWE, WLS)
-
-dasTotal <- dasTotal + scale_color_manual(values=issgPalette)
+dasTotal <- dasTotal + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 ggplotly(dasTotal)
 
@@ -301,6 +306,9 @@ ggplotly(dasTotal)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
 DAS_country_OTB <- droplevels(DAS_country[!is.na(DAS_country$DaysAtSea) & DAS_country$gear %in% c('OTB'),])
 
+# condition is used because running the Rmarkdown gives an error if no data exists
+
+if (dim(DAS_country_OTB)[1]>0) {
 dasCountryOTB <- ggplot(data=DAS_country_OTB, aes(Year, DaysAtSea, colour=FlagCountry)) +
   geom_point() + geom_line() +
   theme_bw() +
@@ -309,10 +317,11 @@ dasCountryOTB <- ggplot(data=DAS_country_OTB, aes(Year, DaysAtSea, colour=FlagCo
   theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),
        legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines")) 
 
-dasCountryOTB <- dasCountryOTB + scale_color_manual(values=issgPalette)
+dasCountryOTB <- dasCountryOTB + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 ggplotly(dasCountryOTB)
-
+}
 
 ```
 
@@ -320,6 +329,7 @@ ggplotly(dasCountryOTB)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 DAS_country_OTT <- droplevels(DAS_country[!is.na(DAS_country$DaysAtSea) & DAS_country$gear %in% c('OTT'),])
 
+if (dim(DAS_country_OTT)[1]>0) {
 dasCountryOTT <- ggplot(data=DAS_country_OTT, aes(Year, DaysAtSea, colour=FlagCountry)) +
   geom_point() + geom_line() +
   theme_bw() +
@@ -328,10 +338,10 @@ dasCountryOTT <- ggplot(data=DAS_country_OTT, aes(Year, DaysAtSea, colour=FlagCo
   theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines"))
 
 
-dasCountryOTT <- dasCountryOTT + scale_color_manual(values=issgPalette)
-
+dasCountryOTT <- dasCountryOTT + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 ggplotly(dasCountryOTT)
-
+}
 
 ```
 
@@ -339,6 +349,7 @@ ggplotly(dasCountryOTT)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
 DAS_country_PTB <- droplevels(DAS_country[!is.na(DAS_country$DaysAtSea) & DAS_country$gear %in% c('PTB'),])
 
+if (dim(DAS_country_PTB)[1]>0) {
 dasCountryPTB <- ggplot(data=DAS_country_PTB, aes(Year, DaysAtSea, colour=FlagCountry)) +
   geom_point() + geom_line() +
   theme_bw() +
@@ -346,9 +357,11 @@ dasCountryPTB <- ggplot(data=DAS_country_PTB, aes(Year, DaysAtSea, colour=FlagCo
   labs(title=paste("Days at sea by country - Bottom pair trawl fisheries -", RCG), x="year", y="Days at sea", colour="Country")+
  theme(legend.position="bottom",  axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines")) 
 
-dasCountryPTB <- dasCountryPTB + scale_color_manual(values=issgPalette)
+dasCountryPTB <- dasCountryPTB + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 ggplotly(dasCountryPTB)
+}
 
 ```
 
@@ -356,8 +369,7 @@ ggplotly(dasCountryPTB)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 DAS_country_TBB <- droplevels(DAS_country[!is.na(DAS_country$DaysAtSea) & DAS_country$gear %in% c('TBB'),])
 
-if (dim(DAS_country_TBB)[1]>0) {
-  
+if (dim(DAS_country_TBB)[1]>0) {  
 dasCountryTBB <- ggplot(data=DAS_country_TBB, aes(Year, DaysAtSea, colour=FlagCountry)) +
   geom_point() + geom_line() +
   theme_bw() +
@@ -366,11 +378,11 @@ dasCountryTBB <- ggplot(data=DAS_country_TBB, aes(Year, DaysAtSea, colour=FlagCo
  theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines")) 
 
 
-dasCountryTBB <- dasCountryTBB + scale_color_manual(values=issgPalette)
+dasCountryTBB <- dasCountryTBB + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 ggplotly(dasCountryTBB)
 }
-
 
 ```
 
@@ -378,6 +390,7 @@ ggplotly(dasCountryTBB)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
 DAS_country_OTM <- droplevels(DAS_country[!is.na(DAS_country$DaysAtSea) & DAS_country$gear %in% c('OTM','PTM'),])
   
+if (dim(DAS_country_OTM)[1]>0) {
 dasCountryOTM <- ggplot(data=DAS_country_OTM, aes(Year, DaysAtSea, colour=FlagCountry)) +
   geom_point() + geom_line() +
   theme_bw() +
@@ -385,10 +398,11 @@ dasCountryOTM <- ggplot(data=DAS_country_OTM, aes(Year, DaysAtSea, colour=FlagCo
   labs(title=paste("Days at sea by country - Pelagic trawl fisheries -", RCG), x="year", y="Days at sea", colour="Country")+
  theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines")) 
 
-dasCountryOTM <- dasCountryOTM + scale_color_manual(values=issgPalette)
+dasCountryOTM <- dasCountryOTM + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 ggplotly(dasCountryOTM)
-
+}
 
 ```
 
@@ -396,6 +410,7 @@ ggplotly(dasCountryOTM)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 DAS_country_SNet <- DAS_country[!is.na(DAS_country$DaysAtSea) & DAS_country$gear %in% c('LA_','PS_') ,]
 
+if (dim(DAS_country_SNet)[1]>0) {
 dasCountrySNet <-ggplot(data=DAS_country_SNet, aes(Year, DaysAtSea, colour=FlagCountry)) +
   geom_point() + geom_line() +
   theme_bw() +
@@ -403,9 +418,11 @@ dasCountrySNet <-ggplot(data=DAS_country_SNet, aes(Year, DaysAtSea, colour=FlagC
   labs(title=paste("Days at sea by country - Surrounding nets fisheries -", RCG), x="year", y="Days at sea", colour="Country")+
  theme(legend.position="bottom",  axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines")) 
 
-dasCountrySNet <- dasCountrySNet + scale_color_manual(values=issgPalette)
+dasCountrySNet <- dasCountrySNet + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 ggplotly(dasCountrySNet)
+}
 
 ```
 
@@ -413,6 +430,7 @@ ggplotly(dasCountrySNet)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
 DAS_country_S <- droplevels(DAS_country[!is.na(DAS_country$DaysAtSea) & DAS_country$gear %in% c('SB_','SV_','SSC','SDN','SPR') ,])
 
+if (dim(DAS_country_S)[1]>0) {
 dasCountryS <- ggplot(data=DAS_country_S, aes(Year, DaysAtSea, colour=FlagCountry)) +
   geom_point() + geom_line() +
   theme_bw() +
@@ -420,9 +438,11 @@ dasCountryS <- ggplot(data=DAS_country_S, aes(Year, DaysAtSea, colour=FlagCountr
   labs(title=paste("Days at sea by country - Seine fisheries -", RCG), x="year", y="Days at sea", colour="Country")+
  theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines")) 
 
-dasCountryS <- dasCountryS + scale_color_manual(values=issgPalette)
+dasCountryS <- dasCountryS + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 ggplotly(dasCountryS)
+}
 
 ```
 
@@ -431,6 +451,7 @@ ggplotly(dasCountryS)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
 DAS_country_N <- droplevels(DAS_country[!is.na(DAS_country$DaysAtSea) & DAS_country$gear %in% c('GNS','GND','GTR'),])
 
+if (dim(DAS_country_N)[1]>0) {
 dasCountryN <- ggplot(data=DAS_country_N, aes(Year, DaysAtSea, colour=FlagCountry)) +
   geom_point() + geom_line() +
   theme_bw() +
@@ -438,9 +459,11 @@ dasCountryN <- ggplot(data=DAS_country_N, aes(Year, DaysAtSea, colour=FlagCountr
   labs(title=paste("Days at sea by country - Net fisheries -", RCG), x="year", y="Days at sea", colour="Country")+
  theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines"))
 
-dasCountryN <- dasCountryN + scale_color_manual(values=issgPalette)
+dasCountryN <- dasCountryN + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 ggplotly(dasCountryN)
+}
 
 ```
 
@@ -449,6 +472,7 @@ ggplotly(dasCountryN)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
 DAS_country_LL <- droplevels(DAS_country[!is.na(DAS_country$DaysAtSea) & DAS_country$gear %in% c('LLS','LLD'),])
 
+if (dim(DAS_country_LL)[1]>0) {
 dasCountryLL <- ggplot(data=DAS_country_LL, aes(Year, DaysAtSea, colour=FlagCountry)) +
   geom_point() + geom_line() +
   theme_bw() +
@@ -456,9 +480,11 @@ dasCountryLL <- ggplot(data=DAS_country_LL, aes(Year, DaysAtSea, colour=FlagCoun
   labs(title=paste("Days at sea by country - Longline fisheries -", RCG), x="year", y="Days at sea", colour="Country")+
  theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines")) 
 
-dasCountryLL <- dasCountryLL + scale_color_manual(values=issgPalette)
+dasCountryLL <- dasCountryLL + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 ggplotly(dasCountryLL)
+}
 
 ```
 
@@ -467,6 +493,7 @@ ggplotly(dasCountryLL)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
 DAS_country_RL <- droplevels(DAS_country[!is.na(DAS_country$DaysAtSea) & DAS_country$gear %in% c("LHP",'LHM','LTL'),])
 
+if (dim(DAS_country_RL)[1]>0) {
 dasCountryRL <- ggplot(data=DAS_country_RL, aes(Year, DaysAtSea, colour=FlagCountry)) +
   geom_point() + geom_line() +
   theme_bw() +
@@ -474,9 +501,11 @@ dasCountryRL <- ggplot(data=DAS_country_RL, aes(Year, DaysAtSea, colour=FlagCoun
   labs(title=paste("Days at sea by country - Rods and lines fisheries -", RCG), x="year", y="Days at sea", colour="Country")+
  theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines")) 
 
-dasCountryRL <- dasCountryRL + scale_color_manual(values=issgPalette)
+dasCountryRL <- dasCountryRL + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 ggplotly(dasCountryRL)
+}
 
 ```
 
@@ -485,6 +514,7 @@ ggplotly(dasCountryRL)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 DAS_country_D <- droplevels(DAS_country[!is.na(DAS_country$DaysAtSea) & DAS_country$gear %in% c("DRB","HMD"),])
 
+if (dim(DAS_country_D)[1]>0) {
 dasCountryD <- ggplot(data=DAS_country_D, aes(Year, DaysAtSea, colour=FlagCountry)) +
   geom_point() + geom_line() +
   theme_bw() +
@@ -492,27 +522,73 @@ dasCountryD <- ggplot(data=DAS_country_D, aes(Year, DaysAtSea, colour=FlagCountr
   labs(title=paste("Days at sea by country - Dredge fisheries -", RCG), x="year", y="Days at sea", colour="Country")+
  theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines")) 
 
-dasCountryD <- dasCountryD + scale_color_manual(values=issgPalette)
+dasCountryD <- dasCountryD + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 ggplotly(dasCountryD)
+}
 
 ```
 
-### Days at sea - Traps fisheries
+### Days at sea - Pots and traps fisheries
 
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
-DAS_country_T <- droplevels(DAS_country[!is.na(DAS_country$DaysAtSea) & DAS_country$gear %in% c("FPO","FPN","FYK"),])
+DAS_country_FPO <- droplevels(DAS_country[!is.na(DAS_country$DaysAtSea) & DAS_country$gear %in% c("FPO"),])
 
-dasCountryT <- ggplot(data=DAS_country_T, aes(Year, DaysAtSea, colour=FlagCountry)) +
+if (dim(DAS_country_FPO)[1]>0) {
+dasCountryFPO <- ggplot(data=DAS_country_FPO, aes(Year, DaysAtSea, colour=FlagCountry)) +
   geom_point() + geom_line() +
   theme_bw() +
   facet_wrap(~FishingActivityLvl5, scales="free_y")+
-  labs(title=paste("Days at sea by country - Pots and Traps fisheries -", RCG), x="year", y="Days at sea", colour="Country")+
+  labs(title=paste("Days at sea by country - Pots and traps fisheries -", RCG), x="year", y="Days at sea", colour="Country")+
  theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines")) 
 
-dasCountryT <- dasCountryT + scale_color_manual(values=issgPalette)
+dasCountryFPO <- dasCountryFPO + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
-ggplotly(dasCountryT)
+ggplotly(dasCountryFPO)
+}
+
+```
+### Days at sea - Stationary uncovered pound nets fisheries
+
+```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
+DAS_country_FPN <- droplevels(DAS_country[!is.na(DAS_country$DaysAtSea) & DAS_country$gear %in% c("FPN"),])
+
+if (dim(DAS_country_FPN)[1]>0) {
+dasCountryFPN <- ggplot(data=DAS_country_FPN, aes(Year, DaysAtSea, colour=FlagCountry)) +
+  geom_point() + geom_line() +
+  theme_bw() +
+  facet_wrap(~FishingActivityLvl5, scales="free_y")+
+  labs(title=paste("Days at sea by country - Stationary uncovered pound nets fisheries -", RCG), x="year", y="Days at sea", colour="Country")+
+ theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines")) 
+
+dasCountryFPN <- dasCountryFPN + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
+
+ggplotly(dasCountryFPN)
+}
+
+```
+
+### Days at sea - Fyke nets (FYK)
+
+```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
+DAS_country_FYK <- droplevels(DAS_country[!is.na(DAS_country$DaysAtSea) & DAS_country$gear %in% c("FYK"),])
+
+if (dim(DAS_country_FYK)[1]>0) {
+dasCountryFYK <- ggplot(data=DAS_country_FYK, aes(Year, DaysAtSea, colour=FlagCountry)) +
+  geom_point() + geom_line() +
+  theme_bw() +
+  facet_wrap(~FishingActivityLvl5, scales="free_y")+
+  labs(title=paste("Days at sea by country - Fyke nets -", RCG), x="year", y="Days at sea", colour="Country")+
+ theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines")) 
+
+dasCountryFYK <- dasCountryFYK + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
+
+ggplotly(dasCountryFYK)
+}
 
 ```
 
@@ -520,8 +596,7 @@ ggplotly(dasCountryT)
 
 ## Landings {.tabset}
 
-The annual landings overview for the `r title_stock`, is presented in the interactive figures below. The first panel ('Landings Total fisheries') compiles the annual total landings by flag country. The following panels present the annual total landings from the different fisheries by flag country, where the "Fishing activity level 5" data is grouped according to métier level 3 definition: the "Pelagic trawl fisheries" include the mid-water otter trawl (OTM) and pelagic pair trawl (PTM); the "Surrounding nets fisheries" include the lampara nets (LA) and purse seine (PS); the "Seine fisheries" include the beach and boat seines (SB and SV), the fly shooting seine (SSC), anchored seine (SDN) and pair seine (SPR); the "Net fisheries" include set gillnet (GNS), driftnet (GND) and trammel net (GTR); the "Longline fisheries" include set and drifting longlines (LLS and LLD); the "Rods and lines fisheries" include the hand and pole lines (LHP and LHM) and the trolling lines (LTL); the "Dredge fisheries" include boat and hand dredges (DRB and HMD); and "Traps fisheries" include the pots and traps (FPO), the stationary uncovered pound nets (FPN) and fyke nets (FYK). In the case of the bottom trawls, the panels are presented by metier level 4 because of the higher number of metiers level 5 present in this group: "Bottom otter trawl fisheries" (OTB); "Multi-rig otter trawl fisheries" (OTT); "Bottom pair trawl fisheries" (PTB); "Beam trawl fisheries" (TBB). Note that the presence of "blank plots" is related to single year data in a particular gear group. Note that the presence of empty or single value plots is related to single year data in a particular gear group.
-
+The annual landings overview for the `r title_stock`, is presented in the interactive figures below. The first panel ('Landings Total fisheries') compiles the annual total landings by flag country. The following panels present the annual total landings from the different fisheries by flag country, where the "Fishing activity level 5" data is grouped according to métier level 3 definition: the "Pelagic trawl fisheries" include the mid-water otter trawl (OTM) and pelagic pair trawl (PTM); the "Surrounding nets fisheries" include the lampara nets (LA) and purse seine (PS); the "Seine fisheries" include the beach and boat seines (SB and SV), the fly shooting seine (SSC), anchored seine (SDN) and pair seine (SPR); the "Net fisheries" include set gillnet (GNS), driftnet (GND) and trammel net (GTR); the "Longline fisheries" include set and drifting longlines (LLS and LLD); the "Rods and lines fisheries" include the hand and pole lines (LHP and LHM) and the trolling lines (LTL); the "Dredge fisheries" include boat and hand dredges (DRB and HMD). In the case of the bottom trawls and traps, the panels are presented by metier level 4 due to the higher number of metiers level 5 present in these groups: "Bottom otter trawl fisheries" (OTB); "Multi-rig otter trawl fisheries" (OTT); "Bottom pair trawl fisheries" (PTB); "Beam trawl fisheries" (TBB); "Pots and traps" (FPO); "Stationary uncovered pound nets" (FPN); "Fyke nets" (FYK). Note that the presence of empty or single value plots is related to single year data in a particular gear group.
 
 ### Landings - Total fisheries
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
@@ -538,7 +613,8 @@ landingsTotal <- ggplot(data=Landings_total, aes(Year, round(LandingWeight_ton/1
   theme(axis.text.x = element_text(size=9), plot.title=element_text(size=11), axis.title = element_text(size=9))+
   theme_bw()
 
-landingsTotal <- landingsTotal + scale_color_manual(values=issgPalette)
+landingsTotal <- landingsTotal + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 ggplotly(landingsTotal)
 
@@ -548,16 +624,19 @@ ggplotly(landingsTotal)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
 Landings_country_OTB <- droplevels(Landings_country[!is.na(Landings_country$LandingWeight_ton) & Landings_country$gear %in% c('OTB'),])
 
+if (dim(Landings_country_OTB)[1]>0) {
 landingsOTB <- ggplot(data=Landings_country_OTB, aes(Year, LandingWeight_ton, colour=FlagCountry)) +
   geom_point() + geom_line() +
   theme_bw() +
   facet_wrap(~FishingActivityLvl5, scales="free_y")+
   labs(title=paste("Landings by country Bottom trawl fisheries -", RCG), x="year", y="Landings (ton)", colour="Country")+
- theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines")) 
+ theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(2,"lines"), panel.spacing.y = unit(2,"lines")) 
 
-landingsOTB <- landingsOTB + scale_color_manual(values=issgPalette)
+landingsOTB <- landingsOTB + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 ggplotly(landingsOTB)
+}
 
 ```
 
@@ -565,16 +644,19 @@ ggplotly(landingsOTB)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 Landings_country_OTT <- droplevels(Landings_country[!is.na(Landings_country$LandingWeight_ton) & Landings_country$gear %in% c('OTT'),])
 
+if (dim(Landings_country_OTT)[1]>0) {
 landingsOTT <- ggplot(data=Landings_country_OTT, aes(Year, LandingWeight_ton, colour=FlagCountry)) +
   geom_point() + geom_line() +
   theme_bw() +
   facet_wrap(~FishingActivityLvl5, scales="free_y")+
   labs(title=paste("Landings by country - Multi-rig otter trawl fisheries -", RCG), x="year", y="Landings (ton)", colour="Country")+
- theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines")) 
+ theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(2,"lines"), panel.spacing.y = unit(2,"lines")) 
 
-landingsOTT <- landingsOTT + scale_color_manual(values=issgPalette)
+landingsOTT <- landingsOTT + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 ggplotly(landingsOTT)
+}
 
 ```
 
@@ -582,16 +664,19 @@ ggplotly(landingsOTT)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
 Landings_country_PTB <- droplevels(Landings_country[!is.na(Landings_country$LandingWeight_ton) & Landings_country$gear %in% c('PTB'),])
 
+if (dim(Landings_country_PTB)[1]>0) {
 landingsPTB <- ggplot(data=Landings_country_PTB, aes(Year, LandingWeight_ton, colour=FlagCountry)) +
   geom_point() + geom_line() +
   theme_bw() +
   facet_wrap(~FishingActivityLvl5, scales="free_y")+
   labs(title=paste("Landings by country - Bottom pair trawl fisheries -", RCG), x="year", y="Landings (ton)", colour="Country")+
- theme(legend.position="bottom",  axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines")) 
+ theme(legend.position="bottom",  axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(2,"lines"), panel.spacing.y = unit(2,"lines")) 
 
-landingsPTB <- landingsPTB + scale_color_manual(values=issgPalette)
+landingsPTB <- landingsPTB + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 ggplotly(landingsPTB)
+}
 
 ```
 
@@ -606,12 +691,12 @@ landingsTBB <-ggplot(data=Landings_country_TBB, aes(Year, LandingWeight_ton, col
   theme_bw() +
   facet_wrap(~FishingActivityLvl5, scales="free_y")+
   labs(title=paste("Landings by country - Beam trawl fisheries -", RCG), x="year", y="Landings (ton)", colour="Country")+
- theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines")) 
+ theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(2,"lines"), panel.spacing.y = unit(2,"lines")) 
 
-landingsTBB <- landingsTBB + scale_color_manual(values=issgPalette)
+landingsTBB <- landingsTBB + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 ggplotly(landingsTBB)
-
 }
 
 ```
@@ -620,16 +705,19 @@ ggplotly(landingsTBB)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
 Landings_country_OTM <- droplevels(Landings_country[!is.na(Landings_country$LandingWeight_ton) & Landings_country$gear %in% c("OTM","PTM"),])
 
+if (dim(Landings_country_OTM)[1]>0) {
 landingsOTM <- ggplot(data=Landings_country_OTM, aes(Year, LandingWeight_ton, colour=FlagCountry)) +
   geom_point() + geom_line() +
   theme_bw() +
   facet_wrap(~FishingActivityLvl5, scales="free_y")+
   labs(title=paste("Landings by country - Pelagic trawl fisheries -", RCG), x="year", y="Landings (ton)", colour="Country")+
- theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines")) 
+ theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(2,"lines"), panel.spacing.y = unit(2,"lines")) 
 
-landingsOTM <- landingsOTM + scale_color_manual(values=issgPalette)
+landingsOTM <- landingsOTM + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 ggplotly(landingsOTM)
+}
 
 ```
 
@@ -637,16 +725,19 @@ ggplotly(landingsOTM)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 Landings_country_SNet <- droplevels(Landings_country[!is.na(Landings_country$LandingWeight_ton) & Landings_country$gear %in% c("LA_","PS_"),])
 
+if (dim(Landings_country_SNet)[1]>0) {
 landingsSNet <- ggplot(data=Landings_country_SNet, aes(Year, LandingWeight_ton, colour=FlagCountry)) +
   geom_point() + geom_line() +
   theme_bw() +
   facet_wrap(~FishingActivityLvl5, scales="free_y")+
   labs(title=paste("Landings by country - Surrounding net fisheries -", RCG), x="year", y="Landings (ton)", colour="Country")+
- theme(legend.position="bottom",  axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines")) 
+ theme(legend.position="bottom",  axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(2,"lines"), panel.spacing.y = unit(2,"lines")) 
 
-landingsSNet <- landingsSNet + scale_color_manual(values=issgPalette)
+landingsSNet <- landingsSNet + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 ggplotly(landingsSNet)
+}
 
 ```
 
@@ -654,16 +745,19 @@ ggplotly(landingsSNet)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
 Landings_country_S <- Landings_country[Landings_country$gear %in% c("SDN","SSC","SB_"),]
 
+if (dim(Landings_country_S)[1]>0) {
 landingsS <- ggplot(data=Landings_country_S, aes(Year, LandingWeight_ton, colour=FlagCountry)) +
   geom_point() +geom_line() +
   theme_bw() +
   facet_wrap(~FishingActivityLvl5, scales="free_y")+
   labs(title=paste("Landings by country - Seine fisheries -", RCG), x="year", y="Landings (ton)", colour="Country")+
- theme(legend.position="bottom",  axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines")) 
+ theme(legend.position="bottom",  axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(2,"lines"), panel.spacing.y = unit(2,"lines")) 
 
-landingsS <- landingsS + scale_color_manual(values=issgPalette)
+landingsS <- landingsS + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 ggplotly(landingsS)
+}
 
 ```
 
@@ -671,7 +765,7 @@ ggplotly(landingsS)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
 Landings_country_N <- droplevels(Landings_country[!is.na(Landings_country$LandingWeight_ton) & Landings_country$gear %in% c('GNS','GND','GTR'),])
 
-
+if (dim(Landings_country_N)[1]>0) {
 landingsN <- ggplot(data=Landings_country_N, aes(Year, LandingWeight_ton, colour=FlagCountry)) +
   geom_point() +geom_line() +
   theme_bw() +
@@ -679,9 +773,11 @@ landingsN <- ggplot(data=Landings_country_N, aes(Year, LandingWeight_ton, colour
   labs(title=paste("Landings by country - Net fisheries -", RCG), x="year", y="Landings (ton)", colour="Country")+
  theme(legend.position="bottom",  axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines")) 
 
-landingsN <- landingsN + scale_color_manual(values=issgPalette)
+landingsN <- landingsN + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 ggplotly(landingsN)
+}
 
 ```
 
@@ -689,16 +785,19 @@ ggplotly(landingsN)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
 Landings_country_LL <- droplevels(Landings_country[!is.na(Landings_country$LandingWeight_ton) & Landings_country$gear %in% c('LLS','LLD'),])
 
+if (dim(Landings_country_LL)[1]>0) {
 landingsLL <- ggplot(data=Landings_country_LL, aes(Year, LandingWeight_ton, colour=FlagCountry)) +
   geom_point() +geom_line() +
   theme_bw() +
   facet_wrap(~FishingActivityLvl5, scales="free_y")+
   labs(title=paste("Landings by country - Longline fisheries -", RCG), x="year", y="Landings (ton)", colour="Country")+
- theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines")) 
+ theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(2,"lines"), panel.spacing.y = unit(2,"lines")) 
 
-landingsLL <- landingsLL + scale_color_manual(values=issgPalette)
+landingsLL <- landingsLL + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 ggplotly(landingsLL)
+}
 
 ```
 
@@ -706,16 +805,19 @@ ggplotly(landingsLL)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
 Landings_country_RL <- droplevels(Landings_country[!is.na(Landings_country$LandingWeight_ton) & Landings_country$gear %in% c('LHP','LHM','LTL'),])
 
+if (dim(Landings_country_RL)[1]>0) {
 landingsRL <- ggplot(data=Landings_country_RL, aes(Year, LandingWeight_ton, colour=FlagCountry)) +
   geom_point() +geom_line() +
   theme_bw() +
   facet_wrap(~FishingActivityLvl5, scales="free_y")+
   labs(title=paste("Landings by country - Rods and lines fisheries -", RCG), x="year", y="Landings (ton)", colour="Country")+
- theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines")) 
+ theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(2,"lines"), panel.spacing.y = unit(2,"lines")) 
 
-landingsRL <- landingsRL + scale_color_manual(values=issgPalette)
+landingsRL <- landingsRL + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 ggplotly(landingsRL)
+}
 
 ```
 
@@ -723,43 +825,86 @@ ggplotly(landingsRL)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 Landings_country_D <- droplevels(Landings_country[!is.na(Landings_country$LandingWeight_ton) & Landings_country$gear %in% c("DRB","HMD"),])
 
+if (dim(Landings_country_D)[1]>0) {
 landingsD <- ggplot(data=Landings_country_D, aes(Year, LandingWeight_ton, colour=FlagCountry)) +
   geom_point() +geom_line() +
   theme_bw() +
   facet_wrap(~FishingActivityLvl5, scales="free_y")+
   labs(title=paste("Landings by country - Dredge fisheries -", RCG), x="year", y="Landings (ton)", colour="Country")+
- theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines")) 
+ theme(legend.position="bottom", axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(2,"lines"), panel.spacing.y = unit(2,"lines")) 
 
-landingsD <- landingsD + scale_color_manual(values=issgPalette)
+landingsD <- landingsD + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 ggplotly(landingsD)
+}
 
 ```
 
-### Landings - Pots and Traps fisheries
+### Landings - Pots and traps fisheries
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
-Landings_country_T <- droplevels(Landings_country[!is.na(Landings_country$LandingWeight_ton) & Landings_country$gear %in% c('FPO','FPN','FYK'),])
+Landings_country_FPO <- droplevels(Landings_country[!is.na(Landings_country$LandingWeight_ton) & Landings_country$gear %in% c('FPO'),])
 
-landingsT <- ggplot(data=Landings_country_T, aes(Year, LandingWeight_ton, colour=FlagCountry)) +
+if (dim(Landings_country_FPO)[1]>0) {
+landingsFPO <- ggplot(data=Landings_country_FPO, aes(Year, LandingWeight_ton, colour=FlagCountry)) +
   geom_point() +geom_line() +
   theme_bw() +
   facet_wrap(~FishingActivityLvl5, scales="free_y")+
-  labs(title=paste("Landings by country - Pots and Traps fisheries -", RCG), x="year", y="Landings (ton)", colour="Country")+
- theme(legend.position="bottom",  axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(1,"lines"), panel.spacing.y = unit(2,"lines"))
+  labs(title=paste("Landings by country - Pots and traps fisheries -", RCG), x="year", y="Landings (ton)", colour="Country")+
+ theme(legend.position="bottom",  axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(2,"lines"), panel.spacing.y = unit(2,"lines"))
 
-landingsT <- landingsT + scale_color_manual(values=issgPalette)
+landingsFPO <- landingsFPO + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
-ggplotly(landingsT)
+ggplotly(landingsFPO)
+}
+
+```
+
+### Landings - Stationary uncovered pound nets fisheries
+```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
+Landings_country_FPN <- droplevels(Landings_country[!is.na(Landings_country$LandingWeight_ton) & Landings_country$gear %in% c('FPN'),])
+
+if (dim(DAS_country_FPN)[1]>0) {
+landingsFPN <- ggplot(data=Landings_country_FPN, aes(Year, LandingWeight_ton, colour=FlagCountry)) +
+  geom_point() +geom_line() +
+  theme_bw() +
+  facet_wrap(~FishingActivityLvl5, scales="free_y")+
+  labs(title=paste("Landings by country - Stationary uncovered pound nets fisheries -", RCG), x="year", y="Landings (ton)", colour="Country")+
+ theme(legend.position="bottom",  axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(2,"lines"), panel.spacing.y = unit(2,"lines"))
+
+landingsFPN <- landingsFPN + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
+
+ggplotly(landingsFPN)
+}
+
+```
+
+### Landings - Fyke nets fisheries
+```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
+Landings_country_FYK <- droplevels(Landings_country[!is.na(Landings_country$LandingWeight_ton) & Landings_country$gear %in% c('FYK'),])
+
+if (dim(Landings_country_FYK)[1]>0) {
+landingsFYK <- ggplot(data=Landings_country_FYK, aes(Year, LandingWeight_ton, colour=FlagCountry)) +
+  geom_point() +geom_line() +
+  theme_bw() +
+  facet_wrap(~FishingActivityLvl5, scales="free_y")+
+  labs(title=paste("Landings by country - Fyke nets fisheries -", RCG), x="year", y="Landings (ton)", colour="Country")+
+ theme(legend.position="bottom",  axis.text.x = element_text(size=8),  axis.text.y = element_text(size=8),plot.title=element_text(size=11), axis.title = element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9),panel.spacing.x = unit(2,"lines"), panel.spacing.y = unit(2,"lines"))
+
+landingsFYK <- landingsFYK + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
+
+ggplotly(landingsFYK)
+}
 
 ```
 ## {-}
 
 ### Foreign Landings
 
-The Table 5 presents summary information on foreign total landings reported by country and area, for the period `r years[1]` - `r years[6]`. The data summarized includes the weight (in tons) of the foreign landings and its percentage in relation to the national total landing weight.
-
-
-**Table 5.**  Summary information of the foreign landings by year, country and area.
+The table below presents summary information on total landings abroad reported by year, country and area, for the period `r years[1]` - `r years[6]`. The data summarized includes the weight (in tons) of the foreign landings and its percentage in relation to the national total landing weight per area.
 
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 
@@ -788,12 +933,16 @@ DT::datatable(tableForeign, filter = list(
 
 ## {-}
 
-## Landings by species catch group {.tabset}
+## Landings by catch group {.tabset}
 
-A characterization of the landings by catch group in `r title_stock` is presented. The catch groups considered for this characterization are: Small Pelagic fish (SPF); Crustaceans (CRU); Demersal fish (DEF); Molluscs (MOL); Elasmobranch fish (EF); Flatfish (FF); Large Pelagic fish (LPF); Diadromous fish (DIA). The first two figures include an overall summary of the catch group composition by flag country (top figure) and gear group (bottom figure) for the period 2016-2021. The following panels present the summary information for each of the catch group landings composition by flag country, fishing gear group and vessel length. 
+A characterization of the landings by catch group in `r title_stock` is presented. The catch groups considered for this characterization are: Small Pelagic fish (SPF); Crustaceans (CRU); Demersal fish (DEF); Molluscs (MOL); Elasmobranch fish (EF); Flatfish (FF); Large Pelagic fish (LPF); Diadromous fish (DIA). 
 
 
-### Total landings of species catch groups by country
+## Overall Summary {.tabset}
+
+The figures below include an overall summary of the catch group composition by flag country and gear group for the period `r years[1]`-`r years[6]`.
+
+### Total landings by catch groups and country
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
 Landings_sum_country <- CL_years %>%
   group_by(Year, FlagCountry, Catch_group) %>%
@@ -811,7 +960,7 @@ ggplotly(land_count)
 
 ```
 
-### Total landings of species catch groups by gear
+### Total landings by catch groups and gear
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
 CL_years$Gear <- substring(CL_years$FishingActivityLvl5,1,3)
 CL_years[CL_years$Gear=='PS_',]$Gear <- 'PS'
@@ -834,6 +983,8 @@ ggplotly(land_gear)
 ```
 ## Information by catch group {.tabset}
 
+The following panels present the summary information for each of the catch group landings composition by flag country, fishing gear group and vessel length. 
+
 ### Total landings of Small Pelagic Fish (SPF)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, , out.width="90%", out.height="90%", fig.height = 8, fig.width = 10}
 
@@ -843,12 +994,17 @@ Landings_spf <- CL_years_spf %>%
   summarise(LandingWeight_ton=sum(LandingWeight_ton))
 
 p1 <- ggplot(data=Landings_spf, aes(Year, round(LandingWeight_ton/1000,0), colour=FlagCountry)) +
-  geom_point() + geom_line()  +
+  geom_point() + geom_line(size=1)  +
   theme_bw() +
   scale_colour_discrete(guide = 'none') +
-  geom_dl(aes(label = FlagCountry), method = list(dl.trans(x = x + 0.1), "last.points", cex = 0.7))+
+  #geom_dl(aes(label = FlagCountry), method = list(dl.trans(x = x + 0.2), "last.points", cex = 0.7))+
   labs(title=paste("Landings of SPF by country -", RCG), x="year", y="Landings (thousand ton)") +
-  theme(axis.text = element_text(size=9), plot.title=element_text(size=11), axis.title = element_text(size=9))
+  theme(axis.text = element_text(size=9), plot.title=element_text(size=11), axis.title = element_text(size=9),legend.position = "none")
+
+p1 <- p1 + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
+
+
 
 # Landings by Flag Country
 
@@ -872,6 +1028,10 @@ p2 <- ggplot(data=landings_spf_sum, aes(x=Year, y=Landing_ton, fill=topCountries
   theme_bw() +
   labs(title=paste("Landings of SPF by top 10 countries -", RCG), x="year", y="Proportion of landings", fill="Country") +
   theme(axis.text = element_text(size=8), plot.title=element_text(size=11), axis.title=element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9)) 
+
+p2 <- p2 + scale_fill_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
+
 
 # Landings by gear group (FishingActivityLvl5)
 
@@ -933,7 +1093,9 @@ grid.arrange(p1,p2,p3,p4)
 #p <- grid.arrange(p1a, p2a, p3a, p4a)
 #htmltools::tagList(list(p))
 
+
 ```
+
 
 ### Total landings of Crustaceans (CRU)
 ```{r echo=FALSE, message=FALSE, warning = FALSE,, out.width="90%", out.height="90%", fig.height = 8, fig.width = 10}
@@ -942,13 +1104,16 @@ Landings_cru <- CL_years_cru %>%
   group_by(Year, FlagCountry) %>%
   summarise(LandingWeight_ton=sum(LandingWeight_ton))
 
-p1 <- ggplot(data=Landings_cru, aes(Year, round(LandingWeight_ton/1000,0), colour=FlagCountry)) +
-  geom_point() + geom_line() +
+p1 <- ggplot(data=Landings_cru, aes(Year, round(LandingWeight_ton,0), colour=FlagCountry)) +
+  geom_point() + geom_line(size=1) +
   theme_bw() +
   scale_colour_discrete(guide = 'none') +
-  geom_dl(aes(label = FlagCountry), method = list(dl.trans(x = x + 0.1), "last.points", cex = 0.7))+
-  labs(title=paste("Landings of CRU by country -", RCG), x="year", y="Landings (thousand ton)") +
-  theme(axis.text = element_text(size=9), plot.title=element_text(size=11), axis.title = element_text(size=9)) 
+  #geom_dl(aes(label = FlagCountry), method = list(dl.trans(x = x + 0.1), "last.points", cex = 0.7))+
+  labs(title=paste("Landings of CRU by country -", RCG), x="year", y="Landings (ton)") +
+  theme(axis.text = element_text(size=9), plot.title=element_text(size=11), axis.title = element_text(size=9),legend.position = "none") 
+
+p1 <- p1 + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 
 # Landings by Flag Country
@@ -974,6 +1139,9 @@ p2 <- ggplot(data=landings_cru_sum, aes(x=Year, y=Landing_ton, fill=topCountries
   labs(title=paste("Landings of CRU by top 10 countries -", RCG), x="year", y="Proportion of landings", fill="Country") +
    theme(axis.text = element_text(size=8), plot.title=element_text(size=11), axis.title=element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9)) 
 
+p2 <- p2 + scale_fill_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
+
 # Landings by gear group (FishingActivityLvl5)
 
 CL_years_cru$FishingActivityLvl5_1 <- as.character(CL_years_cru$FishingActivityLvl5)
@@ -996,6 +1164,7 @@ p3 <- ggplot(data=landings_cru_sum, aes(x=Year, y=Landing_ton, fill=topGears)) +
   theme_bw() +
   labs(title=paste("Landings of CRU by top 10 gears -", RCG), x="year", y="Proportion of landings", fill="Métier Level 5") +
    theme(axis.text = element_text(size=8), plot.title=element_text(size=11), axis.title=element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9)) 
+
 
 # landings by vessel_length
 
@@ -1022,7 +1191,9 @@ p4 <- landings_cru_Loa_sum %>%
 
 grid.arrange(p1,p2,p3,p4)
 
+
 ```
+
 
 ### Total landings of Demersal fish (DEF)
 
@@ -1033,12 +1204,15 @@ Landings_def <- CL_years_def %>%
   summarise(LandingWeight_ton=sum(LandingWeight_ton))
 
 p1 <- ggplot(data=Landings_def, aes(Year, round(LandingWeight_ton/1000,0), colour=FlagCountry)) +
-  geom_point() + geom_line() +
+  geom_point() + geom_line(size=1) +
   theme_bw() +
   scale_colour_discrete(guide = 'none') +
-  geom_dl(aes(label = FlagCountry), method = list(dl.trans(x = x + 0.1), "last.points", cex = 0.7))+
+ # geom_dl(aes(label = FlagCountry), method = list(dl.trans(x = x + 0.1), "last.points", cex = 0.7))+
   labs(title=paste("Landings of DEF by country -", RCG), x="year", y="Landings (thousand ton)") +
-  theme(axis.text = element_text(size=9), plot.title=element_text(size=11), axis.title = element_text(size=9)) 
+  theme(axis.text = element_text(size=9), plot.title=element_text(size=11), axis.title = element_text(size=9),legend.position = "none") 
+
+p1 <- p1 + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 
 # Landings by Flag Country
@@ -1064,6 +1238,9 @@ p2 <- ggplot(data=landings_def_sum, aes(x=Year, y=Landing_ton, fill=topCountries
   labs(title=paste("Landings of DEF by top 10 countries -", RCG), x="year", y="Proportion of landings", fill="Country") +
   theme(axis.text = element_text(size=8), plot.title=element_text(size=11), axis.title=element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9)) 
 
+p2 <- p2 + scale_fill_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
+
 # Landings by gear group (FishingActivityLvl5)
 
 CL_years_def$FishingActivityLvl5_1 <- as.character(CL_years_def$FishingActivityLvl5)
@@ -1086,6 +1263,7 @@ p3 <- ggplot(data=landings_def_sum, aes(x=Year, y=Landing_ton, fill=topGears)) +
   theme_bw() +
   labs(title=paste("Landings of DEF by top 10 gears -", RCG), x="year", y="Proportion of landings", fill="Métier Level 5") +
   theme(axis.text = element_text(size=8), plot.title=element_text(size=11), axis.title=element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9)) 
+
 
 # landings by vessel_length
 
@@ -1112,7 +1290,9 @@ p4 <- landings_def_Loa_sum %>%
 
 grid.arrange(p1,p2,p3,p4)
 
+
 ```
+
 
 ### Total landings of molluscs (MOL)
 
@@ -1122,13 +1302,16 @@ Landings_mol <- CL_years_mol %>%
   group_by(Year, FlagCountry) %>%
   summarise(LandingWeight_ton=sum(LandingWeight_ton))
 
-p1 <- ggplot(data=Landings_mol, aes(Year, round(LandingWeight_ton/1000,0), colour=FlagCountry)) +
-  geom_point() + geom_line() +
+p1 <- ggplot(data=Landings_mol, aes(Year, round(LandingWeight_ton,0), colour=FlagCountry)) +
+  geom_point() + geom_line(size=1) +
   theme_bw() +
   scale_colour_discrete(guide = 'none') +
-  geom_dl(aes(label = FlagCountry), method = list(dl.trans(x = x + 0.1), "last.points", cex = 0.7)) +
-  labs(title=paste("Landings of MOL by country -", RCG), x="year", y="Landings (thousand ton)") +
-  theme(axis.text = element_text(size=9), plot.title=element_text(size=11), axis.title = element_text(size=9)) 
+ # geom_dl(aes(label = FlagCountry), method = list(dl.trans(x = x + 0.1), "last.points", cex = 0.7)) +
+  labs(title=paste("Landings of MOL by country -", RCG), x="year", y="Landings (ton)") +
+  theme(axis.text = element_text(size=9), plot.title=element_text(size=11), axis.title = element_text(size=9),legend.position = "none") 
+
+p1 <- p1 + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 
 # Landings by Flag Country
@@ -1153,6 +1336,9 @@ p2 <- ggplot(data=landings_mol_sum, aes(x=Year, y=Landing_ton, fill=topCountries
   theme_bw() +
   labs(title=paste("Landings of MOL by top 10 countries -", RCG), x="year", y="Proportion of landings", fill="Country") +
   theme(axis.text = element_text(size=8), plot.title=element_text(size=11), axis.title=element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9)) 
+
+p2 <- p2 + scale_fill_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 # Landings by gear group (FishingActivityLvl5)
 
@@ -1192,6 +1378,7 @@ landings_mol_Loa_sum <- CL_years_mol %>%
   group_by(Year, Loa1) %>%
   summarise(Landing_ton=sum(LandingWeight_ton)) 
 
+
 p4 <- landings_mol_Loa_sum %>% 
   mutate(Loa1 = factor(Loa1, levels=c('<10','10-<12','12-<18','18-<24','24-<40','>40'))) %>%
   ggplot(aes(x=Year, y=Landing_ton, fill=Loa1)) +
@@ -1202,7 +1389,9 @@ p4 <- landings_mol_Loa_sum %>%
 
 grid.arrange(p1,p2,p3,p4)
 
+
 ```
+
 
 ### Total landings of Elasmobranch fish (EF)
 
@@ -1212,13 +1401,16 @@ Landings_ef <- CL_years_ef %>%
   group_by(Year, FlagCountry) %>%
   summarise(LandingWeight_ton=sum(LandingWeight_ton))
 
-p1 <- ggplot(data=Landings_ef, aes(Year, round(LandingWeight_ton/1000,0), colour=FlagCountry)) +
-  geom_point() + geom_line() +
+p1 <- ggplot(data=Landings_ef, aes(Year, round(LandingWeight_ton,0), colour=FlagCountry)) +
+  geom_point() + geom_line(size=1) +
   theme_bw() +
   scale_colour_discrete(guide = 'none') +
-  geom_dl(aes(label = FlagCountry), method = list(dl.trans(x = x + 0.1), "last.points", cex = 0.7))+
-  labs(title=paste("Landings of EF by country -", RCG), x="year", y="Landings (thousand ton)") +
-  theme(axis.text = element_text(size=9), plot.title=element_text(size=11), axis.title = element_text(size=9)) 
+  #geom_dl(aes(label = FlagCountry), method = list(dl.trans(x = x + 0.1), "last.points", cex = 0.7))+
+  labs(title=paste("Landings of EF by country -", RCG), x="year", y="Landings (ton)") +
+  theme(axis.text = element_text(size=9), plot.title=element_text(size=11), axis.title = element_text(size=9),legend.position = "none") 
+
+p1 <- p1 + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 
 # Landings by Flag Country
@@ -1243,6 +1435,9 @@ p2 <- ggplot(data=landings_ef_sum, aes(x=Year, y=Landing_ton, fill=topCountries)
   theme_bw() +
   labs(title=paste("Landings of EF by top 10 countries -", RCG), x="year", y="Proportion of landings", fill="Country") +
    theme(axis.text = element_text(size=8), plot.title=element_text(size=11), axis.title=element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9)) 
+
+p2 <- p2 + scale_fill_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 # Landings by gear group (FishingActivityLvl5)
 
@@ -1295,6 +1490,7 @@ grid.arrange(p1,p2,p3,p4)
 
 ```
 
+
 ### Total landings of Flatfish (FF)
 
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%", fig.height = 8, fig.width = 10}
@@ -1304,12 +1500,16 @@ Landings_ff <- CL_years_ff %>%
   summarise(LandingWeight_ton=sum(LandingWeight_ton))
 
 p1 <- ggplot(data=Landings_ff, aes(Year, round(LandingWeight_ton/1000,0), colour=FlagCountry)) +
-  geom_point() + geom_line() +
+  geom_point() + geom_line(size=1) +
   theme_bw() +
   scale_colour_discrete(guide = 'none') +
-  geom_dl(aes(label = FlagCountry), method = list(dl.trans(x = x + 0.1), "last.points", cex = 0.7)) +
+#  geom_dl(aes(label = FlagCountry), method = list(dl.trans(x = x + 0.1), "last.points", cex = 0.7)) +
   labs(title=paste("Landings of FF by country -", RCG), x="year", y="Landings (thousand ton)") +
-  theme(axis.text.x = element_text(size=9), plot.title=element_text(size=11), axis.title = element_text(size=9)) 
+  theme(axis.text.x = element_text(size=9), plot.title=element_text(size=11), axis.title = element_text(size=9),legend.position = "none") 
+
+p1 <- p1 + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
+
 
 # Landings by Flag Country
 
@@ -1333,6 +1533,9 @@ p2 <- ggplot(data=landings_ff_sum, aes(x=Year, y=Landing_ton, fill=topCountries)
   theme_bw() +
   labs(title=paste("Landings of FF by top 10 countries -", RCG), x="year", y="Proportion of landings", fill="Country") +
    theme(axis.text = element_text(size=8), plot.title=element_text(size=11), axis.title=element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9)) 
+
+p2 <- p2 + scale_fill_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 # Landings by gear group (FishingActivityLvl5)
 
@@ -1382,6 +1585,7 @@ p4 <- landings_ff_Loa_sum %>%
   theme(axis.text = element_text(size=8), plot.title=element_text(size=11), axis.title=element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9)) 
 
 grid.arrange(p1,p2,p3,p4)
+
 ```
 
 ### Total landings of Large Pelagic fish (LPF)
@@ -1392,13 +1596,16 @@ Landings_lpf <- CL_years_lpf %>%
   group_by(Year, FlagCountry) %>%
   summarise(LandingWeight_ton=sum(LandingWeight_ton))
 
-p1 <- ggplot(data=Landings_lpf, aes(Year, round(LandingWeight_ton/1000,0), colour=FlagCountry)) +
-  geom_point() + geom_line() +
+p1 <- ggplot(data=Landings_lpf, aes(Year, round(LandingWeight_ton,0), colour=FlagCountry)) +
+  geom_point() + geom_line(size=1) +
   theme_bw() +
   scale_colour_discrete(guide = 'none') +
-  geom_dl(aes(label = FlagCountry), method = list(dl.trans(x = x + 0.1), "last.points", cex = 0.7))+
-  labs(title=paste("Landings of LPF fish by country -", RCG), x="year", y="Landings (thousand ton)") +
-  theme(axis.text.x = element_text(size=9), plot.title=element_text(size=11), axis.title = element_text(size=9)) 
+  #geom_dl(aes(label = FlagCountry), method = list(dl.trans(x = x + 0.1), "last.points", cex = 0.7))+
+  labs(title=paste("Landings of LPF fish by country -", RCG), x="year", y="Landings (ton)") +
+  theme(axis.text.x = element_text(size=9), plot.title=element_text(size=11), axis.title = element_text(size=9),legend.position = "none") 
+
+p1 <- p1 + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 
 # Landings by Flag Country
@@ -1423,6 +1630,9 @@ p2 <- ggplot(data=landings_lpf_sum, aes(x=Year, y=Landing_ton, fill=topCountries
   theme_bw() +
   labs(title=paste("Landings of LPF by top 10 countries -", RCG), x="year", y="Proportion of landings", fill="Country") +
   theme(axis.text = element_text(size=8), plot.title=element_text(size=11), axis.title=element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9)) 
+
+p2 <- p2 + scale_fill_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 # Landings by gear group (FishingActivityLvl5)
 
@@ -1462,7 +1672,6 @@ landings_lpf_Loa_sum <- CL_years_lpf %>%
   group_by(Year, Loa1) %>%
   summarise(Landing_ton=sum(LandingWeight_ton))
 
-
 p4 <- landings_lpf_Loa_sum %>% 
   mutate(Loa1 = factor(Loa1, levels=c('<10','10-<12','12-<18','18-<24','24-<40','>40'))) %>%
   ggplot(aes(x=Year, y=Landing_ton, fill=Loa1)) +
@@ -1473,9 +1682,7 @@ p4 <- landings_lpf_Loa_sum %>%
 
 grid.arrange(p1,p2,p3,p4)
 
-
 ```
-
 
 ### Total Landings of Diadromous (DIA)
 
@@ -1486,12 +1693,15 @@ Landings_dia <- CL_years_dia %>%
   summarise(LandingWeight_ton=sum(LandingWeight_ton))
 
 p1 <- ggplot(data=Landings_dia, aes(Year, round(LandingWeight_ton,0), colour=FlagCountry)) +
-  geom_point() + geom_line() +
+  geom_point() + geom_line(size=1) +
   theme_bw() +
   scale_colour_discrete(guide = 'none') +
-  geom_dl(aes(label = FlagCountry), method = list(dl.trans(x = x + 0.1), "last.points", cex = 0.7))+
+ # geom_dl(aes(label = FlagCountry), method = list(dl.trans(x = x + 0.1), "last.points", cex = 0.7))+
   labs(title=paste("Landings of DIA fish by country -", RCG), x="year", y="Landings (ton)") +
-  theme(axis.text.x = element_text(size=9), plot.title=element_text(size=11), axis.title = element_text(size=9)) 
+  theme(axis.text.x = element_text(size=9), plot.title=element_text(size=11), axis.title = element_text(size=9),legend.position = "none") 
+
+p1 <- p1 + scale_color_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 
 # Landings by Flag Country
@@ -1516,6 +1726,9 @@ p2 <- ggplot(data=landings_dia_sum, aes(x=Year, y=Landing_ton, fill=topCountries
   theme_bw() +
   labs(title=paste("Landings of DIA fish by top 10 countries -", RCG), x="year", y="Proportion of landings", fill="Country") +
   theme(axis.text = element_text(size=8), plot.title=element_text(size=11), axis.title=element_text(size=9),legend.title=element_text(size=10),legend.text=element_text(size=9)) 
+
+p2 <- p2 + scale_fill_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 # Landings by gear group (FishingActivityLvl5)
 
@@ -1555,7 +1768,6 @@ landings_dia_Loa_sum <- CL_years_dia %>%
   group_by(Year, Loa1) %>%
   summarise(Landing_ton=sum(LandingWeight_ton)) 
 
-
 p4 <- landings_dia_Loa_sum %>% 
   mutate(Loa1 = factor(Loa1, levels=c('<10','10-<12','12-<18','18-<24','24-<40','>40'))) %>%
   ggplot(aes(x=Year, y=Landing_ton, fill=Loa1)) +
@@ -1566,12 +1778,11 @@ p4 <- landings_dia_Loa_sum %>%
 
 grid.arrange(p1,p2,p3,p4)
 
-
 ```
 
 ## Landings by Species {.tabset}
 
-The most landed species in weight, in `r title_stock` are presented in the interactive plots below. The first three panels show the top 10 species present in the landings of the region, using different layouts. In panel 1 the lines represent the variation of weights by year of the main species landed; panel 2 shows te variation of the total volume and species composition of the landings by year; panel 3 presents the variation of the proportion of the main species in the overall landings for the reference period. The last panel presents the countries that contribute for the landings of the main landed species in weight (top 10) in the `r title_stock`.
+The main landed species in weight, in `r title_stock` are presented in the interactive plots below. The first three panels show the top 10 species present in the landings of the region, using different layouts. In panel 1 the lines represent the variation of weights by year of the main species landed; panel 2 shows te variation of the total volume and species composition of the landings by year; panel 3 presents the variation of the proportion of the main species in the overall landings for the reference period. The last panel presents the countries that contribute for the landings of the main landed species in weight (top 10) in the `r title_stock`.
 
 ### 1 Total landings top 10 species  
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%", fig.height = 8, fig.width = 10}
@@ -1625,7 +1836,6 @@ ggplotly(land2)
 
 ```
 
-
 ### 3 Landings proportions top 10 species
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%", fig.height = 8, fig.width = 10}
 CL_years$Species1 <- as.character(CL_years$Species)
@@ -1675,10 +1885,10 @@ land4 <- ggplot(data=landings_sp_sum, aes(x=Year, y=Landing_ton, fill=FlagCountr
   labs(title=paste("Landings by top 10 species -", RCG), x="year", y="Proportion of landings", fill="Country") +
  theme(axis.text.x = element_text(size=8), axis.text.y = element_text(size=8), plot.title=element_text(size=11), axis.title=element_text(size=9),legend.title=element_text(size=9),legend.text=element_text(size=8),strip.text = element_text(size = 8), panel.spacing.y = unit(2,"lines"))#, panel.spacing.x = unit(2,"lines"), panel.spacing.y = unit(3,"lines")) 
 
-
+land4 <- land4 + scale_fill_manual(breaks = aux_colours_ggplot$Country,
+        values = aux_colours_ggplot$colour5)
 
 ggplotly(land4)
-
 
 ```
 
@@ -1686,16 +1896,15 @@ ggplotly(land4)
 
 
 ## Landings by Stock {.tabset}
-The following chapter refers to the multiannual stocks’ distribution for `r title_stock`. This data is provided by ICES’ fishframe RDB regional database that has been working with the development and production of fisheries data.
+The following chapter refers to the multiannual stocks’ distribution for `r title_stock`. 
 
-*Warning*: This stock allocation represents variable stock denominations which were adjusted by the group accordingly with procedures discussed within ICES community and, therefore some of them do not come directly from the RDB. Therefore, for the species that don´t have a stock assigned, a new stock denomination was created by joining the FAO code (or scientific name when no FAO code exists) with the fishing ground.
+*Warning*: This stock allocation represents variable stock denominations which were adjusted by the group accordingly with procedures discussed within ICES community and, therefore some of them do not come directly from the RDB. For the species that don´t have a stock assigned, a new stock denomination was created by joining the FAO code (or scientific name when no FAO code exists) with the fishing ground.
 
 
 ### Table: Landings by country top 5 stocks
 
-The table below summarizes the Top 5 stocks in Landing’s percentage incidence per country and by year for the period `r years[1]`-`r years[6]`. This stock information has been developed for the last five years, and so adjustments and definitions are being worked ever since. In the Table 4, landings per stock ("Landings") and total landings of all stocks by country and year ("Total") are presented in thousand tons. 
+The table below summarizes the top 5 stocks in landing’s volume per country and by year for the period `r years[1]`-`r years[6]`. This stock information has been developed for the last five years, and so adjustments and definitions are being worked ever since. Landings per stock ("Landings") and total landings of all stocks by country and year ("Total") are presented in thousand tons. 
 
-**Table 4.** Frequency of occurrence of the top 5 stocks in the landings, by country
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
 Def_stock$Code = as.character(Def_stock$Code)
 Def_stock$ID<- paste(Def_stock$area, Def_stock$AphiaID, sep='')
@@ -1721,7 +1930,6 @@ temp$new_stockplus<-ifelse(is.na(temp$stockNew),paste(temp$Species,temp$FishingG
 # Dealing with herring stock, where area was reported as 27.3.d.28 - we have no knowledge if it was 27.3.d.28.1 or 27.3.d.28.2 # Nuno corrected this after RCG 2021
 # Now we're assuming that it was stock ‘her.27.25-2932’
   #temp$new_stockplus<- ifelse(temp$new_stockplus == "her-2529+32(-GOR)", "her.27.25-2932", temp$new_stockplus)
-# Check if Nuno changed this to evaluate the need to ADD INFORMATION ABOUT THIS IN THE TEXT
 
 temp<-temp[,c('Year','FlagCountry','OfficialLandingCatchWeight','new_stockplus','FishingGround','SpeciesDesc')]
 temp%>%
@@ -1746,7 +1954,7 @@ DT::datatable(top5, filter = list(
 ```
 
 ### Figure: Landings by top 10 stocks
-This set of graphs refer to the Landing’s percentage incidence of the top 10 stocks per flag country. The main goal of this topic is to present how those stock landings are distributed among countries and analyse the evolution of the landings by stock in the reference period (`r years[1]` - `r years[6]`). It also gives some indications on the stock incidence history per flag country.
+This set of graphs refer to the landing’s proportion of the top 10 stocks per flag country. The main goal of this topic is to present how those stock landings are distributed among countries and analyse the evolution of the landings by stock in the reference period (`r years[1]` - `r years[6]`). It also gives some indications on the stock incidence history per flag country.
 
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
 top10_stock <- temp1 %>%
@@ -1774,4 +1982,30 @@ ggplotly(landTop10)
 
 ```
 
+## Appendix A. Dates of data extraction
+
+The data referring to the present year was collected under the RCG 2022 data call for the 2021 data for the Baltic Sea, North Sea, Eastern Arctic and the North Atlantic regions and downloaded from the system on the 17th of April 2022 with the exception of information detailed in section “Overall fleet evolution” which was extracted from the EU Fleet Register (https://webgate.ec.europa.eu/fleet-europa/index_en) on the 11th of March 2022.
+
 ## {-}
+
+## Appendix B. Glossary for the country codes
+
+```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
+
+country_table <-  read.table(
+    "D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/data/aux_countries.txt",
+    header = T,
+    sep = ",",
+    colClasses = "character",
+    na.strings = "",
+    comment.char = ""
+  )
+ 
+table_out <- droplevels(country_table[country_table$ISO3Code %in% CL_years$FlagCountry | country_table$ISO3Code %in% CL_years$LandingCountry,])
+table_out <- table_out[,c('Country','ISO3Code')]
+
+kable(table_out, row.names=F, col.names = c('Name','Code'),format = "html", table.attr = "style='width:30%;'")
+
+```
+
+
