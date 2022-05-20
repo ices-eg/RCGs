@@ -139,7 +139,7 @@ output$absolute <- renderUI({
       "Year",
       choices =
         #c("All", levels(data_list()[[3]]$Region)),
-        c(as.character(data_list()[[4]]$Year)),
+        c(levels(data_list()[[4]]$Year)),
       multiple = F,
       selected = "All"
     ),

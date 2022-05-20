@@ -1,10 +1,3 @@
 ﻿<p style="text-align:JUSTIFY">
-<font size="2">Tables, plots and graphs presented in this document and overviews are made for the coordination purposes of regional 
-fisheries data collection and are not designed for any other use. Data used for the outputs are extracted from the Regional Database 
-(RDB) and European Fleet Register. Due to different aggregations and reporting authorities, data can differ to those, e.g., used for assessments or 
-technical reports. Member States (MS) are responsible for uploading latest data and the latest year should be viewed as provisional. Data can be 
-resubmitted by a MS for more than one previous year so there might be differences in earlier year reports if countries update back 
-in time. Responsibility for the quality of the data and comparability to other data sources lies with the MS that provided these data. The respective 
-scripts and calculations used for data displaying are publicly available via the RCG GitHub <a href="https://github.com/ices-eg/RCGs"> RCGs GitHub </a> 
-and subject to change as the work of the group progresses.</font> 
+<font size="2"> The tables and figures of the overviews presented in this document are made for the coordination of EU regional fisheries data collection purposes and are not designed for any other use. Data used for producing the outputs are extracted from the Regional Database (RDB) and EU Fleet Register. Dates of data extractions are stated in Appendix A. Due to different aggregations and reporting authorities, data can differ from those used e.g. for assessments or technical reports. Member States (MS) are responsible for uploading latest data and the latest year should be viewed as provisional. Data can be resubmitted by a MS for more than one previous year so there might be differences in earlier year reports, if countries update back in time. Responsibility for the quality of the data and comparability to other data sources lies with the MS that provided these data. The upload logs presented by MS regarding the data submitted to RDB can be found in the ISSG Data Quality report.The respective scripts and calculations used for data displaying are publicly available via the <a href="https://github.com/ices-eg/RCGs"> RCGs GitHub </a> and subject to change as the work of the group progresses.</font> 
 

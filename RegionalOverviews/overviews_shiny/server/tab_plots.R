@@ -42,7 +42,7 @@ output$summary <- renderUI({
            column(4,
                   p("Barplot"),
                   selectizeInput("yearp","Year",
-                                 choices =c(as.character(data_list()[[2]]$Year)),
+                                 choices =c(levels(data_list()[[2]]$Year)),
                                  multiple = FALSE,
                                  selected = "All"),
                   selectizeInput("fishgroundp","Fishing Ground",

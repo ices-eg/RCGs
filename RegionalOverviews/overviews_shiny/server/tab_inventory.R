@@ -25,6 +25,7 @@ data_list<-reactive({
   cainventory<-ca[,.(NumMaturityStageFish=sum(!is.na(MaturityStage)),NumMaturityStageTrips=length(unique(Trip[!is.na(MaturityStage)])),NumAgeFish=sum(!is.na(Age)),NumAgeTrips=length(unique(Trip[!is.na(Age)])),NumLengthFish=sum(!is.na(LengthClass)),NumLengthTrips=length(unique(Trip[!is.na(LengthClass)])),NumWeightFish=sum(!is.na(Weight)),NumWeightTrips=length(unique(Trip[!is.na(Weight)]))),by=c("Year","Region","FlagCountry","LandingCountry","Stock","Species","SamplingType","Quarter","CatchCategory","Sex")]
   
   # datatable wants factors for filter = 
+  cainventory$Year <- as.factor(cainventory$Year)
   cainventory$FlagCountry<-as.factor(cainventory$FlagCountry)
   cainventory$LandingCountry<-as.factor(cainventory$LandingCountry)
   cainventory$Region<-as.factor(cainventory$Region)
@@ -74,6 +75,7 @@ data_list<-reactive({
   
   slinventory$Region[slinventory$Region=="NA"|is.na(slinventory$Region)]<-'NATL'
   
+  slinventory$Year<-as.factor(slinventory$Year)
   slinventory$FlagCountry<-as.factor(slinventory$FlagCountry)
   slinventory$LandingCountry<-as.factor(slinventory$LandingCountry)
   slinventory$Region<-as.factor(slinventory$Region)
@@ -147,12 +149,14 @@ data_list<-reactive({
   ca_map2<-ca_map2[,.(NumMaturityStageFish=sum(!is.na(MaturityStage)),NumMaturityStageTrips=length(unique(Trip[!is.na(MaturityStage)])),NumAgeFish=sum(!is.na(Age)),NumAgeTrips=length(unique(Trip[!is.na(Age)])),NumLengthFish=sum(!is.na(LengthClass)),NumLengthTrips=length(unique(Trip[!is.na(LengthClass)])),NumWeightFish=sum(!is.na(Weight)),NumWeightTrips=length(unique(Trip[!is.na(Weight)]))),by=c("Year" ,"Region","FlagCountry","Species","SamplingType","Quarter","CatchCategory","lat","lon")]
   #
 
+  ca_map$Year<-as.factor(ca_map$Year)
   ca_map$SamplingType<-as.factor(ca_map$SamplingType)
   ca_map$Quarter<-as.factor(ca_map$Quarter)
   ca_map$LandingCountry<-as.factor(ca_map$LandingCountry)
   ca_map$Region<-as.factor(ca_map$Region)
   ca_map$Species<-as.factor(ca_map$Species)
   
+  ca_map2$Year<-as.factor(ca_map2$Year)
   ca_map2$SamplingType<-as.factor(ca_map2$SamplingType)
   ca_map2$Quarter<-as.factor(ca_map2$Quarter)
   ca_map2$FlagCountry<-as.factor(ca_map2$FlagCountry)
