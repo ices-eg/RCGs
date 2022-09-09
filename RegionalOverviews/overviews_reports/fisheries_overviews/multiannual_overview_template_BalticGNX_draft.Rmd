@@ -217,7 +217,7 @@ The respective scripts and calculations used for data displaying are publicly av
 # **RCG Multiannual overviews - Net fisheries (GNS, GTR)**
 
 The present Catch and Effort Overview displays summary information on EU commercial landings (CL) and fishing effort (CE) statistics included in the Regional Data Base (RDB), which is used to store detailed commercial fisheries and sampling data. 
-Only the gillneter fishery has been considered in this report, including GNS, GTR and GND
+Only the gillneter fishery has been considered in this report, including GNS, GTR
 
 
 
