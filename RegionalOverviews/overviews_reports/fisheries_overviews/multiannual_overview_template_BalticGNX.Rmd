@@ -216,17 +216,17 @@ The respective scripts and calculations used for data displaying are publicly av
 
 # **RCG Multiannual overviews - Net fisheries (GNS, GTR)**
 
-The present Catch and Effort Overview displays summary information on EU commercial landings (CL) and fishing effort (CE) statistics included in the Regional Data Base (RDB), which is used to store detailed commercial fisheries and sampling data. 
-Only the gillneter fishery has been considered in this report, including GNS, GTR
+The present Catch and Effort Overview displays summary information on the EU fleet evolution (EU Fleet Register) and EU commercial landings (CL) and fishing effort (CE) statistics included in the Regional Data Base (RDB), which is used to store detailed commercial fisheries and sampling data. 
+Only the net fisheries including GNS and GTR have been considered in this report.
 
 
 
 ##	Overall fleet evolution {.tabset}
 
-The tables included in this section present a summary of the information on licensed vessels from the European Union Fleet Register in the period 2016-2021.
+The tables included in this section present a summary of the information on licensed vessels with GNS or GTR reported as main gear, from the European Union Fleet Register in the period 2016-2021.
 
 ### Number of vessels
-**Table 1.** Number of vessels with fishing license, by flag country in the EU vessel register.
+**Table 1.** Number of licensed vessels with GNS or GTR reported as main gear, by flag country in the EU vessel register.
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 res_fleetreg<-tapply(fleetreg$Country_Code,list(fleetreg$Country_Code,fleetreg$Status_date),length)
 ft<-theme_flextable(res_fleetreg)
@@ -235,7 +235,7 @@ ft
 ```
 
 ### Power
-**Table 2.** Power (`1000*`kW) of the vessels with fishing license, by flag country in the EU vessel register.
+**Table 2.** Power (`1000*`kW) of licensed vessels with GNS or GTR reported as main gear, by flag country in the EU vessel register.
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 res_fleetreg_pwr<-round(tapply(fleetreg$Power_Main, list(fleetreg$Country_Code, fleetreg$Status_date), sum)/1000,1)
 ft<-theme_flextable(res_fleetreg_pwr)
@@ -243,7 +243,7 @@ ft
 ```
 
 ### Gross tonnage
-**Table 3.** Gross Tonnage (`1000*`GT) of the vessels with fishing license, by flag country in the EU vessel register.
+**Table 3.** Gross Tonnage (`1000*`GT) of licensed vessels with GNS or GTR reported as main gear, by flag country in the EU vessel register.
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 res_fleetreg_gt <- round(tapply(fleetreg$Ton_Gt, list(fleetreg$Country_Code, fleetreg$Status_date), sum)/1000,1)
 ft<-theme_flextable(res_fleetreg_gt)
@@ -258,9 +258,11 @@ The figures below are based on RDB effort (CE) and landings (CL) data.
 
 ## Effort {.tabset}
 
-The annual fishing effort in number of days at sea for the `r title_stock`, is presented in the interactive figures below. Since this is not a mandatory field in the reported CE data, there is some missing information for some countries/years (see Table 4). 
-The first panel ('Days at sea Total fisheries') compiles the annual total fishing effort by flag country. 
-The following panels present the annual fishing effort by flag country for the different vessel length categories
+The annual fishing effort for  net fisheries, in number of days at sea, for the `r title_stock`, is presented in the figures below. Since this is not a mandatory field in the reported CE data, there may be missing information for some countries/years. Information about missing information is given in Table 4.
+
+The first panel ('Days at sea - Net fisheries') compiles the annual fishing effort for net fisheries, by flag country. 
+The second panel ('Days at sea per vessel length category - Net fisheries') present the annual fishing effort for net fisheries, by flag country, for the different vessel length categories
+
 
 
 **Table 4.** Summary of the missing information on the days at sea reported by country and year.
@@ -294,7 +296,8 @@ ft
 
 ```
 
-### Days at sea - Total
+
+### Days at sea - Net fisheries
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 DAS_total <- CE_years %>%
     group_by(Year, FlagCountry) %>%
@@ -305,7 +308,7 @@ dasTotal <- ggplot(data=DAS_total, aes(Year, round(DaysAtSea/1000,0), colour=Fla
   theme_bw() +
   scale_colour_discrete(guide = 'none') +
   geom_dl(aes(label = FlagCountry), method = list(dl.trans(x = x + 0.1), "last.points", cex = 0.7))+
-  labs(title=paste("Days at sea by country - Total fisheries -", RCG), x="year", y="Days at sea (thousands)", colour="Country") +
+  labs(title=paste("Days at sea by country - Net fisheries -", RCG), x="year", y="Days at sea (thousands)", colour="Country") +
  theme(axis.text = element_text(size=9),plot.title=element_text(size=11), axis.title = element_text(size=9))
 
 dasTotal <- dasTotal + scale_color_manual(breaks = aux_colours_ggplot$Country,
@@ -315,7 +318,7 @@ ggplotly(dasTotal)
 
 ```
 
-### Days at sea - per vessel length category
+### Days at sea per vessel length category - Net fisheries
 
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
 #DAS_country_N <- droplevels(DAS_country[!is.na(DAS_country$DaysAtSea) & DAS_country$gear %in% c('GNS','GND','GTR'),])
@@ -341,9 +344,13 @@ ggplotly(dasCountryN)
 
 ## Landings {.tabset}
 
-The annual landings overview for the `r title_stock`, is presented in the interactive figures below. The first panel ('Landings Total fisheries') compiles the annual total landings by flag country. The following panels present the annual total landings from the different fisheries by flag country, for the different vessel length categories
+The annual landings overview for net fisherie, for the `r title_stock`, is presented in the interactive figures below. 
+The first panel ('Landings - Net fisheries') compiles the annual total landings for net fisheries, by flag country. 
+The second panel ('Landings per vessel length category - Net fisheries') presents the annual landings for net fisheries, by flag country, for the different vessel length categories
 
-### Landings  Total
+
+
+### Landings - Net fisheries
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 
 Landings_total <- CL_years %>%
@@ -354,7 +361,7 @@ landingsTotal <- ggplot(data=Landings_total, aes(Year, round(LandingWeight_ton/1
   geom_point() + geom_line() +
   scale_colour_discrete(guide = 'none') +
   geom_dl(aes(label = FlagCountry), method = list(dl.trans(x = x + 0.1), "last.points", cex = 0.7))+
-  labs(title=paste("Landings by country - Total fisheries -", RCG), x="year", y="Landings (thousand ton)")+
+  labs(title=paste("Landings by country - Net fisheries -", RCG), x="year", y="Landings (thousand ton)")+
   theme(axis.text.x = element_text(size=9), plot.title=element_text(size=11), axis.title = element_text(size=9))+
   theme_bw()
 
@@ -365,7 +372,7 @@ ggplotly(landingsTotal)
 
 ```
 
-### Landings - - per vessel length category
+### Landings per vessel length category - Net fisheries
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="95%", out.height="95%"}
 #Landings_country_N <- droplevels(Landings_country[!is.na(Landings_country$LandingWeight_ton) & Landings_country$gear %in% c('GNS','GND','GTR'),])
 Landings_country_N <- Landings_country
@@ -385,6 +392,10 @@ ggplotly(landingsN)
 }
 
 ```
+
+
+## Appendix A.           Dates of data extraction
+The data referring to the present year was collected under the RCG 2022 data call for the 2021 data for the Baltic Sea, North Sea, Eastern Arctic and the North Atlantic regions and downloaded from the system on the 17th of April 2022 with the exception of information detailed in section “2. Overall Fleet Evolution” which was extracted from the EU Fleet Register (https://webgate.ec.europa.eu/fleet-europa/index_en) on the 11th of March 2022.
 
 
 
