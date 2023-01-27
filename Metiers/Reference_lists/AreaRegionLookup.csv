@@ -1,299 +1,299 @@
-AreaType,AreaCode,RegionId,Code,Description
-Area,18,4,LDF,Distant Waters
-Area,21,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubArea,21.1,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubArea,21.2,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubArea,21.3,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubArea,21.4,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubArea,21.5,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubArea,21.6,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubArea,27.1,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubArea,27.10,3,NAtl                                      ,North Atlantic                                                                                      
-SubArea,27.12,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubArea,27.14,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubArea,27.2,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubArea,27.4,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubArea,27.6,3,NAtl                                      ,North Atlantic                                                                                      
-SubArea,27.8,3,NAtl                                      ,North Atlantic                                                                                      
-SubArea,27.9,3,NAtl                                      ,North Atlantic                                                                                      
-Area,31,4,LDF,Distant Waters
-Area,34,4,LDF,Distant Waters
-SubArea,34.1,4,LDF,Distant Waters
-SubArea,34.2,4,LDF,Distant Waters
-SubArea,34.3,4,LDF,Distant Waters
-SubArea,34.4,4,LDF,Distant Waters
-Area,37,5,MED,Mediterranean and Black Sea
-SubArea,37.1,5,MED,Mediterranean and Black Sea
-SubArea,37.2,5,MED,Mediterranean and Black Sea
-SubArea,37.3,5,MED,Mediterranean and Black Sea
-SubArea,37.4,5,MED,Mediterranean and Black Sea
-Area,41,4,LDF,Distant Waters
-SubArea,41.1,4,LDF,Distant Waters
-SubArea,41.2,4,LDF,Distant Waters
-SubArea,41.3,4,LDF,Distant Waters
-Area,47,4,LDF,Distant Waters
-SubArea,47.1,4,LDF,Distant Waters
-SubArea,47.2,4,LDF,Distant Waters
-Area,48,4,LDF,Distant Waters
-SubArea,48.1,4,LDF,Distant Waters
-SubArea,48.2,4,LDF,Distant Waters
-SubArea,48.3,4,LDF,Distant Waters
-SubArea,48.4,4,LDF,Distant Waters
-SubArea,48.5,4,LDF,Distant Waters
-SubArea,48.6,4,LDF,Distant Waters
-Area,51,4,LDF,Distant Waters
-SubArea,51.1,4,LDF,Distant Waters
-SubArea,51.2,4,LDF,Distant Waters
-SubArea,51.3,4,LDF,Distant Waters
-SubArea,51.4,4,LDF,Distant Waters
-SubArea,51.5,4,LDF,Distant Waters
-SubArea,51.6,4,LDF,Distant Waters
-SubArea,51.7,4,LDF,Distant Waters
-SubArea,51.8,4,LDF,Distant Waters
-Area,57,4,LDF,Distant Waters
-SubArea,57.1,4,LDF,Distant Waters
-SubArea,57.2,4,LDF,Distant Waters
-SubArea,57.3,4,LDF,Distant Waters
-SubArea,57.4,4,LDF,Distant Waters
-SubArea,57.5,4,LDF,Distant Waters
-SubArea,57.6,4,LDF,Distant Waters
-Area,58,4,LDF,Distant Waters
-SubArea,58.4,4,LDF,Distant Waters
-SubArea,58.5,4,LDF,Distant Waters
-SubArea,58.6,4,LDF,Distant Waters
-SubArea,58.7,4,LDF,Distant Waters
-Area,61,4,LDF,Distant Waters
-Area,67,4,LDF,Distant Waters
-Area,71,4,LDF,Distant Waters
-Area,77,4,LDF,Distant Waters
-Area,81,4,LDF,Distant Waters
-Area,87,4,LDF,Distant Waters
-SubArea,87.1,4,LDF,Distant Waters
-SubArea,87.2,4,LDF,Distant Waters
-SubArea,87.3,4,LDF,Distant Waters
-Area,88,4,LDF,Distant Waters
-SubArea,88.1,4,LDF,Distant Waters
-SubArea,88.2,4,LDF,Distant Waters
-SubArea,88.3,4,LDF,Distant Waters
-Division,21.0.A,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.0.B,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.1.A,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.1.B,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.1.C,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.1.D,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.1.E,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.1.F,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.2.G,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.2.H,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.2.J,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.3.K,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.3.L,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.3.M,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.3.N,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.3.O,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.3.P,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,21.3.P.n,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,21.3.P.s,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.4.R,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.4.S,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.4.T,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.4.V,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,21.4.V.n,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,21.4.V.s,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.4.W,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.4.X,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.5.Y,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.5.Z,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,21.5.Z.c,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,21.5.Z.e,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,21.5.Z.u,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,21.5.Z.w,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.6.A,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.6.B,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.6.C,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.6.D,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.6.E,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.6.F,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.6.G,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,21.6.H,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,27.1.a,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,27.1.b,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,27.10.a,3,NAtl                                      ,North Atlantic                                                                                      
-SubDivision,27.10.a.1,3,NAtl                                      ,North Atlantic                                                                                      
-SubDivision,27.10.a.2,3,NAtl                                      ,North Atlantic                                                                                      
-Division,27.10.b,3,NAtl                                      ,North Atlantic                                                                                      
-SubDivision,27.10.b.1,3,NAtl                                      ,North Atlantic                                                                                      
-SubDivision,27.10.b.2,3,NAtl                                      ,North Atlantic                                                                                      
-Division,27.12.a,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,27.12.a.1,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,27.12.a.2,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,27.12.a.3,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,27.12.a.4,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,27.12.b,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,27.12.c,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,27.14.a,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,27.14.b,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,27.14.b.1,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,27.14.b.2,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,27.2.a,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,27.2.a.1,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,27.2.a.2,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,27.2.b,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,27.2.b.1,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,27.2.b.2,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,27.3.a,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,27.3.a.20,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,27.3.a.21,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,27.3.b,,BALT,Baltic Sea                                                                                          
-SubDivision,27.3.b.23,1,BALT,Baltic Sea                                                                                          
-Division,27.3.bc,1,BALT,Baltic Sea                                                                                          
-Division,27.3.c,,BALT,Baltic Sea                                                                                          
-SubDivision,27.3.c.22,1,BALT,Baltic Sea                                                                                          
-Division,27.3.d,1,BALT,Baltic Sea                                                                                          
-SubDivision,27.3.d.24,1,BALT,Baltic Sea                                                                                          
-SubDivision,27.3.d.25,1,BALT,Baltic Sea                                                                                          
-SubDivision,27.3.d.26,1,BALT,Baltic Sea                                                                                          
-SubDivision,27.3.d.27,1,BALT,Baltic Sea                                                                                          
-SubDivision,27.3.d.28,1,BALT,Baltic Sea                                                                                          
-Unit,27.3.d.28.1,1,BALT,Baltic Sea                                                                                          
-Unit,27.3.d.28.2,1,BALT,Baltic Sea                                                                                          
-SubDivision,27.3.d.29,1,BALT,Baltic Sea                                                                                          
-SubDivision,27.3.d.30,1,BALT,Baltic Sea                                                                                          
-SubDivision,27.3.d.31,1,BALT,Baltic Sea                                                                                          
-SubDivision,27.3.d.32,1,BALT,Baltic Sea                                                                                          
-Division,27.4.a,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,27.4.a.e,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,27.4.a.w,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,27.4.b,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,27.4.b.e,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,27.4.b.w,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,27.4.c,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,27.5.a,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,27.5.a.1,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-SubDivision,27.5.a.2,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,27.5.b,3,NAtl                                      ,North Atlantic                                                                                      
-SubDivision,27.5.b.1,3,NAtl                                      ,North Atlantic                                                                                      
-Unit,27.5.b.1.a,3,NAtl                                      ,North Atlantic                                                                                      
-Unit,27.5.b.1.b,3,NAtl                                      ,North Atlantic                                                                                      
-SubDivision,27.5.b.2,3,NAtl                                      ,North Atlantic                                                                                      
-Division,27.6.a,3,NAtl                                      ,North Atlantic                                                                                      
-SubDivision,27.6.a.n,3,NAtl                                      ,North Atlantic                                                                                      
-SubDivision,27.6.a.s,3,NAtl                                      ,North Atlantic                                                                                      
-Division,27.6.b,3,NAtl                                      ,North Atlantic                                                                                      
-SubDivision,27.6.b.1,3,NAtl                                      ,North Atlantic                                                                                      
-SubDivision,27.6.b.2,3,NAtl                                      ,North Atlantic                                                                                      
-Division,27.7.a,3,NAtl                                      ,North Atlantic                                                                                      
-Division,27.7.b,3,NAtl                                      ,North Atlantic                                                                                      
-Division,27.7.c,3,NAtl                                      ,North Atlantic                                                                                      
-SubDivision,27.7.c.1,3,NAtl                                      ,North Atlantic                                                                                      
-SubDivision,27.7.c.2,3,NAtl                                      ,North Atlantic                                                                                      
-Division,27.7.d,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        
-Division,27.7.e,3,NAtl                                      ,North Atlantic                                                                                      
-Division,27.7.f,3,NAtl                                      ,North Atlantic                                                                                      
-Division,27.7.g,3,NAtl                                      ,North Atlantic                                                                                      
-Division,27.7.h,3,NAtl                                      ,North Atlantic                                                                                      
-Division,27.7.j,3,NAtl                                      ,North Atlantic                                                                                      
-SubDivision,27.7.j.1,3,NAtl                                      ,North Atlantic                                                                                      
-SubDivision,27.7.j.2,3,NAtl                                      ,North Atlantic                                                                                      
-Division,27.7.k,3,NAtl                                      ,North Atlantic                                                                                      
-SubDivision,27.7.k.1,3,NAtl                                      ,North Atlantic                                                                                      
-SubDivision,27.7.k.2,3,NAtl                                      ,North Atlantic                                                                                      
-Division,27.8.a,3,NAtl                                      ,North Atlantic                                                                                      
-Division,27.8.b,3,NAtl                                      ,North Atlantic                                                                                      
-Division,27.8.c,3,NAtl                                      ,North Atlantic                                                                                      
-Division,27.8.d,3,NAtl                                      ,North Atlantic                                                                                      
-SubDivision,27.8.d.1,3,NAtl                                      ,North Atlantic                                                                                      
-SubDivision,27.8.d.2,3,NAtl                                      ,North Atlantic                                                                                      
-Division,27.8.e,3,NAtl                                      ,North Atlantic                                                                                      
-SubDivision,27.8.e.1,3,NAtl                                      ,North Atlantic                                                                                      
-SubDivision,27.8.e.2,3,NAtl                                      ,North Atlantic                                                                                      
-Division,27.9.a,3,NAtl                                      ,North Atlantic                                                                                      
-Division,27.9.b,3,NAtl                                      ,North Atlantic                                                                                      
-SubDivision,27.9.b.1,3,NAtl                                      ,North Atlantic                                                                                      
-SubDivision,27.9.b.2,3,NAtl                                      ,North Atlantic                                                                                      
-Division,34.1.1,4,LDF,Distant Waters
-SubDivision,34.1.1.1,4,LDF,Distant Waters
-SubDivision,34.1.1.2,4,LDF,Distant Waters
-SubDivision,34.1.1.3,4,LDF,Distant Waters
-Division,34.1.2,4,LDF,Distant Waters
-Division,34.1.3,4,LDF,Distant Waters
-SubDivision,34.1.3.1,4,LDF,Distant Waters
-SubDivision,34.1.3.2,4,LDF,Distant Waters
-Division,34.2.0,4,LDF,Distant Waters
-Division,34.3.1,4,LDF,Distant Waters
-SubDivision,34.3.1.1,4,LDF,Distant Waters
-SubDivision,34.3.1.2,4,LDF,Distant Waters
-SubDivision,34.3.1.3,4,LDF,Distant Waters
-Division,34.3.2,4,LDF,Distant Waters
-Division,34.3.3,4,LDF,Distant Waters
-Division,34.3.4,4,LDF,Distant Waters
-Division,34.3.5,4,LDF,Distant Waters
-Division,34.3.6,4,LDF,Distant Waters
-Division,34.4.1,4,LDF,Distant Waters
-Division,34.4.2,4,LDF,Distant Waters
-Division,37.1.1,5,MED,Mediterranean and Black Sea
-Division,37.1.2,5,MED,Mediterranean and Black Sea
-Division,37.1.3,5,MED,Mediterranean and Black Sea
-Division,37.2.1,5,MED,Mediterranean and Black Sea
-Division,37.2.2,5,MED,Mediterranean and Black Sea
-Division,37.3.1,5,MED,Mediterranean and Black Sea
-Division,37.3.2,5,MED,Mediterranean and Black Sea
-Division,37.4.1,5,MED,Mediterranean and Black Sea
-Division,37.4.2,5,MED,Mediterranean and Black Sea
-Division,37.4.3,5,MED,Mediterranean and Black Sea
-Division,41.1.1,4,LDF,Distant Waters
-Division,41.1.2,4,LDF,Distant Waters
-Division,41.1.3,4,LDF,Distant Waters
-Division,41.1.4,4,LDF,Distant Waters
-Division,41.2.1,4,LDF,Distant Waters
-Division,41.2.2,4,LDF,Distant Waters
-Division,41.2.3,4,LDF,Distant Waters
-Division,41.2.4,4,LDF,Distant Waters
-Division,41.3.1,4,LDF,Distant Waters
-Division,41.3.2,4,LDF,Distant Waters
-Division,41.3.3,4,LDF,Distant Waters
-Division,47.1.1,4,LDF,Distant Waters
-Division,47.1.2,4,LDF,Distant Waters
-Division,47.1.3,4,LDF,Distant Waters
-Division,47.1.4,4,LDF,Distant Waters
-Division,47.1.5,4,LDF,Distant Waters
-Division,47.1.6,4,LDF,Distant Waters
-Division,47.2.1,4,LDF,Distant Waters
-Division,47.2.2,4,LDF,Distant Waters
-SubArea,47.A,4,LDF,Distant Waters
-Division,47.A.0,4,LDF,Distant Waters
-Division,47.A.1,4,LDF,Distant Waters
-SubArea,47.B,4,LDF,Distant Waters
-Division,47.B.0,4,LDF,Distant Waters
-Division,47.B.1,4,LDF,Distant Waters
-SubArea,47.C,4,LDF,Distant Waters
-Division,47.C.0,4,LDF,Distant Waters
-Division,47.C.1,4,LDF,Distant Waters
-SubArea,47.D,4,LDF,Distant Waters
-Division,47.D.0,4,LDF,Distant Waters
-Division,47.D.1,4,LDF,Distant Waters
-Division,57.5.1,4,LDF,Distant Waters
-Division,57.5.2,4,LDF,Distant Waters
-Division,58.4.1,4,LDF,Distant Waters
-Division,58.4.2,4,LDF,Distant Waters
-Division,58.4.3,4,LDF,Distant Waters
-SubDivision,58.4.3.a,4,LDF,Distant Waters
-SubDivision,58.4.3.b,4,LDF,Distant Waters
-Division,58.4.4,4,LDF,Distant Waters
-SubDivision,58.4.4.a,4,LDF,Distant Waters
-SubDivision,58.4.4.b,4,LDF,Distant Waters
-Division,58.5.1,4,LDF,Distant Waters
-Division,58.5.2,4,LDF,Distant Waters
-Division,87.1.1,4,LDF,Distant Waters
-Division,87.1.2,4,LDF,Distant Waters
-Division,87.1.3,4,LDF,Distant Waters
-Division,87.1.4,4,LDF,Distant Waters
-Division,87.2.1,4,LDF,Distant Waters
-Division,87.2.2,4,LDF,Distant Waters
-Division,87.2.3,4,LDF,Distant Waters
-Division,87.2.4,4,LDF,Distant Waters
-Division,87.2.5,4,LDF,Distant Waters
-Division,87.2.6,4,LDF,Distant Waters
-Division,87.3.1,4,LDF,Distant Waters
-Division,87.3.2,4,LDF,Distant Waters
-Division,87.3.3,4,LDF,Distant Waters
+AreaType,AreaCode,RegionId,Code,Description,
+Area,18,4,LDF,Distant Waters,
+Area,21,4,LDF,Distant Waters,
+SubArea,21.1,4,LDF,Distant Waters,
+SubArea,21.2,4,LDF,Distant Waters,
+SubArea,21.3,4,LDF,Distant Waters,
+SubArea,21.4,4,LDF,Distant Waters,
+SubArea,21.5,4,LDF,Distant Waters,
+SubArea,21.6,4,LDF,Distant Waters,
+SubArea,27.1,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+SubArea,27.10,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubArea,27.12,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+SubArea,27.14,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+SubArea,27.2,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+SubArea,27.4,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+SubArea,27.6,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubArea,27.8,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubArea,27.9,3,NAtl                                      ,North Atlantic                                                                                      ,
+Area,31,4,LDF,Distant Waters,
+Area,34,4,LDF,Distant Waters,
+SubArea,34.1,4,LDF,Distant Waters,
+SubArea,34.2,4,LDF,Distant Waters,
+SubArea,34.3,4,LDF,Distant Waters,
+SubArea,34.4,4,LDF,Distant Waters,
+Area,37,5,MED,Mediterranean and Black Sea,
+SubArea,37.1,5,MED,Mediterranean and Black Sea,
+SubArea,37.2,5,MED,Mediterranean and Black Sea,
+SubArea,37.3,5,MED,Mediterranean and Black Sea,
+SubArea,37.4,5,MED,Mediterranean and Black Sea,
+Area,41,4,LDF,Distant Waters,
+SubArea,41.1,4,LDF,Distant Waters,
+SubArea,41.2,4,LDF,Distant Waters,
+SubArea,41.3,4,LDF,Distant Waters,
+Area,47,4,LDF,Distant Waters,
+SubArea,47.1,4,LDF,Distant Waters,
+SubArea,47.2,4,LDF,Distant Waters,
+Area,48,4,LDF,Distant Waters,
+SubArea,48.1,4,LDF,Distant Waters,
+SubArea,48.2,4,LDF,Distant Waters,
+SubArea,48.3,4,LDF,Distant Waters,
+SubArea,48.4,4,LDF,Distant Waters,
+SubArea,48.5,4,LDF,Distant Waters,
+SubArea,48.6,4,LDF,Distant Waters,
+Area,51,4,LDF,Distant Waters,
+SubArea,51.1,4,LDF,Distant Waters,
+SubArea,51.2,4,LDF,Distant Waters,
+SubArea,51.3,4,LDF,Distant Waters,
+SubArea,51.4,4,LDF,Distant Waters,
+SubArea,51.5,4,LDF,Distant Waters,
+SubArea,51.6,4,LDF,Distant Waters,
+SubArea,51.7,4,LDF,Distant Waters,
+SubArea,51.8,4,LDF,Distant Waters,
+Area,57,4,LDF,Distant Waters,
+SubArea,57.1,4,LDF,Distant Waters,
+SubArea,57.2,4,LDF,Distant Waters,
+SubArea,57.3,4,LDF,Distant Waters,
+SubArea,57.4,4,LDF,Distant Waters,
+SubArea,57.5,4,LDF,Distant Waters,
+SubArea,57.6,4,LDF,Distant Waters,
+Area,58,4,LDF,Distant Waters,
+SubArea,58.4,4,LDF,Distant Waters,
+SubArea,58.5,4,LDF,Distant Waters,
+SubArea,58.6,4,LDF,Distant Waters,
+SubArea,58.7,4,LDF,Distant Waters,
+Area,61,4,LDF,Distant Waters,
+Area,67,4,LDF,Distant Waters,
+Area,71,4,LDF,Distant Waters,
+Area,77,4,LDF,Distant Waters,
+Area,81,4,LDF,Distant Waters,
+Area,87,4,LDF,Distant Waters,
+SubArea,87.1,4,LDF,Distant Waters,
+SubArea,87.2,4,LDF,Distant Waters,
+SubArea,87.3,4,LDF,Distant Waters,
+Area,88,4,LDF,Distant Waters,
+SubArea,88.1,4,LDF,Distant Waters,
+SubArea,88.2,4,LDF,Distant Waters,
+SubArea,88.3,4,LDF,Distant Waters,
+Division,21.0.A,4,LDF,Distant Waters,
+Division,21.0.B,4,LDF,Distant Waters,
+Division,21.1.A,4,LDF,Distant Waters,
+Division,21.1.B,4,LDF,Distant Waters,
+Division,21.1.C,4,LDF,Distant Waters,
+Division,21.1.D,4,LDF,Distant Waters,
+Division,21.1.E,4,LDF,Distant Waters,
+Division,21.1.F,4,LDF,Distant Waters,
+Division,21.2.G,4,LDF,Distant Waters,
+Division,21.2.H,4,LDF,Distant Waters,
+Division,21.2.J,4,LDF,Distant Waters,
+Division,21.3.K,4,LDF,Distant Waters,
+Division,21.3.L,4,LDF,Distant Waters,
+Division,21.3.M,4,LDF,Distant Waters,
+Division,21.3.N,4,LDF,Distant Waters,
+Division,21.3.O,4,LDF,Distant Waters,
+Division,21.3.P,4,LDF,Distant Waters,
+SubDivision,21.3.P.n,4,LDF,Distant Waters,
+SubDivision,21.3.P.s,4,LDF,Distant Waters,
+Division,21.4.R,4,LDF,Distant Waters,
+Division,21.4.S,4,LDF,Distant Waters,
+Division,21.4.T,4,LDF,Distant Waters,
+Division,21.4.V,4,LDF,Distant Waters,
+SubDivision,21.4.V.n,4,LDF,Distant Waters,
+SubDivision,21.4.V.s,4,LDF,Distant Waters,
+Division,21.4.W,4,LDF,Distant Waters,
+Division,21.4.X,4,LDF,Distant Waters,
+Division,21.5.Y,4,LDF,Distant Waters,
+Division,21.5.Z,4,LDF,Distant Waters,
+SubDivision,21.5.Z.c,4,LDF,Distant Waters,
+SubDivision,21.5.Z.e,4,LDF,Distant Waters,
+SubDivision,21.5.Z.u,4,LDF,Distant Waters,
+SubDivision,21.5.Z.w,4,LDF,Distant Waters,
+Division,21.6.A,4,LDF,Distant Waters,
+Division,21.6.B,4,LDF,Distant Waters,
+Division,21.6.C,4,LDF,Distant Waters,
+Division,21.6.D,4,LDF,Distant Waters,
+Division,21.6.E,4,LDF,Distant Waters,
+Division,21.6.F,4,LDF,Distant Waters,
+Division,21.6.G,4,LDF,Distant Waters,
+Division,21.6.H,4,LDF,Distant Waters,
+Division,27.1.a,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+Division,27.1.b,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+Division,27.10.a,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubDivision,27.10.a.1,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubDivision,27.10.a.2,3,NAtl                                      ,North Atlantic                                                                                      ,
+Division,27.10.b,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubDivision,27.10.b.1,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubDivision,27.10.b.2,3,NAtl                                      ,North Atlantic                                                                                      ,
+Division,27.12.a,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+SubDivision,27.12.a.1,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+SubDivision,27.12.a.2,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+SubDivision,27.12.a.3,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+SubDivision,27.12.a.4,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+Division,27.12.b,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+Division,27.12.c,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+Division,27.14.a,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+Division,27.14.b,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+SubDivision,27.14.b.1,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+SubDivision,27.14.b.2,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+Division,27.2.a,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+SubDivision,27.2.a.1,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+SubDivision,27.2.a.2,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+Division,27.2.b,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+SubDivision,27.2.b.1,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+SubDivision,27.2.b.2,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+Division,27.3.a,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+SubDivision,27.3.a.20,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+SubDivision,27.3.a.21,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+Division,27.3.b,,BALT,Baltic Sea                                                                                          ,
+SubDivision,27.3.b.23,1,BALT,Baltic Sea                                                                                          ,
+Division,27.3.bc,1,BALT,Baltic Sea                                                                                          ,
+Division,27.3.c,,BALT,Baltic Sea                                                                                          ,
+SubDivision,27.3.c.22,1,BALT,Baltic Sea                                                                                          ,
+Division,27.3.d,1,BALT,Baltic Sea                                                                                          ,
+SubDivision,27.3.d.24,1,BALT,Baltic Sea                                                                                          ,
+SubDivision,27.3.d.25,1,BALT,Baltic Sea                                                                                          ,
+SubDivision,27.3.d.26,1,BALT,Baltic Sea                                                                                          ,
+SubDivision,27.3.d.27,1,BALT,Baltic Sea                                                                                          ,
+SubDivision,27.3.d.28,1,BALT,Baltic Sea                                                                                          ,
+Unit,27.3.d.28.1,1,BALT,Baltic Sea                                                                                          ,
+Unit,27.3.d.28.2,1,BALT,Baltic Sea                                                                                          ,
+SubDivision,27.3.d.29,1,BALT,Baltic Sea                                                                                          ,
+SubDivision,27.3.d.30,1,BALT,Baltic Sea                                                                                          ,
+SubDivision,27.3.d.31,1,BALT,Baltic Sea                                                                                          ,
+SubDivision,27.3.d.32,1,BALT,Baltic Sea                                                                                          ,
+Division,27.4.a,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+SubDivision,27.4.a.e,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+SubDivision,27.4.a.w,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+Division,27.4.b,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+SubDivision,27.4.b.e,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+SubDivision,27.4.b.w,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+Division,27.4.c,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+Division,27.5.a,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+SubDivision,27.5.a.1,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+SubDivision,27.5.a.2,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+Division,27.5.b,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubDivision,27.5.b.1,3,NAtl                                      ,North Atlantic                                                                                      ,
+Unit,27.5.b.1.a,3,NAtl                                      ,North Atlantic                                                                                      ,
+Unit,27.5.b.1.b,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubDivision,27.5.b.2,3,NAtl                                      ,North Atlantic                                                                                      ,
+Division,27.6.a,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubDivision,27.6.a.n,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubDivision,27.6.a.s,3,NAtl                                      ,North Atlantic                                                                                      ,
+Division,27.6.b,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubDivision,27.6.b.1,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubDivision,27.6.b.2,3,NAtl                                      ,North Atlantic                                                                                      ,
+Division,27.7.a,3,NAtl                                      ,North Atlantic                                                                                      ,
+Division,27.7.b,3,NAtl                                      ,North Atlantic                                                                                      ,
+Division,27.7.c,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubDivision,27.7.c.1,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubDivision,27.7.c.2,3,NAtl                                      ,North Atlantic                                                                                      ,
+Division,27.7.d,2,NSEA                                    ,North Sea and Eastern Arctic                                                                        ,
+Division,27.7.e,3,NAtl                                      ,North Atlantic                                                                                      ,
+Division,27.7.f,3,NAtl                                      ,North Atlantic                                                                                      ,
+Division,27.7.g,3,NAtl                                      ,North Atlantic                                                                                      ,
+Division,27.7.h,3,NAtl                                      ,North Atlantic                                                                                      ,
+Division,27.7.j,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubDivision,27.7.j.1,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubDivision,27.7.j.2,3,NAtl                                      ,North Atlantic                                                                                      ,
+Division,27.7.k,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubDivision,27.7.k.1,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubDivision,27.7.k.2,3,NAtl                                      ,North Atlantic                                                                                      ,
+Division,27.8.a,3,NAtl                                      ,North Atlantic                                                                                      ,
+Division,27.8.b,3,NAtl                                      ,North Atlantic                                                                                      ,
+Division,27.8.c,3,NAtl                                      ,North Atlantic                                                                                      ,
+Division,27.8.d,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubDivision,27.8.d.1,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubDivision,27.8.d.2,3,NAtl                                      ,North Atlantic                                                                                      ,
+Division,27.8.e,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubDivision,27.8.e.1,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubDivision,27.8.e.2,3,NAtl                                      ,North Atlantic                                                                                      ,
+Division,27.9.a,3,NAtl                                      ,North Atlantic                                                                                      ,
+Division,27.9.b,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubDivision,27.9.b.1,3,NAtl                                      ,North Atlantic                                                                                      ,
+SubDivision,27.9.b.2,3,NAtl                                      ,North Atlantic                                                                                      ,
+Division,34.1.1,4,LDF,Distant Waters,
+SubDivision,34.1.1.1,4,LDF,Distant Waters,
+SubDivision,34.1.1.2,4,LDF,Distant Waters,
+SubDivision,34.1.1.3,4,LDF,Distant Waters,
+Division,34.1.2,4,LDF,Distant Waters,
+Division,34.1.3,4,LDF,Distant Waters,
+SubDivision,34.1.3.1,4,LDF,Distant Waters,
+SubDivision,34.1.3.2,4,LDF,Distant Waters,
+Division,34.2.0,4,LDF,Distant Waters,
+Division,34.3.1,4,LDF,Distant Waters,
+SubDivision,34.3.1.1,4,LDF,Distant Waters,
+SubDivision,34.3.1.2,4,LDF,Distant Waters,
+SubDivision,34.3.1.3,4,LDF,Distant Waters,
+Division,34.3.2,4,LDF,Distant Waters,
+Division,34.3.3,4,LDF,Distant Waters,
+Division,34.3.4,4,LDF,Distant Waters,
+Division,34.3.5,4,LDF,Distant Waters,
+Division,34.3.6,4,LDF,Distant Waters,
+Division,34.4.1,4,LDF,Distant Waters,
+Division,34.4.2,4,LDF,Distant Waters,
+Division,37.1.1,5,MED,Mediterranean and Black Sea,
+Division,37.1.2,5,MED,Mediterranean and Black Sea,
+Division,37.1.3,5,MED,Mediterranean and Black Sea,
+Division,37.2.1,5,MED,Mediterranean and Black Sea,
+Division,37.2.2,5,MED,Mediterranean and Black Sea,
+Division,37.3.1,5,MED,Mediterranean and Black Sea,
+Division,37.3.2,5,MED,Mediterranean and Black Sea,
+Division,37.4.1,5,MED,Mediterranean and Black Sea,
+Division,37.4.2,5,MED,Mediterranean and Black Sea,
+Division,37.4.3,5,MED,Mediterranean and Black Sea,
+Division,41.1.1,4,LDF,Distant Waters,
+Division,41.1.2,4,LDF,Distant Waters,
+Division,41.1.3,4,LDF,Distant Waters,
+Division,41.1.4,4,LDF,Distant Waters,
+Division,41.2.1,4,LDF,Distant Waters,
+Division,41.2.2,4,LDF,Distant Waters,
+Division,41.2.3,4,LDF,Distant Waters,
+Division,41.2.4,4,LDF,Distant Waters,
+Division,41.3.1,4,LDF,Distant Waters,
+Division,41.3.2,4,LDF,Distant Waters,
+Division,41.3.3,4,LDF,Distant Waters,
+Division,47.1.1,4,LDF,Distant Waters,
+Division,47.1.2,4,LDF,Distant Waters,
+Division,47.1.3,4,LDF,Distant Waters,
+Division,47.1.4,4,LDF,Distant Waters,
+Division,47.1.5,4,LDF,Distant Waters,
+Division,47.1.6,4,LDF,Distant Waters,
+Division,47.2.1,4,LDF,Distant Waters,
+Division,47.2.2,4,LDF,Distant Waters,
+SubArea,47.A,4,LDF,Distant Waters,
+Division,47.A.0,4,LDF,Distant Waters,
+Division,47.A.1,4,LDF,Distant Waters,
+SubArea,47.B,4,LDF,Distant Waters,
+Division,47.B.0,4,LDF,Distant Waters,
+Division,47.B.1,4,LDF,Distant Waters,
+SubArea,47.C,4,LDF,Distant Waters,
+Division,47.C.0,4,LDF,Distant Waters,
+Division,47.C.1,4,LDF,Distant Waters,
+SubArea,47.D,4,LDF,Distant Waters,
+Division,47.D.0,4,LDF,Distant Waters,
+Division,47.D.1,4,LDF,Distant Waters,
+Division,57.5.1,4,LDF,Distant Waters,
+Division,57.5.2,4,LDF,Distant Waters,
+Division,58.4.1,4,LDF,Distant Waters,
+Division,58.4.2,4,LDF,Distant Waters,
+Division,58.4.3,4,LDF,Distant Waters,
+SubDivision,58.4.3.a,4,LDF,Distant Waters,
+SubDivision,58.4.3.b,4,LDF,Distant Waters,
+Division,58.4.4,4,LDF,Distant Waters,
+SubDivision,58.4.4.a,4,LDF,Distant Waters,
+SubDivision,58.4.4.b,4,LDF,Distant Waters,
+Division,58.5.1,4,LDF,Distant Waters,
+Division,58.5.2,4,LDF,Distant Waters,
+Division,87.1.1,4,LDF,Distant Waters,
+Division,87.1.2,4,LDF,Distant Waters,
+Division,87.1.3,4,LDF,Distant Waters,
+Division,87.1.4,4,LDF,Distant Waters,
+Division,87.2.1,4,LDF,Distant Waters,
+Division,87.2.2,4,LDF,Distant Waters,
+Division,87.2.3,4,LDF,Distant Waters,
+Division,87.2.4,4,LDF,Distant Waters,
+Division,87.2.5,4,LDF,Distant Waters,
+Division,87.2.6,4,LDF,Distant Waters,
+Division,87.3.1,4,LDF,Distant Waters,
+Division,87.3.2,4,LDF,Distant Waters,
+Division,87.3.3,4,LDF,Distant Waters,
