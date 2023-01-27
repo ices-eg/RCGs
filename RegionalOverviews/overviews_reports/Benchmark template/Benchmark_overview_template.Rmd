@@ -1,0 +1,860 @@
+---
+title: "Benchmark template for DM RCG"
+author: "RCG ISSG on catch, effort and sampling overviews"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  word_document: default
+  pdf_document: default
+
+---
+
+## Contents
+
+Plots and graphs presented in this document are prepared for the 'Benchmark ID' request. This overview refers to 2016-2021 data for 'stock ID' and is only for use by 'Benchmark ID'. 
+
+```{r 1_setup_param_dir, include = F}
+
+#If running outside knitr, then set wd. When knitting the wd is set to the folder where the .rmd is stored
+#setwd("D:/RCGs/RegionalOverviews")
+#setwd("C:/Users/acfernandes/Documents/2022/000_RCG_Interssessional Work/ISSG Catch Effort Sampling Overviews_old/ISSG CESOv/RegionalOverviews/")
+setwd("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/")
+
+#Parameters
+
+target_region <- "RCG_BA"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
+years <- c(2016,2017,2018,2019,2020,2021)
+
+stock_code <- 'spr-2232' # uses the 'stockNew' column; before it was: species_code <- 126417 # Clupea harengus
+species_code <- '126417'
+Region <- "BS"
+
+figures <- "yes" #yes / no - all figures outputtet to a folder
+tables <- "yes" #yes / no - all tables outputtet to a folder
+
+#data_dir <- paste("../../data/002_prepared/", target_region, "/", sep = '') 
+#data_dir <- paste("C:/Users/acfernandes/Documents/2022/000_RCG_Interssessional Work/ISSG Catch Effort Sampling Overviews_old/ISSG CESOv/RegionalOverviews/input data/", target_region, "/", sep = '') 
+
+data_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/input_data/2021/", target_region, "/", sep = '') 
+period <- c(2016,2017,2018,2019,2020,2021) #"2021"
+#Folder for figures and tables
+ #table_dir <- paste("../../overviews_reports/WGBFAS/outputs/tables/", sep = "")
+  table_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/overviews_reports/Benchmarks_template_DM RCG/outputs/tables/", sep = "")
+ #figur_dir <- paste("../../overviews_reports/WGBFAS/outputs/figures/", sep = "")
+  figur_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/overviews_reports/Benchmarks_template_DM RCG/outputs/figures/", sep = "")
+```
+
+```{r 2_setup_lib, include = F}
+
+options(scipen = 999)
+
+library(tidyverse)
+library(data.table)
+library(rnaturalearth)
+library(dplyr)
+library(mapdata)
+library(mapplots)
+library(lubridate)
+```
+
+```{r 3_source_ref, include = F}
+
+source("../../funs/choroplethMap_func.R")
+source("../../funs/func_barplot_var_by_one_var_rmd.r")
+source("../../funs/func_determine_what_to_inset.r")
+source("../../funs/func_barplot_var_by_two_var_stacked_rmd.r")
+
+#Function below from http://michaeljw.com/blog/post/subchunkify/
+subchunkify <- function(g, chunk_name = chunk_name, fig_height=7, fig_width=5) {
+  g_deparsed <- paste0(deparse(
+    function() {g}
+  ), collapse = "")
+  
+  sub_chunk <- paste0("
+  `","``{r fig_", chunk_name, ", fig.height=", fig_height, ", fig.width=", fig_width, ", echo=FALSE, result = \"asis\", warning = F, fig.pos = \"H\"}",
+  "  \n (", 
+    g_deparsed
+    , ")()", "  \n ",
+  "  \n `","``
+  ")
+  
+  cat(knitr::knit(text = knitr::knit_expand(text = sub_chunk), quiet = TRUE))
+  
+}
+colour_table <-
+     read.table(
+         #"D:/RCGs/RegionalOverviews/data/aux_colours.txt",
+        "D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/data/aux_colours.txt",  
+         header = T,
+         sep = "\t",
+         colClasses = "character",
+         na.strings = "",
+         comment.char = ""
+     )
+```
+
+```{r setup_markdown, include = F}
+
+#Don't set the dpi too high, then the .docx crash
+
+if (figures == "yes") {
+  knitr::opts_chunk$set(
+  fig.width = 9,
+  fig.height = 5,
+  fig.path = figur_dir,
+  dpi = 300,
+  dev = "png",
+  fig.pos = "H",
+  echo = F,
+  warning = F,
+  message = F,
+  error = F,
+  comment = F
+)
+} else {
+  knitr::opts_chunk$set(
+  fig.width = 9,
+  fig.height = 5,
+  dpi = 300,
+  dev = "png",
+  echo = F,
+  warning = F,
+  message = F,
+  error = F,
+  comment = F
+)
+}
+
+```
+
+```{r title, include = F}
+
+if (target_region == "RCG_BA") {
+  front_title <- paste("RDB Catch and Effort Overview for Benchmarks, ",  period, "  \n ","![](../../overviews_shiny/www/logo RCG BALTIC.PNG)", sep = "")
+}
+
+```
+
+```{r data, include = F}
+
+#This needs to be more generic - for easy loading the naming needs to be more generic
+if (target_region == "RCG_BA")
+{
+  load(
+    paste(data_dir, "RDB_RCG_BA_CL_2009_2021_prepared_20220601.Rdata", sep = "")
+  )
+  load(
+    paste(data_dir, "RDB_RCG_BA_CE_2009_2021_prepared_20220601.Rdata", sep = "")
+  )
+  load(
+    paste(data_dir, "RDB_RCG_BA_CS_all_2009_2021_prepared_202204211940.Rdata", sep = "")
+  )
+}
+
+#Adds IDs [move to preparation]
+cl_rcg[, FlagCountry_Loa := paste(FlagCountry, VesselLengthCategory, sep = "_")]
+ce_rcg[, FlagCountry_Loa := paste(FlagCountry, VesselLengthCategory, sep = "_")]
+
+# for maps of foreign landings 'LandingCountry' is needed
+ce_rcg[,LandingCountry := HarbourCountry]
+
+#Filter
+
+cl <- filter(cl_rcg, Year %in% years & stock==stock_code) #stock==stock_code; SpeciesAphiaID==species_code)
+
+ce <- filter(ce_rcg, Year %in% years)
+
+
+# filter WGBFAS
+
+cl <- droplevels(cl)
+ce <- droplevels(ce) 
+
+#
+
+```
+
+```{r map_prep, include = F}
+# Load shapefiles 
+
+if (target_region == "RCG_BA")
+{
+  shp  = sf::st_read("../../data/shapefiles/RCG_BA_FAOareas.shp") %>% filter(F_LEVEL ==
+                                                                    'SUBDIVISION') # for BA maps on DIVISIONS level -> WATCH OUT ...28.1/...28.2
+}
+
+shp %>%
+  mutate(AreaMap = F_CODE, Area = F_CODE) -> shp
+
+# For plotting FishingGrounds
+cl %>% group_by(FishingGround) %>% distinct(Area) -> FishingGround
+shp %>% left_join(FishingGround) %>% group_by(FishingGround) %>% summarise(ID = mean(ID)) -> FAOshpFG
+FAOshpFG = cbind(FAOshpFG,  sf::st_coordinates(sf::st_centroid(FAOshpFG$geometry))) %>% mutate(lon = X, lat = Y)
+
+# For plotting Areas
+# add centroids - to put areas labels there, and to put piecharts there, creates new columns to the dataset named X, Y
+FAOshp = cbind(shp,  sf::st_coordinates(sf::st_centroid(shp$geometry))) %>% mutate(lon = X, lat = Y)
+
+if(target_region=="RCG_BA"){ # fixed wrong calculation of centroid of 27.3.d.30
+  FAOshp = FAOshp %>%   
+    mutate(X = ifelse(AreaMap=="27.3.d.30", 19.5 ,X), Y =  ifelse(AreaMap=="27.3.d.30",62 ,Y)) %>%
+    mutate(lon = X, lat = Y) 
+  
+  FAOshpFG = FAOshpFG %>% 
+    mutate(X = ifelse(FishingGround=="25-32", 20 ,X), Y =  ifelse(FishingGround=="25-32",58 ,Y)) %>% 
+    mutate(lon = X, lat = Y) 
+
+}
+
+if (target_region == "RCG_BA")
+{
+  StatRectshp  = sf::st_read("../../data/shapefiles/RCG_BA_ICESrect.shp")# for BA maps on DIVISIONS level -> WATCH OUT ...28.1/...28.2
+}
+
+StatRectshp %>% mutate(StatisticalRectangle = ICESNAME) -> StatRectshp
+StatRectshp = cbind(StatRectshp,  sf::st_coordinates(sf::st_centroid(StatRectshp$geometry))) %>% mutate(lon = X, lat = Y)
+```
+
+# Total landings information
+
+```{r landings, results = "asis", eval = T}
+cat("  \n")
+cat(paste0("## ", "Annual landings of 'Stock ID' by Statistical Rectangle (2016-2021)  \n"))
+
+res <- choroplethMap_func(
+            df = cl%>%filter(stock==stock_code), #stock==stock_code, SpeciesAphiaID==species_code
+            var = "LandingWeight_1000ton",
+            groupBy = "StatisticalRectangle",
+            facet = "Year",
+            func = "sum",
+            type_of_threshold = "percent",
+            value_of_threshold =  100,
+            points_coord =  eval(parse(text = "StatRectshp")),
+            plot_labels = FALSE,
+            saveResults = FALSE,
+            outputPath = NA,
+            Catch_group_name = NA,
+            newVarName = "Landings (1000 t)"
+            )
+
+          subchunkify(res[[2]],"Figure_landings_y",  10, 9)
+          
+          if (tables == "yes") {
+            write.table(
+              res[[1]],
+              file =  
+                paste(table_dir, "Figure_landings_y",
+                ".txt",
+                sep = ""
+              ),
+              sep = "\t",
+              dec = ".",
+              row.names = F
+            )
+            }
+          
+          cat("\n")
+          cat("**Figure 1.**", res[[3]],"  \n ")
+
+## For now we're not using quarter... removed it from the code (ACF and Lucia 08.09.2022)          
+          
+```
+
+# Effort information
+
+The measure used for presenting effort information is the fishing trip. This decision is based on the fact that the calculated mean of 'days at sea per trip' is 1 (also for median and quantiles) and thus the use of days at sea in the report presents similar results.
+
+The analysis of the results regarding the effort by metier is performed using the gear code (Figure 3) and the target assemblage (Figure 4). For analyzing the multiannual distribution of effort at metier level 6, another type of plot must be used, for a better visualization and interpretation of the results.
+
+```{r effort, results = "asis", eval = T}          
+cat("  \n")
+cat(paste0("## ", "Annual effort by Statistical Rectangle (2016-2021) \n"))          
+          
+res_ce <- choroplethMap_func(
+            df = ce,
+            var = "TripsNumber",
+            groupBy = "StatisticalRectangle",
+            facet = "Year",
+            func = "sum",
+            type_of_threshold = "percent",
+            value_of_threshold =  100,
+            points_coord =  eval(parse(text = "StatRectshp")),
+            plot_labels = FALSE,
+            saveResults = FALSE,
+            outputPath = NA,
+            Catch_group_name = NA,
+            newVarName = "Trips Number"
+            )
+
+            subchunkify(res_ce[[2]],"Figure_effort_ty",  10, 9)
+            
+            if (tables == "yes") {
+            write.table(
+              res[[1]],
+              file =  
+                paste(table_dir, "Figure_effort_ty",
+                ".txt",
+                sep = ""
+              ),
+              sep = "\t",
+              dec = ".",
+              row.names = F
+            )
+              }
+            cat("\n")
+            cat("**Figure 2.**", res_ce[[3]],"  \n ")
+
+                                
+## For now we're not using quarter... (ACF and Lucia 08.09.2022)    
+  
+  ce_benchmk <- droplevels(ce[ce$FishingActivityLvl5 %in% cl$FishingActivityLvl5,])
+  ce_benchmk$Gear <- substr(ce_benchmk$FishingActivityLvl5, 1, 3)
+  ce_benchmk$Assemblage <- substr(ce_benchmk$FishingActivityLvl5, 5, 7)
+  
+  ## Effort by metier Lv5 - too many metiers!
+  
+  # bar_ce <- ggplot(data=ce_benchmk, aes(x=Year, y=TripsNumber, fill=FishingActivityLvl5)) +
+  # geom_bar(position="fill", stat="identity") +
+  # labs(title="Effort by metier Lv5", x="year", y="Proportion of trips", fill="Metier Lv5") +
+  # theme(axis.text.x = element_text(size=6), plot.title=element_text(size=6), line =   axis.title=element_text(size=6),legend.title=element_text(size=4),legend.text=element_text(size=4)) +
+  # theme_bw()
+  # 
+  # bar_ce
+  
+ ## Effort by Gear
+  
+  cat("  \n")
+  cat(paste0("## ", "Effort distribution by gear (2016-2021) \n"))
+  
+  bar_ce_gear <- ggplot(data=ce_benchmk, aes(x=Year, y=TripsNumber, fill=Gear)) +
+  geom_bar(position="fill", stat="identity") +
+  labs(title="Effort by gear", x="year", y="Proportion of trips", fill="Gear") +
+  theme(axis.text.x = element_text(size=6), plot.title=element_text(size=6), axis.title=element_text(size=6),legend.title=element_text(size=4),legend.text=element_text(size=4)) +
+  theme_bw()
+ 
+  # bar_ce_gear
+  
+          subchunkify(bar_ce_gear,"Figure_effort_ft_by_gear",  5, 8)
+          
+          if (tables == "yes") {
+            write.table(
+              bar_ce_gear[[1]],
+              file =  
+                paste(table_dir, "Figure_effort_ft_by_gear",
+                ".txt",
+                sep = ""
+              ),
+              sep = "\t",
+              dec = ".",
+              row.names = F
+            )
+            }
+          
+  cat("\n")
+  cat("**Figure 3**. Effort in number of trips, by gear.  \n ")  
+  
+  
+  ## Effort by target assemblage
+  
+  cat("  \n")
+  cat(paste0("## ", "Effort by target assemblage (2016-2021) \n"))
+
+  
+  bar_ce_target <- ggplot(data=ce_benchmk, aes(x=Year, y=TripsNumber, fill=Assemblage)) +
+  geom_bar(position="fill", stat="identity") +
+  labs(title="Effort by target assemblage", x="year", y="Proportion of trips", fill="Target Assemblage") +
+  theme(axis.text.x = element_text(size=6), plot.title=element_text(size=6), axis.title=element_text(size=6),legend.title=element_text(size=4),legend.text=element_text(size=4)) +
+  theme_bw()
+  
+
+           subchunkify(bar_ce_target,"Figure_effort_ft_by_target assemblage",  5, 8)
+          
+          if (tables == "yes") {
+            write.table(
+              bar_ce_target[[1]],
+              file =  
+                paste(table_dir, "Figure_effort_ft_by_target assemblage",
+                ".txt",
+                sep = ""
+              ),
+              sep = "\t",
+              dec = ".",
+              row.names = F
+            )
+            }
+          
+cat("\n")
+cat("**Figure 4.** Effort in number of trips by Target Assemblage. \n ")
+
+
+```
+
+# Sampling information
+
+
+```{r sampling, results = "asis", eval = T}          
+
+
+cat("  \n")
+cat(paste0("## ", "Annual number of samples per unit of landings \n")) #per HH
+
+cl %>% 
+  mutate(Gear = str_sub(FishingActivityLvl6, end = 3)) %>%
+  group_by(StatisticalRectangle, Year) %>%
+  summarise(LandingsT=sum(LandingWeight_ton, na.rm=TRUE)) %>%
+  ungroup()->mapcl
+
+## Subset the years: 2016-2021
+
+sl_rcg_all <- droplevels(sl_rcg_all[sl_rcg_all$Year %in% c('2016','2017','2018','2019','2020','2021'),])
+hh_rcg_all <- droplevels(hh_rcg_all[hh_rcg_all$Year %in% c('2016','2017','2018','2019','2020','2021'),])
+
+left_join(sl_rcg_all, hh_rcg_all) %>%
+  filter(Region==Region) %>%
+  mutate(Gear = str_sub(FishingActivityCategoryEuropeanLvl6 , end = 3),
+         idsamp=paste(CS_TripId, StationNo)) %>%  group_by(StatisticalRectangle,Year) %>%  summarise(wsamp=sum(Weight_ton ,na.rm=T), nbsamp=n_distinct(idsamp))-> mapcs
+
+## insert the centroids of the icesRect
+mapcs$lon <- StatRectshp$lon[match(mapcs$StatisticalRectangle,StatRectshp$StatisticalRectangle)]
+mapcs$lat <- StatRectshp$lat[match(mapcs$StatisticalRectangle,StatRectshp$StatisticalRectangle)]
+
+
+#draw a map
+mapcl$lon<-mapcl$lat<-mapcl$lonc<-mapcl$latc<-NA
+for(i in 1:nrow(mapcl)){
+  if(!is.na(mapcl$StatisticalRectangle[i]) & nchar(mapcl$StatisticalRectangle[i])==4){
+    mapcl$lon[i]<-ices.rect(mapcl$StatisticalRectangle[i])$lon
+    mapcl$lat[i]<-ices.rect(mapcl$StatisticalRectangle[i])$lat
+    
+  }
+}
+rangex<-c(min(mapcl$lon,na.rm=T)-.1,max(mapcl$lon,na.rm=T)+.1)
+rangey<-c(min(mapcl$lat,na.rm=T)-.1,max(mapcl$lat,na.rm=T)+.1)
+#poly map
+map0<-ggplot(mapcl)+theme_bw() +
+  geom_raster(data=mapcl,aes(x=lon,y=lat,fill=LandingsT ),stat="identity",alpha=.75)+
+  
+  geom_point(data=mapcs,aes(x=lon,y=lat,size=nbsamp),alpha=.8,shape=1)+ #CatchCategory
+  
+  borders("worldHires",xlim=rangex,ylim=rangey,fill="light grey",colour="light grey")+
+  coord_quickmap(xlim=range(mapcl$lon,na.rm=T),ylim=range(mapcl$lat,na.rm=T))+
+  scale_fill_distiller(palette="Spectral",name="Landings\n(t)")+
+  facet_wrap(~Year,ncol=2)+xlab("")+ylab("")
+
+#map0
+
+# Total landings and sampling position number of samples by quarter and statistical rectangle.
+
+          subchunkify(map0,"Figure_n_sample_CPUE_map_y",  10, 9)
+          
+          if (tables == "yes") {
+            write.table(
+              map0[[1]],
+              file =  
+                paste(table_dir, "Figure_n_sample_CPUE_map_y",
+                ".txt",
+                sep = ""
+              ),
+              sep = "\t",
+              dec = ".",
+              row.names = F
+            )
+            }
+          
+cat("\n")
+cat("**Figure 5.** Total landings of 'Stock ID' and number of samples by statistical rectangle.(source: HH and SL data) \n ")
+
+## removed the code for the quarter results 
+
+cat("  \n")
+cat(paste0("## ", "Total landings and sampled weights for 'Stock ID' \n")) #per HH
+
+
+#draw a map
+mapcl$lon<-mapcl$lat<-mapcl$lonc<-mapcl$latc<-NA
+for(i in 1:nrow(mapcl)){
+  if(!is.na(mapcl$StatisticalRectangle[i]) & nchar(mapcl$StatisticalRectangle[i])==4){
+    mapcl$lon[i]<-ices.rect(mapcl$StatisticalRectangle[i])$lon
+    mapcl$lat[i]<-ices.rect(mapcl$StatisticalRectangle[i])$lat
+    
+  }
+}
+rangex<-c(min(mapcl$lon,na.rm=T)-.1,max(mapcl$lon,na.rm=T)+.1)
+rangey<-c(min(mapcl$lat,na.rm=T)-.1,max(mapcl$lat,na.rm=T)+.1)
+#poly map
+map1<-ggplot(mapcl)+theme_bw()+
+  geom_raster(data=mapcl,aes(x=lon,y=lat,fill=LandingsT ),stat="identity",alpha=.75)+
+  
+  geom_point(data=mapcs,aes(x=lon,y=lat,size=wsamp),alpha=.8,shape=1)+
+  
+  borders("worldHires",xlim=rangex,ylim=rangey,fill="light grey",colour="light grey")+
+  coord_quickmap(xlim=range(mapcl$lon,na.rm=T),ylim=range(mapcl$lat,na.rm=T))+
+  scale_fill_distiller(palette="Spectral",name="Landings\n(t)")+
+  facet_wrap(~Year, ncol=2)+xlab("")+ylab("")
+
+  #map1
+
+# Total landings and sampling weight by statistical rectangle.
+
+          subchunkify(map1,"Figure_sample_CPUE_map_y",  10, 9)
+          
+          if (tables == "yes") {
+            write.table(
+              map1[[1]],
+              file =  
+                paste(table_dir, "Figure_sample_CPUE_map_y",
+                ".txt",
+                sep = ""
+              ),
+              sep = "\t",
+              dec = ".",
+              row.names = F
+            )
+            }
+          
+cat("\n")
+cat("**Figure 6.** Total landings and sampled weight (ton) by statistical rectangle.(source: HH and SL data) \n ")
+
+## By catch category
+
+cat("  \n")
+cat(paste0("## ", "Number of samples per unit of landings, by catch category \n")) 
+
+
+hh_join <- left_join(sl_rcg_all, hh_rcg_all) 
+
+## Subset DIS and LAND - the dataset includes also BMS, CATCH and REGDIS... to many circles in the map are difficult to interpret...
+hh_join <- droplevels(hh_join[hh_join$CatchCategory %in% c('DIS','LAN'),])
+
+
+left_join(hh_join, hl_rcg_all)%>%
+  filter(Region=="BS") %>%
+  mutate(Gear = str_sub(FishingActivityCategoryEuropeanLvl6 , end = 3),
+         idsamp=paste(CS_TripId, StationNo)) %>% 
+  group_by(StatisticalRectangle, CatchCategory)%>%
+  summarise(wsamp=sum(Weight_ton ,na.rm=T),
+            nbsamp=n_distinct(idsamp))-> mapcs
+
+## insert the centroids of the icesRect
+mapcs$lon <- StatRectshp$lon[match(mapcs$StatisticalRectangle,StatRectshp$StatisticalRectangle)]
+mapcs$lat <- StatRectshp$lat[match(mapcs$StatisticalRectangle,StatRectshp$StatisticalRectangle)]
+
+
+#draw a map
+mapcl$lon<-mapcl$lat<-mapcl$lonc<-mapcl$latc<-NA
+for(i in 1:nrow(mapcl)){
+  if(!is.na(mapcl$StatisticalRectangle[i]) & nchar(mapcl$StatisticalRectangle[i])==4){
+    mapcl$lon[i]<-ices.rect(mapcl$StatisticalRectangle[i])$lon
+    mapcl$lat[i]<-ices.rect(mapcl$StatisticalRectangle[i])$lat
+    
+  }
+}
+rangex<-c(min(mapcl$lon,na.rm=T)-.1,max(mapcl$lon,na.rm=T)+.1)
+rangey<-c(min(mapcl$lat,na.rm=T)-.1,max(mapcl$lat,na.rm=T)+.1)
+
+#poly map
+
+map2<-ggplot(mapcl)+theme_bw()+
+  geom_raster(data=mapcl,aes(x=lon,y=lat,fill=LandingsT ),stat="identity",alpha=.75)+
+  
+  geom_point(data=mapcs,aes(x=lon,y=lat,color=CatchCategory,size=nbsamp),shape=1)+ 
+  scale_color_manual(name = "CatchCategory",
+                     values = c("DISC" = "black",
+                                  "LAN" = "green"),
+                    labels = c("DIS","LAN"))+
+  
+  borders("worldHires",xlim=rangex,ylim=rangey,fill="light grey",colour="light grey")+
+  coord_quickmap(xlim=range(mapcl$lon,na.rm=T),ylim=range(mapcl$lat,na.rm=T))+
+  scale_fill_distiller(palette="Spectral",name="Landings\n(t)")+
+  facet_wrap(~Year, ncol=2)+xlab("")+ylab("")
+
+#map2
+
+
+# Annual total landings and sampling position and number of samples by statistical rectangle.
+
+         subchunkify(map2,"Figure_n_sample_CPUE_map_HL_y",  10, 9)
+          
+          if (tables == "yes") {
+            write.table(
+              map2[[1]],
+              file =  
+                paste(table_dir, "Figure_n_sample_CPUE_map_HL_y",
+                ".txt",
+                sep = ""
+              ),
+              sep = "\t",
+              dec = ".",
+              row.names = F
+            )
+            }
+          
+cat("\n")
+cat("**Figure 7.** Total landings and number of samples by catch category and statistical rectangle in 2016-2021.(source: HH and SL data) \n ")
+
+#removed the quarter outputs
+
+cat("  \n")
+cat(paste0("## ", "Total landings and sampled weights by size category, for 'Stock ID' in 2016-2021 \n")) #per SL (paste 'CS_TripId' and 'StationNo');  
+
+
+### If per CA (paste('CS_SMAWLId', 'StationNo'))
+# hh_join <- left_join(sl_rcg_all, hh_rcg_all) 
+# hl_join <- left_join(hh_join, hl_rcg_all) 
+# left_join(hl_join, ca_rcg_all)%>%
+
+hh_join <- left_join(sl_rcg_all, hh_rcg_all) 
+
+hh_join <- droplevels(hh_join[hh_join$CatchCategory %in% c('DIS','LAN'),])
+
+left_join(hh_join, hl_rcg_all)%>%
+  
+  filter(Region=="BS") %>%
+  mutate(Gear = str_sub(FishingActivityCategoryEuropeanLvl6, end = 3),
+         idsamp=paste(CS_TripId, StationNo)) %>%
+  group_by(StatisticalRectangle, CatchCategory)%>%
+  summarise(wsamp=sum(Weight_ton ,na.rm=T),
+            nbsamp=n_distinct(idsamp))-> mapcs
+
+## insert the centroids of the icesRect
+mapcs$lon <- StatRectshp$lon[match(mapcs$StatisticalRectangle,StatRectshp$StatisticalRectangle)]
+mapcs$lat <- StatRectshp$lat[match(mapcs$StatisticalRectangle,StatRectshp$StatisticalRectangle)]
+
+#draw a map
+mapcl$lon<-mapcl$lat<-mapcl$lonc<-mapcl$latc<-NA
+for(i in 1:nrow(mapcl)){
+  if(!is.na(mapcl$StatisticalRectangle[i]) & nchar(mapcl$StatisticalRectangle[i])==4){
+    mapcl$lon[i]<-ices.rect(mapcl$StatisticalRectangle[i])$lon
+    mapcl$lat[i]<-ices.rect(mapcl$StatisticalRectangle[i])$lat
+    
+  }
+}
+rangex<-c(min(mapcl$lon,na.rm=T)-.1,max(mapcl$lon,na.rm=T)+.1)
+rangey<-c(min(mapcl$lat,na.rm=T)-.1,max(mapcl$lat,na.rm=T)+.1)
+#poly map
+map3<-ggplot(mapcl)+theme_bw()+
+  geom_raster(data=mapcl,aes(x=lon,y=lat,fill=LandingsT ),stat="identity",alpha=.75)+
+  
+  geom_point(data=mapcs,aes(x=lon,y=lat,color=CatchCategory,size=wsamp),shape=1)+ 
+  scale_color_manual(name = "CatchCategory",
+                     values = c("DISC" = "black",
+                                  "LAN" = "green"),
+                    labels = c("DIS","LAN"))+
+
+  borders("worldHires",xlim=rangex,ylim=rangey,fill="light grey",colour="light grey")+
+  coord_quickmap(xlim=range(mapcl$lon,na.rm=T),ylim=range(mapcl$lat,na.rm=T))+
+  scale_fill_distiller(palette="Spectral",name="Landings\n(t)")+
+  facet_wrap(~Year, ncol=2)+xlab("")+ylab("")
+
+  #map3
+
+# Total landings and sampling position and number of samples by quarter and statistical rectangle.
+
+          subchunkify(map3,"Figure_sample_n_CPUE_map_CA_y",  10, 9)
+          
+          if (tables == "yes") {
+            write.table(
+              map3[[1]],
+              file =  
+                paste(table_dir, "Figure_sample_n_CPUE_map_CA_y",
+                ".txt",
+                sep = ""
+              ),
+              sep = "\t",
+              dec = ".",
+              row.names = F
+            )
+            }
+          
+cat("\n")
+cat("**Figure 8.** Total landings and sampled weight by size category and statistical rectangle, in 2016-2021. (source: HH and SL data) \n ")
+
+
+### Using CA table to get the number of samples (number of fish measured)
+
+cat("  \n")
+cat(paste0("## ", "Number of individuals sampled by catch category in 2016-2021 \n")) #per CA
+
+hh_join <- left_join(sl_rcg_all, hh_rcg_all) 
+hl_join <- left_join(hh_join, hl_rcg_all) 
+left_join(hl_join, ca_rcg_all)%>%
+  filter(Region=="BS") %>%
+  mutate(Gear = str_sub(FishingActivityCategoryEuropeanLvl6 , end = 3),
+         idsamp=paste(CS_SMAWLId, StationNo)) %>%
+  group_by(StatisticalRectangle, CatchCategory)%>%
+  summarise(wsamp=sum(Weight_ton ,na.rm=T),
+            nbsamp=n_distinct(idsamp))-> mapcs
+
+## insert the centroids of the icesRect
+mapcs$lon <- StatRectshp$lon[match(mapcs$StatisticalRectangle,StatRectshp$StatisticalRectangle)]
+mapcs$lat <- StatRectshp$lat[match(mapcs$StatisticalRectangle,StatRectshp$StatisticalRectangle)]
+
+
+#draw a map
+mapcl$lon<-mapcl$lat<-mapcl$lonc<-mapcl$latc<-NA
+for(i in 1:nrow(mapcl)){
+  if(!is.na(mapcl$StatisticalRectangle[i]) & nchar(mapcl$StatisticalRectangle[i])==4){
+    mapcl$lon[i]<-ices.rect(mapcl$StatisticalRectangle[i])$lon
+    mapcl$lat[i]<-ices.rect(mapcl$StatisticalRectangle[i])$lat
+    
+  }
+}
+rangex<-c(min(mapcl$lon,na.rm=T)-.1,max(mapcl$lon,na.rm=T)+.1)
+rangey<-c(min(mapcl$lat,na.rm=T)-.1,max(mapcl$lat,na.rm=T)+.1)
+#poly map
+
+
+map4<-ggplot(mapcl)+theme_bw()+
+  geom_raster(data=mapcl,aes(x=lon,y=lat,fill=LandingsT ),stat="identity",alpha=.75)+
+  geom_point(data=mapcs,aes(x=lon,y=lat,color=CatchCategory,size=nbsamp),shape=1)+ 
+     scale_color_manual(name = "CatchCategory",
+                     values = c("DISC" = "black",
+                                  "LAN" = "green"),
+                    labels = c("DIS","LAN"))+
+  borders("worldHires",xlim=rangex,ylim=rangey,fill="light grey",colour="light grey")+
+  coord_quickmap(xlim=range(mapcl$lon,na.rm=T),ylim=range(mapcl$lat,na.rm=T))+
+  scale_fill_distiller(palette="Spectral",name="Landings\n(t)")+
+  facet_wrap(~Year,ncol=2)+xlab("")+ylab("")
+
+#map4
+
+# Total landings and sampling position and catch sampled weights by quarter and statistical rectangle.
+
+          subchunkify(map4,"Figure_sample_CPUE_map_CA_y",  10, 9)
+          
+          if (tables == "yes") {
+            write.table(
+              map4[[1]],
+              file =  
+                paste(table_dir, "Figure_sample_CPUE_map_CA_y",
+                ".txt",
+                sep = ""
+              ),
+              sep = "\t",
+              dec = ".",
+              row.names = F
+            )
+            }
+          
+cat("\n")
+cat("**Figure 9.** Total landings and number of sampled individuals by catch category and statistical rectangle, in 2016-2021. (source: CA data) \n ")
+
+cat("  \n")
+cat(paste0("## ", "Sampling coverage by gear and flag country. \n"))
+
+
+# # This part is based on the WKBIOPTIM2 scripts - we didn't use the  original scripts,
+# # just ideas how to present sampling vs landings. 
+# 
+cl_data <- cl_rcg
+cl_data$Region <- ifelse(cl_data$Region=="NA"|is.na(cl_data$Region),"NATL",cl_data$Region)
+# 
+# # ################################################################################################################
+# # # subset sl data according to cl and create combined dataset
+# # ################################################################################################################
+# # 
+# #   # Filter CS only to the Region which is in CL
+
+#preparing master table
+
+sl_master<-merge(sl_rcg_all, tr_rcg_all[,list(CS_TripId, VesselIdentifier, SamplingCountry, SamplingMethod, VesselLengthCategory)], by="CS_TripId", all.x=T)
+
+hh_rcg_all$StartQuarter <- quarter(ymd(hh_rcg_all$StartDate))
+sl_master <-
+  merge(sl_master,
+        hh_rcg_all[, list(
+          Region,
+          CS_TripId,
+          CS_StationId,
+          StartDate,
+          StartQuarter,
+          FishingTime,
+          PosStartLatDec,
+          PosStartLonDec,
+          PosStopLatDec,
+          PosStopLonDec,
+          Area,
+          FishingGround,
+          StatisticalRectangle,
+          FishingActivityCategoryEuropeanLvl5,
+          FishingActivityCategoryEuropeanLvl6,
+          Gear
+        )],
+        by = c("CS_TripId", "CS_StationId"),
+        all.x = T)
+sl_data <- sl_master
+
+# #   # check if factor are not spoiling anything
+sl_data <- sl_master[,.(NoLength=sum(NoInSubSample),NoLengthTrips=length(unique(Trip[NoInSubSample>0])),WeigthKg=sum(SubSampleWeight_kg)),by=c("Year","Region","FlagCountry","LandingCountry","Stock","Species","SamplingType","StartQuarter","FishingGround","Area" ,"FishingActivityCategoryEuropeanLvl6", "CatchCategory","VesselLengthCategory")][NoLength>0|NoLengthTrips>0,]
+sl_data <- sl_data[sl_data$Region %in% unique(cl_data$Region),]
+# # 
+sl_data %>%
+  mutate(Quarter=as.numeric(as.character(StartQuarter))) %>% # some problem with factors <----- to do - to be checked
+  rename(FishingActivityLvl6=FishingActivityCategoryEuropeanLvl6) %>%
+  group_by(Year,Quarter, Region, FlagCountry,FishingGround,Area,Species,Stock,FishingActivityLvl6, VesselLengthCategory) %>% #Stock,
+  summarise(NoLengthTrips = sum(NoLengthTrips, na.rm =  TRUE),
+            NoLength = sum(NoLength),
+            WeigthKg = sum(WeigthKg)) -> samplingPart
+
+cl_data %>%
+  filter(Year %in% unique(samplingPart$Year)) %>%
+  group_by(Year, Quarter, Region, FlagCountry,FishingGround, stockNew, Area, Species, FishingActivityLvl6, VesselLengthCategory ) %>% #stockNew, 
+  summarise(LandingsT = sum(LandingWeight_ton, na.rm=TRUE))-> LandingsPart
+#colnames(LandingsPart)[8] <- "Stock"
+
+# 
+# 
+samplingPart %>%
+  full_join(LandingsPart)-> samplingVSlandings
+
+
+## Species specific
+
+samplingVSlandings %>%
+  filter(Stock == "spr-2232") %>% #Species == "Clupea harengus"; Stock == "her.27.20-24") 
+  mutate(Gear = str_sub(FishingActivityLvl6, end = 3)) %>% 
+  group_by(
+    Year,
+    Region,
+    #Area,
+    Gear,
+    Species,
+    Stock,
+    FlagCountry
+  )   %>% 
+  summarise(NoLengthTrips =sum(NoLengthTrips, na.rm=TRUE),
+            LandingsT=sum(LandingsT, na.rm=TRUE))  %>% 
+  mutate(NoLengthTrips = ifelse(NoLengthTrips==0, NA, NoLengthTrips))  -> samplingVSlandingsF_bench
+
+matrix<-ggplot(samplingVSlandingsF_bench, aes(y = factor(FlagCountry),
+                                x = factor(Gear))) +        ## global aes
+  geom_tile(aes(fill = LandingsT), na.rm = TRUE) +         ## to get the rect filled
+  geom_point(aes(
+    size =NoLengthTrips),
+    shape =1,
+    stroke = 1)  +    ## geom_point for circle illusion
+  scale_fill_distiller(palette = "Spectral", direction = -1, trans = "log10", na.value="transparent",name="Landings\n(t)") +
+  #scale_size(range = c(1, 20))+             ## to tune the size of circles
+  facet_wrap(~Year, ncol=2) + labs(x="Gear", y="Flag Country") +
+  theme_bw()
+
+
+          subchunkify(matrix,"Figure_sample_matrix_cod",  10, 9)
+          
+          if (tables == "yes") {
+            write.table(
+              matrix[[1]],
+              file =  
+                paste(table_dir, "Figure_sample_matrix_cod",
+                ".txt",
+                sep = ""
+              ),
+              sep = "\t",
+              dec = ".",
+              row.names = F
+            )
+            }
+          
+cat("\n")
+cat("**Figure 10.** Total landings and number of trips sampled with 'Stock ID', by gear and country. \n ")
+
+```
