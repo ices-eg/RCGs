@@ -107,12 +107,12 @@ step.levels<-list(c("vessel_id","month","area","seq_dom_group","gear_group"),
                   c("vessel_id","quarter","area","seq_dom_group"),
                   c("vessel_id","year","area","seq_dom_group","gear_group"),
                   c("vessel_id","year","area","seq_dom_group"),
-                  c("vessel_id","month","seq_dom_group","gear_group"),
-                  c("vessel_id","month","seq_dom_group"),
-                  c("vessel_id","quarter","seq_dom_group","gear_group"),
-                  c("vessel_id","quarter","seq_dom_group"),
-                  c("vessel_id","year","seq_dom_group","gear_group"),
-                  c("vessel_id","year","seq_dom_group"))
+                  c("vessel_id","month","RCG","seq_dom_group","gear_group"),
+                  c("vessel_id","month","RCG","seq_dom_group"),
+                  c("vessel_id","quarter","RCG","seq_dom_group","gear_group"),
+                  c("vessel_id","quarter","RCG","seq_dom_group"),
+                  c("vessel_id","year","RCG","seq_dom_group","gear_group"),
+                  c("vessel_id","year","RCG","seq_dom_group"))
 for(level in step.levels){
   if(nrow(input.data[substr(metier_level_6,1,3)=="MIS"])>0){
     input.data <- missingMetiersByLevel(input.data,level,sequence.def)
@@ -122,15 +122,15 @@ for(level in step.levels){
 step.levels<-list(c("vessel_id","month","area","gear_level6"),
                   c("vessel_id","quarter","area","gear_level6"),
                   c("vessel_id","year","area","gear_level6"),
-                  c("vessel_id","month","gear_level6"),
-                  c("vessel_id","quarter","gear_level6"),
-                  c("vessel_id","year","gear_level6"),
+                  c("vessel_id","month","RCG","gear_level6"),
+                  c("vessel_id","quarter","RCG","gear_level6"),
+                  c("vessel_id","year","RCG","gear_level6"),
                   c("vessel_id","month","area","gear_group"),
                   c("vessel_id","quarter","area","gear_group"),
                   c("vessel_id","year","area","gear_group"),
-                  c("vessel_id","month","gear_group"),
-                  c("vessel_id","quarter","gear_group"),
-                  c("vessel_id","year","gear_group"))
+                  c("vessel_id","month","RCG","gear_group"),
+                  c("vessel_id","quarter","RCG","gear_group"),
+                  c("vessel_id","year","RCG","gear_group"))
 for(level in step.levels){
   if(nrow(input.data[substr(metier_level_6,1,3)=="MIS"])>0){
     input.data <- missingMetiersByLevel(input.data,level,sequence.def)
@@ -145,12 +145,12 @@ step.levels<-list(c("month","vessel_length_group","gear_FR","area","seq_dom_grou
                   c("quarter","gear_FR","area","seq_dom_group"),
                   c("year","vessel_length_group","gear_FR","area","seq_dom_group"),
                   c("year","gear_FR","area","seq_dom_group"),
-                  c("month","vessel_length_group","gear_FR","seq_dom_group"),
-                  c("month","gear_FR","seq_dom_group"),
-                  c("quarter","vessel_length_group","gear_FR","seq_dom_group"),
-                  c("quarter","gear_FR","seq_dom_group"),
-                  c("year","vessel_length_group","gear_FR","seq_dom_group"),
-                  c("year","gear_FR","seq_dom_group"))
+                  c("month","vessel_length_group","gear_FR","RCG","seq_dom_group"),
+                  c("month","gear_FR","RCG","seq_dom_group"),
+                  c("quarter","vessel_length_group","gear_FR","RCG","seq_dom_group"),
+                  c("quarter","gear_FR","RCG","seq_dom_group"),
+                  c("year","vessel_length_group","gear_FR","RCG","seq_dom_group"),
+                  c("year","gear_FR","RCG","seq_dom_group"))
 for(level in step.levels){
   if(nrow(input.data[substr(metier_level_6,1,3)=="MIS"])>0){
     input.data <- missingMetiersByLevel(input.data,level,sequence.def)
@@ -163,24 +163,24 @@ step.levels<-list(c("month","vessel_length_group","gear_FR","area","gear_level6"
                   c("quarter","gear_FR","area","gear_level6"),
                   c("year","vessel_length_group","gear_FR","area","gear_level6"),
                   c("year","gear_FR","area","gear_level6"),
-                  c("month","vessel_length_group","gear_FR","gear_level6"),
-                  c("month","gear_FR","gear_level6"),
-                  c("quarter","vessel_length_group","gear_FR","gear_level6"),
-                  c("quarter","gear_FR","gear_level6"),
-                  c("year","vessel_length_group","gear_FR","gear_level6"),
-                  c("year","gear_FR","gear_level6"),
+                  c("month","vessel_length_group","gear_FR","RCG","gear_level6"),
+                  c("month","gear_FR","RCG","gear_level6"),
+                  c("quarter","vessel_length_group","gear_FR","RCG","gear_level6"),
+                  c("quarter","gear_FR","RCG","gear_level6"),
+                  c("year","vessel_length_group","gear_FR","RCG","gear_level6"),
+                  c("year","gear_FR","RCG","gear_level6"),
                   c("month","vessel_length_group","gear_FR","area","gear_group"),
                   c("month","gear_FR","area","gear_group"),
                   c("quarter","vessel_length_group","gear_FR","area","gear_group"),
                   c("quarter","gear_FR","area","gear_group"),
                   c("year","vessel_length_group","gear_FR","area","gear_group"),
                   c("year","gear_FR","area","gear_group"),
-                  c("month","vessel_length_group","gear_FR","gear_group"),
-                  c("month","gear_FR","gear_group"),
-                  c("quarter","vessel_length_group","gear_FR","gear_group"),
-                  c("quarter","gear_FR","gear_group"),
-                  c("year","vessel_length_group","gear_FR","gear_group"),
-                  c("year","gear_FR","gear_group"))
+                  c("month","vessel_length_group","gear_FR","RCG","gear_group"),
+                  c("month","gear_FR","RCG","gear_group"),
+                  c("quarter","vessel_length_group","gear_FR","RCG","gear_group"),
+                  c("quarter","gear_FR","RCG","gear_group"),
+                  c("year","vessel_length_group","gear_FR","RCG","gear_group"),
+                  c("year","gear_FR","RCG","gear_group"))
 for(level in step.levels){
   if(nrow(input.data[substr(metier_level_6,1,3)=="MIS"])>0){
     input.data <- missingMetiersByLevel(input.data,level,sequence.def)
@@ -202,12 +202,12 @@ step.levels<-list(c("vessel_id","month","area","seq_dom_group","gear_group"),
                   c("vessel_id","quarter","area","seq_dom_group"),
                   c("vessel_id","year","area","seq_dom_group","gear_group"),
                   c("vessel_id","year","area","seq_dom_group"),
-                  c("vessel_id","month","seq_dom_group","gear_group"),
-                  c("vessel_id","month","seq_dom_group"),
-                  c("vessel_id","quarter","seq_dom_group","gear_group"),
-                  c("vessel_id","quarter","seq_dom_group"),
-                  c("vessel_id","year","seq_dom_group","gear_group"),
-                  c("vessel_id","year","seq_dom_group"))
+                  c("vessel_id","month","RCG","seq_dom_group","gear_group"),
+                  c("vessel_id","month","RCG","seq_dom_group"),
+                  c("vessel_id","quarter","RCG","seq_dom_group","gear_group"),
+                  c("vessel_id","quarter","RCG","seq_dom_group"),
+                  c("vessel_id","year","RCG","seq_dom_group","gear_group"),
+                  c("vessel_id","year","RCG","seq_dom_group"))
 for(level in step.levels){
   if(nrow(input.data[metier_level_5_status=="rare" & is.na(metier_level_5_pattern)])>0){
     input.data <- vesselPatternsByLevel(input.data,level,sequence.def)
@@ -217,15 +217,15 @@ for(level in step.levels){
 step.levels<-list(c("vessel_id","month","area","gear_level6"),
                   c("vessel_id","quarter","area","gear_level6"),
                   c("vessel_id","year","area","gear_level6"),
-                  c("vessel_id","month","gear_level6"),
-                  c("vessel_id","quarter","gear_level6"),
-                  c("vessel_id","year","gear_level6"),
+                  c("vessel_id","month","RCG","gear_level6"),
+                  c("vessel_id","quarter","RCG","gear_level6"),
+                  c("vessel_id","year","RCG","gear_level6"),
                   c("vessel_id","month","area","gear_group"),
                   c("vessel_id","quarter","area","gear_group"),
                   c("vessel_id","year","area","gear_group"),
-                  c("vessel_id","month","gear_group"),
-                  c("vessel_id","quarter","gear_group"),
-                  c("vessel_id","year","gear_group"))
+                  c("vessel_id","month","RCG","gear_group"),
+                  c("vessel_id","quarter","RCG","gear_group"),
+                  c("vessel_id","year","RCG","gear_group"))
 for(level in step.levels){
   if(nrow(input.data[metier_level_5_status=="rare" & is.na(metier_level_5_pattern)])>0){
     input.data <- vesselPatternsByLevel(input.data,level,sequence.def)
@@ -237,9 +237,9 @@ input.data[,metier_level_6_pattern:=NA]
 step.levels<-list(c("vessel_id","month","area","metier_level_5"),
                   c("vessel_id","quarter","area","metier_level_5"),
                   c("vessel_id","year","area","metier_level_5"),
-                  c("vessel_id","month","metier_level_5"),
-                  c("vessel_id","quarter","metier_level_5"),
-                  c("vessel_id","year","metier_level_5"))
+                  c("vessel_id","month","RCG","metier_level_5"),
+                  c("vessel_id","quarter","RCG","metier_level_5"),
+                  c("vessel_id","year","RCG","metier_level_5"))
 for(level in step.levels){
   if(nrow(input.data[metier_level_5_status=="rare" & 
                      !is.na(metier_level_5_pattern) &
@@ -261,9 +261,9 @@ input.data[,detailed_metier_level_6:=ifelse(grepl("_>0_0_0",metier_level_6_new),
 step.levels<-list(c("vessel_id","month","area","metier_level_5_new"),
                   c("vessel_id","quarter","area","metier_level_5_new"),
                   c("vessel_id","year","area","metier_level_5_new"),
-                  c("vessel_id","month","metier_level_5_new"),
-                  c("vessel_id","quarter","metier_level_5_new"),
-                  c("vessel_id","year","metier_level_5_new"))
+                  c("vessel_id","month","RCG","metier_level_5_new"),
+                  c("vessel_id","quarter","RCG","metier_level_5_new"),
+                  c("vessel_id","year","RCG","metier_level_5_new"))
 for(level in step.levels){
   if(nrow(input.data[is.na(detailed_metier_level_6)])>0){
     input.data <- detailedMetiersLvl6ForLvl5(input.data,level,sequence.def)
@@ -284,7 +284,8 @@ write.csv(result,"metier_results.csv", na = "")
 write.xlsx(file = "metier_results_summary.xlsx",result[,.(n_count=.N,
                                                           KG_sum=sum(KG, na.rm=T),
                                                           EUR_sum=sum(EUR, na.rm=T)),
-                                                       by=.(Country, RCG, metier_level_6_new)][order(Country, RCG, metier_level_6_new)])
+                                                       by=.(Country, RCG, metier_level_6_new)][order(Country, RCG, metier_level_6_new)],
+           overwrite = T)
 
 
 
