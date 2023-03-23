@@ -31,7 +31,8 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 		# 2019-05-08: added argument save_plot_to_list (saves plot as second argument of final list)
     # 2020-04-07: added captions K.Krakówka
     # 2020-04-21: added subplot and Nuno's function
-    # 2020-06-18: added catch groups 
+    # 2020-06-18: added catch groups
+    # 2023-03-23: change "main" threshold type to be "top_n"
 
 		percent_Var <- round(sum(!is.na(x[,Var]))/dim(x)[1]*100,2)
 		percent_var1 <- round(sum(!is.na(x[,var1]))/dim(x)[1]*100,2)
@@ -140,7 +141,6 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 	    #catch start
 	    if(!type_of_threshold == "NULL")
 	    {
-	      #title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = 0.5)
 	      if(type_of_threshold == "cum_percent"){
 	        var1<-rename_var1(var1)
 	        Var<-rename_var(Var)
@@ -155,7 +155,6 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 	      
 	    } else {
 	      if (percent_Var==100){
-	        #title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ","all_data", sep=""), cex.main=0.9, line = 0.5)
 	        var1<-rename_var1(var1)
 	        Var<-rename_var(Var)
 	        caption<-paste(Var,' of ',filter, ' by ',var1,'.',sep="")}
@@ -168,7 +167,6 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 	  }else{
 	  if(!type_of_threshold == "NULL")
 	  {
-	    #title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = 0.5)
 
 	    if(type_of_threshold == "cum_percent"){
 	      var1<-rename_var1(var1)
@@ -184,7 +182,6 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 	    
 	  } else {
 	    if (percent_Var==100){
-	      #title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ","all_data", sep=""), cex.main=0.9, line = 0.5)
 	      var1<-rename_var1(var1)
 	      Var<-rename_var(Var)
 	      caption<-paste(Var,' by ',var1,'.',sep="")}
@@ -202,12 +199,6 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 		  if(title_root!="") title(main = paste(title_root,":",Var,"by", var1), line = 1.8) else title(main = paste(Var,"by", var1), line = 1.8)
 		  title(ylab=y_title, line = graph_par$ylab_line)
 		  title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ",type_of_threshold_desc, sep=""), cex.main=0.9, line = 0.5)
-		  #if(!type_of_threshold == "NULL")
-		  #{
-		   # title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = 0.5)
-		  #} else {
-		  #  title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ","all_data", sep=""), cex.main=0.9, line = 0.5)
-		  #}
 			out<-list(table = data.frame(var1 = rownames(t1), Var = t1, row.names=NULL), plot = NULL,caption=NULL)
 			out
 			}

@@ -29,6 +29,7 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 		# 2019-04-29: improve colour specification (do single colour barplots)
 		# 2019-05-08: changed output to list with values "table" and "plot"
 		# 2019-05-08: added argument save_plot_to_list (saves plot as second argument of final list)
+    # 2023-03-23: change "main" threshold type to be "top_n"
 		
 		percent_Var <- round(sum(!is.na(x[,Var]))/dim(x)[1]*100,2)
 		percent_var1 <- round(sum(!is.na(x[,var1]))/dim(x)[1]*100,2)
@@ -55,8 +56,9 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 				x<-droplevels(x[x[,var1] %in% selected_names,])
 				type_of_threshold_desc <- paste0(type_of_threshold,"(",value_of_threshold,")")
 				}	
-			if(type_of_threshold == "main" || type_of_threshold == 'top_n')
+			if(type_of_threshold == "main" || type_of_threshold == "top_n")
 				{			
+			  type_of_threshold <- "top_n"
 			# determines names to keep
 				v1<-sort(tapply(x[,Var], x[,var1], sum, na.rm=T), decreasing=T)
 				selected_names<-names(v1[1:as.numeric(value_of_threshold)])
@@ -117,12 +119,6 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 	  if(title_root!="") title(main = paste(title_root,":",Var,"by", var1), line = 1.8) else title(main = paste(Var,"by", var1), line = 1.8)
 	  title(ylab=y_title, line = graph_par$ylab_line)
 	  title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ",type_of_threshold_desc, sep=""), cex.main=0.9, line = 0.5)
-	  #if(!type_of_threshold == "NULL")
-	  #{
-	    #title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = 0.5)
-	  #} else {
-	    #title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ","all_data", sep=""), cex.main=0.9, line = 0.5)
-	  #}
 		p <- recordPlot()
 		out<-list(table = data.frame(var1 = rownames(t1), Var = t1, row.names=NULL), plot = p)
 		dev.off()
@@ -131,12 +127,6 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 		  if(title_root!="") title(main = paste(title_root,":",Var,"by", var1), line = 1.8) else title(main = paste(Var,"by", var1), line = 1.8)
 		  title(ylab=y_title, line = graph_par$ylab_line)
 		  title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ",type_of_threshold_desc,sep=""), cex.main=0.9, line = 0.5)
-		  #if(!type_of_threshold == "NULL")
-		  #{
-		    #title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = 0.5)
-		  #} else {
-		    #title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ","all_data", sep=""), cex.main=0.9, line = 0.5)
-		  #}
 			out<-list(table = data.frame(var1 = rownames(t1), Var = t1, row.names=NULL), plot = NULL)
 			out
 			}
