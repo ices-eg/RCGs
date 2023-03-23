@@ -244,7 +244,7 @@ scatterpieMap_func = function(df,
   
 
   unique_bys = mdf2  %>%  distinct(groupBy2) %>% nrow()
-  if(is.na(color_palette)){ # if there is no color_palette given, use the random one
+  if(length(color_palette) == 1 && is.na(color_palette)){ # if there is no color_palette given, use the random one
     color_palette = scales::hue_pal()(unique_bys)
   }
 
