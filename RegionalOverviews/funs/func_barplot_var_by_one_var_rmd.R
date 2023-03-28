@@ -31,7 +31,8 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 		# 2019-05-08: added argument save_plot_to_list (saves plot as second argument of final list)
     # 2020-04-07: added captions K.Krakówka
     # 2020-04-21: added subplot and Nuno's function
-    # 2020-06-18: added catch groups 
+    # 2020-06-18: added catch groups
+    # 2023-03-23: change "main" threshold type to be "top_n"
 
 		percent_Var <- round(sum(!is.na(x[,Var]))/dim(x)[1]*100,2)
 		percent_var1 <- round(sum(!is.na(x[,var1]))/dim(x)[1]*100,2)
@@ -47,6 +48,7 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 				selected_names<-names(v1[v1<=as.numeric(value_of_threshold)])
 			# subsets data to names
 				x<-droplevels(x[x[,var1] %in% selected_names,])
+				type_of_threshold_desc <- paste0(type_of_threshold,"(",value_of_threshold,")")
 				}
 			if(type_of_threshold == "absolute")
 				{			
@@ -55,16 +57,22 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 				selected_names<-names(v1[v1>as.numeric(value_of_threshold)])
 			# subsets data to names
 				x<-droplevels(x[x[,var1] %in% selected_names,])
+				type_of_threshold_desc <- paste0(type_of_threshold,"(",value_of_threshold,")")
 				}	
-			if(type_of_threshold == "main")
+			if(type_of_threshold == "main" || type_of_threshold == "top_n")
 				{			
+			  type_of_threshold <- "top_n"
 			# determines names to keep
 				v1<-sort(tapply(x[,Var], x[,var1], sum, na.rm=T), decreasing=T)
 				selected_names<-names(v1[1:as.numeric(value_of_threshold)])
 			# subsets data to names
 				x<-droplevels(x[x[,var1] %in% selected_names,])
+				type_of_threshold_desc <- paste0("top ",value_of_threshold," values")
 				}				
-			}
+		}
+		else {
+		  type_of_threshold_desc <- "all data"
+		}
 			
 	#windows(5,5); 
 	#print(par("new"))
@@ -128,19 +136,18 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 	  
 	  if(title_root!="") title(main = paste(title_root,":",Var,"by", var1), line = 1.8) else title(main = paste(Var,"by", var1), line = 1.8)
 	  title(ylab=y_title, line = graph_par$ylab_line)
+	  title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ",type_of_threshold_desc, sep=""), cex.main=0.9, line = 0.5)
 	  if (filter=='small pelagic'|| filter=="flatfish"|| filter=="demersal"){
 	    #catch start
 	    if(!type_of_threshold == "NULL")
 	    {
-	      title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = 0.5)
-	      
 	      if(type_of_threshold == "cum_percent"){
 	        var1<-rename_var1(var1)
 	        Var<-rename_var(Var)
 	        caption<-paste(Var,' of ',filter, ' by ',var1,'. ',var1,' displayed comprise ',value_of_threshold, '% of the total ',Var,'.',sep='' )} 
 	      else { caption<-paste('caption 1' )}
 	      
-	      if(type_of_threshold == "main"){
+	      if(type_of_threshold == "top_n" ){
 	        var1<-rename_var1(var1)
 	        Var<-rename_var(Var)
 	        caption<-paste(Var,' of ',filter, ' in the ',value_of_threshold, ' main ', var1,' (',percent_var1, '% of rows entering analysis had known ',var1,').',sep='')
@@ -148,7 +155,6 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 	      
 	    } else {
 	      if (percent_Var==100){
-	        title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ","all_data", sep=""), cex.main=0.9, line = 0.5)
 	        var1<-rename_var1(var1)
 	        Var<-rename_var(Var)
 	        caption<-paste(Var,' of ',filter, ' by ',var1,'.',sep="")}
@@ -161,15 +167,14 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 	  }else{
 	  if(!type_of_threshold == "NULL")
 	  {
-	    title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = 0.5)
-	    
+
 	    if(type_of_threshold == "cum_percent"){
 	      var1<-rename_var1(var1)
 	      Var<-rename_var(Var)
 	      caption<-paste(Var, ' by ',var1,'. ',var1,' displayed comprise ',value_of_threshold, '% of the total ',Var,'.',sep='' )} 
 	    else { caption<-paste('caption 1' )}
 	    
-	    if(type_of_threshold == "main"){
+	    if(type_of_threshold == "top_n" ){
 	      var1<-rename_var1(var1)
 	      Var<-rename_var(Var)
 	      caption<-paste(Var,' in the ',value_of_threshold, ' main ', var1,' ( ',percent_var1, '% of rows entering analysis had known ',var1,').',sep='')
@@ -177,7 +182,6 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 	    
 	  } else {
 	    if (percent_Var==100){
-	      title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ","all_data", sep=""), cex.main=0.9, line = 0.5)
 	      var1<-rename_var1(var1)
 	      Var<-rename_var(Var)
 	      caption<-paste(Var,' by ',var1,'.',sep="")}
@@ -194,12 +198,7 @@ barplot_var_by_one_var <- function(x,  Var, var1, tapply_type, type_of_threshold
 		  barplot(t1, las=2, col=colour_scale, ylab = "", main = "", cex.names = graph_par$cex.x)
 		  if(title_root!="") title(main = paste(title_root,":",Var,"by", var1), line = 1.8) else title(main = paste(Var,"by", var1), line = 1.8)
 		  title(ylab=y_title, line = graph_par$ylab_line)
-		  if(!type_of_threshold == "NULL")
-		  {
-		    title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = 0.5)
-		  } else {
-		    title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ","all_data", sep=""), cex.main=0.9, line = 0.5)
-		  }
+		  title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; ",type_of_threshold_desc, sep=""), cex.main=0.9, line = 0.5)
 			out<-list(table = data.frame(var1 = rownames(t1), Var = t1, row.names=NULL), plot = NULL,caption=NULL)
 			out
 			}

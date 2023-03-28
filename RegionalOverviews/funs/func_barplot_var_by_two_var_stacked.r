@@ -22,6 +22,7 @@ barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, pro
 		# 2019-04-14: improve colour specification		
 		# 2019-05-08: changed output to list with values "table" and "plot"
 		# 2019-05-08: added argument save_plot_to_list (saves plot as second argument of final list)
+    # 2023-03-23: change "main" threshold type to be "top_n"
 	
 		percent_Var <- round(sum(!is.na(x[,Var]))/dim(x)[1]*100,2)
 		percent_var1 <- round(sum(!is.na(x[,var1]))/dim(x)[1]*100,2)
@@ -39,6 +40,7 @@ barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, pro
 				selected_names<-names(v1[v1<=as.numeric(value_of_threshold)])
 			# subsets data to names
 				x<-droplevels(x[x[,var1] %in% selected_names,])
+				type_of_threshold_desc <- paste0(type_of_threshold,"(",value_of_threshold,")")
 				}
 				
 			if(type_of_threshold == "absolute")
@@ -48,16 +50,22 @@ barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, pro
 				selected_names<-names(v1[v1>as.numeric(value_of_threshold)])
 			# subsets data to names
 				x<-droplevels(x[x[,var1] %in% selected_names,])
+				type_of_threshold_desc <- paste0(type_of_threshold,"(",value_of_threshold,")")
 				}	
-			if(type_of_threshold == "main")
+			if(type_of_threshold == "main" || type_of_threshold == "top_n")
 				{			
+			  type_of_threshold <- "top_n"
 			# determines names to keep
 				v1<-sort(tapply(x[,Var], x[,var1], sum, na.rm=T), decreasing=T)
 				selected_names<-names(v1[1:as.numeric(value_of_threshold)])
 			# subsets data to names
 				x<-droplevels(x[x[,var1] %in% selected_names,])
+				type_of_threshold_desc <- paste0("top ",value_of_threshold," values")
 				}				
-			}
+		}
+		else {
+		  type_of_threshold_desc <- "all data"
+		}
 
 			
 	#windows(10,5);
@@ -102,12 +110,7 @@ barplot_var_by_two_var_stacked <- function(x,  Var, var1, var2, tapply_type, pro
 	barplot(t1, las=2, legend.text=rownames(t1), col=colour_scale, ylab = "", main = NULL, cex.names = graph_par$cex.x, args.legend = legend_pars)
 	if(title_root!="") title(main = paste(title_root,":",Var,"by", var1, "and", var2), line = 1.8) else title(main = paste(Var,"by", var1, "and", var2), line = 1.8)
 	title(ylab=y_title, line = graph_par$ylab_line)
-	if(!type_of_threshold == "NULL")
-		{
-		title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; z:",percent_var2,"%; ",type_of_threshold,"(",value_of_threshold,")", sep=""), cex.main=0.9, line = .7)
-		} else {
-			title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; z:",percent_var2,"%; ","all_data", sep=""), cex.main=0.9, line = .7)
-				}
+	title(main=paste("y:", percent_Var,"%; x:",percent_var1,"%; z:",percent_var2,"%; ",type_of_threshold_desc,sep=""), cex.main=0.9, line = .7)
 
 	if(save_plot_to_list)
 		{
