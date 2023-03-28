@@ -15,6 +15,9 @@ NAtl,LHP_LPF_0_0_0_BFT,LHP_LPF_0_0_0,LHP_LPF,Bluefin tuna (Thunnus thynnus),2023
 LDF,LHP_LPF_0_0_0_MSP,LHP_LPF_0_0_0,LHP_LPF,Skipjack tuna (Katsuwonus pelamis) Bigeye tuna (Thunnus obesus) Yellowfin tuna (Thunnus albacares) Albacore tuna (Thunnus alalunga) Bluefin tuna (Thunnus thynnus,20230127
 MBS,LHP_LPF_0_0_0_MSP,LHP_LPF_0_0_0,LHP_LPF,Skipjack tuna (Katsuwonus pelamis) Bigeye tuna (Thunnus obesus) Yellowfin tuna (Thunnus albacares) Albacore tuna (Thunnus alalunga) Bluefin tuna (Thunnus thynnus,20230127
 NAtl,LHP_LPF_0_0_0_MSP,LHP_LPF_0_0_0,LHP_LPF,Skipjack tuna (Katsuwonus pelamis) Bigeye tuna (Thunnus obesus) Yellowfin tuna (Thunnus albacares) Albacore tuna (Thunnus alalunga) Bluefin tuna (Thunnus thynnus,20230127
+LDF,LHP_LPF_0_0_0_SWO,LHP_LPF_0_0_0,LHP_LPF,Swordfish (Xiphias gladius),20230328
+MBS,LHP_LPF_0_0_0_SWO,LHP_LPF_0_0_0,LHP_LPF,Swordfish (Xiphias gladius),20230328
+NAtl,LHP_LPF_0_0_0_SWO,LHP_LPF_0_0_0,LHP_LPF,Swordfish (Xiphias gladius),20230328
 LDF,LHP_LPF_0_0_0_TRO,LHP_LPF_0_0_0,LHP_LPF,Skipjack tuna (Katsuwonus pelamis) Yellowfin tuna (Thunnus albacares) Bigeye tuna (Thunnus obesus),20230127
 LDF,LLD_LPF_0_0_0_ALB,LLD_LPF_0_0_0,LLD_LPF,Albacore tuna (Thunnus alalunga),20230127
 MBS,LLD_LPF_0_0_0_ALB,LLD_LPF_0_0_0,LLD_LPF,Albacore tuna (Thunnus alalunga),20230127
