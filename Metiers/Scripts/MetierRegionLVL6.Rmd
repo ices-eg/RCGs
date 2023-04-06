@@ -28,6 +28,7 @@ library(ggpubr)
 library(kableExtra)
 library(sf)
 library(rnaturalearth)
+library(RColorBrewer)
 ```
 
 ```{r}
@@ -62,11 +63,8 @@ catHeader <- function(text = "", level = 3) {
 
 ```{r}
 # Reference lists 
-## Scientific name - This is taken from RDBES repo should I add it in the RCG repo? 
-# urls <- "https://github.com/ices-tools-dev/RDBES/raw/master/QC-scripts/SpeciesScientificName/ICESVocabAphiaIDScienName_V2.csv"
-
-# This needs to be updated annually (Extracted from ICES vocab because RBDES does not hold all infromation - new is added when a country is requesting more aphiad ids)
-urls <- "C:/Users/molla004/OneDrive - Wageningen University & Research/Git/hub/RDBES/QC-scripts/SpeciesScientificName/ICESVocabAphiaIDScienName_V2.csv"
+## Scientific name 
+urls <- "https://raw.githubusercontent.com/ices-eg/RCGs/master/Metiers/Scripts/ICESVocabSpecies/ICESVocabAphiaIDScienName_2023.csv"
 ScienName <- read.csv(urls, header = TRUE)
 
 
@@ -83,17 +81,18 @@ Area <- mutate(Area, Code = ifelse(Code %in% "NSEA                              
   select(AreaCode, Code)
 
 ### Shapefiles 
-### Need to source it from online 
-rect <- read_sf("W:/IMARES/IJmuiden/WOT/WOT Raising_Precision/Code library/shapefile/RectNew/ICES_Statistical_Rectangles_Eco.shp")
+### Need to source it from online - Can't open it
+# rect <- read_sf("https://raw.githubusercontent.com/ices-eg/RCGs/Metiers/Scripts/RectangleShapefiles/StatRec_map_Areas_Full_20170124.shp")
 
+rect <- read_sf("./StatRec_map_Areas_Full_20170124.shp")
 world <- ne_countries(scale = "medium", returnclass = "sf")
 world <- st_set_crs(world, 4326)
 ```
 
 ```{r}
 # Read data 
-CL <- read.csv("C:/Users/molla004/OneDrive - Wageningen University & Research/RCG/2023/CommercialLanding.csv")
-CE <- read.csv("C:/Users/molla004/OneDrive - Wageningen University & Research/RCG/2023/CommercialEffort.csv")
+CL <- read.csv("./CommercialLanding.csv")
+CE <- read.csv("./CommercialEffort.csv")
 ```
 
 ```{r}
@@ -164,9 +163,11 @@ CEAREA <- filter(CE, Code %in% rr)
 
 
 ```{r}
-# Set country colors 
-# myColors <- brewer.pal(18,"Set1")
-# names(myColors) <- levels(CL$CLlandingCountry)
+# Set country colors
+ct.cols <- 14 
+myColors <- colorRampPalette(brewer.pal(8, "Set2"))(ct.cols)
+names(myColors) <- levels(CL$CLvesselFlagCountry)
+colScale <- scale_fill_manual(name = "CLvesselFlagCountry",values = myColors)
 
 ```
 
@@ -233,8 +234,9 @@ CLAREA6 <- filter(CLAREA5, CLmetier6 %in% unique(CEtop6$CEmetier6))
     ggplot( aes(reorder(CLmetier4, -TotW), CLofficialWeight, fill = CLvesselFlagCountry)) +
     geom_bar(stat = "identity") + 
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-    xlab("Metier lvl 4") +
-    ggtitle("Landed weight by country and metier level 4") 
+    colScale +
+    ylab("Weight (t)") +    
+    ggtitle("Landed weight (t) by country and metier level 4") 
   
   p2 <- CLAREA %>%
     group_by(CLmetier4, CLvesselFlagCountry) %>%
@@ -244,9 +246,10 @@ CLAREA6 <- filter(CLAREA5, CLmetier6 %in% unique(CEtop6$CEmetier6))
     ggplot( aes(x= reorder(CLmetier4, -TotL), y=CLtotalOfficialLandingsValue, fill =  CLvesselFlagCountry)) +     
     geom_bar(stat = "identity") +
     xlab("Metier lvl 4") +
-    ggtitle("Landed value by country and metier level 4") +
+    ylab("Value in €") +
+    ggtitle("Landed value (€) by country and metier level 4") +
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-    scale_fill_discrete(drop = TRUE)
+    colScale 
   
   # CE 
   
@@ -259,7 +262,9 @@ CLAREA6 <- filter(CLAREA5, CLmetier6 %in% unique(CEtop6$CEmetier6))
     geom_bar(stat = "identity") + 
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
     xlab("Metier lvl 4") +
-    ggtitle("Fishing days by country and metier level 4") 
+    ylab("Official fishing days")
+    ggtitle("Fishing days by country and metier level 4")  +
+    colScale
   
   k2 <- CEAREA %>%
     group_by(CEmetier4, CEvesselFlagCountry) %>%
@@ -270,7 +275,9 @@ CLAREA6 <- filter(CLAREA5, CLmetier6 %in% unique(CEtop6$CEmetier6))
     geom_bar(stat = "identity") + 
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
     xlab("Metier lvl 4") +
-    ggtitle("Number of trips by country and metier level 4") 
+    ylab("Number of trips") +
+    ggtitle("Number of trips by country and metier level 4")  +
+    colScale
   
   l <- ggarrange(p1, p2, k1, k2, ncol = 2, nrow = 2)
   print(l)
@@ -286,7 +293,8 @@ CLAREA6 <- filter(CLAREA5, CLmetier6 %in% unique(CEtop6$CEmetier6))
     geom_bar(stat = "identity") + 
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
     xlab("Metier lvl 4") +
-    ggtitle("Landed weight by vessel length category and metier level 4") 
+    ylab("Weight (t)") +
+    ggtitle("Landed weight (t) by vessel length category and metier level 4") 
   
   vl2 <- CLAREA %>%
     group_by(CLmetier4, CLvesLenCat) %>%
@@ -296,9 +304,9 @@ CLAREA6 <- filter(CLAREA5, CLmetier6 %in% unique(CEtop6$CEmetier6))
     ggplot( aes(x= reorder(CLmetier4, -TotL), y=CLtotalOfficialLandingsValue, fill =  CLvesLenCat)) +     
     geom_bar(stat = "identity") +
     xlab("Metier lvl 4") +
-    ggtitle("Landed value by vessel length category and metier level 4") +
-    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-    scale_fill_discrete(drop = TRUE)
+    ylab("Value in €") +
+    ggtitle("Landed value (€) by vessel length category and metier level 4") +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) 
   
   # CE 
   
@@ -311,7 +319,7 @@ CLAREA6 <- filter(CLAREA5, CLmetier6 %in% unique(CEtop6$CEmetier6))
     geom_bar(stat = "identity") + 
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
     xlab("Metier lvl 4") +
-    ggtitle("Fishing days by country and metier level 4") 
+    ggtitle("Fishing days by vessel length category and metier level 4")  
   
   vl4 <- CEAREA %>%
     group_by(CEmetier4, CEvesLenCat) %>%
@@ -322,7 +330,7 @@ CLAREA6 <- filter(CLAREA5, CLmetier6 %in% unique(CEtop6$CEmetier6))
     geom_bar(stat = "identity") + 
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
     xlab("Metier lvl 4") +
-    ggtitle("Number of trips by country and metier level 4") 
+    ggtitle("Number of trips by vessel length category and metier level 4")  
   
   vlf <- ggarrange(vl1, vl2, vl3, vl4, ncol = 2, nrow = 2)
   print(vlf)
@@ -342,6 +350,15 @@ create_section4 <- function(met4, CEAREA, CLAREA) {
   # Header
   pander::pandoc.header(met4, level = 2)
   
+  ### HOW TO ADD TEXT IN SUBSECTION 
+   # pandoc.p("You can add text like this")
+   # 
+   # ## if you want to make it specific 
+   # if(met4 %in% "FPN"){
+   #     pandoc.p("Adds text only under the FPN section")
+   # }
+   # 
+  
   # Section contents
   # Flag country 
   # CL 
@@ -356,7 +373,9 @@ create_section4 <- function(met4, CEAREA, CLAREA) {
     geom_bar(stat = "identity") + 
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
     xlab("Metier lvl 5") +
-    ggtitle("Landed weight by country and metier level 5") 
+    ylab("Weight (t)") +
+    ggtitle("Landed weight (t) by country and metier level 5") +
+    colScale 
   
   p2 <- CLAREA %>%
     filter(CLmetier4 %in% met4) %>%
@@ -367,9 +386,10 @@ create_section4 <- function(met4, CEAREA, CLAREA) {
     ggplot( aes(x= reorder(CLmetier5, -TotL), y=CLtotalOfficialLandingsValue, fill =  CLvesselFlagCountry)) +     
     geom_bar(stat = "identity") +
     xlab("Metier lvl 5") +
-    ggtitle("Landed value by country and metier level 5") +
+    ylab("Value in €") +
+    ggtitle("Landed value (€) by country and metier level 5") +
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-    scale_fill_discrete(drop = TRUE)
+    colScale 
   
   # CE 
   
@@ -383,7 +403,8 @@ create_section4 <- function(met4, CEAREA, CLAREA) {
     geom_bar(stat = "identity") + 
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
     xlab("Metier lvl 5") +
-    ggtitle("Fishing days by country and metier level 5") 
+    ggtitle("Fishing days by country and metier level 5") +
+    colScale 
   
   k2 <- CEAREA %>%
     filter(CEmetier4 %in% met4) %>%
@@ -395,7 +416,8 @@ create_section4 <- function(met4, CEAREA, CLAREA) {
     geom_bar(stat = "identity") + 
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
     xlab("Metier lvl 5") +
-    ggtitle("Number of trips by country and metier level 5") 
+    ggtitle("Number of trips by country and metier level 5") +
+    colScale 
   
   l <- ggarrange(p1, p2, k1, k2, ncol = 2, nrow = 2)
   print(l)
@@ -412,7 +434,8 @@ create_section4 <- function(met4, CEAREA, CLAREA) {
     geom_bar(stat = "identity") + 
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
     xlab("Metier lvl 5") +
-    ggtitle("Landed weight by vessel length category and metier level 5") 
+    ylab("Weight (t)") +
+    ggtitle("Landed weight by vessel length category and metier level 5")  
   
   vl2 <- CLAREA %>%
     filter(CLmetier4 %in% met4) %>%
@@ -423,9 +446,9 @@ create_section4 <- function(met4, CEAREA, CLAREA) {
     ggplot( aes(x= reorder(CLmetier5, -TotL), y=CLtotalOfficialLandingsValue, fill =  CLvesLenCat)) +     
     geom_bar(stat = "identity") +
     xlab("Metier lvl 5") +
-    ggtitle("Landed value by vessel length category and metier level 5") +
-    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-    scale_fill_discrete(drop = TRUE)
+    ylab("Value in €") +
+    ggtitle("Landed value (€) by vessel length category and metier level 5") +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) 
   
   # CE 
   
@@ -439,7 +462,7 @@ create_section4 <- function(met4, CEAREA, CLAREA) {
     geom_bar(stat = "identity") + 
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
     xlab("Metier lvl 5") +
-    ggtitle("Fishing days by country and metier level 5") 
+    ggtitle("Fishing days by vessel length category and metier level 5") 
   
   vl4 <- CEAREA %>%
     filter(CEmetier4 %in% met4) %>%
@@ -451,7 +474,7 @@ create_section4 <- function(met4, CEAREA, CLAREA) {
     geom_bar(stat = "identity") + 
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
     xlab("Metier lvl 5") +
-    ggtitle("Number of trips by country and metier level 5") 
+    ggtitle("Number of trips by vessel length category and metier level 5") 
   
   vlf <- ggarrange(vl1, vl2, vl3, vl4, ncol = 2, nrow = 2)
   print(vlf)
@@ -475,9 +498,11 @@ create_section5 <- function(met5, CEAREA4, CLAREA4) {
   CLAREA4 <- filter(CLAREA4, CLmetier5 %in% met5)
   CEAREA4 <- filter(CEAREA4, CEmetier5 %in% met5)
 
-   # Section contents
   
-  # Table totals by country 
+
+  # Section contents
+  
+  ## Table totals by country 
     tab1 <- CLAREA4 %>% 
     group_by(CLmetier5, CLvesselFlagCountry) %>%
     summarise(CLofficialWeight = sum(CLofficialWeight), 
@@ -493,13 +518,28 @@ create_section5 <- function(met5, CEAREA4, CLAREA4) {
            VesselFlagCountry = CEvesselFlagCountry)
   
   print(fintab <- left_join(tab1, tab2) %>%
+          rename(OfficialWeight = CLofficialWeight,
+                 Value = CLtotalOfficialLandingsValue,
+                 OfficialFishingDays = CEofficialFishingDays,
+                 NumberOfTrips = CEnumberOfFractionTrips) %>%
     filter(Metier5 %in% met5) %>%
-    kbl() %>%
+    kbl(caption = "Total values by country and metier level 5") %>%
     kable_styling())
   
   
   
    ## CL 
+  
+    CLtop10 <- CLAREA4 %>%
+    group_by(Description) %>%
+    summarise(ToTw = sum(CLofficialWeight)) %>%
+    top_n(10, ToTw ) %>%
+    mutate(x = "x")
+  
+  CLtopSp <- left_join(CLAREA4, CLtop10, by = "Description") %>%
+    mutate(Description = ifelse(is.na(x), "Others", Description))
+  
+  
   p1 <- CLAREA4 %>%
     group_by(CLmetier6, CLvesselFlagCountry) %>%
     summarise(CLofficialWeight = sum(CLofficialWeight)) %>%
@@ -509,7 +549,9 @@ create_section5 <- function(met5, CEAREA4, CLAREA4) {
     geom_bar(stat = "identity") + 
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
     xlab("Metier lvl 6") +
-    ggtitle("Landed weight by country and metier level 6") 
+    ylab("Weight (t)") +
+    ggtitle("Landed weight (t) by country and metier level 6")  +
+    colScale
   
   p2 <- CLAREA4 %>%
     group_by(CLmetier6, CLvesselFlagCountry) %>%
@@ -519,9 +561,10 @@ create_section5 <- function(met5, CEAREA4, CLAREA4) {
     ggplot( aes(x= reorder(CLmetier6, -TotL), y=CLtotalOfficialLandingsValue, fill =  CLvesselFlagCountry)) +     
     geom_bar(stat = "identity") +
     xlab("Metier lvl 6") +
-    ggtitle("Landed value by country and metier level 6") +
-    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-    scale_fill_discrete(drop = TRUE)
+    ylab("Value in €") +
+    ggtitle("Landed value (€) by country and metier level 6") +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
+    colScale
   
   # CE 
   
@@ -534,7 +577,8 @@ create_section5 <- function(met5, CEAREA4, CLAREA4) {
     geom_bar(stat = "identity") + 
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
     xlab("Metier lvl 6") +
-    ggtitle("Fishing days by country and metier level 6") 
+    ggtitle("Fishing days by country and metier level 6")  +
+    colScale
   
   k2 <- CEAREA4 %>%
     group_by(CEmetier6, CEvesselFlagCountry) %>%
@@ -545,12 +589,99 @@ create_section5 <- function(met5, CEAREA4, CLAREA4) {
     geom_bar(stat = "identity") + 
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
     xlab("Metier lvl 6") +
-    ggtitle("Number of trips by country and metier level 6") 
+    ggtitle("Number of trips by country and metier level 6")  +
+    colScale
   
   l <- ggarrange(p1, p2, k1, k2, ncol = 2, nrow = 2)
   print(l)
+  
+   # Vessel length category 
+  
+  vl1 <- CLAREA4 %>%
+    group_by(CLmetier6, CLvesLenCat) %>%
+    summarise(CLofficialWeight = sum(CLofficialWeight)) %>%
+    group_by(CLmetier6) %>%
+    mutate(TotW = sum(CLofficialWeight)) %>%
+    ggplot( aes(reorder(CLmetier6, -TotW), CLofficialWeight, fill = CLvesLenCat)) +
+    geom_bar(stat = "identity") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    xlab("Metier lvl 6") +
+    ylab("Weight (t)") +
+    ggtitle("Landed weight by vessel length category and metier level 6")  
+  
+  vl2 <- CLAREA4 %>%
+    group_by(CLmetier6, CLvesLenCat) %>%
+    summarise(CLtotalOfficialLandingsValue= sum(as.numeric(CLtotalOfficialLandingsValue), na.rm = TRUE)) %>%
+    group_by(CLmetier6) %>%
+    mutate(TotL = sum(CLtotalOfficialLandingsValue)) %>%
+    ggplot( aes(x= reorder(CLmetier6, -TotL), y=CLtotalOfficialLandingsValue, fill =  CLvesLenCat)) +     
+    geom_bar(stat = "identity") +
+    xlab("Metier lvl 6") +
+    ylab("Value in €") +
+    ggtitle("Landed value (€) by vessel length category and metier level 6") +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) 
+  
+  # CE 
+  
+  vl3 <- CEAREA4 %>%
+    group_by(CEmetier6, CEvesLenCat) %>%
+    summarise(CEofficialFishingDays= sum(CEofficialFishingDays)) %>%
+    group_by(CEmetier6) %>%
+    mutate(TotD = sum(CEofficialFishingDays)) %>%
+    ggplot( aes(reorder(CEmetier6, -TotD),CEofficialFishingDays, fill = CEvesLenCat)) +
+    geom_bar(stat = "identity") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    xlab("Metier lvl 5") +
+    ggtitle("Fishing days by vessel length category and metier level 5") 
+  
+  vl4 <- CEAREA4 %>%
+    group_by(CEmetier6, CEvesLenCat) %>%
+    summarise(CEnumberOfFractionTrips= sum(CEnumberOfFractionTrips)) %>%
+    group_by(CEmetier6) %>%
+    mutate(TotD = sum(CEnumberOfFractionTrips)) %>% 
+    ggplot( aes(reorder(CEmetier6, -TotD),CEnumberOfFractionTrips, fill = CEvesLenCat)) +
+    geom_bar(stat = "identity") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
+    xlab("Metier lvl 5") +
+    ggtitle("Number of trips by vessel length category and metier level 5") 
+  
+  vlf <- ggarrange(vl1, vl2, vl3, vl4, ncol = 2, nrow = 2)
+  print(vlf)
 
+ ### Weight
+  w <- CLtopSp %>%
+    group_by(CLmetier6, Description) %>%
+    summarise(CLofficialWeight = sum(CLofficialWeight)) %>%
+    group_by(CLmetier6) %>%
+    mutate(TotW = sum(CLofficialWeight)) %>%
+    ggplot(aes(reorder(CLmetier6, -TotW ), CLofficialWeight, fill = Description)) +
+    geom_bar(stat = "identity")    +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    theme(text = element_text(size = 15)) +
+    xlab("Metier level 6") +
+    ylab("Weight (t)") +
+    ggtitle("Landed weight (t) top 10 species")
 
+  
+  ### Value 
+  l <- CLtopSp %>%
+    group_by(CLmetier6,Description) %>%
+    summarise(CLtotalOfficialLandingsValue= sum(as.numeric(CLtotalOfficialLandingsValue), na.rm = TRUE)) %>%
+    group_by(CLmetier6) %>%
+    mutate(TotL = sum(as.numeric(CLtotalOfficialLandingsValue), na.rm =TRUE)) %>%
+    ggplot(aes(reorder(CLmetier6, -TotL), CLtotalOfficialLandingsValue, fill = Description)) +
+    geom_bar(stat = "identity")    +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    theme(text = element_text(size = 15)) +
+    xlab("Metier level 6")+
+    ylab("Value in €") +
+    ggtitle("Landed value (€) top 10 species")
+
+  
+  lw <- ggarrange(w, l, ncol = 2, nrow = 1)
+  print(lw)
+  
+  
   # empty lines to be sure that this is valid Markdown
    pander::pandoc.p('')
 
@@ -589,7 +720,8 @@ create_section6 <- function(met6, CEAREA6, CLAREA6) {
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
     theme(text = element_text(size = 15)) +
     xlab("Scientific name") +
-    ggtitle("Landed weight top 15 species")
+    ylab("Weight (t)") +
+    ggtitle("Landed weight (t) top 15 species")
   print(w)
   
   ### Value 
@@ -601,7 +733,8 @@ create_section6 <- function(met6, CEAREA6, CLAREA6) {
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
     theme(text = element_text(size = 15)) +
     xlab("Scientific name")+
-    ggtitle("Landed value top 15 species")
+    ylab("Value in €") +
+    ggtitle("Landed value (€) top 15 species")
   print(l)
   
   ## CE 
@@ -614,7 +747,7 @@ create_section6 <- function(met6, CEAREA6, CLAREA6) {
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
     theme(text = element_text(size = 15)) +
     xlab("Flag Country")+
-    ggtitle("Fishing days by flag country")
+    ggtitle("Fishing days by flag country") 
   print(f)
   
   
