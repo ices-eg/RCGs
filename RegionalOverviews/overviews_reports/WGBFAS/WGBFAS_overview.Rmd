@@ -1,5 +1,5 @@
 ---
-title: "WGBFAS - "
+title: "WGBFAS - `r params$Species_param`"
 author: "RCG ISSG on catch, effort and sampling overviews"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
@@ -78,6 +78,7 @@ period <- paste0("",params$Year_param,"")
 ```{r 3_source_ref, include = F}
 
 source("../../funs/choroplethMap_func.R")
+source("../../funs/pointsMap_func.R")
 source("../../funs/func_barplot_var_by_one_var_rmd.r")
 source("../../funs/func_determine_what_to_inset.r")
 
@@ -250,7 +251,8 @@ res <- choroplethMap_func(
             saveResults = FALSE,
             outputPath = NA,
             Catch_group_name = NA,
-            newVarName = "Landings (1000 t)"
+            newVarName = "Landings (1000 t)",
+            ICESRectangle = TRUE
             )
           subchunkify(res[[2]],"Figure_landings_y",  10, 9)
           
@@ -310,6 +312,8 @@ res <- choroplethMap_func(
           
           cat('\n')
           cat("**Figure 2.**", res[[3]],"  \n ")
+          
+cat('  \n')
 ```
         
 # Effort information
@@ -333,7 +337,8 @@ res_ce <- choroplethMap_func(
             saveResults = FALSE,
             outputPath = NA,
             Catch_group_name = NA,
-            newVarName = "Trips Number"
+            newVarName = "Trips Number",
+            ICESRectangle = TRUE
             )
             subchunkify(res_ce[[2]],"Figure_effort_ty",  10, 9)
             
@@ -841,6 +846,7 @@ map0<-ggplot(mapcl)+theme_bw()+
 cat('\n')
 cat("**Figure 12.** Total landings, sampling position and number of samples by statistical rectangle, in ",params$Year_param,". (source: CA data) \n ")
 
+cat("  \n")
 cat(paste0("## ", "Number of samples per unit of landings by quarter \n")) #per CA
 
 hh_join <- left_join(sl_rcg_all, hh_rcg_all) 
@@ -895,7 +901,6 @@ map0<-ggplot(mapcl)+theme_bw()+
           
 cat("\n")
 cat("**Figure 13.** Total landings, sampling position and number of samples by quarter and statistical rectangle. (source: CA data) \n ")
-
 
 cat("  \n")
 cat(paste0("## ", "Landing sampled weight per unit of landings in ",params$Year_param," \n")) #per CA
@@ -1007,7 +1012,6 @@ map0<-ggplot(mapcl)+theme_bw()+
           
 cat("\n")
 cat("**Figure 15.** Total landings, sampling position and landing sampled weights by quarter and statistical rectangle. (source: CA data) \n ")
-
 
 cat("  \n")
 cat(paste0("## ", "Total landings and number of trips sampled \n"))
