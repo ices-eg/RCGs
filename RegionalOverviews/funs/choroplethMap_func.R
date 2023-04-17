@@ -352,9 +352,9 @@ choroplethMap_func = function(df,
   }
   if(ICESRectangle==TRUE){
       plot+
-      geom_text(aes(x = seq(8.5, 27.5, by = 1), y  = c(53.75), 
+      geom_text(aes(x = seq(8.5, 27.5, by = 1), y  = unlist(limits["ymin"])+1/4, 
                     label = c('F8','F9','G0','G1','G2','G3','G4','G5','G6','G7','G8','G9','H0','H1','H2','H3','H4','H5','H6','H7')))+
-      geom_text(aes(x = c(22), y  = seq(53+3/4, 66+1/4, by = 1/2), 
+      geom_text(aes(x =  unlist(limits["xmax"])-1/4, y  = seq(53+3/4, 66+1/4, by = 1/2), 
                     label = c(36:61))
                 )-> plot
   }

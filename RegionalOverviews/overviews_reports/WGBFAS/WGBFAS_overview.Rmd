@@ -158,13 +158,13 @@ if (target_region == "RCG_BA") {
 if (target_region == "RCG_BA")
 {
   load(
-    paste(data_dir, "RDB_RCG_BA_CL_2009_2021_prepared_20220601.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_BA_CL_2009_2022_prepared_20230414.Rdata", sep = "")
   )
   load(
-    paste(data_dir, "RDB_RCG_BA_CE_2009_2021_prepared_20220601.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_BA_CE_2009_2022_prepared_20230414.Rdata", sep = "")
   )
   load(
-    paste(data_dir, "RDB_RCG_BA_CS_all_2021_2021_prepared_202204211940.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_BA_CS_all_2022_2022_prepared_202304141601.Rdata", sep = "")
   )
 }
 
@@ -314,6 +314,7 @@ res <- choroplethMap_func(
           cat("**Figure 2.**", res[[3]],"  \n ")
           
 cat('  \n')
+
 ```
         
 # Effort information
@@ -1120,5 +1121,89 @@ matrix<-ggplot(samplingVSlandingsF, aes(y = factor(FlagCountry),
           
 cat('\n')
 cat("**Figure 16.** Total landings and number of trips sampled with ", Species_text ,", by gear and country. \n ")
+
+```
+
+# Stocks
+
+```{r stocks, results = "asis", eval = T}
+
+cl%>%filter(SpeciesAphiaID==species_code)%>%
+  distinct(stockNew)->stocks_n
+
+for( i  in 1:nrow(stocks_n)){
+cat("  \n")
+cat(paste0("## ", "Annual landings by Statistical Rectangle - ",stocks_n[i]," \n"))
+res <- choroplethMap_func(
+            df = cl%>%filter(stockNew %in% (stocks_n[i])),
+            var = "LandingWeight_1000ton",
+            groupBy = "StatisticalRectangle",
+            facet = "Year",
+            func = "sum",
+            type_of_threshold = "percent",
+            value_of_threshold =  100,
+            points_coord =  eval(parse(text = "StatRectshp")),
+            plot_labels = FALSE,
+            saveResults = FALSE,
+            outputPath = NA,
+            Catch_group_name = NA,
+            newVarName = "Landings (1000 t)",
+            ICESRectangle = TRUE
+            )
+          subchunkify(res[[2]],paste0("Figure_landings_stock_",i),  10, 9)
+          
+          if (tables == "yes") {
+            write.table(
+              res[[1]],
+              file =  
+                paste(table_dir, paste0("Figure_landings_stock_",i),
+                ".txt",
+                sep = ""
+              ),
+              sep = "\t",
+              dec = ".",
+              row.names = F
+            )
+            }
+          
+          cat("\n")
+          cat(paste0("**Figure ",16+i,".**"), res[[3]],"  \n ")
+          
+cat('  \n')
+
+cat(paste0("## ", "Metier lvl5- ",stocks_n[i], " \n"))
+
+bar_cl <- barplot_var_by_one_var(
+            x = as.data.frame(cl),
+            Var = 'LandingWeight_1000ton' ,
+            var1 = 'FishingActivityLvl5',
+            tapply_type = 'sum',
+            type_of_threshold = 'cum_percent',
+            value_of_threshold = 95,
+            sorted = T,
+            graph_par = eval(parse(text = 'list(oma = c(6,1,1,1), mai = c(1,1,.5,.5), ylab_line=4, col="colour5", mfrow=c(2,1), cex.x=0.7)')),
+            filter = ''
+          )
+          
+          subchunkify(bar_cl[[2]],'Figure_landings_by_metier_lvl5',  5, 8)
+          
+          if (tables == "yes") {
+            write.table(
+              bar_cl[[1]],
+              file =  
+                paste(table_dir, 'Figure_landings_by_metier_lvl5',
+                ".txt",
+                sep = ""
+              ),
+              sep = '\t',
+              dec = '.',
+              row.names = F
+            )
+            }
+          
+cat('\n')
+cat(paste0("**Figure ",17+i,".**"),' Landings (1000 t) by Metier Level 5. \n ')
+cat('  \n')
+}
 
 ```
