@@ -1171,39 +1171,39 @@ res <- choroplethMap_func(
           
 cat('  \n')
 
-cat(paste0("## ", "Metier lvl5- ",stocks_n[i], " \n"))
+ cat(paste0("## ", "Metier lvl5- ",stocks_n[i], " \n"))
 
-bar_cl <- barplot_var_by_one_var(
-            x = as.data.frame(cl),
-            Var = 'LandingWeight_1000ton' ,
-            var1 = 'FishingActivityLvl5',
-            tapply_type = 'sum',
-            type_of_threshold = 'cum_percent',
-            value_of_threshold = 95,
-            sorted = T,
-            graph_par = eval(parse(text = 'list(oma = c(6,1,1,1), mai = c(1,1,.5,.5), ylab_line=4, col="colour5", mfrow=c(2,1), cex.x=0.7)')),
-            filter = ''
-          )
-          
-          subchunkify(bar_cl[[2]],'Figure_landings_by_metier_lvl5',  5, 8)
-          
-          if (tables == "yes") {
-            write.table(
-              bar_cl[[1]],
-              file =  
-                paste(table_dir, 'Figure_landings_by_metier_lvl5',
-                ".txt",
-                sep = ""
-              ),
-              sep = '\t',
-              dec = '.',
-              row.names = F
-            )
-            }
-          
-cat('\n')
-cat(paste0("**Figure ",17+i,".**"),' Landings (1000 t) by Metier Level 5. \n ')
-cat('  \n')
+ bar_cl <- barplot_var_by_one_var(
+             x = as.data.frame(cl%>%filter(stockNew %in% (stocks_n[i]))),
+             Var = 'LandingWeight_1000ton' ,
+             var1 = 'FishingActivityLvl5',
+             tapply_type = 'sum',
+             type_of_threshold = 'top_n',
+             value_of_threshold = 3,
+             sorted = T,
+             graph_par = eval(parse(text = 'list(oma = c(6,1,1,1), mai = c(1,1,.5,.5), ylab_line=4, col="colour5", mfrow=c(2,1), cex.x=0.7)')),
+             filter = ''
+           )
+
+           subchunkify(bar_cl[[2]],paste0('Figure_landings_by_metier_lvl5_',i),  5, 8)
+
+           if (tables == "yes") {
+             write.table(
+               bar_cl[[1]],
+               file =
+                 paste(table_dir, paste0('Figure_landings_by_metier_lvl5_',i),
+                 ".txt",
+                 sep = ""
+               ),
+               sep = '\t',
+               dec = '.',
+               row.names = F
+             )
+             }
+
+ cat('\n')
+ cat(paste0("**Figure ",17+i,".**"),' Landings (1000 t) by Metier Level 5. \n ')
+ cat('  \n')
 }
 
 ```
