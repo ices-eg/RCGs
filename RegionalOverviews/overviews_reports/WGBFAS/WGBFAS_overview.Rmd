@@ -402,28 +402,28 @@ cat(paste0("## ", 'Effort by metier lvl5 \n'))
 
 bar_ce <- barplot_var_by_one_var(
             x = as.data.frame(ce),
-            Var = 'TripsNumber' ,
-            var1 = 'FishingActivityLvl5',
-            tapply_type = 'sum',
-            type_of_threshold = 'cum_percent',
+            Var = "TripsNumber" ,
+            var1 = "FishingActivityLvl5",
+            tapply_type = "sum",
+            type_of_threshold = "cum_percent",
             value_of_threshold = 95,
             sorted = T,
             graph_par = eval(parse(text = 'list(oma = c(6,1,1,1), mai = c(1,1,.5,.5), ylab_line=4, col="colour5", mfrow=c(2,1), cex.x=0.7)')),
-            filter = ''
+            filter = ""
           )
           
-          subchunkify(bar_ce[[2]],'Figure_effort_by_metier_lvl5',  5, 8)
+          subchunkify(bar_ce[[2]],"Figure_effort_ft_by_metier_lvl5",  5, 8)
           
           if (tables == "yes") {
             write.table(
               bar_ce[[1]],
               file =  
-                paste(table_dir, 'Figure_effort_by_metier_lvl5',
+                paste(table_dir, "Figure_effort_ft_by_metier_lvl5",
                 ".txt",
                 sep = ""
               ),
-              sep = '\t',
-              dec = '.',
+              sep = "\t",
+              dec = ".",
               row.names = F
             )
             }
@@ -495,7 +495,7 @@ cat("\n")
 cat("**Figure 6.** Total landings, sampling position and number of samples by statistical rectangle.(source: HH data) \n ")
 
 cat('  \n')
-cat(paste0("## ", 'Number of samples per unit of landings \n')) #per HH
+cat(paste0("## ", 'Number of samples per unit of landings by quarter \n')) #per HH
 
 cl %>% 
   mutate(Gear = str_sub(FishingActivityLvl6, end = 3)) %>%
@@ -685,9 +685,8 @@ hh_join <- left_join(sl_rcg_all, hh_rcg_all)
 left_join(hh_join, hl_rcg_all)%>%
   filter(Region=='BS') %>%
   mutate(Gear = str_sub(FishingActivityCategoryEuropeanLvl6 , end = 3),
-         idsamp=paste(CS_LengthId, StationNo),
-         Quarter=ceiling(as.numeric(substr(StartDate,6,7))/3)) %>%
-  group_by(x=PosStartLonDec ,y=PosStartLatDec, CatchCategory, Quarter )%>%
+         idsamp=paste(CS_LengthId, StationNo)) %>%
+  group_by(x=PosStartLonDec ,y=PosStartLatDec, CatchCategory)%>%
   summarise(wsamp=sum(Weight_ton ,na.rm=T),
             nbsamp=n_distinct(idsamp))-> mapcs
 
@@ -710,7 +709,7 @@ map0<-ggplot(mapcl)+theme_bw()+
   borders("worldHires",xlim=rangex,ylim=rangey,fill="light grey",colour="light grey")+
   coord_quickmap(xlim=range(mapcl$lon,na.rm=T),ylim=range(mapcl$lat,na.rm=T))+
   scale_fill_distiller(palette='Spectral',name="Landings\n(t)")+
-  facet_wrap(~Quarter,ncol=2)+xlab("")+ylab("")
+  xlab("")+ylab("")
 
 # Total landings and sampling position and landing sampled weights by quarter and statistical rectangle.
 
@@ -799,9 +798,8 @@ hl_join <- left_join(hh_join, hl_rcg_all)
 left_join(hl_join, ca_rcg_all)%>%
   filter(Region=='BS') %>%
   mutate(Gear = str_sub(FishingActivityCategoryEuropeanLvl6 , end = 3),
-         idsamp=paste(CS_SMAWLId, StationNo),
-         Quarter=ceiling(as.numeric(substr(StartDate,6,7))/3)) %>%
-  group_by(x=PosStartLonDec ,y=PosStartLatDec, CatchCategory, Quarter )%>%
+         idsamp=paste(CS_SMAWLId, StationNo)) %>%
+  group_by(x=PosStartLonDec ,y=PosStartLatDec, CatchCategory)%>%
   summarise(wsamp=sum(Weight_ton ,na.rm=T),
             nbsamp=n_distinct(idsamp))-> mapcs
 
@@ -820,21 +818,21 @@ rangey<-c(min(mapcl$lat,na.rm=T)-.1,max(mapcl$lat,na.rm=T)+.1)
 #poly map
 map0<-ggplot(mapcl)+theme_bw()+
   geom_raster(data=mapcl,aes(x=lon,y=lat,fill=LandingsT ),stat="identity",alpha=.75)+
-  geom_point(data=mapcs,aes(x=x,y=y,size=nbsamp),alpha=.8,shape=1)+ #CatchCategory
+  geom_point(data=mapcs,aes(x=x,y=y,size=wsamp),alpha=.8,shape=1)+ #CatchCategory
   borders("worldHires",xlim=rangex,ylim=rangey,fill="light grey",colour="light grey")+
   coord_quickmap(xlim=range(mapcl$lon,na.rm=T),ylim=range(mapcl$lat,na.rm=T))+
   scale_fill_distiller(palette='Spectral',name="Landings\n(t)")+
-  facet_wrap(~Quarter,ncol=2)+xlab("")+ylab("")
+  xlab("")+ylab("")
 
 # Total landings and sampling position and landing sampled weights by quarter and statistical rectangle.
 
-          subchunkify(map0,'Figure_sample_CPUE_map_CA',  10, 9)
+          subchunkify(map0,'Figure_sample_CPUE_map_CA_y',  10, 9)
           
           if (tables == "yes") {
             write.table(
               map0[[1]],
               file =  
-                paste(table_dir, 'Figure_sample_CPUE_map_CA',
+                paste(table_dir, 'Figure_sample_CPUE_map_CA_y',
                 ".txt",
                 sep = ""
               ),
