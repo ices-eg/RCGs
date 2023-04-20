@@ -88,6 +88,7 @@ library(rnaturalearth)
 library(flextable) # R version 3.6.3
 library(TeachingDemos)
 library(riverplot)
+library(lwgeom)
 
 ```
 
@@ -291,7 +292,9 @@ ce <- droplevels(ce)
 **Disclaimer**
 
 The tables and figures of the overviews presented in this document are made for the coordination of EU regional fisheries data collection purposes and are not designed for any other use. Data used for producing the outputs are extracted from the Regional Database (RDB) and EU Fleet Register. Dates of data extractions are stated in Appendix A. Due to different aggregations and reporting authorities, data can differ from those used e.g. for assessments or technical reports.
-Member States (MS) are responsible for uploading latest data and the latest year should be viewed as provisional. Data can be resubmitted by a MS for more than one previous year so there might be differences in earlier year reports, if countries update back in time. Responsibility for the quality of the data and comparability to other data sources lies with the MS that provided these data. The upload logs presented by MS regarding the data submitted to RDB can be found in the ISSG Data Quality report.
+
+Member States (MS) are responsible for uploading latest data and the latest year should be viewed as provisional. Data can be resubmitted by a MS for more than one previous year so there might be differences in earlier year reports, if countries update back in time. Responsibility for the quality of the data and comparability to other data sources lies with the MS that provided these data. The upload logs presented by MS regarding the data submitted to RDB can be found in the Share Point for Intersessional Work, together with the data.
+
 
 The respective scripts and calculations used for data displaying are publicly available via the RCG GitHub (https://github.com/ices-eg/RCGs) and subject to change as the work of the group progresses. 
 
@@ -882,7 +885,8 @@ kable(tableForeign)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 
 country_table <-  read.table(
-    "D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/data/aux_countries.txt",
+    #"D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/data/aux_countries.txt",
+    "C:/Use/0_GitHub/RCGs/RegionalOverviews/data/aux_countries.txt",  # lucia's pc
     header = T,
     sep = ",",
     colClasses = "character",
