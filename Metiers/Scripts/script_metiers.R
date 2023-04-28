@@ -8,10 +8,7 @@ rm(list=ls())
 gc()
 
 # Import all functions
-for(f in list.files(path="./Scripts/Functions", full.names = T)){
-  source(f)
-}
-rm(f)
+lapply(list.files(path = "./Scripts/Functions", full.names = T),source)
 
 # Load the input data
 data.file <- "data_input_example.csv"
@@ -286,10 +283,3 @@ write.xlsx(file = "metier_results_summary.xlsx",result[,.(n_count=.N,
                                                           EUR_sum=sum(EUR, na.rm=T)),
                                                        by=.(Country, RCG, metier_level_6_new)][order(Country, RCG, metier_level_6_new)],
            overwrite = T)
-
-
-
-
-
-
-

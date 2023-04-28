@@ -24,6 +24,7 @@ validateInputDataFormat <- function(input.data){
   }
   if(ncol(input.data) > nrow(validation)) 
     warning(paste0("Input data has additional columns that are not recognized by the script."))
+  validateKgAndEur(input.data)
   return(TRUE)
 }
 
