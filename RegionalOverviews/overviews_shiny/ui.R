@@ -1,5 +1,5 @@
 ##-------------------
-## Load user interface files
+## Define user interface
 ##-------------------
 
 ui <- shinyUI(
