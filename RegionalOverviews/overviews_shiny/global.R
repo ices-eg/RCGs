@@ -1,7 +1,17 @@
 ##--------------
-## libraries
+## Glo. settings
+##--------------
+## Set the working directory on local machine
+setwd("PATH-TO/overviews_shiny")
+
+## Set options
+options(shiny.maxRequestSize = 500*1024^2)
+
+##--------------
+## Libraries
 ##--------------
 
+library(shiny)
 library(shinythemes)
 library(shinyBS)
 library(shinyTime)
@@ -28,11 +38,7 @@ library(dplyr)
 library(rgeos) # requiered by shinyappsio
 library(rintrojs) 
 library(plotly) # added 2022
-
 library(shinyalert)
-
-
-
 
 ##--------------
 ## data
