@@ -127,7 +127,7 @@ data_list<-reactive({
                  NoAtLengthInSample_ThousandIndiv = NA,
                  NoAtLengthInSample_MillionIndiv = NA) 
   
-  hl_master <- rename(hl_master, Stock = stock)
+  hl_master <- dplyr::rename(hl_master, Stock = stock)
   
   ca_map <- rbind(cahl, hl_master, fill = TRUE)
 
@@ -162,6 +162,7 @@ data_list<-reactive({
   ca_map2$FlagCountry<-as.factor(ca_map2$FlagCountry)
   ca_map2$Region<-as.factor(ca_map2$Region)
   ca_map2$Species<-as.factor(ca_map2$Species)
+  ca_map2$CatchCategory<-as.factor(ca_map2$CatchCategory)
   
   list1<-vector(mode = "list")
   list1[[1]]<-cainventory
