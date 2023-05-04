@@ -1,6 +1,6 @@
-##-------------------
-## Load user interface files
-##-------------------
+##----------------------
+## Define user interface
+##----------------------
 
 ui <- shinyUI(
   # bootstrapPage(tags$style(HTML(" body, pre { font-size: 12pt; } * { font-family: Arial,sans-serif }")),
