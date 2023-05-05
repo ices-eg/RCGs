@@ -1,16 +1,24 @@
+# ===========================================================================================#
+#                                       Global                                               #   
+#                                                                                            #
+#                                          *                                                 #           
+# This script defines global settings (e.g. options) and load support files (e.g. shps).     #
+#                                                                                            #
+# ===========================================================================================#
+
 ##--------------
-## Glo. settings
+## Set wd.
 ##--------------
-## Set the working directory on local machine
 setwd("PATH-TO/overviews_shiny")
 
+##--------------
 ## Set options
+##--------------
 options(shiny.maxRequestSize = 500*1024^2)
 
 ##--------------
 ## Libraries
 ##--------------
-
 library(shiny)
 library(shinythemes)
 library(shinyBS)
