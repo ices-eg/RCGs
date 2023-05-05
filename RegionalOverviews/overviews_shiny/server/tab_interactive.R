@@ -1,11 +1,11 @@
-# =========================================================#
-#                    Leaflet interactive map               #   
-#                                                          #
-#                              *                           #           
-#                                                          #
-# This script filters the data in order to display them on # 
-# a leaflet interactive map according to user´s selection. #
-# =========================================================#
+# ===================================================================================#
+#                             Leaflet interactive map                                #   
+#                                                                                    #
+#                                         *                                          #           
+#                                                                                    #
+# This script filters the data in order to display them on a leaflet interactive map # 
+# according to user´s selection.                                                    #
+# ===================================================================================#
 
 # ---------------------------------------------------------
 # Updating selectize input == country 
