@@ -1,16 +1,26 @@
+# ===========================================================================================#
+#                                    Launch script                                           #   
+#                                                                                            #
+#                                          *                                                 #           
+# This script launch the application once settings, user interface and server are defined.   #
+#                                                                                            #
+# ===========================================================================================#
 ## --------------------------------
-#  Launch file
+#  Load global settings
 ## --------------------------------
-## This script launch the application once settings, user interface and server are defined. 
-
-## Load global settings 
 source("global.R")
 
-## Load user interface
+## --------------------------------
+#  Load user interface
+## --------------------------------
 source("ui.R")
 
-## Load server
+## --------------------------------
+#  Load server
+## --------------------------------
 source("server.R")
 
-## Launch app
+## --------------------------------
+#  Launch server
+## --------------------------------
 shinyApp(ui, server)
