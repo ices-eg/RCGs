@@ -21,6 +21,6 @@ source("ui.R")
 source("server.R")
 
 ## --------------------------------
-#  Launch server
+#  Launch app
 ## --------------------------------
 shinyApp(ui, server)
