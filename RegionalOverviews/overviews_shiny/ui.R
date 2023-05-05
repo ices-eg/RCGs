@@ -1,3 +1,11 @@
+# ===========================================================================================#
+#                                    user interface                                          #   
+#                                                                                            #
+#                                          *                                                 #           
+# Builds the front-end                                                                       #
+#                                                                                            #
+# ===========================================================================================#
+
 ##----------------------
 ## Define user interface
 ##----------------------
@@ -114,6 +122,16 @@ ui <- shinyUI(
                  br(),
                  #addSpinner(DT::dataTableOutput("inventorytable_SL"), spin = "circle", color = "grey")
                  DT::dataTableOutput("inventorytable_SL"),
+                 add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
+               ),
+               tabPanel(
+                 "TR inventory",
+                 align = 'center',
+                 br(),
+                 downloadButton(outputId = 'download_filtered_invetorytable_TR', label = "Download the filtered dataset"),
+                 br(),
+                 #addSpinner(DT::dataTableOutput("inventorytable_SL"), spin = "circle", color = "grey")
+                 DT::dataTableOutput("inventorytable_TR"),
                  add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
                )
              )),
