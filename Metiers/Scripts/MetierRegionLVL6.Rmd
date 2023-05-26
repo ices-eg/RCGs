@@ -1,0 +1,874 @@
+---
+author: "ISSG Metier Overviews"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 4
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile,
+  encoding = encoding, 
+  output_file = file.path(dirname(inputFile), "BALT.html"))}) # <--- Change region here
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.dim = c(14, 10))
+options(scipen=999)
+```
+
+```{r}
+library(tidyverse, quietly=TRUE, warn.conflicts=FALSE)
+library(knitr)
+library(ggplot2)
+library(cowplot)
+library(pander)
+library(ggpubr)
+library(kableExtra)
+library(sf)
+library(rnaturalearth)
+library(RColorBrewer)
+```
+
+```{r}
+# Set RCG region - NSEA, NAtl, BALT
+rr <- "BALT" # <---------- and here 
+
+if(rr %in% "NSEA"){
+  title <- "North Sea and Eastern Arctic"
+}else if(rr %in% "NAtl"){
+  title <- "North Atlantic"
+}else{
+  title <- "Baltic"
+}
+
+```
+
+---
+title: "`r title`"
+---
+
+
+```{r functions, include=FALSE}
+catHeader <- function(text = "", level = 3) {
+    cat(paste0("\n\n", 
+               paste(rep("#", level), collapse = ""), 
+               " ", text, "\n"))
+}
+```
+
+
+
+
+```{r}
+# Reference lists 
+## Scientific name 
+urls <- "https://raw.githubusercontent.com/ices-eg/RCGs/master/Metiers/Scripts/ICESVocabSpecies/ICESVocabAphiaIDScienName_2023.csv"
+ScienName <- read.csv(urls, header = TRUE)
+
+
+### Remove deprecated and invalid records 
+ScienName <- filter(ScienName, !Deprecated %in% c("", "True", "2020-09-16")) %>%
+  select(Code, Description) %>%
+  mutate(Code = as.numeric(Code))
+## Area - region (normal path gives back xml version)
+url <- "https://raw.githubusercontent.com/ices-eg/RCGs/master/Metiers/Reference_lists/AreaRegionLookup.csv"
+Area <- read.csv(url, header = TRUE)
+### Fix the extra space in rcg region code
+Area <- mutate(Area, Code = ifelse(Code %in% "NSEA                                    " , "NSEA",
+                             ifelse(Code %in% "NAtl                                      ", "NAtl", Code))) %>%
+  select(AreaCode, Code)
+
+### Shapefiles 
+### Need to source it from online - Can't open it
+# rect <- read_sf("https://raw.githubusercontent.com/ices-eg/RCGs/Metiers/Scripts/RectangleShapefiles/StatRec_map_Areas_Full_20170124.shp")
+
+rect <- read_sf("./StatRec_map_Areas_Full_20170124.shp")
+world <- ne_countries(scale = "medium", returnclass = "sf")
+world <- st_set_crs(world, 4326)
+```
+
+```{r}
+# Read data 
+CL <- read.csv("./CommercialLanding.csv")
+CE <- read.csv("./CommercialEffort.csv")
+```
+
+```{r}
+# Select only area 27 
+CL <- filter(CL, substr(CLarea, 1, 2) %in% "27")
+CE <- filter(CE, substr(CEarea, 1, 2) %in% "27")
+
+# Assign regions (and split? Need to do this at the end of processing then)
+CL <- left_join(CL, Area, by = c("CLarea" = "AreaCode"))
+# table(CL$Code, useNA = "always") # 6 NAs from area 27 (IE, GB) - exclude for now, check!!! 
+CL <- filter(CL, !is.na(Code))
+
+CE <- left_join(CE, Area, by = c("CEarea" = "AreaCode"))
+# table(CE$Code, useNA = "always") # No NA's
+```
+
+```{r}
+# Merge for scientific name 
+CL <- left_join(CL, ScienName, by = c("CLspeciesCode" = "Code"))
+```
+
+
+```{r}
+# Process
+
+## Year string 
+CL$CLyear <- as.character(CL$CLyear)
+CE$CEyear <- as.character(CE$CEyear)
+
+## Month factors 
+CL$CLmonth <- factor(CL$CLmonth, levels = as.character(c(1:12)))
+CE$CEmonth <- factor(CE$CEmonth, levels = as.character(c(1:12)))
+
+## Quarter factors 
+CL$CLquarter <- factor(CL$CLquarter, levels = as.character(c(1:4)))
+CE$CEquarter <- factor(CE$CEquarter, levels = as.character(c(1:4)))
+
+## Vessel length factors 
+CL$CLvesLenCat <- factor(CL$CLvesselLengthCategory, levels = c("VL0006","VL0608", "VL0810", "VL1012", "VL1215", "VL1518", "VL1824", "VL2440", "VL40XX", "NK"))
+CE$CEvesLenCat <- factor(CE$CEvesselLengthCategory, levels = c("VL0006","VL0608", "VL0810", "VL1012", "VL1215", "VL1518", "VL1824", "VL2440", "VL40XX", "NK"))
+
+## Country factors 
+CL$CLvesselFlagCountry <- factor(CL$CLvesselFlagCountry, levels = sort(unique(CL$CLvesselFlagCountry)))
+CE$CEvesselFlagCountry <- factor(CE$CEvesselFlagCountry, levels = sort(unique(CE$CEvesselFlagCountry)))
+
+
+## Get metier lvl 4 
+CL <- mutate(CL, CLmetier4 = str_extract(CLmetier6, "[^_]+"))
+CE <- mutate(CE, CEmetier4 = str_extract(CEmetier6, "[^_]+"))
+
+## Get metier lvl 5 
+CL <- mutate(CL, CLmetier5 = str_extract(CLmetier6,  "[^_]*_[^_]*"))
+CE <- mutate(CE, CEmetier5 = str_extract(CEmetier6,  "[^_]*_[^_]*"))
+
+
+# Weight kg to t 
+CL <- mutate(CL, CLofficialWeight = round(CLofficialWeight/1000, digits = 2))
+```
+
+
+```{r}
+# Filter by area 
+CLAREA <- filter(CL, Code %in% rr)
+CEAREA <- filter(CE, Code %in% rr)
+```
+
+
+
+
+```{r}
+# Set country colors
+ct.cols <- 14 
+myColors <- colorRampPalette(brewer.pal(8, "Set2"))(ct.cols)
+names(myColors) <- levels(CL$CLvesselFlagCountry)
+colScale <- scale_fill_manual(name = "CLvesselFlagCountry",values = myColors)
+
+```
+
+
+
+
+
+```{r}
+# Top 10 metiers by region based on FISHING DAYS 
+# Select top 10 lvl 4 
+# Select top 10 metier lvl 5 from the top 10 metier lvl 4
+# Select top 5 metier lvl 6 from the top 10 metier lvl 5 
+#--- Keep all metier lvl 5 and metier lvl 6 for the respective summary plots  
+
+# TODO - more than 5% of total fishing days and less than 10/5
+
+# Lvl 4 
+CEtop4 <- CEAREA %>%
+  group_by(CEmetier4) %>%
+  summarise(Fd = sum(CEofficialFishingDays)) %>%
+  mutate(ToTfd = sum(Fd),
+         Perc = (Fd/ToTfd)*100)%>%
+  top_n(10, Perc)
+
+CEAREA4 <- filter(CEAREA, CEmetier4 %in% unique(CEtop4$CEmetier4))
+
+# Lvl 5 
+CEtop5 <- CEAREA4 %>%
+  group_by(CEmetier4, CEmetier5) %>%
+  summarise(Fd = sum(CEofficialFishingDays))  %>%
+  mutate(ToTfd = sum(Fd),
+         Perc = (Fd/ToTfd)*100) %>%
+  filter(Perc > 5)
+
+CEAREA5 <- filter(CEAREA4, CEmetier5 %in% unique(CEtop5$CEmetier5))
+# Lvl 6 - top 5 
+# TODO arrange index based on mesh size 
+
+
+CEtop6 <- CEAREA5 %>%
+  group_by(CEmetier4, CEmetier5, CEmetier6) %>%
+  summarise(Fd = sum(CEofficialFishingDays)) %>%
+  mutate(ToTfd = sum(Fd),
+         Perc = (Fd/ToTfd)*100) %>%
+  filter(Perc > 5)
+
+# Lvl 6 
+# TODO
+CEAREA6 <- filter(CEAREA5, CEmetier6 %in% unique(CEtop6$CEmetier6))
+CLAREA4 <- filter(CLAREA, CLmetier4 %in% unique(CEtop4$CEmetier4))
+CLAREA5 <- filter(CLAREA4, CLmetier5 %in% unique(CEtop5$CEmetier5))
+CLAREA6 <- filter(CLAREA5, CLmetier6 %in% unique(CEtop6$CEmetier6))
+```
+
+# All metier level 4 
+
+```{r}
+
+  p1 <- CLAREA %>%
+    group_by(CLmetier4, CLvesselFlagCountry) %>%
+    summarise(CLofficialWeight = sum(CLofficialWeight)) %>%
+    group_by(CLmetier4) %>%
+    mutate(TotW = sum(CLofficialWeight)) %>%
+    ggplot( aes(reorder(CLmetier4, -TotW), CLofficialWeight, fill = CLvesselFlagCountry)) +
+    geom_bar(stat = "identity") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    colScale +
+    ylab("Weight (t)") +    
+    ggtitle("Landed weight (t) by country and metier level 4") 
+  
+  p2 <- CLAREA %>%
+    group_by(CLmetier4, CLvesselFlagCountry) %>%
+    summarise(CLtotalOfficialLandingsValue= sum(as.numeric(CLtotalOfficialLandingsValue), na.rm = TRUE)) %>%
+    group_by(CLmetier4) %>%
+    mutate(TotL = sum(CLtotalOfficialLandingsValue)) %>%
+    ggplot( aes(x= reorder(CLmetier4, -TotL), y=CLtotalOfficialLandingsValue, fill =  CLvesselFlagCountry)) +     
+    geom_bar(stat = "identity") +
+    xlab("Metier lvl 4") +
+    ylab("Value in €") +
+    ggtitle("Landed value (€) by country and metier level 4") +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    colScale 
+  
+  # CE 
+  
+  k1 <- CEAREA %>%
+    group_by(CEmetier4, CEvesselFlagCountry) %>%
+    summarise(CEofficialFishingDays= sum(CEofficialFishingDays)) %>%
+    group_by(CEmetier4) %>%
+    mutate(TotD = sum(CEofficialFishingDays)) %>%
+    ggplot( aes(reorder(CEmetier4, -TotD),CEofficialFishingDays, fill = CEvesselFlagCountry)) +
+    geom_bar(stat = "identity") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    xlab("Metier lvl 4") +
+    ylab("Official fishing days")
+    ggtitle("Fishing days by country and metier level 4")  +
+    colScale
+  
+  k2 <- CEAREA %>%
+    group_by(CEmetier4, CEvesselFlagCountry) %>%
+    summarise(CEnumberOfFractionTrips= sum(CEnumberOfFractionTrips)) %>%
+    group_by(CEmetier4) %>%
+    mutate(TotD = sum(CEnumberOfFractionTrips)) %>% 
+    ggplot( aes(reorder(CEmetier4, -TotD),CEnumberOfFractionTrips, fill = CEvesselFlagCountry)) +
+    geom_bar(stat = "identity") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
+    xlab("Metier lvl 4") +
+    ylab("Number of trips") +
+    ggtitle("Number of trips by country and metier level 4")  +
+    colScale
+  
+  l <- ggarrange(p1, p2, k1, k2, ncol = 2, nrow = 2)
+  print(l)
+  
+  # Vessel length category 
+  
+  vl1 <- CLAREA %>%
+    group_by(CLmetier4, CLvesLenCat) %>%
+    summarise(CLofficialWeight = sum(CLofficialWeight)) %>%
+    group_by(CLmetier4) %>%
+    mutate(TotW = sum(CLofficialWeight)) %>%
+    ggplot( aes(reorder(CLmetier4, -TotW), CLofficialWeight, fill = CLvesLenCat)) +
+    geom_bar(stat = "identity") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    xlab("Metier lvl 4") +
+    ylab("Weight (t)") +
+    ggtitle("Landed weight (t) by vessel length category and metier level 4") 
+  
+  vl2 <- CLAREA %>%
+    group_by(CLmetier4, CLvesLenCat) %>%
+    summarise(CLtotalOfficialLandingsValue= sum(as.numeric(CLtotalOfficialLandingsValue), na.rm = TRUE)) %>%
+    group_by(CLmetier4) %>%
+    mutate(TotL = sum(CLtotalOfficialLandingsValue)) %>%
+    ggplot( aes(x= reorder(CLmetier4, -TotL), y=CLtotalOfficialLandingsValue, fill =  CLvesLenCat)) +     
+    geom_bar(stat = "identity") +
+    xlab("Metier lvl 4") +
+    ylab("Value in €") +
+    ggtitle("Landed value (€) by vessel length category and metier level 4") +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) 
+  
+  # CE 
+  
+  vl3 <- CEAREA %>%
+    group_by(CEmetier4, CEvesLenCat) %>%
+    summarise(CEofficialFishingDays= sum(CEofficialFishingDays)) %>%
+    group_by(CEmetier4) %>%
+    mutate(TotD = sum(CEofficialFishingDays)) %>%
+    ggplot( aes(reorder(CEmetier4, -TotD),CEofficialFishingDays, fill = CEvesLenCat)) +
+    geom_bar(stat = "identity") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    xlab("Metier lvl 4") +
+    ggtitle("Fishing days by vessel length category and metier level 4")  
+  
+  vl4 <- CEAREA %>%
+    group_by(CEmetier4, CEvesLenCat) %>%
+    summarise(CEnumberOfFractionTrips= sum(CEnumberOfFractionTrips)) %>%
+    group_by(CEmetier4) %>%
+    mutate(TotD = sum(CEnumberOfFractionTrips)) %>% 
+    ggplot( aes(reorder(CEmetier4, -TotD),CEnumberOfFractionTrips, fill = CEvesLenCat)) +
+    geom_bar(stat = "identity") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
+    xlab("Metier lvl 4") +
+    ggtitle("Number of trips by vessel length category and metier level 4")  
+  
+  vlf <- ggarrange(vl1, vl2, vl3, vl4, ncol = 2, nrow = 2)
+  print(vlf)
+  
+
+```
+
+
+# Top 10 metier level 4 
+
+
+```{r}
+
+# Metier lvl 4 section 
+create_section4 <- function(met4, CEAREA, CLAREA) {
+
+  # Header
+  pander::pandoc.header(met4, level = 2)
+  
+  ### HOW TO ADD TEXT IN SUBSECTION 
+   # pandoc.p("You can add text like this")
+   # 
+   # ## if you want to make it specific 
+   # if(met4 %in% "FPN"){
+   #     pandoc.p("Adds text only under the FPN section")
+   # }
+   # 
+  
+  # Section contents
+  # Flag country 
+  # CL 
+  
+  p1 <- CLAREA %>%
+    filter(CLmetier4 %in% met4) %>%
+    group_by(CLmetier5, CLvesselFlagCountry) %>%
+    summarise(CLofficialWeight = sum(CLofficialWeight)) %>%
+    group_by(CLmetier5) %>%
+    mutate(TotW = sum(CLofficialWeight)) %>%
+    ggplot( aes(reorder(CLmetier5, -TotW), CLofficialWeight, fill = CLvesselFlagCountry)) +
+    geom_bar(stat = "identity") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    xlab("Metier lvl 5") +
+    ylab("Weight (t)") +
+    ggtitle("Landed weight (t) by country and metier level 5") +
+    colScale 
+  
+  p2 <- CLAREA %>%
+    filter(CLmetier4 %in% met4) %>%
+    group_by(CLmetier5, CLvesselFlagCountry) %>%
+    summarise(CLtotalOfficialLandingsValue= sum(as.numeric(CLtotalOfficialLandingsValue), na.rm = TRUE)) %>%
+    group_by(CLmetier5) %>%
+    mutate(TotL = sum(CLtotalOfficialLandingsValue)) %>%
+    ggplot( aes(x= reorder(CLmetier5, -TotL), y=CLtotalOfficialLandingsValue, fill =  CLvesselFlagCountry)) +     
+    geom_bar(stat = "identity") +
+    xlab("Metier lvl 5") +
+    ylab("Value in €") +
+    ggtitle("Landed value (€) by country and metier level 5") +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    colScale 
+  
+  # CE 
+  
+  k1 <- CEAREA %>%
+    filter(CEmetier4 %in% met4) %>%
+    group_by(CEmetier5, CEvesselFlagCountry) %>%
+    summarise(CEofficialFishingDays= sum(CEofficialFishingDays)) %>%
+    group_by(CEmetier5) %>%
+    mutate(TotD = sum(CEofficialFishingDays)) %>%
+    ggplot( aes(reorder(CEmetier5, -TotD),CEofficialFishingDays, fill = CEvesselFlagCountry)) +
+    geom_bar(stat = "identity") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    xlab("Metier lvl 5") +
+    ggtitle("Fishing days by country and metier level 5") +
+    colScale 
+  
+  k2 <- CEAREA %>%
+    filter(CEmetier4 %in% met4) %>%
+    group_by(CEmetier5, CEvesselFlagCountry) %>%
+    summarise(CEnumberOfFractionTrips= sum(CEnumberOfFractionTrips)) %>%
+    group_by(CEmetier5) %>%
+    mutate(TotD = sum(CEnumberOfFractionTrips)) %>% 
+    ggplot( aes(reorder(CEmetier5, -TotD),CEnumberOfFractionTrips, fill = CEvesselFlagCountry)) +
+    geom_bar(stat = "identity") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
+    xlab("Metier lvl 5") +
+    ggtitle("Number of trips by country and metier level 5") +
+    colScale 
+  
+  l <- ggarrange(p1, p2, k1, k2, ncol = 2, nrow = 2)
+  print(l)
+  
+  # Vessel length category 
+  
+  vl1 <- CLAREA %>%
+    filter(CLmetier4 %in% met4) %>%
+    group_by(CLmetier5, CLvesLenCat) %>%
+    summarise(CLofficialWeight = sum(CLofficialWeight)) %>%
+    group_by(CLmetier5) %>%
+    mutate(TotW = sum(CLofficialWeight)) %>%
+    ggplot( aes(reorder(CLmetier5, -TotW), CLofficialWeight, fill = CLvesLenCat)) +
+    geom_bar(stat = "identity") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    xlab("Metier lvl 5") +
+    ylab("Weight (t)") +
+    ggtitle("Landed weight by vessel length category and metier level 5")  
+  
+  vl2 <- CLAREA %>%
+    filter(CLmetier4 %in% met4) %>%
+    group_by(CLmetier5, CLvesLenCat) %>%
+    summarise(CLtotalOfficialLandingsValue= sum(as.numeric(CLtotalOfficialLandingsValue), na.rm = TRUE)) %>%
+    group_by(CLmetier5) %>%
+    mutate(TotL = sum(CLtotalOfficialLandingsValue)) %>%
+    ggplot( aes(x= reorder(CLmetier5, -TotL), y=CLtotalOfficialLandingsValue, fill =  CLvesLenCat)) +     
+    geom_bar(stat = "identity") +
+    xlab("Metier lvl 5") +
+    ylab("Value in €") +
+    ggtitle("Landed value (€) by vessel length category and metier level 5") +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) 
+  
+  # CE 
+  
+  vl3 <- CEAREA %>%
+    filter(CEmetier4 %in% met4) %>%
+    group_by(CEmetier5, CEvesLenCat) %>%
+    summarise(CEofficialFishingDays= sum(CEofficialFishingDays)) %>%
+    group_by(CEmetier5) %>%
+    mutate(TotD = sum(CEofficialFishingDays)) %>%
+    ggplot( aes(reorder(CEmetier5, -TotD),CEofficialFishingDays, fill = CEvesLenCat)) +
+    geom_bar(stat = "identity") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    xlab("Metier lvl 5") +
+    ggtitle("Fishing days by vessel length category and metier level 5") 
+  
+  vl4 <- CEAREA %>%
+    filter(CEmetier4 %in% met4) %>%
+    group_by(CEmetier5, CEvesLenCat) %>%
+    summarise(CEnumberOfFractionTrips= sum(CEnumberOfFractionTrips)) %>%
+    group_by(CEmetier5) %>%
+    mutate(TotD = sum(CEnumberOfFractionTrips)) %>% 
+    ggplot( aes(reorder(CEmetier5, -TotD),CEnumberOfFractionTrips, fill = CEvesLenCat)) +
+    geom_bar(stat = "identity") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
+    xlab("Metier lvl 5") +
+    ggtitle("Number of trips by vessel length category and metier level 5") 
+  
+  vlf <- ggarrange(vl1, vl2, vl3, vl4, ncol = 2, nrow = 2)
+  print(vlf)
+  
+  # empty lines to be sure that this is valid Markdown
+  pander::pandoc.p('')
+  
+}
+
+```
+
+```{r}
+
+# Metier lvl 5 section 
+create_section5 <- function(met5, CEAREA4, CLAREA4) {
+
+   # Header
+   pander::pandoc.header(met5, level = 3)
+  
+  
+  CLAREA4 <- filter(CLAREA4, CLmetier5 %in% met5)
+  CEAREA4 <- filter(CEAREA4, CEmetier5 %in% met5)
+
+  
+
+  # Section contents
+  
+  ## Table totals by country 
+    tab1 <- CLAREA4 %>% 
+    group_by(CLmetier5, CLvesselFlagCountry) %>%
+    summarise(CLofficialWeight = sum(CLofficialWeight), 
+              CLtotalOfficialLandingsValue = sum(as.numeric(CLtotalOfficialLandingsValue), na.rm = TRUE)) %>%
+    rename(Metier5 = CLmetier5, 
+           VesselFlagCountry = CLvesselFlagCountry)
+  
+  tab2 <-CEAREA4 %>%
+    group_by(CEmetier5, CEvesselFlagCountry) %>%
+    summarise(CEofficialFishingDays= sum(CEofficialFishingDays),
+              CEnumberOfFractionTrips= sum(CEnumberOfFractionTrips)) %>%
+    rename(Metier5 = CEmetier5, 
+           VesselFlagCountry = CEvesselFlagCountry)
+  
+  print(fintab <- left_join(tab1, tab2) %>%
+          rename(OfficialWeight = CLofficialWeight,
+                 Value = CLtotalOfficialLandingsValue,
+                 OfficialFishingDays = CEofficialFishingDays,
+                 NumberOfTrips = CEnumberOfFractionTrips) %>%
+    filter(Metier5 %in% met5) %>%
+    kbl(caption = "Total values by country and metier level 5") %>%
+    kable_styling())
+  
+  
+  
+   ## CL 
+  
+    CLtop10 <- CLAREA4 %>%
+    group_by(Description) %>%
+    summarise(ToTw = sum(CLofficialWeight)) %>%
+    top_n(10, ToTw ) %>%
+    mutate(x = "x")
+  
+  CLtopSp <- left_join(CLAREA4, CLtop10, by = "Description") %>%
+    mutate(Description = ifelse(is.na(x), "Others", Description))
+  
+  
+  p1 <- CLAREA4 %>%
+    group_by(CLmetier6, CLvesselFlagCountry) %>%
+    summarise(CLofficialWeight = sum(CLofficialWeight)) %>%
+    group_by(CLmetier6) %>%
+    mutate(TotW = sum(CLofficialWeight)) %>%
+    ggplot( aes(reorder(CLmetier6, -TotW), CLofficialWeight, fill = CLvesselFlagCountry)) +
+    geom_bar(stat = "identity") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    xlab("Metier lvl 6") +
+    ylab("Weight (t)") +
+    ggtitle("Landed weight (t) by country and metier level 6")  +
+    colScale
+  
+  p2 <- CLAREA4 %>%
+    group_by(CLmetier6, CLvesselFlagCountry) %>%
+    summarise(CLtotalOfficialLandingsValue= sum(as.numeric(CLtotalOfficialLandingsValue), na.rm = TRUE)) %>%
+      group_by(CLmetier6) %>%
+    mutate(TotL = sum(as.numeric(CLtotalOfficialLandingsValue))) %>%
+    ggplot( aes(x= reorder(CLmetier6, -TotL), y=CLtotalOfficialLandingsValue, fill =  CLvesselFlagCountry)) +     
+    geom_bar(stat = "identity") +
+    xlab("Metier lvl 6") +
+    ylab("Value in €") +
+    ggtitle("Landed value (€) by country and metier level 6") +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
+    colScale
+  
+  # CE 
+  
+  k1 <- CEAREA4 %>%
+    group_by(CEmetier6, CEvesselFlagCountry) %>%
+    summarise(CEofficialFishingDays= sum(CEofficialFishingDays)) %>%
+    group_by(CEmetier6) %>%
+    mutate(TotD = sum(CEofficialFishingDays)) %>%
+    ggplot( aes(reorder(CEmetier6, -TotD),CEofficialFishingDays, fill = CEvesselFlagCountry)) +
+    geom_bar(stat = "identity") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    xlab("Metier lvl 6") +
+    ggtitle("Fishing days by country and metier level 6")  +
+    colScale
+  
+  k2 <- CEAREA4 %>%
+    group_by(CEmetier6, CEvesselFlagCountry) %>%
+    summarise(CEnumberOfFractionTrips= sum(CEnumberOfFractionTrips)) %>%
+    group_by(CEmetier6) %>%
+    mutate(TotD = sum(CEnumberOfFractionTrips)) %>% 
+    ggplot( aes(reorder(CEmetier6, -TotD),CEnumberOfFractionTrips, fill = CEvesselFlagCountry)) +
+    geom_bar(stat = "identity") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
+    xlab("Metier lvl 6") +
+    ggtitle("Number of trips by country and metier level 6")  +
+    colScale
+  
+  l <- ggarrange(p1, p2, k1, k2, ncol = 2, nrow = 2)
+  print(l)
+  
+   # Vessel length category 
+  
+  vl1 <- CLAREA4 %>%
+    group_by(CLmetier6, CLvesLenCat) %>%
+    summarise(CLofficialWeight = sum(CLofficialWeight)) %>%
+    group_by(CLmetier6) %>%
+    mutate(TotW = sum(CLofficialWeight)) %>%
+    ggplot( aes(reorder(CLmetier6, -TotW), CLofficialWeight, fill = CLvesLenCat)) +
+    geom_bar(stat = "identity") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    xlab("Metier lvl 6") +
+    ylab("Weight (t)") +
+    ggtitle("Landed weight by vessel length category and metier level 6")  
+  
+  vl2 <- CLAREA4 %>%
+    group_by(CLmetier6, CLvesLenCat) %>%
+    summarise(CLtotalOfficialLandingsValue= sum(as.numeric(CLtotalOfficialLandingsValue), na.rm = TRUE)) %>%
+    group_by(CLmetier6) %>%
+    mutate(TotL = sum(CLtotalOfficialLandingsValue)) %>%
+    ggplot( aes(x= reorder(CLmetier6, -TotL), y=CLtotalOfficialLandingsValue, fill =  CLvesLenCat)) +     
+    geom_bar(stat = "identity") +
+    xlab("Metier lvl 6") +
+    ylab("Value in €") +
+    ggtitle("Landed value (€) by vessel length category and metier level 6") +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) 
+  
+  # CE 
+  
+  vl3 <- CEAREA4 %>%
+    group_by(CEmetier6, CEvesLenCat) %>%
+    summarise(CEofficialFishingDays= sum(CEofficialFishingDays)) %>%
+    group_by(CEmetier6) %>%
+    mutate(TotD = sum(CEofficialFishingDays)) %>%
+    ggplot( aes(reorder(CEmetier6, -TotD),CEofficialFishingDays, fill = CEvesLenCat)) +
+    geom_bar(stat = "identity") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    xlab("Metier lvl 5") +
+    ggtitle("Fishing days by vessel length category and metier level 5") 
+  
+  vl4 <- CEAREA4 %>%
+    group_by(CEmetier6, CEvesLenCat) %>%
+    summarise(CEnumberOfFractionTrips= sum(CEnumberOfFractionTrips)) %>%
+    group_by(CEmetier6) %>%
+    mutate(TotD = sum(CEnumberOfFractionTrips)) %>% 
+    ggplot( aes(reorder(CEmetier6, -TotD),CEnumberOfFractionTrips, fill = CEvesLenCat)) +
+    geom_bar(stat = "identity") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
+    xlab("Metier lvl 5") +
+    ggtitle("Number of trips by vessel length category and metier level 5") 
+  
+  vlf <- ggarrange(vl1, vl2, vl3, vl4, ncol = 2, nrow = 2)
+  print(vlf)
+
+ ### Weight
+  w <- CLtopSp %>%
+    group_by(CLmetier6, Description) %>%
+    summarise(CLofficialWeight = sum(CLofficialWeight)) %>%
+    group_by(CLmetier6) %>%
+    mutate(TotW = sum(CLofficialWeight)) %>%
+    ggplot(aes(reorder(CLmetier6, -TotW ), CLofficialWeight, fill = Description)) +
+    geom_bar(stat = "identity")    +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    theme(text = element_text(size = 15)) +
+    xlab("Metier level 6") +
+    ylab("Weight (t)") +
+    ggtitle("Landed weight (t) top 10 species")
+
+  
+  ### Value 
+  l <- CLtopSp %>%
+    group_by(CLmetier6,Description) %>%
+    summarise(CLtotalOfficialLandingsValue= sum(as.numeric(CLtotalOfficialLandingsValue), na.rm = TRUE)) %>%
+    group_by(CLmetier6) %>%
+    mutate(TotL = sum(as.numeric(CLtotalOfficialLandingsValue), na.rm =TRUE)) %>%
+    ggplot(aes(reorder(CLmetier6, -TotL), CLtotalOfficialLandingsValue, fill = Description)) +
+    geom_bar(stat = "identity")    +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    theme(text = element_text(size = 15)) +
+    xlab("Metier level 6")+
+    ylab("Value in €") +
+    ggtitle("Landed value (€) top 10 species")
+
+  
+  lw <- ggarrange(w, l, ncol = 2, nrow = 1)
+  print(lw)
+  
+  
+  # empty lines to be sure that this is valid Markdown
+   pander::pandoc.p('')
+
+}
+
+```
+
+```{r}
+# Metier lvl 6 section 
+create_section6 <- function(met6, CEAREA6, CLAREA6) {
+
+   # Header
+  pandoc.header(met6, level = 4)
+  
+  CLAREA6 <- filter(CLAREA6, CLmetier6 %in% met6)
+  CEAREA6 <- filter(CEAREA6, CEmetier6 %in% met6)
+  
+  
+  # Section contents
+  ## CL - top 15 species
+  
+  CLtop15 <- CLAREA6 %>%
+    group_by(Description) %>%
+    summarise(ToTw = sum(CLofficialWeight)) %>%
+    top_n(15, ToTw ) %>%
+    mutate(x = "x")
+  
+  CLtopSp <- left_join(CLAREA6, CLtop15, by = "Description") %>%
+    mutate(Description = ifelse(is.na(x), "Others", Description))
+  ### Weight
+  w <- CLtopSp %>%
+    group_by(Description) %>%
+    summarise(CLofficialWeight = sum(CLofficialWeight)) %>%
+    ggplot(aes(reorder(Description, -CLofficialWeight), CLofficialWeight)) +
+    geom_bar(stat = "identity")    +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    theme(text = element_text(size = 15)) +
+    xlab("Scientific name") +
+    ylab("Weight (t)") +
+    ggtitle("Landed weight (t) top 15 species")
+  print(w)
+  
+  ### Value 
+  l <- CLtopSp %>%
+    group_by(Description) %>%
+    summarise(CLtotalOfficialLandingsValue= sum(as.numeric(CLtotalOfficialLandingsValue), na.rm = TRUE)) %>%
+    ggplot(aes(reorder(Description, -CLtotalOfficialLandingsValue), CLtotalOfficialLandingsValue)) +
+    geom_bar(stat = "identity")    +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    theme(text = element_text(size = 15)) +
+    xlab("Scientific name")+
+    ylab("Value in €") +
+    ggtitle("Landed value (€) top 15 species")
+  print(l)
+  
+  ## CE 
+  ### Flag country 
+  f <- CEAREA6 %>%
+    group_by(CEvesselFlagCountry) %>%
+    summarise(CEofficialFishingDays = sum(CEofficialFishingDays)) %>%
+    ggplot(aes(reorder(CEvesselFlagCountry, -CEofficialFishingDays), CEofficialFishingDays)) +
+    geom_bar(stat = "identity")    +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    theme(text = element_text(size = 15)) +
+    xlab("Flag Country")+
+    ggtitle("Fishing days by flag country") 
+  print(f)
+  
+  
+  t <- CEAREA6 %>%
+    group_by(CEvesselFlagCountry) %>%
+    summarise(CEnumberOfFractionTrips = sum(CEnumberOfFractionTrips)) %>%
+    ggplot(aes(reorder(CEvesselFlagCountry, -CEnumberOfFractionTrips), CEnumberOfFractionTrips)) +
+    geom_bar(stat = "identity")    +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    theme(text = element_text(size = 15)) +
+    xlab("Flag Country")+
+    ggtitle("Number of trips by flag country")
+  print(t)
+  ### Vessel length 
+  
+   v1 <- CEAREA6 %>%
+    group_by(CEvesLenCat) %>%
+    summarise(CEofficialFishingDays = sum(CEofficialFishingDays)) %>%
+    ggplot(aes(CEvesLenCat, CEofficialFishingDays)) +
+    geom_bar(stat = "identity")    +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    theme(text = element_text(size = 15)) +
+    xlab("Vessel Length")+
+    ggtitle("Fishing days by vessel length group")
+  print(v1)
+  
+  v2 <- CEAREA6 %>%
+    group_by(CEvesLenCat) %>%
+    summarise(CEnumberOfFractionTrips = sum(CEnumberOfFractionTrips)) %>%
+    ggplot(aes( CEvesLenCat, CEnumberOfFractionTrips)) +
+    geom_bar(stat = "identity")    +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    theme(text = element_text(size = 15)) +
+    xlab("Vessel Length")+
+    ggtitle("Number of trips by vessel length group")
+  print(v2)
+  
+  ### Quarter
+    q1 <- CEAREA6 %>%
+    group_by(CEquarter) %>%
+    summarise(CEofficialFishingDays = sum(CEofficialFishingDays)) %>%
+    ggplot(aes( CEquarter, CEofficialFishingDays)) +
+    geom_bar(stat = "identity")    +
+    theme(text = element_text(size = 15)) +
+    xlab("Quarter")+
+    ggtitle("Fishing days by quarter")
+  print(q1)
+  
+   q2 <- CEAREA6 %>%
+    group_by(CEquarter) %>%
+    summarise(CEnumberOfFractionTrips = sum(CEnumberOfFractionTrips)) %>%
+    ggplot(aes( CEquarter, CEnumberOfFractionTrips)) +
+    geom_bar(stat = "identity")    +
+    theme(text = element_text(size = 15)) +
+    xlab("Quarter")+
+    ggtitle("Number of trips by quarter")
+  print(q2)
+  
+  
+  ### Map - Fishing days 
+  mapDat <- CEAREA6 %>%
+    group_by(CEstatisticalRectangle) %>%
+    summarise(CEofficialFishingDays = sum(CEofficialFishingDays))
+  
+  
+  mapdata <- left_join(rect, mapDat, by = c("ICESNAME" = "CEstatisticalRectangle" )) %>%  filter(!is.na(CEofficialFishingDays))
+  
+  
+  
+  #Setting lim
+  ylim_min <- min(mapdata$SOUTH, na.rm = T)
+  ylim_max <- max(mapdata$NORTH, na.rm = T)
+  xlim_min <- min(mapdata$WEST, na.rm = T)
+  xlim_max <- max(mapdata$EAST, na.rm = T)
+  xlim <- c(xlim_min - 2, xlim_max + 2)
+  ylim <- c(ylim_min - 1, ylim_max + 1)
+  
+  mm <- ggplot() + 
+    geom_sf(data = rect) +
+    geom_sf(data = mapdata, aes(fill = CEofficialFishingDays)) +
+    geom_sf(data = world) +
+    coord_sf(xlim = xlim, ylim = ylim, expand = FALSE) +
+    xlab("Longitude") +
+    ylab("Latitude")+
+    scale_fill_gradient(low="lightblue", high="red") +
+    ggtitle("Fishing days by ICES rectangle")   +
+    theme(text = element_text(size = 15)) 
+  
+  print(mm)
+  
+  # empty lines to be sure that this is valid Markdown
+  pandoc.p('')
+  
+   }
+
+```
+
+
+
+```{r, results='asis'}
+
+#initialize
+create_section4(CEtop6$CEmetier4[1], CEAREA, CLAREA)
+create_section5(CEtop6$CEmetier5[1], CEAREA4, CLAREA4)
+create_section6(CEtop6$CEmetier6[1], CEAREA6, CLAREA6)
+#loop
+for (i in 2:nrow(CEtop6)) {
+  if(CEtop6$CEmetier4[i-1] != CEtop6$CEmetier4[i]){
+    create_section4(CEtop6$CEmetier4[i], CEAREA, CLAREA)
+      
+  }
+  if(CEtop6$CEmetier5[i-1] != CEtop6$CEmetier5[i]){
+    create_section5(CEtop6$CEmetier5[i], CEAREA4, CLAREA4)
+  }
+    if(CEtop6$CEmetier6[i-1] != CEtop6$CEmetier6[i]){
+    create_section6(CEtop6$CEmetier6[i], CEAREA6, CLAREA6)
+  }
+
+}
+```
+
+
+
+

@@ -30,43 +30,41 @@ output:
 #setwd("RegionalOverviews")
 
 #Paramters 
-RDB_download_date <- "17/04/2022"
+RDB_download_date <- "24/04/2023"
 
 target_region <- "RCG_NSEA"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
-years <- c(2021)
+years <- c(2022)
 
-period <- "2021"
+period <- "2022"
 
 figures <- "yes" #yes / no - all figures outputted to a folder
 tables <- "yes" #yes / no - all tables outputted to a folder
 
-#data_dir <-data_dir <- paste("../../data/002_prepared/", target_region, "/", sep = '') # "Q:/dfad/users/kibi/data/RCG/from_share_point/"
-#data_dir <-data_dir <- paste("D:/Grupy robocze/RCG/RCGs Data/2020 data/", target_region, "/", sep = '') # 
+#data_dir <-data_dir <- paste("../../data/002_prepared/", target_region, "/", sep = '') 
 
-data_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/input_data/2021/", target_region, "/", sep = '') # Ana PC
+data_dir <- paste("C:/Use/0_Lucia/6_Working groups/RCG_ISSG/ISSG Catch and Effort Overview/ISSG_overviews/RDB_Data/2021/", target_region, "/", sep = '') # Lucia PC
+
+# data_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/input_data/2021/", target_region, "/", sep = '') # Ana PC
 
 
 # Folder for figures and tables
 # table_dir <- paste("../../outputs/", target_region, "/tables/", sep = "")
 # figur_dir <- paste("../../outputs/", target_region, "/figures/", sep = "")
-# table_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/",period,"/", target_region, "/tables/", sep = "")
-# figur_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/",period,"/", target_region, "/figures/", sep = "")
+table_dir <- paste("C:/Use/0_Lucia/6_Working groups/RCG_ISSG/ISSG Catch and Effort Overview/ISSG_overviews/Overviews_output/CatchEffort/",period,"/", target_region, "/tables/", sep = "")  # Lucia PC
+figur_dir <- paste("C:/Use/0_Lucia/6_Working groups/RCG_ISSG/ISSG Catch and Effort Overview/ISSG_overviews/Overviews_output/CatchEffort/",period,"/", target_region, "/figures/", sep = "") # Lucia PC
 
-table_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/outputs/",period,"/", target_region, "/tables/", sep = "")  # PC Ana
-figur_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/outputs/",period,"/", target_region, "/figures/", sep = "") # PC Ana
- 
 # for SSF
 #table_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/SSF_", target_region, "/tables/", sep = "")
 #figur_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/SSF_", target_region, "/figures/", sep = "")
 
 #Landings per stock settings
 
-years_stock <- c(2019, 2020, 2021)
-period_stock <- "2019-2021"
+years_stock <- c(2019, 2020, 2021, 2022)
+period_stock <- "2019-2022"
 
 #Fleet register		
-Date_0<-20210101
-Date_previous<-20200101
+Date_0<-20220101
+Date_previous<-20210101
 ```
 
 ```{r 2_setup_lib, include = F}
@@ -84,6 +82,7 @@ library(rnaturalearth)
 library(flextable) # R version 3.6.3
 library(TeachingDemos)
 library(riverplot)
+library(lwgeom)
 
 ```
 
@@ -233,29 +232,29 @@ date: `r Sys.Date()`
 if (target_region == "RCG_NA")
 {
   load(
-    paste(data_dir, "RDB_RCG_NA_CL_2009_2021_prepared_20220422.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NA_CL_2009_2022_prepared_20230426.Rdata", sep = "")
   )
   load(
-    paste(data_dir, "RDB_RCG_NA_CE_2009_2021_prepared_20220422.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NA_CE_2009_2022_prepared_20230426.Rdata", sep = "")
   )
 }
 
 if (target_region == "RCG_BA")
 {
   load(
-    paste(data_dir, "RDB_RCG_BA_CL_2009_2021_prepared_20220422.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_BA_CL_2009_2022_prepared_20230426.Rdata", sep = "")
   )
   load(
-    paste(data_dir, "RDB_RCG_BA_CE_2009_2021_prepared_20220422.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_BA_CE_2009_2022_prepared_20230426.Rdata", sep = "")
   )
 }
 if (target_region == "RCG_NSEA")
 {
   load(
-    paste(data_dir, "RDB_RCG_NSEA_CL_2009_2021_prepared_20220422.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NSEA_CL_2009_2022_prepared_20230426.Rdata", sep = "")
   )
   load(
-    paste(data_dir, "RDB_RCG_NSEA_CE_2009_2021_prepared_20220422.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NSEA_CE_2009_2022_prepared_20230426.Rdata", sep = "")
     )
 			}	
 
@@ -287,7 +286,9 @@ ce <- droplevels(ce)
 **Disclaimer**
 
 The tables and figures of the overviews presented in this document are made for the coordination of EU regional fisheries data collection purposes and are not designed for any other use. Data used for producing the outputs are extracted from the Regional Database (RDB) and EU Fleet Register. Dates of data extractions are stated in Appendix A. Due to different aggregations and reporting authorities, data can differ from those used e.g. for assessments or technical reports.
-Member States (MS) are responsible for uploading latest data and the latest year should be viewed as provisional. Data can be resubmitted by a MS for more than one previous year so there might be differences in earlier year reports, if countries update back in time. Responsibility for the quality of the data and comparability to other data sources lies with the MS that provided these data. The upload logs presented by MS regarding the data submitted to RDB can be found in the ISSG Data Quality report.
+
+Member States (MS) are responsible for uploading latest data and the latest year should be viewed as provisional. Data can be resubmitted by a MS for more than one previous year so there might be differences in earlier year reports, if countries update back in time. Responsibility for the quality of the data and comparability to other data sources lies with the MS that provided these data. The upload logs presented by MS regarding the data submitted to RDB can be found in the Share Point for Intersessional Work, under the folder "Data".
+
 
 The respective scripts and calculations used for data displaying are publicly available via the RCG GitHub (https://github.com/ices-eg/RCGs) and subject to change as the work of the group progresses. 
 
@@ -296,14 +297,15 @@ The respective scripts and calculations used for data displaying are publicly av
 
 The present Catch and Effort Overview displays summary information on the EU commercial landings (CL) and commercial effort (CE) statistics included in the Regional Data Base (RDB), which is used to store detailed commercial fisheries and sampling data.
 
-Before the subgroup on catch, effort and sampling overviews was set up, the different RCGs conducted data analysis and overviews separately with minimal exchange, resulting in redundancies and efficiency loss. Furthermore, a substantial part of the work was being carried out during the RCG meetings themselves and so not readily available to inform RCG preparation and meeting discussions. This group was established to streamline and facilitate the work on the fisheries and sampling data of the MS and prepare data overviews in advance of the RCG meetings.
+The RDB is hosted at the International Council for Exploration of the Sea (ICES) and its data is property of EU Member States with usage governed by the [Data use license for the Regional Database (RDB)](https://ices-library.figshare.com/articles/report/Data_use_license_for_the_Regional_Database_RDB_and_Regional_Database_and_Estimation_System_RDBES_/22188157/1). 
 
-The RDB is hosted at the International Council for Exploration of the Sea (ICES) and its data is property of EU Member States with usage governed by the RDB data policy (https://www.ices.dk/data/Documents/Data_Policy_RDB.pdf). It is a regionally coordinated database platform covering fisheries by region (e.g. North Atlantic Ocean, North Sea, Baltic Sea) and is a main resource used by the Regional Coordination Groups to coordinate data collection of EU fisheries. This database aims also: 1) To ensure that data can be made available for the coordination of regional fisheries data sampling plans, in particular for the DCF Regional Coordination Groups (RCGs); 2) To provide a regional estimation system such that statistical estimates of quantities of interest can be produced from sample data, in order to deliver data for ICES stock assessments and advice, 3) To serve and facilitate the production of fisheries management advice and status reports, 4) To increase the awareness of fisheries data collected by the users of the RDB and the overall usage of these data. 5) Addresses fishery management needs related to the European Union Common Fisheries.
+It is a regionally coordinated database platform covering fisheries by region (e.g. North Atlantic Ocean, North Sea, Baltic Sea) and is a main resource used by the Regional Coordination Groups to coordinate data collection of EU fisheries. This database aims also: 1) To ensure that data can be made available for the coordination of regional fisheries data sampling plans, in particular for the DCF Regional Coordination Groups (RCGs); 2) To provide a regional estimation system such that statistical estimates of quantities of interest can be produced from sample data, in order to deliver data for ICES stock assessments and advice, 3) To serve and facilitate the production of fisheries management advice and status reports, 4) To increase the awareness of fisheries data collected by the users of the RDB and the overall usage of these data. 5) Addresses fishery management needs related to the European Union Common Fisheries.
 
 However, it has been recognized for many years that there is a need to have a new version of the RDB which would also store details about how the sampling was performed and enable statistical estimations to be made.
 
 In fact, the current Regional Data Base stores the commercial catch and sample data at detailed level, and here the data format and estimations do not support statistical estimations, even though most of the countries’ sampling are not done in a statistical way, the countries never used the RDB for raising/estimating their data. The countries have raised/estimated the data nationally at the institutes and uploaded the data to InterCatch for the stock assessment Expert Groups. That means the stock assessment EG have no information of how the data have been raised/estimated until the data is uploaded into InterCatch, from that point and through the international raising the data and processes are fully documented. InterCatch does neither support statistical estimations. 
-The incoming "Regional DataBase and Estimation System" (RDBES) is taking the place of the RDB (and InterCatch) to improve those aspects. It is expected that RDBES will fill the gaps of the RDB and, in the near future, will also allow the improvement of the information reported in these fisheries overviews.
+
+The incoming "Regional DataBase and Estimation System" (RDBES) is taking the place of the RDB (and InterCatch) to improve those aspects. It is expected that RDBES will fill the gaps of the RDB and will also allow the improvement of the information reported in these fisheries overviews.
 
 
 ## Reading the graphs
@@ -800,7 +802,7 @@ cat('  \n ')
 
 #### Dates of data extraction
 
-The data referring to the present year was collected under the RCG 2022 data call for the 2021 data for the Baltic Sea, North Sea, Eastern Arctic and the North Atlantic regions and downloaded from the system on the 17th of April 2022 with the exception of information detailed in section “2. Overall Fleet Evolution” which was extracted from the EU Fleet Register (https://webgate.ec.europa.eu/fleet-europa/index_en) on the 11th of March 2022.
+The data referring to the present year was collected under the RCG 2022 data call for the 2021 data for the Baltic Sea, North Sea, Eastern Arctic and the North Atlantic regions and downloaded from the system on the 24th of April 2023 with the exception of information detailed in section “2. Overall Fleet Evolution” which was extracted from the EU Fleet Register (https://webgate.ec.europa.eu/fleet-europa/index_en) on the 4th of April 2023.
 
 
 #### Catch groups
@@ -877,7 +879,7 @@ kable(tableForeign)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 
 country_table <-  read.table(
-    "D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/data/aux_countries.txt",
+    "C:/Use/0_GitHub/RCGs/RegionalOverviews/data/aux_countries.txt",  # lucia's pc
     header = T,
     sep = ",",
     colClasses = "character",

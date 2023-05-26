@@ -20,7 +20,8 @@ choroplethMap_func = function(df,
                               filter_type = NA,
                               filter_threshold = NA,
                               filter_func = NA,
-                              filter_facet = NA) {
+                              filter_facet = NA,
+                              ICESRectangle = FALSE) {
   # df - a data frame
   # var -  a column to be summmarised e.g. var = 'OfficialLandingCatchWeight'
   # groupBy - name of column, by which the grouping should be carried out. e.g. groupBy = 'Area'
@@ -349,7 +350,14 @@ choroplethMap_func = function(df,
         check_overlap = TRUE
       ) -> plot
   }
-  
+  if(ICESRectangle==TRUE){
+      plot+
+      geom_text(aes(x = seq(8.5, 27.5, by = 1), y  = unlist(limits["ymin"])+1/4, 
+                    label = c('F8','F9','G0','G1','G2','G3','G4','G5','G6','G7','G8','G9','H0','H1','H2','H3','H4','H5','H6','H7')))+
+      geom_text(aes(x =  unlist(limits["xmax"])-1/4, y  = seq(53+3/4, 66+1/4, by = 1/2), 
+                    label = c(36:61))
+                )-> plot
+  }
   if (saveResults == TRUE) {
     fileName =   paste(
       outputPath,
