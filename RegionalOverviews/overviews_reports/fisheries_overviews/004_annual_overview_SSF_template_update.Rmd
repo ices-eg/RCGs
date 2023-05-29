@@ -30,20 +30,20 @@ output:
 #setwd("RegionalOverviews")
 
 #Paramters
-RDB_download_date <- "17/04/2022"
+RDB_download_date <- "24/04/2023"
 
 target_region <- "RCG_NSEA"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
-years <- c(2021)
+years <- c(2022)
 
-period <- "2021"
+period <- "2022"
 
 figures <- "yes" #yes / no - all figures outputted to a folder
 tables <- "yes" #yes / no - all tables outputted to a folder
 
-#data_dir <-data_dir <- paste("../../data/002_prepared/", target_region, "/", sep = '') # "Q:/dfad/users/kibi/data/RCG/from_share_point/"
-#data_dir <-data_dir <- paste("D:/Grupy robocze/RCG/RCGs Data/2020 data/", target_region, "/", sep = '') # 
+data_dir <- paste("../../data/002_prepared/", target_region, "/", sep = '')
+#data_dir <-data_dir <- paste("D:/Grupy robocze/RCG/RCGs Data/2020 data/", target_region, "/", sep = '') 
 
-data_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/input_data/2021/RDB_Per_Region_CLCE_SSF_2009_2021_prepared/", target_region, "/", sep = '') # Ana PC
+#data_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/input_data/2021/RDB_Per_Region_CLCE_SSF_2009_2021_prepared/", target_region, "/", sep = '') # Ana PC
 
 
 # Folder for figures and tables
@@ -53,24 +53,24 @@ data_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch
 # figur_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/",period,"/", target_region, "/figures/", sep = "")
  
 
-table_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/outputs/",period,"/SSF/", target_region, "/tables/", sep = "")  # PC Ana
+#table_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/outputs/",period,"/SSF/", target_region, "/tables/", sep = "")  # PC Ana
 
-figur_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/outputs/",period,"/SSF/", target_region, "/figures/", sep = "") # PC Ana
+#figur_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/outputs/",period,"/SSF/", target_region, "/figures/", sep = "") # PC Ana
  
 # for SSF
-#table_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/SSF_", target_region, "/tables/", sep = "")
-#figur_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/SSF_", target_region, "/figures/", sep = "")
+table_dir <- paste("D:/rcgs_dane/SSF_",period,"/", target_region, "/tables/", sep = "")
+figur_dir <- paste("D:/rcgs_dane/SSF_",period,"/", target_region, "/figures/", sep = "")
 
 
 #Landings per stock settings
 
-years_stock <- c(2018, 2019, 2020, 2021)
-period_stock <- "2018-2021"
+years_stock <- c(2018, 2019, 2020, 2021,2022)
+period_stock <- "2018-2022"
 
 
 #Fleet register		
-Date_0<-20210101
-Date_previous<-20200101
+Date_0<-20220101
+Date_previous<-20210101
 ```
 
 ```{r 2_setup_lib, include = F}
@@ -237,29 +237,29 @@ date: `r Sys.Date()`
 if (target_region == "RCG_NA")
 {
   load(
-    paste(data_dir, "RDB_RCG_NA_CL_SSF_2009_2021_prepared_20220422.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NA_CL_SSF_2009_2022_prepared_20230426.Rdata", sep = "")
   )
   load(
-    paste(data_dir, "RDB_RCG_NA_CE_SSF_2009_2021_prepared_20220422.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NA_CE_SSF_2009_2022_prepared_20230426.Rdata", sep = "")
   )
 }
 
 if (target_region == "RCG_BA")
 {
   load(
-    paste(data_dir, "RDB_RCG_BA_CL_SSF_2009_2021_prepared_20220422.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_BA_CL_SSF_2009_2022_prepared_20230426.Rdata", sep = "")
   )
   load(
-    paste(data_dir, "RDB_RCG_BA_CE_SSF_2009_2021_prepared_20220422.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_BA_CE_SSF_2009_2022_prepared_20230426.Rdata", sep = "")
   )
 }
 if (target_region == "RCG_NSEA")
 {
   load(
-    paste(data_dir, "RDB_RCG_NSEA_CL_SSF_2009_2021_prepared_20220422.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NSEA_CL_SSF_2009_2022_prepared_20230426.Rdata", sep = "")
   )
   load(
-    paste(data_dir, "RDB_RCG_NSEA_CE_SSF_2009_2021_prepared_20220422.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NSEA_CE_SSF_2009_2022_prepared_20230426.Rdata", sep = "")
     )
 			}	
 
@@ -892,7 +892,8 @@ kable(tableForeign)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 
 country_table <-  read.table(
-    "D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/data/aux_countries.txt",
+  "../../data/aux_countries.txt", 
+  # "D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/data/aux_countries.txt",
     header = T,
     sep = ",",
     colClasses = "character",
