@@ -212,6 +212,7 @@ data_list<-reactive({
     )
 
   #ca_map<-as.data.table(ca_map)
+  ca_map$StatisticalRectangle <- ifelse(ca_map$StatisticalRectangle == "NA", NA, paste(ca_map$StatisticalRectangle)) # In 2022 data NA are not recognized unless specified
   ca_map<-ca_map[!(is.na(StatisticalRectangle)|StatisticalRectangle=='99u9'),]
   ca_map$lat<- ices.rect(ca_map$StatisticalRectangle)$lat
   ca_map$lon <- ices.rect(ca_map$StatisticalRectangle)$lon
@@ -246,6 +247,7 @@ data_list<-reactive({
   ca_map$Species<-as.factor(ca_map$Species)
   
   ca_map2<-ca
+  ca_map2$StatisticalRectangle <- ifelse(ca_map2$StatisticalRectangle == "NA", NA, paste(ca_map2$StatisticalRectangle)) # In 2022 data NA are not recognized unless specified
   ca_map2<-ca_map2[!(is.na(StatisticalRectangle)|StatisticalRectangle=='99u9'),]
   ca_map2$lat<- ices.rect(ca_map2$StatisticalRectangle)$lat
   ca_map2$lon <- ices.rect(ca_map2$StatisticalRectangle)$lon
