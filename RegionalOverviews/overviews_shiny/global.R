@@ -9,7 +9,8 @@
 ##--------------
 ## Set wd.
 ##--------------
-setwd("PATH-TO/overviews_shiny")
+#setwd("PATH-TO/overviews_shiny")
+setwd("//storage-lk.slu.se/home$/erqu0001/Desktop/HLab_GH/Public_Eros/RCGs/RegionalOverviews/overviews_shiny") ## Eros PC
 
 ##--------------
 ## Set options

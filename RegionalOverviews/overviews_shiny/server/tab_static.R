@@ -19,7 +19,6 @@ dg <- reactive({
   data
 })
 
-
 observe({
   # Updating selectize input
   #updateSelectInput(session, "countryg", choices = unique(dg()$LandingCountry), selected = sort(unique(dg()$LandingCountry))[1]) 
