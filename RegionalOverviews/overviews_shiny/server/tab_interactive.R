@@ -1,13 +1,15 @@
+# ===================================================================================#
+#                             Leaflet interactive map                                #   
+#                                                                                    #
+#                                         *                                          #           
+#                                                                                    #
+# This script filters the data in order to display them on a leaflet interactive map # 
+# according to user´s selection.                                                    #
+# ===================================================================================#
 
-
-# ******************
-# Tab "with leaflet"
-# ******************
-
-
-# -------------------------
+# ---------------------------------------------------------
 # Updating selectize input == country 
-# -------------------------
+# ---------------------------------------------------------
 
 dd <- reactive({
   
@@ -22,7 +24,6 @@ dd <- reactive({
   data
 })
 
-
 observe({
   #updateSelectInput(session, "country", choices = unique(dd()$LandingCountry), selected = sort(unique(dd()$LandingCountry))[1]) 
   #updateSelectInput(session, "country", choices = c("All",as.character(unique(dd()$LandingCountry))), selected = "All") 
@@ -30,10 +31,9 @@ observe({
   
   })
 
-
-# -------------------------
+# ---------------------------------------------------------
 # Updating selectize input == species
-# -------------------------
+# ---------------------------------------------------------
 
 vars <- reactive ({
   
@@ -54,11 +54,11 @@ observe({
   updateSelectInput(session, "species", choices =c("All", as.character(unique(vars()))), selected = "All") 
 })
 
-# -------------------------
+# ---------------------------------------------------------
 # Updating selectize input : 
 # Remove All when another value is selected !!!All needs to be selected initially for the code to work!!! 
 # Remove other values when All is selected again 
-# -------------------------
+# ---------------------------------------------------------
 # Country 
 selected <- reactiveValues(v = NULL)
 observeEvent(input$country, {
@@ -105,6 +105,18 @@ observeEvent(input$quarter, {
   }
 })
 
+# Catch category
+observeEvent(input$catchcat, {
+  selected$v <- input$catchcat
+  if(selected$v[1] %in% "All" & length(selected$v) > 1){
+    newSelection <- subset(input$catchcat, !input$catchcat %in% "All")
+    updateSelectizeInput(session, "catchcat", choices =  c("All", levels(data_list()[[4]]$CatchCategory)), selected = newSelection)
+  }else if(!selected$v[1] %in% "All" & sum(str_detect(selected$v, "All")) %in% 1){
+    newSelection <- subset(input$catchcat, input$catchcat %in% "All")
+    updateSelectizeInput(session, "catchcat", choices =  c("All", levels(data_list()[[4]]$CatchCategory)), selected = newSelection)
+  }
+})
+
 # observe({
 #   if(input$country != "All"){
 #     # Updating selectize input
@@ -113,10 +125,9 @@ observeEvent(input$quarter, {
 # 
 # })
 
-
-# -------------------------
+# ---------------------------------------------------------
 # AbsolutePanel uiOutput
-# -------------------------
+# ---------------------------------------------------------
 
 output$absolute <- renderUI({
   req(input$file)
@@ -142,6 +153,16 @@ output$absolute <- renderUI({
         c(levels(data_list()[[4]]$Year)),
       multiple = F,
       selected = "All"
+    ),
+    selectizeInput(
+      "quarter",
+      "Quarter",
+      choices =
+        #c("All", levels(data_list()[[3]]$Quarter)),
+        c("All", levels(data_list()[[4]]$Quarter)),
+      multiple = TRUE,
+      selected = "All",
+      options = list(plugins = list("remove_button", "drag_drop"))
     ),
     selectInput(
       "region",
@@ -191,16 +212,15 @@ output$absolute <- renderUI({
       options = list(plugins = list("remove_button", "drag_drop"))
     ),
     selectizeInput(
-      "quarter",
-      "Quarter",
+      "catchcat",
+      "Catch category",
       choices =
-      #c("All", levels(data_list()[[3]]$Quarter)),
-      c("All", levels(data_list()[[4]]$Quarter)),
+        #c("All", levels(data_list()[[3]]$SamplingType)),
+        c("All", levels(factor(data_list()[[4]]$CatchCategory))),
       multiple = TRUE,
       selected = "All",
       options = list(plugins = list("remove_button", "drag_drop"))
     ),
-    
     popify(selectInput ("N_var2", "Variable", var, multiple = F), ""),
     checkboxInput("rec", "ICES Rectangles"),
     br(),
@@ -235,11 +255,9 @@ observeEvent(input$N_var2, {
         addPopover(session, "N_var2",  "", content = "Numbers of trips with length samples", trigger = "hover" , placement = "right")
 }})
 
-
-
-# -----------------------------------
+# ---------------------------------------------------------
 # Filtered data
-# -----------------------------------
+# ---------------------------------------------------------
 
 df <- reactive({
   
@@ -277,39 +295,69 @@ df <- reactive({
   if (!("All" %in% input$quarter)){
     data <- data[data$Quarter %in% input$quarter,]
   }
+  if (!("All" %in% input$catchcat)){
+    data <- data[data$CatchCategory %in% input$catchcat,]
+  }
   
   # data <- data[, c("LandingCountry", "Quarter",  "Species", "SamplingType",
   #                  "lat", "lon", input$N_var2)]
   data <- data[, c("FlagCountry", "Quarter",  "Species", "SamplingType",
-                   "lat", "lon", input$N_var2)]
+                   "lat", "lon", input$N_var2, "NumMaturityStageTrips", "NumAgeTrips", "NumLengthTrips", "NumWeightTrips")]
   # names(data) <- c("LandingCountry", "Quarter",  "Species", "SamplingType",
   #                  "lat", "lon", "aux")
   names(data) <- c("FlagCountry", "Quarter",  "Species", "SamplingType",
-                   "lat", "lon", "aux")
+                   "lat", "lon", "aux", "NumMaturityStageTrips", "NumAgeTrips", "NumLengthTrips", "NumWeightTrips")
   data$FlagCountry <- droplevels(data$FlagCountry)
+  
   data
 })
 
-# # --------------------------------------
-# # Data aggregation at location 
-# # filtered data updated with view button
-# # --------------------------------------
+# ---------------------------------------------------------
+# Data aggregation at location 
+# filtered data updated with view button
+# ---------------------------------------------------------
 # 
-filter_df <- eventReactive(input$view2, {
+#filter_df <- eventReactive(input$view2, { # Previous filter_df, consider to delete if edits are accepted
+#  if(nrow(df())!=0){
+#    dat<-aggregate(list(aux = df()$aux),
+#                   by = list(lat = df()$lat, lon = df()$lon),
+#                   # LandingCountry = df()$LandingCountry,
+#                   # Species = df()$Species,
+#                   # SamplingType = df()$SamplingType,
+#                   # Quarter = df()$Quarter),
+#                   FUN = sum)
+#  }
+#  else {
+#    dat <- df()
+#  }
+#})
+
+filter_df <- eventReactive(input$view2, { # Current filter_df, including number of trips contributing to the displayed statistics, by each of the coordinates combination. 
   if(nrow(df())!=0){
-    dat<-aggregate(list(aux = df()$aux),
-                   by = list(lat = df()$lat, lon = df()$lon),
-                   # LandingCountry = df()$LandingCountry,
-                   # Species = df()$Species,
-                   # SamplingType = df()$SamplingType,
-                   # Quarter = df()$Quarter),
-                   FUN = sum)
+    dat<- df() %>% 
+        mutate(code = as.factor(paste(lat, lon))) %>%
+        distinct() %>%
+        group_by(code) %>%
+        dplyr::summarize(
+          quarter_list = paste(unique(Quarter), collapse = ", "),
+          flagcountry_list = paste(unique(FlagCountry), collapse = ", "),
+          species_list = paste(unique(Species), collapse = ", "),
+          samplingType_list = paste(unique(SamplingType), collapse = ", "),
+          aux = sum(aux),
+          n_trip = case_when( # How many trip are contributing
+            input$N_var2 == "NumMaturityStageFish" ~ sum(as.numeric(NumMaturityStageTrips), na.rm = T),
+            input$N_var2 == "NumAgeFish" ~ sum(as.numeric(NumAgeTrips), na.rm = T),
+            input$N_var2 == "NumLengthFish" ~ sum(as.numeric(NumLengthTrips), na.rm = T),
+            input$N_var2 == "NumWeightFish" ~ sum(as.numeric(NumWeightTrips), na.rm = T)
+                              ),  
+          lat = lat,
+          lon = lon
+          )
   }
   else {
     dat <- df()
   }
 })
-# 
 
 # -----------------------------------
 # Debugging
@@ -327,8 +375,6 @@ filter_df <- eventReactive(input$view2, {
 # -----------------------------------
 # leaflet map and barplots
 # -----------------------------------
-
-
 
 #input$view2ColorsBAR <- colour_table$colour4
 ColorsBAR <- colour_table$colour4
@@ -374,8 +420,6 @@ output$down <- downloadHandler(
 # leaflet map and barplots
 # -----------------------------------
 
-
-
 output$map <- renderLeaflet({
   leaflet() %>% addProviderTiles(providers$CartoDB.Positron)  %>% 
     setView(lng = -5,lat =  52, zoom = 5)
@@ -389,7 +433,6 @@ output$map <- renderLeaflet({
 # -----------------------------------
 # Add filtered data to map
 # -----------------------------------
-
 observeEvent(input$view2,{
   #if (input$plottype == "Map")
   pal<-colorNumeric ("viridis", domain = as.numeric(filter_df()$aux))
@@ -399,14 +442,24 @@ observeEvent(input$view2,{
     addCircleMarkers(color=~pal(aux),
                      stroke=F,
                      radius=~ (sqrt(sqrt(aux))+0.6),
-                     fillOpacity=0.8)%>%
+                     fillOpacity=0.8,
+                     popup = ~paste0( # Add pop-up to each of the data point displayed 
+                                      "<strong>", "Vessel country flag:", "</strong>", filter_df()$flagcountry_list, "<br>", 
+                                      "<strong>", "Number of trips contributing:", "</strong>", filter_df()$n_trip, "<br>", 
+                                      "<strong>","Quarter :","</strong>", filter_df()$quarter_list, "<br>", 
+                                      "<strong>","Species :","</strong>", filter_df()$species_list,"<br>", 
+                                      "<strong>","Sampling type: ","</strong>", filter_df()$samplingType_list,"<br>", 
+                                      "<strong>", input$N_var2, " :", "</strong>", filter_df()$aux,"<br>", 
+                                      "<strong>","Latitude: ","</strong>", filter_df()$lat,"<br>", 
+                                      "<strong>","Longitude: ","</strong>", filter_df()$lon
+                     #popup = popupTable() # Other options, like graphs or tables inside the pop-up might be considered later on]
+                        ))  %>%
     addLegend( "bottomleft", pal=pal, values=~aux, title = input$N_var2,opacity = 0.8)
 })
 
 # -----------------------------------
 # Add ICES Rectangles Shapefile
 # -----------------------------------
-
 observe({
   proxy<-leafletProxy("map", data = filter_df())
   proxy%>%clearShapes()
@@ -419,8 +472,6 @@ observe({
 # -----------------------------------
 # barplot to panel
 # -----------------------------------
-
-
 output$plot2 <- renderPlot ({
   #input$view2
   if (input$view2==0) return()
@@ -437,8 +488,6 @@ output$plot2 <- renderPlot ({
       theme_bw()+
       theme(axis.text.x = element_text(angle = 90, hjust = 1))+
       labs(y = input$N_var2)
-    
-    
   })
   
 })

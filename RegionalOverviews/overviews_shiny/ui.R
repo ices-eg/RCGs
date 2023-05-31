@@ -1,6 +1,16 @@
+# ===========================================================================================#
+#                                    user interface                                          #   
+#                                                                                            #
+#                                          *                                                 #           
+# Builds the front-end                                                                       #
+#                                                                                            #
+# ===========================================================================================#
 
+##----------------------
+## Define user interface
+##----------------------
 
-shinyUI(
+ui <- shinyUI(
   # bootstrapPage(tags$style(HTML(" body, pre { font-size: 12pt; } * { font-family: Arial,sans-serif }")),
   #                   tags$style(".shiny-file-input-progress {display: none}"),
   #                   tags$head(tags$style(HTML(".selectize-input {width: 700px;}"))),
@@ -112,6 +122,16 @@ shinyUI(
                  br(),
                  #addSpinner(DT::dataTableOutput("inventorytable_SL"), spin = "circle", color = "grey")
                  DT::dataTableOutput("inventorytable_SL"),
+                 add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
+               ),
+               tabPanel(
+                 "TR inventory",
+                 align = 'center',
+                 br(),
+                 downloadButton(outputId = 'download_filtered_invetorytable_TR', label = "Download the filtered dataset"),
+                 br(),
+                 #addSpinner(DT::dataTableOutput("inventorytable_SL"), spin = "circle", color = "grey")
+                 DT::dataTableOutput("inventorytable_TR"),
                  add_busy_spinner(spin = "scaling-squares", color = "grey", timeout = 5, position = "top-right", margins = c(55,20))
                )
              )),

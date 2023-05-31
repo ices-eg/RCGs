@@ -1,7 +1,26 @@
-##--------------
-## libraries
-##--------------
+# ===========================================================================================#
+#                                       Global                                               #   
+#                                                                                            #
+#                                          *                                                 #           
+# This script defines global settings (e.g. options) and load support files (e.g. shps).     #
+#                                                                                            #
+# ===========================================================================================#
 
+##--------------
+## Set wd.
+##--------------
+#setwd("PATH-TO/overviews_shiny")
+setwd("//storage-lk.slu.se/home$/erqu0001/Desktop/HLab_GH/Public_Eros/RCGs/RegionalOverviews/overviews_shiny") ## Eros PC
+
+##--------------
+## Set options
+##--------------
+options(shiny.maxRequestSize = 500*1024^2)
+
+##--------------
+## Libraries
+##--------------
+library(shiny)
 library(shinythemes)
 library(shinyBS)
 library(shinyTime)
@@ -28,11 +47,7 @@ library(dplyr)
 library(rgeos) # requiered by shinyappsio
 library(rintrojs) 
 library(plotly) # added 2022
-
 library(shinyalert)
-
-
-
 
 ##--------------
 ## data
@@ -50,7 +65,6 @@ ices.rect <- read_sf("shp/ices_rectangles/ices_squares_simple.shp")
 #ices.rect <- read_sf("../data/shapefiles/ices_rectangles/ices_squares_simple.shp")
 ices.rect<-as(ices.rect, 'Spatial')
 
-
 ##--------------
 ## Fix a color for each country
 ##--------------
@@ -59,7 +73,6 @@ colour_table<-read.table("data/aux_colours.txt", header=T, sep="\t", colClasses=
 
 #inventory_ca$SamplingType <- as.factor(inventory_ca$SamplingType)
 #inventory_ca$Quarter <- as.factor(as.character(inventory_ca$Quarter))
-
 
 ##--------------
 ## Mapping
@@ -122,7 +135,6 @@ var <-
 ##--------------
 
 spptable <- read.csv("data/jointable.csv", sep= ";")
-
 
 #setwd("C:/Users/Win10 Home x64/Desktop/Arbeitszeug/RCG_ISSG/RCGs/RegionalOverviews/overviews_shiny")
 # 
