@@ -5,7 +5,8 @@
 # This script launch the application once settings, user interface and server are defined.   #
 #                                                                                            #
 # ===========================================================================================#
-## --------------------------------
+
+##-----------------------------
 #  Load global settings
 ## --------------------------------
 source("global.R")
