@@ -65,7 +65,6 @@ ices.rect <- read_sf("shp/ices_rectangles/ices_squares_simple.shp")
 #ices.rect <- read_sf("../data/shapefiles/ices_rectangles/ices_squares_simple.shp")
 ices.rect<-as(ices.rect, 'Spatial')
 
-
 ##--------------
 ## Fix a color for each country
 ##--------------
