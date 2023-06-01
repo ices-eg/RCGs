@@ -40,18 +40,18 @@ period <- "2022"
 figures <- "yes" #yes / no - all figures outputted to a folder
 tables <- "yes" #yes / no - all tables outputted to a folder
 
-#data_dir <-data_dir <- paste("../../data/002_prepared/", target_region, "/", sep = '') 
+data_dir <- paste("../../data/002_prepared/", target_region, "/", sep = '') 
 
-data_dir <- paste("C:/Use/0_Lucia/6_Working groups/RCG_ISSG/ISSG Catch and Effort Overview/ISSG_overviews/RDB_Data/2021/", target_region, "/", sep = '') # Lucia PC
+#data_dir <- paste("C:/Use/0_Lucia/6_Working groups/RCG_ISSG/ISSG Catch and Effort Overview/ISSG_overviews/RDB_Data/2021/", target_region, "/", sep = '') # Lucia PC
 
 # data_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/input_data/2021/", target_region, "/", sep = '') # Ana PC
 
 
 # Folder for figures and tables
-# table_dir <- paste("../../outputs/", target_region, "/tables/", sep = "")
-# figur_dir <- paste("../../outputs/", target_region, "/figures/", sep = "")
-table_dir <- paste("C:/Use/0_Lucia/6_Working groups/RCG_ISSG/ISSG Catch and Effort Overview/ISSG_overviews/Overviews_output/CatchEffort/",period,"/", target_region, "/tables/", sep = "")  # Lucia PC
-figur_dir <- paste("C:/Use/0_Lucia/6_Working groups/RCG_ISSG/ISSG Catch and Effort Overview/ISSG_overviews/Overviews_output/CatchEffort/",period,"/", target_region, "/figures/", sep = "") # Lucia PC
+ table_dir <- paste("../../outputs/", target_region, "/tables/", sep = "")
+ figur_dir <- paste("../../outputs/", target_region, "/figures/", sep = "")
+#table_dir <- paste("C:/Use/0_Lucia/6_Working groups/RCG_ISSG/ISSG Catch and Effort Overview/ISSG_overviews/Overviews_output/CatchEffort/",period,"/", target_region, "/tables/", sep = "")  # Lucia PC
+#figur_dir <- paste("C:/Use/0_Lucia/6_Working groups/RCG_ISSG/ISSG Catch and Effort Overview/ISSG_overviews/Overviews_output/CatchEffort/",period,"/", target_region, "/figures/", sep = "") # Lucia PC
 
 # for SSF
 #table_dir <- paste("D:/Grupy robocze/RCG/RCGs Outputs/SSF_", target_region, "/tables/", sep = "")
@@ -232,29 +232,29 @@ date: `r Sys.Date()`
 if (target_region == "RCG_NA")
 {
   load(
-    paste(data_dir, "RDB_RCG_NA_CL_2009_2022_prepared_20230426.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NA_CL_2009_2022_prepared_20230530.Rdata", sep = "")
   )
   load(
-    paste(data_dir, "RDB_RCG_NA_CE_2009_2022_prepared_20230426.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NA_CE_2009_2022_prepared_20230530.Rdata", sep = "")
   )
 }
 
 if (target_region == "RCG_BA")
 {
   load(
-    paste(data_dir, "RDB_RCG_BA_CL_2009_2022_prepared_20230426.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_BA_CL_2009_2022_prepared_20230530.Rdata", sep = "")
   )
   load(
-    paste(data_dir, "RDB_RCG_BA_CE_2009_2022_prepared_20230426.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_BA_CE_2009_2022_prepared_20230530.Rdata", sep = "")
   )
 }
 if (target_region == "RCG_NSEA")
 {
   load(
-    paste(data_dir, "RDB_RCG_NSEA_CL_2009_2022_prepared_20230426.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NSEA_CL_2009_2022_prepared_20230530.Rdata", sep = "")
   )
   load(
-    paste(data_dir, "RDB_RCG_NSEA_CE_2009_2022_prepared_20230426.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NSEA_CE_2009_2022_prepared_20230530.Rdata", sep = "")
     )
 			}	
 
@@ -879,7 +879,8 @@ kable(tableForeign)
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 
 country_table <-  read.table(
-    "C:/Use/0_GitHub/RCGs/RegionalOverviews/data/aux_countries.txt",  # lucia's pc
+    "../../data/aux_countries.txt",# Kasia
+    #"C:/Use/0_GitHub/RCGs/RegionalOverviews/data/aux_countries.txt",  # lucia's pc
     header = T,
     sep = ",",
     colClasses = "character",
