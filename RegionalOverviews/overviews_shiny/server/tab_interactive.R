@@ -51,7 +51,7 @@ vars <- reactive ({
 
 observe({
   # Updating selectize input
-  updateSelectInput(session, "species", choices =c("All", as.character(unique(vars()))), selected = "All") 
+  updateSelectInput(session, "species", choices =c("All", sort(as.character(unique(vars())))), selected = "All") 
 })
 
 # ---------------------------------------------------------
@@ -76,10 +76,10 @@ observeEvent(input$species, {
   selected$v <- input$species
   if(selected$v[1] %in% "All" & length(selected$v) > 1){
     newSelection <- subset(input$species, !input$species %in% "All")
-    updateSelectizeInput(session, "species", choices = c("All",as.character(unique(vars()))), selected = newSelection)
+    updateSelectizeInput(session, "species", choices = c("All",sort(as.character(unique(vars())))), selected = newSelection)
   }else if(!selected$v[1] %in% "All" & sum(str_detect(selected$v, "All")) %in% 1){
     newSelection <- subset(input$species, input$species %in% "All")
-    updateSelectizeInput(session, "species", choices = c("All",as.character(unique(vars()))), selected = newSelection)
+    updateSelectizeInput(session, "species", choices = c("All",sort(as.character(unique(vars())))), selected = newSelection)
   }
 })
 #Sampling type 
@@ -196,7 +196,7 @@ output$absolute <- renderUI({
       "species",
       " ",
       choices = c(""),
-      #  c("All", levels(data_list()[[3]]$Species)),
+      #  c("All", sort(levels(data_list()[[3]]$Species))),
       multiple = TRUE,
       #selected = "All",
       options = list(plugins = list("remove_button", "drag_drop"))

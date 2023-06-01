@@ -23,7 +23,7 @@ pars <- reactive({
 observe({
   # Updating selectize input
   #updateSelectInput(session, "countryg", choices = unique(dg()$LandingCountry), selected = sort(unique(dg()$LandingCountry))[1]) 
-  updateSelectInput(session, "speciesp", choices = c("All",as.character(unique(pars()))), selected = "All")
+  updateSelectInput(session, "speciesp", choices = c("All",sort(as.character(unique(pars())))), selected = "All")
 })
 
 
@@ -61,7 +61,7 @@ output$summary <- renderUI({
                   ),
                   selectizeInput("speciesp","Species",
                                  choices = c(""),
-                                 #choices =c("All", levels(data_list()[[2]]$Species)),
+                                 #choices =c("All", sort(levels(data_list()[[2]]$Species))),
                                  multiple = TRUE,
                                  #selected = "All",
                                  options = list(plugins = list("remove_button", "drag_drop"))),
