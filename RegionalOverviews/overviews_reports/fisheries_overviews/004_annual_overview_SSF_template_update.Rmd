@@ -237,29 +237,29 @@ date: `r Sys.Date()`
 if (target_region == "RCG_NA")
 {
   load(
-    paste(data_dir, "RDB_RCG_NA_CL_SSF_2009_2022_prepared_20230426.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NA_CL_SSF_2009_2022_prepared_20230530.Rdata", sep = "")
   )
   load(
-    paste(data_dir, "RDB_RCG_NA_CE_SSF_2009_2022_prepared_20230426.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NA_CE_SSF_2009_2022_prepared_20230530.Rdata", sep = "")
   )
 }
 
 if (target_region == "RCG_BA")
 {
   load(
-    paste(data_dir, "RDB_RCG_BA_CL_SSF_2009_2022_prepared_20230426.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_BA_CL_SSF_2009_2022_prepared_20230530.Rdata", sep = "")
   )
   load(
-    paste(data_dir, "RDB_RCG_BA_CE_SSF_2009_2022_prepared_20230426.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_BA_CE_SSF_2009_2022_prepared_20230530.Rdata", sep = "")
   )
 }
 if (target_region == "RCG_NSEA")
 {
   load(
-    paste(data_dir, "RDB_RCG_NSEA_CL_SSF_2009_2022_prepared_20230426.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NSEA_CL_SSF_2009_2022_prepared_20230530.Rdata", sep = "")
   )
   load(
-    paste(data_dir, "RDB_RCG_NSEA_CE_SSF_2009_2022_prepared_20230426.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_NSEA_CE_SSF_2009_2022_prepared_20230530.Rdata", sep = "")
     )
 			}	
 
