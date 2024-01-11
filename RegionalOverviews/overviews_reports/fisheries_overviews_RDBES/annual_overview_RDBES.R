@@ -2,7 +2,8 @@ params <- list(
   year = 2023,
   region = 'Baltic',
   logo_path = file.path("../../overviews_shiny/www/logo RCG BALTIC.PNG"),
-  data_dir = 'your path here' 
+  data_dir = 'your path here', 
+  RDBES_download_date = '01/01/2000'
   
 )
 

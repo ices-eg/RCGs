@@ -1,17 +1,19 @@
 ---
 title: "RDBES Catch and Effort Overview"
 date: "`r format(Sys.time(), '%d.%m.%Y')`"
-output: html_document
+output:
+  html_document:
+    toc: true
 
-# output: 
+# output:
 #   prettydoc::html_pretty:
 #     theme: tactile
 #     highlight: vignette
 #     toc: yes
-#     toc_depth: 3 
+#     toc_depth: 3
 #     fig_height: 7
 #     fig_width: 10
-#     #css: styles.css
+# #     #css: styles.css
     
 params:
   set_subtitle: "Title"
@@ -19,6 +21,7 @@ params:
   year: NA
   logo_path: NA
   data_dir: NA
+  RDBES_download_date: NA
   
 ---
 
@@ -60,6 +63,16 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 
 ```
 
+```{r loadFunctions, echo=FALSE}
+# LOAD FUNCTIONS GENERATING PLOTS/MAPS
+
+```
+
+```{r mapData, echo=FALSE}
+# LOAD AND PREPARE DATA NEEDED FOR MAPS (shp, rdata, ...)
+
+```
+
 ```{r loadPrepareData, echo=FALSE}
 # LOAD AND PREPARE DATA
 
@@ -69,6 +82,8 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 # LOAD AND PREPARE FLEET REGISTER DATA
 
 ```
+
+
 
 
 **Disclaimer**
@@ -104,7 +119,6 @@ put some text here
 
 ```
 
-# {-}
 
 # Landings (CL)
 
@@ -113,12 +127,11 @@ put some text here
 ### Landings by species {.tabset}
 #### species
 #### species and country
-### {-}
+
 
 ### Landings by catch_group {.tabset}
 #### catch group
 #### catch_group and country
-### {-}
 
 ### Landings by fleet
 
@@ -126,21 +139,18 @@ put some text here
 #### area
 #### area and country
 #### country and area
-### {-}
 
 ### Landings by metier {.tabset}
 #### metier lvl5
 #### metier lvl5 and country
 #### metier lvl6
 #### metier lvl6 and country
-### {-}
 
 ### Landings by harbour {.tabset}
 #### harbour
 #### harbour and flag country
 #### map - harbour
 #### map - harbour and flag country
-### {-}
 
 ### Landings abroad
 
@@ -154,13 +164,11 @@ put some text here
 ### Landings by species, small pelagics {.tabset}
 #### species
 #### species and country
-### {-}
 
 ### Landings by fleet, small pelagics {.tabset}
 #### fleet
 #### country and fleet
 #### fleet and country
-### {-}
 
 ### Landings by area, small pelagics {.tabset}
 #### area
@@ -168,21 +176,18 @@ put some text here
 #### country and area
 #### map area
 #### map area and flag country
-### {-}
 
 ### Landings by metier, small pelagics {.tabset}
 #### metier lvl5
 #### metier lvl5 and country
 #### metier lvl6
 #### metier lvl6 and country
-### {-}
 
 ### Landings by harbour, small pelagics {.tabset}
 #### harbour
 #### harbour and flag country
 #### map - harbour
 #### map - harbour and flag country
-### {-}
 
 ### Landings abroad, small pelagics
 
@@ -196,13 +201,11 @@ put some text here
 ### Landings by species, demersal (without flatfish) {.tabset}
 #### species
 #### species and country
-### {-}
 
 ### Landings by fleet, demersal (without flatfish) {.tabset}
 #### fleet
 #### country and fleet
 #### fleet and country
-### {-}
 
 ### Landings by area, demersal (without flatfish) {.tabset}
 #### area
@@ -210,21 +213,18 @@ put some text here
 #### country and area
 #### map area
 #### map area and flag country
-### {-}
 
 ### Landings by metier, demersal (without flatfish) {.tabset}
 #### metier lvl5
 #### metier lvl5 and country
 #### metier lvl6
 #### metier lvl6 and country
-### {-}
 
 ### Landings by harbour, demersal (without flatfish) {.tabset}
 #### harbour
 #### harbour and flag country
 #### map - harbour
 #### map - harbour and flag country
-### {-}
 
 ### Landings abroad, demersal (without flatfish)
 
@@ -238,13 +238,11 @@ put some text here
 ### Landings by species, flatfish {.tabset}
 #### species
 #### species and country
-### {-}
 
 ### Landings by fleet, flatfish {.tabset}
 #### fleet
 #### country and fleet
 #### fleet and country
-### {-}
 
 ### Landings by area, flatfish {.tabset}
 #### area
@@ -252,21 +250,18 @@ put some text here
 #### country and area
 #### map area
 #### map area and flag country
-### {-}
 
 ### Landings by metier, flatfish {.tabset}
 #### metier lvl5
 #### metier lvl5 and country
 #### metier lvl6
 #### metier lvl6 and country
-### {-}
 
 ### Landings by harbour, flatfish {.tabset}
 #### harbour
 #### harbour and flag country
 #### map - harbour
 #### map - harbour and flag country
-### {-}
 
 ### Landings abroad, flatfish
 
@@ -280,26 +275,22 @@ put some text here
 ### days at sea
 ### KW-days
 ### GT-days
-## {-}
 
 ## Effort by fleet {.tabset}
 ### number of trips
 ### number of trips by country and fleet
 ### number of trips by fleet and country
-## {-}
 
 ## Effort by area
 ### Below 10 meters {.tabset}
 #### area
 #### area and country
 #### country and area
-### {-}
 
 ### 10 meteres and above {.tabset}
 #### area
 #### area and country
 #### country and area
-### {-}
 
 
 ## Effort by metier
@@ -307,32 +298,26 @@ put some text here
 #### metier lvl 5
 #### metier lvl 5 and country
 #### statistical rectangle
-### {-}
 
 ### 10 meteres and above  {.tabset}
 #### metier lvl 5
 #### metier lvl 5 and country
 #### statistical rectangle
-### {-}
 
 ## Effort by harbour
 ### Below 10 meters {.tabset}
 #### harbour
 #### harbour and country
 #### map - harbour
-### {-}
-
 
 ### 10 meteres and above {.tabset}
 #### harbour
 #### harbour and country
 #### map - harbour
-### {-}
 
 ## Spatal distribution on effort {.tabset}
 ### Below 10 meters
 ### 10 meteres and above
-## {-}
 
 ## Appendix A. Dates of data extraction
 ## Appendix B. Catch groups
