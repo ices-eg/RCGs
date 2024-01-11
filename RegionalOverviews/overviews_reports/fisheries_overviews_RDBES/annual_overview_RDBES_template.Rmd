@@ -1,0 +1,221 @@
+---
+title: "RDBES Catch and Effort Overview"
+date: "`r format(Sys.time(), '%d.%m.%Y')`"
+output: html_document
+
+# output: 
+#   prettydoc::html_pretty:
+#     theme: tactile
+#     highlight: vignette
+#     toc: yes
+#     toc_depth: 3 
+#     fig_height: 7
+#     fig_width: 10
+#     #css: styles.css
+    
+params:
+  set_subtitle: "Title"
+  region: NA
+  year: NA
+  logo_path: NA
+  data_dir: NA
+  
+---
+
+---
+subtitle: `r paste(params$region, params$year, sep = ", ")`
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+```{r, echo=FALSE}
+  htmltools::img(src = knitr::image_uri(params$logo_path), 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; right:0; padding:10px;',width="300px", height="100px")
+```
+
+```{r loadPackages, echo=FALSE, message=FALSE, warning=FALSE}
+# LOAD PACKAGES AND DEFINE EVAL_PARAMETERS IF NEEDED
+
+# library(tidyverse)
+# library(car)
+# library(ggrepel)
+# library(knitr)
+# library(kableExtra)
+# library(data.table)
+# library(magrittr)
+# library(plotly)
+# library(leaflet)
+
+ ## establish conditions  - can use it if for example some chunks should be run only for selected Regions, e.g. only Bal
+ eval_region <- params$region=='Baltic' # when added to the chunk header, the chunk will be run only for Baltic report
+
+```
+
+
+```{r GlobalSettings, echo=FALSE}
+# DEFINE GLOBAL PARAMETERS/FUNCTIONS FOR DISPLAYING TABLES/PLOTS/MAPS/...
+
+```
+
+```{r loadPrepareData, echo=FALSE}
+# LOAD AND PREPARE DATA
+
+```
+
+```{r fleetRegisterData, echo=FALSE}
+# LOAD AND PREPARE FLEET REGISTER DATA
+
+```
+
+
+**Disclaimer**
+put some text here
+
+# Introduction
+put some text here
+
+## Reading the graphs
+### Barplots
+put some text here
+
+### Maps
+put some text here
+
+# Overall fleet evolution (All RCGs){.tabset}
+
+## Number of vessels
+**Table 1.**put some text here
+```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
+
+```
+
+## Power
+**Table 2.** put some text here
+```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
+
+```
+
+## Gross tonnage
+**Table 3.** put some text here
+```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
+
+```
+
+## {-}
+
+# Landings (CL)
+
+## Overall landings{.tabset}
+
+### Landings by species
+### Landings by species and country
+### {-}
+
+### Landings by catch_group
+### Landings by catch_group
+
+### Landings by fleet
+
+### Landings by area
+
+### Landings by metier
+
+### Landings by harbour
+
+### Landings abroad
+
+### Spatial distribution of landings
+
+
+## Small pelagics landings
+
+### Landings by country, small pelagics
+
+### Landings by species, small pelagics
+
+### Landings by fleet, small pelagics
+
+### Landings by area, small pelagics
+
+### Landings by metier, small pelagics
+
+### Landings by harbour, small pelagics
+
+### Landings abroad, small pelagics
+
+### Spatial distribution of landings, small pelagics
+
+
+## Demersal landings (without flatfish)
+
+### Landings by country, demersal (without flatfish)
+
+### Landings by species, demersal (without flatfish)
+
+### Landings by fleet, demersal (without flatfish)
+
+### Landings by area, demersal (without flatfish)
+
+### Landings by metier, demersal (without flatfish)
+
+### Landings by harbour, demersal (without flatfish)
+
+### Landings abroad, demersal (without flatfish)
+
+### Spatial distribution of landings, demersal (without flatfish)
+
+
+## Flatfish landings
+
+### Landings by country, flatfish
+
+### Landings by species, flatfish
+
+### Landings by fleet, flatfish
+
+### Landings by area, flatfish
+
+### Landings by metier, flatfish
+
+### Landings by harbour, flatfish
+
+### Landings abroad, flatfish
+
+### Spatial distribution of landings, flatfish
+
+
+# Effort (CE)
+
+## Effort by country
+
+## Effort by fleet
+
+## Effort by area{.tabset}
+### Below 10 meters
+### 10 meteres and above
+### {-}
+
+## Effort by metier {.tabset}
+### Below 10 meters
+### 10 meteres and above
+### {-}
+
+## Effort by harbour {.tabset}
+### Below 10 meters
+### 10 meteres and above
+### {-}
+
+## Spatal distribution on effort {.tabset}
+### Below 10 meters
+### 10 meteres and above
+### {-}
+
+## Appendix A. Dates of data extraction
+## Appendix B. Catch groups
+## Appendix C. Mean Landings per stock, put years here
+## Appendix D. Summary information of the landings abroad (ton), by country and area
+## Appendix E. Glossary for the country codes
+
