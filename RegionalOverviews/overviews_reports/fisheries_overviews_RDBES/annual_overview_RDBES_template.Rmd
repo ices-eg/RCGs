@@ -4,16 +4,6 @@ date: "`r format(Sys.time(), '%d.%m.%Y')`"
 output:
   html_document:
     toc: true
-
-# output:
-#   prettydoc::html_pretty:
-#     theme: tactile
-#     highlight: vignette
-#     toc: yes
-#     toc_depth: 3
-#     fig_height: 7
-#     fig_width: 10
-# #     #css: styles.css
     
 params:
   set_subtitle: "Title"
