@@ -1,18 +1,23 @@
 # based on the 001_read_and_prepare_data_rdb_2009_2021_CL_CE.r
-
 # script prepares datasets for further analysis
-
-# 2024-01-11 first ver of this script is created, for the RDBES 2021 CL and CE data
-# ...
 
 rm(list=ls())
 library(data.table)
 gc()
-getwd() #display the directory
+getwd()
 
-# ====================== 
-# Set Prep Options 
-# ======================  
+ 
+################################################################################################################################################################
+################################################################################################################################################################
+#
+#                                 SER PREP OPTIONS
+#
+################################################################################################################################################################
+################################################################################################################################################################
+
+# ========================
+# set params
+# ======================== 
 
 target_region <- "RCG_NSEA" # RCG_BA, RCG_NA, RCG_NSEA
 year_start <- 2021
@@ -26,14 +31,14 @@ time_tag<-format(Sys.time(), "%Y%m%d")
 # either download the data manually, or use the function below (some adjustment might be needed)
 # source("funs/func_download_data_from_sharepoint.r")
 
-# is it needed?
-# reads aux_countries dataset
-# aux_countries<-read.table(".\\data\\aux_countries.txt", sep=",", header=T, colClasses="character", na.strings = "")
-
 # ========================
 # reads in data
 # ========================
 
+# reads aux_countries dataset
+aux_countries<-read.table("RegionalOverviews\\data\\aux_countries.txt", sep=",", header=T, colClasses="character", na.strings = "")
+
+# reads RDBES data
 RDBESdataPath = 'RegionalOverviews/data_RDBES/001_raw'
 
 file_cl <- paste(RDBESdataPath, "/RDBES CL/CommercialLanding.csv", sep = '')
@@ -61,52 +66,142 @@ if (!dir.exists(paste("RegionalOverviews/data_RDBES/002_prepared/", time_tag ,"/
   dir.create(paste("RegionalOverviews/data_RDBES/002_prepared/", time_tag ,"/RCG_NSEA", sep=""),recursive=TRUE, showWarnings=FALSE)
 }
 
+################################################################################################################################################################
+################################################################################################################################################################
+#
+#                                 COUNTRY SPECIFIC CORRECTIONS
+#
+################################################################################################################################################################
+################################################################################################################################################################
+# this should be fulfilled after generating the first versions of the overviews
+# when some issues to be fixed are noticed 
+
+
+################################################################################################################################################################
+################################################################################################################################################################
+#
+#                                 BASIC CHECKS <------ TO BE DONE
+#
+################################################################################################################################################################
+################################################################################################################################################################
+
 # ======================
-# Tweak on areas/region 
+# Tweak on areas/region/ harbour/...
 # ====================== 
 # is it ISSG responsible for correction of the data?
 
-# CL and CE 
+# <----------------------------------------------------------------------------- to be done
 
-# areas
-sort(unique(ce$CEarea))
-sort(unique(cl$CLarea))
-# QCA: check for ambiguous records (e.g., 27.7; 27.3)
-# Area 27.7
-ce[CEarea=="27.7",.N,c("CEyear","CEvesselFlagCountry","CEarea")]
-cl[CLarea=="27.7",.N,c("CLyear","CLvesselFlagCountry","CLarea")]
-# corrections below:
-# ...
 
-#	Area 27.3
-ce[CEarea=="27.3",.N,c("CEyear","CEvesselFlagCountry","CEarea")]
-cl[CLarea=="27.3",.N,c("CLyear","CLvesselFlagCountry","CLarea")]
-# cerrections below:
-#... 
+################################################################################################################################################################
+################################################################################################################################################################
+#
+#                                 FORMATS VARIABLES
+#
+################################################################################################################################################################
+################################################################################################################################################################
 
-# issue in Area
-cl[CLarea=="27.3.d.28" & cl$CLvesselFlagCountry=="SWE"]
+# formats CL 
+cl[,CLlandingLocation:=iconv(CLlandingLocation, from="UTF-8", to="")]
+cl[,CLlandingLocation:=toupper(CLlandingLocation)]
+cl[,CLscientificWeight:=as.numeric(CLscientificWeight)]
 
-# issue in Harbour
-sort(unique(ce$CElandingLocation))
-sort(unique(cl$CLlandingLocation))
+# formats CE 
+ce[,CElandingLocation:=iconv(CElandingLocation, from="UTF-8", to="")]
+ce[,CElandingLocation:=toupper(CElandingLocation)]
 
-cl[CLlandingLocation=="POL-1303"]
-ce[CElandingLocation=="POL-1303"]
-# corrections below: 
-# cl[CLlandingLocation=="POL-1303", Harbour:="RUPNY"]
 
-# also may be worth noting/correcting this
-cl[CLlandingLocation=="*HS-*HS"]
-ce[CElandingLocation=="*HS-*HS"]			
+################################################################################################################################################################
+################################################################################################################################################################
+#
+#                                 CREATE NEW VARIABLES
+#
+################################################################################################################################################################
+################################################################################################################################################################
 
+# ======================
+# CL
+# ======================
+
+# OfficialLandingCatchWeight_1000ton
+cl[,CLscientificWeight_ton := CLscientificWeight/1000]
+cl[,CLscientificWeight_1000ton := CLscientificWeight/1000000]
+
+# fleet segment (FlagCountry_Loa)
+cl[,FlagCountry_Loa:=paste(CLvesselFlagCountry, CLvesselLengthCategory, sep="_")]
+
+# HarbourCountry (ISO3) and HarbourCountry2 (ISO2)
+cl[,HarbourCountry2:=substring(CLlandingLocation,1,2)]
+cl[,HarbourCountry:=aux_countries$ISO3Code[match(HarbourCountry2, aux_countries$ISO2Code)]]
+
+# HarbourCountry (ISO3) and HarbourCountry2 (ISO2)
+cl[is.na(HarbourCountry) & !CLlandingCountry %in% c('*HS','WK1'),HarbourCountry:=CLlandingCountry]
+cl[is.na(HarbourCountry) & !CLlandingCountry %in% c('*HS','WK1'),HarbourCountry2:=aux_countries$ISO2Code[match(HarbourCountry, aux_countries$ISO3Code)]]
+
+# QCA: should yield TRUE otherwise debug on cl and cl_rcg
+nrow(cl[is.na(HarbourCountry) & !is.na(HarbourCountry2),]) == 0
+
+# 'BEN' (Benim - 'BJ' according to UNLOCODE lists), 
+# 'ESH' (Western Sahara - 'EH' according to UNLOCODE lists) 
+# are not included in the file 'aux_countries' - 
+# - changed with code lines:'GM' ('GMB' - Gambia) and 'GW' ('GNB' - Guine Bissau)	
+
+cl[HarbourCountry2 %in% c("GM"), HarbourCountry := "GMB"]
+cl[HarbourCountry2 %in% c("GW"), HarbourCountry := "GNB"]
+cl[HarbourCountry2 %in% c("EH"), HarbourCountry := "ESH"]
+cl[HarbourCountry2 %in% c("BJ"), HarbourCountry := "BEN"]
+
+# QCA: should yield TRUE otherwise debug on cl and cl_rcg
+nrow(cl[is.na(HarbourCountry) & !is.na(HarbourCountry2),]) == 0
+
+# ======================
+# CE 
+# ======================
+
+# KWDays_thousands
+ce[,CEscientifickWDaysAtSea_1000x := CEscientifickWDaysAtSea/1000]				
+# GTDays_thousands
+ce[,CEgTDaysAtSea_1000x := CEgTDaysAtSea/1000]
+
+# fleet segment (FlagCountry_Loa)	
+ce[,FlagCountry_Loa:=paste(CEvesselFlagCountry, CEvesselLengthCategory, sep="_")]
+
+# HarbourCountry (ISO3) and HarbourCountry2 (ISO2)			
+ce[,HarbourCountry2:=substring(CElandingLocation,1,2)]
+ce[,HarbourCountry:=aux_countries$ISO3Code[match(HarbourCountry2, aux_countries$ISO2Code)]]
+
+# HarbourCountry (ISO3) and HarbourCountry2 (ISO2)
+ce[is.na(HarbourCountry) & !CElandingCountry %in% c('*HS','WK1'),HarbourCountry:=CElandingCountry]
+ce[is.na(HarbourCountry) & !CElandingCountry %in% c('*HS','WK1'),HarbourCountry2:=aux_countries$ISO2Code[match(HarbourCountry, aux_countries$ISO3Code)]]
+
+# QCA: should yield TRUE otherwise debug on ce and ce_rcg
+nrow(ce[is.na(HarbourCountry) & !is.na(HarbourCountry2),]) == 0
+
+# 'BEN' (Benim - 'BJ' according to UNLOCODE lists), 
+# 'ESH' (Western Sahara - 'EH' according to UNLOCODE lists) 
+# are not included in the file 'aux_countries' - 
+# - changed with code lines:'GM' ('GMB' - Gambia) and 'GW' ('GNB' - Guine Bissau)	
+
+ce[HarbourCountry2 %in% c("GM"), HarbourCountry := "GMB"]
+ce[HarbourCountry2 %in% c("GW"), HarbourCountry := "GNB"]
+ce[HarbourCountry2 %in% c("EH"), HarbourCountry := "ESH"]
+ce[HarbourCountry2 %in% c("BJ"), HarbourCountry := "BEN"]
+
+# QCA: should yield TRUE otherwise debug on ce and ce_rcg
+nrow(ce[is.na(HarbourCountry) & !is.na(HarbourCountry2),]) == 0
+
+
+################################################################################################################################################################
+################################################################################################################################################################
+#
+#                                 ASSIGN RCG
+#
+################################################################################################################################################################
+################################################################################################################################################################
 
 # ========================
 # subsets data and RCG specific preparations
 # ========================	
- 
-# # to do -> check if all the rows that should be assigned to the target_region, are assigned properly
-
 
 # RCM Baltic: Baltic Sea (ICES areas III b-d)
 if(target_region=="RCG_BA") 
@@ -115,8 +210,6 @@ if(target_region=="RCG_BA")
   
   cl_rcg <- cl[ ( grepl('27.3.b',CLarea) | grepl('27.3.c',CLarea) | grepl('27.3.d',CLarea) ) & 
                   CLyear >= year_start & CLyear <= year_end]
-
-  # to do -> check if all the rows that should be assigned to the RCG_BA, are assigned properly
 
   ce_rcg <- ce[ ( grepl('27.3.b',CEarea) | grepl('27.3.c',CEarea) | grepl('27.3.d',CEarea) ) & 
                   CEyear >= year_start & CEyear <= year_end]
@@ -136,10 +229,8 @@ if(target_region=="RCG_NSEA")
                     grepl('27.12',CLarea) | 
                     grepl('27.14',CLarea) | 
                     grepl('21.',CLarea) 
-                  ) & 
-                  CLyear >= year_start & CLyear <= year_end]
-  
-  # to do -> check if all the rows that should be assigned to the RCG_NSEA, are assigned properly
+  ) & 
+    CLyear >= year_start & CLyear <= year_end]
   
   ce_rcg <- ce[ ( grepl('27.1',CEarea) | 
                     grepl('27.2',CEarea) | 
@@ -150,10 +241,9 @@ if(target_region=="RCG_NSEA")
                     grepl('27.12',CEarea) | 
                     grepl('27.14',CEarea) | 
                     grepl('21.',CEarea)   
-                  ) & 
-                  CEyear >= year_start & CEyear <= year_end]
+  ) & 
+    CEyear >= year_start & CEyear <= year_end]
 }
-
 
 
 # RCM NA: the North Atlantic (ICES areas V-X, excluding Va and VIId)
@@ -172,8 +262,6 @@ if(target_region=="RCG_NA")
     !grepl('27.7.d', CLarea) & 
     CLyear >= year_start & CLyear <= year_end]
   
-  # to do -> check if all the rows that should be assigned to the RCG_NSEA, are assigned properly
-  
   ce_rcg <- ce[ ( grepl('27.5',CEarea) | 
                     grepl('27.6',CEarea) | 
                     grepl('27.7',CEarea) | 
@@ -185,3 +273,60 @@ if(target_region=="RCG_NA")
     !grepl('27.7.d', CEarea) & 
     CEyear >= year_start & CEyear <= year_end]
 }
+
+################################################################################
+################################################################################
+#
+#                                 AREA MAP
+#
+################################################################################
+################################################################################
+
+
+################################################################################
+################################################################################
+#
+#                                 ISSCAAP
+#
+################################################################################
+################################################################################
+
+
+################################################################################
+################################################################################
+#
+#                                 CATCH GROUP
+#
+################################################################################
+################################################################################
+
+
+################################################################################
+################################################################################
+#
+#                                 FACTORIZATION
+#
+################################################################################
+################################################################################
+
+
+################################################################################
+################################################################################
+#
+#                                 STOCKS
+#
+################################################################################
+################################################################################
+
+
+################################################################################
+################################################################################
+#
+#                                 SAVE DATA
+#
+################################################################################
+################################################################################
+
+
+
+
