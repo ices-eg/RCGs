@@ -1,0 +1,14 @@
+Manual how to prepare fleet register data.
+1. Create new folder named N-1 year in the input folder (input folder will contains MS files from Fleet Register)
+2. Open https://webgate.ec.europa.eu/fleet-europa/search_en 
+3. Searching options:
+	Specific Country 	[BEL]Belgium 
+	Period 		 	All
+	Search data Context	Search data in the whole history of the vessels
+4. Click Download
+5. Save .csv document in the input folder
+6. Open script prep_fleet_reg.R 
+7. Change the parameters.
+8. Run the script.
+
+DONE! Output data prepared to used in the overview.
