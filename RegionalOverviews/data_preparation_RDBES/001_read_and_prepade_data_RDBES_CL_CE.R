@@ -104,20 +104,7 @@ ce[CElandingLocation=="*HS-*HS"]
 # ========================
 # subsets data and RCG specific preparations
 # ========================	
-
-# areaPattern_BA = '27.3.b|27.3.c|27.3.d'
-# areaPattern_NSEA = '27.1|27.2|27.3.a|27.4|27.5.a|27.7.d|27.12|27.14|21.'
-# areaPattern_NA = '27.5|27.6|27.7|27.8|27.9|27.10'
-# 
-# target_region = 'RCG_NA'
-# print(paste(".subsetting",target_region))
-# areaPattern = ifelse(target_region=='RCG_BA',areaPattern_BA,
-#                      ifelse(target_region=='RCG_NSEA', areaPattern_NSEA,
-#                             ifelse(target_region=='RCG_NA', areaPattern_NA, warning('Unknown target region'))))
-# 
-# cl_rcg2 <- cl[ grepl(areaPattern, CLarea) &CLyear >= year_start & CLyear <= year_end]
-# ce_rcg2 <- ce[ grepl(areaPattern, CEarea) & CEyear >= year_start & CEyear <= year_end]
-# 
+ 
 # # to do -> check if all the rows that should be assigned to the target_region, are assigned properly
 
 
