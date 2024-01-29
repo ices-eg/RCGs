@@ -24,6 +24,22 @@ year_start <- 2021
 year_end <- 2021
 time_tag<-format(Sys.time(), "%Y%m%d")
 
+# ====================== 
+# create directory structure
+# ====================== 
+#time_tag<-202006160931
+dir_output_all<-paste("RegionalOverviews/data_RDBES/002_prepared/", time_tag, sep="")
+dir_output_rcg<-paste("RegionalOverviews/data_RDBES/002_prepared/", time_tag ,"/",target_region, sep="")
+
+
+if (!dir.exists(dir_output_all)){
+  dir.create(dir_output_all,recursive=TRUE, showWarnings=FALSE)
+}
+
+if (!dir.exists(dir_output_rcg)){
+  dir.create(dir_output_rcg,recursive=TRUE, showWarnings=FALSE)
+}
+
 # ========================
 # downloads data from sharepoint
 # ======================== 
@@ -52,35 +68,27 @@ cl<-data.table::fread(file_cl, stringsAsFactors=FALSE, verbose=FALSE, fill=TRUE,
 dim(cl); cl<-unique(cl); dim(cl)
 dim(ce); ce<-unique(ce); dim(ce)
 
-# ====================== 
-# create directory structure
-# ====================== 
-
-if (!dir.exists(paste("RegionalOverviews/data_RDBES/002_prepared/", time_tag ,"2021/RCG_NA", sep=""))){
-  dir.create(paste("RegionalOverviews/data_RDBES/002_prepared/", time_tag ,"/RCG_NA", sep=""),recursive=TRUE, showWarnings=FALSE)
-}
-if (!dir.exists(paste("RegionalOverviews/data_RDBES/002_prepared/", time_tag ,"/RCG_BA", sep=""))){
-  dir.create(paste("RegionalOverviews/data_RDBES/002_prepared/", time_tag ,"/RCG_BA", sep=""),recursive=TRUE, showWarnings=FALSE)
-}
-if (!dir.exists(paste("RegionalOverviews/data_RDBES/002_prepared/", time_tag ,"/RCG_NSEA", sep=""))){
-  dir.create(paste("RegionalOverviews/data_RDBES/002_prepared/", time_tag ,"/RCG_NSEA", sep=""),recursive=TRUE, showWarnings=FALSE)
-}
+# filter out the proper years
+cl<- cl[CLyear >= year_start & CLyear <= year_end]
+ce<- ce[CEyear >= year_start & CEyear <= year_end]
 
 ################################################################################################################################################################
 ################################################################################################################################################################
 #
-#                                 COUNTRY SPECIFIC CORRECTIONS
+#                                 COUNTRY SPECIFIC CORRECTIONS <-------------------------- TO BE DONE
 #
 ################################################################################################################################################################
 ################################################################################################################################################################
 # this should be fulfilled after generating the first versions of the overviews
 # when some issues to be fixed are noticed 
 
+# should this part be in this script or a separate one not to mess here every year?
+
 
 ################################################################################################################################################################
 ################################################################################################################################################################
 #
-#                                 BASIC CHECKS <------ TO BE DONE
+#                                 BASIC CHECKS <---------------------------------- TO BE DONE
 #
 ################################################################################################################################################################
 ################################################################################################################################################################
@@ -138,7 +146,7 @@ cl[,HarbourCountry:=aux_countries$ISO3Code[match(HarbourCountry2, aux_countries$
 cl[is.na(HarbourCountry) & !CLlandingCountry %in% c('*HS','WK1'),HarbourCountry:=CLlandingCountry]
 cl[is.na(HarbourCountry) & !CLlandingCountry %in% c('*HS','WK1'),HarbourCountry2:=aux_countries$ISO2Code[match(HarbourCountry, aux_countries$ISO3Code)]]
 
-# QCA: should yield TRUE otherwise debug on cl and cl_rcg
+# QCA: should yield TRUE otherwise debug on cl
 nrow(cl[is.na(HarbourCountry) & !is.na(HarbourCountry2),]) == 0
 
 # 'BEN' (Benim - 'BJ' according to UNLOCODE lists), 
@@ -146,10 +154,12 @@ nrow(cl[is.na(HarbourCountry) & !is.na(HarbourCountry2),]) == 0
 # are not included in the file 'aux_countries' - 
 # - changed with code lines:'GM' ('GMB' - Gambia) and 'GW' ('GNB' - Guine Bissau)	
 
-cl[HarbourCountry2 %in% c("GM"), HarbourCountry := "GMB"]
-cl[HarbourCountry2 %in% c("GW"), HarbourCountry := "GNB"]
-cl[HarbourCountry2 %in% c("EH"), HarbourCountry := "ESH"]
-cl[HarbourCountry2 %in% c("BJ"), HarbourCountry := "BEN"]
+cl[HarbourCountry2 == c("GM"), HarbourCountry := "GMB"]
+cl[HarbourCountry2 == c("GW"), HarbourCountry := "GNB"]
+cl[HarbourCountry2 == c("EH"), HarbourCountry := "ESH"]
+cl[HarbourCountry2 == c("BJ"), HarbourCountry := "BEN"]
+cl[HarbourCountry2 == c("PA"), HarbourCountry := "PAN"]
+cl[HarbourCountry2 == c("CV"), HarbourCountry := "CPV"]
 
 # QCA: should yield TRUE otherwise debug on cl and cl_rcg
 nrow(cl[is.na(HarbourCountry) & !is.na(HarbourCountry2),]) == 0
@@ -170,24 +180,19 @@ ce[,FlagCountry_Loa:=paste(CEvesselFlagCountry, CEvesselLengthCategory, sep="_")
 ce[,HarbourCountry2:=substring(CElandingLocation,1,2)]
 ce[,HarbourCountry:=aux_countries$ISO3Code[match(HarbourCountry2, aux_countries$ISO2Code)]]
 
-# HarbourCountry (ISO3) and HarbourCountry2 (ISO2)
-ce[is.na(HarbourCountry) & !CElandingCountry %in% c('*HS','WK1'),HarbourCountry:=CElandingCountry]
-ce[is.na(HarbourCountry) & !CElandingCountry %in% c('*HS','WK1'),HarbourCountry2:=aux_countries$ISO2Code[match(HarbourCountry, aux_countries$ISO3Code)]]
-
-# QCA: should yield TRUE otherwise debug on ce and ce_rcg
-nrow(ce[is.na(HarbourCountry) & !is.na(HarbourCountry2),]) == 0
-
 # 'BEN' (Benim - 'BJ' according to UNLOCODE lists), 
 # 'ESH' (Western Sahara - 'EH' according to UNLOCODE lists) 
 # are not included in the file 'aux_countries' - 
 # - changed with code lines:'GM' ('GMB' - Gambia) and 'GW' ('GNB' - Guine Bissau)	
 
-ce[HarbourCountry2 %in% c("GM"), HarbourCountry := "GMB"]
-ce[HarbourCountry2 %in% c("GW"), HarbourCountry := "GNB"]
-ce[HarbourCountry2 %in% c("EH"), HarbourCountry := "ESH"]
-ce[HarbourCountry2 %in% c("BJ"), HarbourCountry := "BEN"]
+ce[HarbourCountry2 == c("GM"), HarbourCountry := "GMB"]
+ce[HarbourCountry2 == c("GW"), HarbourCountry := "GNB"]
+ce[HarbourCountry2 == c("EH"), HarbourCountry := "ESH"]
+ce[HarbourCountry2 == c("BJ"), HarbourCountry := "BEN"]
+ce[HarbourCountry2 == c("PA"), HarbourCountry := "PAN"]
+ce[HarbourCountry2 == c("CV"), HarbourCountry := "CPV"]
 
-# QCA: should yield TRUE otherwise debug on ce and ce_rcg
+# QCA: should yield TRUE otherwise debug on ce
 nrow(ce[is.na(HarbourCountry) & !is.na(HarbourCountry2),]) == 0
 
 
@@ -208,11 +213,9 @@ if(target_region=="RCG_BA")
 {
   print(paste(".subsetting",target_region))
   
-  cl_rcg <- cl[ ( grepl('27.3.b',CLarea) | grepl('27.3.c',CLarea) | grepl('27.3.d',CLarea) ) & 
-                  CLyear >= year_start & CLyear <= year_end]
+  cl_rcg <- cl[ ( grepl('27.3.b',CLarea) | grepl('27.3.c',CLarea) | grepl('27.3.d',CLarea) )]
 
-  ce_rcg <- ce[ ( grepl('27.3.b',CEarea) | grepl('27.3.c',CEarea) | grepl('27.3.d',CEarea) ) & 
-                  CEyear >= year_start & CEyear <= year_end]
+  ce_rcg <- ce[ ( grepl('27.3.b',CEarea) | grepl('27.3.c',CEarea) | grepl('27.3.d',CEarea) )]
 }
 
 # RCM NS&EA: the  North  Sea  (ICES  areas  IIIa,  IV  and  VIId),  the  Eastern  Arctic  (ICES  areas  I  and  II),  the  ICES  divisions Va, XII & XIV and the NAFO areas.
@@ -229,8 +232,7 @@ if(target_region=="RCG_NSEA")
                     grepl('27.12',CLarea) | 
                     grepl('27.14',CLarea) | 
                     grepl('21.',CLarea) 
-  ) & 
-    CLyear >= year_start & CLyear <= year_end]
+  )]
   
   ce_rcg <- ce[ ( grepl('27.1',CEarea) | 
                     grepl('27.2',CEarea) | 
@@ -241,8 +243,7 @@ if(target_region=="RCG_NSEA")
                     grepl('27.12',CEarea) | 
                     grepl('27.14',CEarea) | 
                     grepl('21.',CEarea)   
-  ) & 
-    CEyear >= year_start & CEyear <= year_end]
+  )]
 }
 
 
@@ -259,8 +260,7 @@ if(target_region=="RCG_NA")
                     grepl('27.10',CLarea) 
   ) & 
     !grepl('27.5.a', CLarea) & 
-    !grepl('27.7.d', CLarea) & 
-    CLyear >= year_start & CLyear <= year_end]
+    !grepl('27.7.d', CLarea)]
   
   ce_rcg <- ce[ ( grepl('27.5',CEarea) | 
                     grepl('27.6',CEarea) | 
@@ -270,14 +270,13 @@ if(target_region=="RCG_NA")
                     grepl('27.10',CEarea) 
   ) & 
     !grepl('27.5.a', CEarea) & 
-    !grepl('27.7.d', CEarea) & 
-    CEyear >= year_start & CEyear <= year_end]
+    !grepl('27.7.d', CEarea)]
 }
 
 ################################################################################
 ################################################################################
 #
-#                                 AREA MAP
+#                                 AREA MAP <----------------------------------------------------------- to do
 #
 ################################################################################
 ################################################################################
@@ -286,7 +285,7 @@ if(target_region=="RCG_NA")
 ################################################################################
 ################################################################################
 #
-#                                 ISSCAAP
+#                                 ISSCAAP <------------------------------------------------------------ not needed anymore?
 #
 ################################################################################
 ################################################################################
@@ -295,7 +294,33 @@ if(target_region=="RCG_NA")
 ################################################################################
 ################################################################################
 #
-#                                 CATCH GROUP
+#                                 CATCH GROUP <------------------------------------------------------------ WORK ON IT
+#
+################################################################################
+################################################################################
+
+# to assign Catch group to the RDBES data, we're using a table produced by ISSG metiers
+# https://github.com/ices-eg/RCGs/blob/master/Metiers/Reference_lists/Metier%20Subgroup%20Species%202020%20cleaned%20version.xlsx
+
+MetierGroupSpecies = openxlsx::read.xlsx('Metiers/Reference_lists/Metier Subgroup Species 2020 cleaned version.xlsx')
+
+# For now, we merge the dataset using FAO code, but this variable is optional <-------------------------------- IMPORTANT!
+# So additional table would be needed: WORMS - FAO (where to find it? any official source?)
+# then merge with MetierGroupSpecies by FAO key and we get for each row Catch group
+# another option? WORMS - ISSCAAP? TaxoCode ? ...?
+
+cl_rcg[,CatchGroup:=MetierGroupSpecies$`Grouping.2.(TO.BE.USED)`[match(cl_rcg$CLspeciesFaoCode, MetierGroupSpecies$FAOcode)]]
+# QCA: should yield TRUE otherwise debug
+nrow(cl_rcg[is.na(CatchGroup),]) == 0
+cl_rcg[is.na(CatchGroup),]
+
+# IF NEEDED -> Full name of the catch group might be taken from this table
+# icesVocab::getCodeList("TargetSpecies")
+
+################################################################################
+################################################################################
+#
+#                                 FACTORIZATION <----------------------------------- is it still needed?
 #
 ################################################################################
 ################################################################################
@@ -304,16 +329,7 @@ if(target_region=="RCG_NA")
 ################################################################################
 ################################################################################
 #
-#                                 FACTORIZATION
-#
-################################################################################
-################################################################################
-
-
-################################################################################
-################################################################################
-#
-#                                 STOCKS
+#                                 STOCK <---------------------------------------------- to be done
 #
 ################################################################################
 ################################################################################
@@ -326,6 +342,16 @@ if(target_region=="RCG_NA")
 #
 ################################################################################
 ################################################################################
+
+file_info_cl<-file.info(file_cl)
+file_info_ce<-file.info(file_ce)
+
+save(cl_rcg, file_info_cl, file = paste(dir_output_rcg, paste("\\RDB",target_region,"CL", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
+save(ce_rcg, file_info_ce, file = paste(dir_output_rcg, paste("\\RDB",target_region,"CE", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
+save(cl, file_info_cl, file = paste(dir_output_all, paste("\\RDB","All_Regions","CL", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
+save(ce, file_info_ce, file = paste(dir_output_all, paste("\\RDB","All_Regions","CE", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))	
+
+
 
 
 
