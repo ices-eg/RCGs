@@ -8,7 +8,7 @@ output:
 params:
   set_subtitle: "Title"
   region: 'Baltic'
-  year: 2023
+  year: 2021
   logo_path: "../../overviews_shiny/www/logo RCG BALTIC.PNG"
   data_dir: '../../data_RDBES/002_prepared/20240129/RCG_BA'
   RDBES_download_date: '01/01/2000'
