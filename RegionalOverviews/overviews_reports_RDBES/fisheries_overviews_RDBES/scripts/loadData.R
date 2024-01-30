@@ -13,3 +13,10 @@ load(
 ce = ce_rcg # shorter name 
 
 # put some necessary data prep part below
+
+######################
+# FILTER the data out
+######################
+
+cl <- cl[CLyear %in% params$year]
+ce <- ce[CEyear %in% params$year]

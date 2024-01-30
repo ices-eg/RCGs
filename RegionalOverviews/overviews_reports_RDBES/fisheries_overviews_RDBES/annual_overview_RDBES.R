@@ -2,7 +2,7 @@
 #   - it sources the .rmd file and additionally in annual_overview_RDBES.R you can define parameters to be used in the report
 
 params <- list(
-  year = 2023,
+  year = 2021,
   region = 'Baltic',
   logo_path = file.path("../../overviews_shiny/www/logo RCG BALTIC.PNG"),
   data_dir = '../../data_RDBES/002_prepared/20240129/RCG_BA', 
