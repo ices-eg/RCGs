@@ -1,3 +1,6 @@
+# annual_overview_RDBES_template.Rmd - contains main structure of the overview, but to create a report, please use annual_overview_RDBES.R - 
+#   - it sources the .rmd file and additionally in annual_overview_RDBES.R you can define parameters to be used in the report
+
 params <- list(
   year = 2023,
   region = 'Baltic',
