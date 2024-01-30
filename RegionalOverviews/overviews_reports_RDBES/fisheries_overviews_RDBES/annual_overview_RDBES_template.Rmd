@@ -7,11 +7,13 @@ output:
     
 params:
   set_subtitle: "Title"
-  region: NA
-  year: NA
-  logo_path: NA
-  data_dir: NA
-  RDBES_download_date: NA
+  region: 'Baltic'
+  year: 2023
+  logo_path: "../../overviews_shiny/www/logo RCG BALTIC.PNG"
+  data_dir: '../../data_RDBES/002_prepared/20240129/RCG_BA'
+  RDBES_download_date: '01/01/2000'
+  CLfileName: 'RDBES_RCG_BA_CL_2021_2021_prepared_20240129'
+  CEfileName: 'RDBES_RCG_BA_CE_2021_2021_prepared_20240129'
   
 ---
 
@@ -66,6 +68,8 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```{r loadPrepareData, echo=FALSE}
 # LOAD AND PREPARE DATA
 
+source('scripts/loadData.R', local = knitr::knit_global())
+  
 ```
 
 ```{r fleetRegisterData, echo=FALSE}
