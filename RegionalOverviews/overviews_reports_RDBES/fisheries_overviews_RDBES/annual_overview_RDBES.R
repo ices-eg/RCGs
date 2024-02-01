@@ -3,8 +3,8 @@
 
 params <- list(
   year = 2021,
-  region = 'Baltic',
-  logo_path = file.path("../../overviews_shiny/www/logo RCG BALTIC.PNG"),
+  region = 'BA', #BA, NA, NSEA
+  logo_path = file.path("../../overviews_shiny/www/logo RCG BALTIC.PNG"), # move it to the rmd part <----------------- to do 
   data_dir = '../../data_RDBES/002_prepared/20240129/RCG_BA',
   CLfileName = 'RDBES_RCG_BA_CL_2021_2021_prepared_20240129',
   CEfileName = 'RDBES_RCG_BA_CE_2021_2021_prepared_20240129',
