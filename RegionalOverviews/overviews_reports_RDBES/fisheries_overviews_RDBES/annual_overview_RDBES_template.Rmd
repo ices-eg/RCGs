@@ -7,7 +7,7 @@ output:
     
 params:
   set_subtitle: "Title"
-  region: 'Baltic'
+  region: 'BA'
   year: 2021
   logo_path: "../../overviews_shiny/www/logo RCG BALTIC.PNG"
   data_dir: '../../data_RDBES/002_prepared/20240129/RCG_BA'
@@ -18,7 +18,7 @@ params:
 ---
 
 ---
-subtitle: `r paste(params$region, params$year, sep = ", ")`
+subtitle: `r paste(dplyr::case_when(params$region=='BA'~'Baltic',params$region=='NA'~'North Atlantic',params$region=='NSEA'~'North Sea and Eastern Arctic'), params$year, sep = ", ")`
 ---
 
 ```{r setup, include=FALSE}
@@ -34,18 +34,20 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```{r loadPackages, echo=FALSE, message=FALSE, warning=FALSE}
 # LOAD PACKAGES AND DEFINE EVAL_PARAMETERS IF NEEDED
 
-# library(tidyverse)
+library(tidyverse)
 # library(car)
 # library(ggrepel)
 # library(knitr)
 # library(kableExtra)
-# library(data.table)
+library(data.table)
 # library(magrittr)
 # library(plotly)
 # library(leaflet)
 
  ## establish conditions  - can use it if for example some chunks should be run only for selected Regions, e.g. only Bal
- eval_region <- params$region=='Baltic' # when added to the chunk header, the chunk will be run only for Baltic report
+ eval_region_BA <- params$region=='BA' # when added to the chunk header, the chunk will be run only for BA report
+ eval_region_NA <- params$region=='NA' # when added to the chunk header, the chunk will be run only for NA report
+ eval_region_NSEA <- params$region=='NSEA' # when added to the chunk header, the chunk will be run only for NSEA report
 
 ```
 
@@ -60,14 +62,31 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 
 ```
 
-```{r mapData, echo=FALSE}
-# LOAD AND PREPARE DATA NEEDED FOR MAPS (shp, rdata, ...)
+
+```{r mapDataBA, echo=FALSE, eval=eval_region_BA}
+# LOAD PREPARE DATA NEEDED FOR MAPS (shp, rdata, ...) ONLY FOR RCG BA
+StatRectshp  = sf::st_read("../../data/shapefiles/RCG_BA_ICESrect.shp")# for BA maps on DIVISIONS level -> WATCH OUT ...28.1/...28.2
+
+```
+
+```{r mapDataNA, echo=FALSE, eval=eval_region_NA}
+# LOAD DATA NEEDED FOR MAPS (shp, rdata, ...) ONLY FOR RCG NA
+StatRectshp  = sf::st_read("../../data/shapefiles/RCG_NA_ICESrect.shp")
+```
+
+```{r mapDataNSEA, echo=FALSE, eval=eval_region_NSEA}
+# LOAD DATA NEEDED FOR MAPS (shp, rdata, ...) ONLY FOR RCG NSEA
+StatRectshp  = sf::st_read("../../data/shapefiles/RCG_NSEA_ICESrect.shp")
+
+```
+
+```{r mapDataPrepare, echo=FALSE}
+# PREPARE DATA NEEDED FOR MAPS (shp, rdata, ...)
 
 ```
 
 ```{r loadPrepareData, echo=FALSE}
 # LOAD AND PREPARE DATA
-
 source('scripts/loadData.R', local = knitr::knit_global())
   
 ```
@@ -150,6 +169,9 @@ put some text here
 
 ### Spatial distribution of landings
 
+```{r}
+
+```
 
 ## Small pelagics landings
 
