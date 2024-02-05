@@ -219,8 +219,8 @@ if(!exists(spatial_dataset_name)){
     }
     
     
-    caption = paste(title, '. ',
-                    ifelse(!is.na(subtitle), paste(subtitle, '. ' , sep = ''),''),
+    caption = paste(#title, '. ',
+                    #ifelse(!is.na(subtitle), paste(subtitle, '. ' , sep = ''),''),
                     ifelse(nrow(missing_var_spatial)>0, ifelse(missing_var_spatial$missing_var_spatial_pr<=0.005 &
                                                                  missing_var_spatial$missing_var_spatial_pr>0,'~0',
                                                                round(missing_var_spatial$missing_var_spatial_pr, 2)),0),
@@ -324,7 +324,7 @@ if(!exists(spatial_dataset_name)){
       x = 'Longitude',
       y = 'Latitude'
       # subtitle = subtitle <-------------------------------------------------------------------------------to do
-      #     , caption = caption
+      , caption = caption
     ) +
     facet_wrap(~facet, ncol =2)+
     theme_classic() +
@@ -345,7 +345,8 @@ if(!exists(spatial_dataset_name)){
       ),
       strip.text = element_text(size = ifelse(length(unique(df_spatial_toMap$facet))==1,10,6)),
       axis.text.x = element_text(size = ifelse(length(unique(df_spatial_toMap$facet))==1,9,7)),
-      axis.text.y = element_text(size = ifelse(length(unique(df_spatial_toMap$facet))==1,9,7))
+      axis.text.y = element_text(size = ifelse(length(unique(df_spatial_toMap$facet))==1,9,7)),
+      plot.caption = element_text(size=5)
     ) -> choropleth_map
   
   # if (plot_labels == TRUE) { <--------------------------------------------------------------------------------------- to do
@@ -408,7 +409,7 @@ if(!exists(spatial_dataset_name)){
   #   return(list(mdf, plot, caption)) #should we return all data - mdf (with missing parts) or only the data that were  plotted - mdf2?
   # }
   
-  return(list(choropleth_map, caption))
+  return(list(choropleth_map))
 }
 
 
