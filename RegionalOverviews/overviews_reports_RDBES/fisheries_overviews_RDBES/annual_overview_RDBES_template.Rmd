@@ -73,16 +73,25 @@ source("../../funs_RDBES/choroplethMap_func2.R", local = knitr::knit_global())
 # LOAD PREPARE DATA NEEDED FOR MAPS (shp, rdata, ...) ONLY FOR RCG BA
 StatRectshp  = sf::st_read("../../data/shapefiles/RCG_BA_ICESrect.shp")# for BA maps on DIVISIONS level -> WATCH OUT ...28.1/...28.2
 
+FAOshp  = sf::st_read("../../data/shapefiles/RCG_BA_FAOareas.shp") %>% filter(F_LEVEL == 'SUBDIVISION') # for BA maps on DIVISIONS level -> WATCH OUT ...28.1/...28.2
 ```
 
 ```{r mapDataNA, echo=FALSE, eval=eval_region_NA}
 # LOAD DATA NEEDED FOR MAPS (shp, rdata, ...) ONLY FOR RCG NA
 StatRectshp  = sf::st_read("../../data/shapefiles/RCG_NA_ICESrect.shp")
+
+FAOshp  = sf::st_read("../../data/shapefiles/RCG_NA_FAOareas.shp") %>% filter(F_LEVEL == 'DIVISION') # for NA maps on DIVISIONS level
+
 ```
 
 ```{r mapDataNSEA, echo=FALSE, eval=eval_region_NSEA}
 # LOAD DATA NEEDED FOR MAPS (shp, rdata, ...) ONLY FOR RCG NSEA
 StatRectshp  = sf::st_read("../../data/shapefiles/RCG_NSEA_ICESrect.shp")
+
+FAOshp  = sf::st_read("../../data/shapefiles/RCG_NSEA_FAOareas.shp") %>%  filter(F_LEVEL == 'DIVISION' |
+                                                                                   F_LEVEL == 'SUBAREA' |
+                                                                                   F_CODE == '27.3.a.20' | 
+                                                                                   F_CODE == '27.3.a.21')
 
 ```
 
@@ -90,6 +99,14 @@ StatRectshp  = sf::st_read("../../data/shapefiles/RCG_NSEA_ICESrect.shp")
 # PREPARE DATA NEEDED FOR MAPS (shp, rdata, ...)
 #StatRectshp %>% mutate(StatisticalRectangle = ICESNAME) -> StatRectshp
 StatRectshp = cbind(StatRectshp,  sf::st_coordinates(sf::st_centroid(StatRectshp$geometry))) %>% rename(lon = X, lat = Y)
+
+FAOshp = cbind(FAOshp,  sf::st_coordinates(sf::st_centroid(FAOshp$geometry))) %>% rename(lon = X, lat = Y)
+
+if(params$region=='BA'){ # fixed wrong calculation of centroid of 27.3.d.30
+  FAOshp = FAOshp %>%   
+    mutate(lon = ifelse(F_CODE=='27.3.d.30', 19.5 ,lon), lat =  ifelse(F_CODE=='27.3.d.30',62 ,lat))
+
+}
 
 ```
 
@@ -177,7 +194,7 @@ put some text here
 
 ### Spatial distribution of landings
 
-```{r, echo = FALSE, warning = FALSE, message = FALSE, results = "asis"}
+```{r, echo = FALSE, warning = FALSE, message = FALSE, results = "asis", dpi=100, fig.width=6,fig.height=6}
 # do we need information on for how many rows(%) there was a missing CLscientificWeight_ton? <-------------------------- to do
 
 # data prep
@@ -201,8 +218,7 @@ result = choroplethMap_func2(
   saveResults = FALSE,
   outputPath,
   displayInR = TRUE,
-  addExtraShp = FALSE,
-  extraShp_dir = NA,
+  extraShp_name = 'FAOshp',
   var_name_new = NA,
   addToTitle = NA,
   RCGregion = 'BA'
@@ -371,6 +387,39 @@ result[[1]]
 
 ## Spatal distribution on effort {.tabset}
 ### Below 10 meters
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE, results = "asis", dpi=100, fig.width=6,fig.height=6}
+# data prep
+ce %>%
+  filter(CEvesselLengthCategory %in% c("VL0006", "VL0608", "VL0810")) %>% 
+  group_by(CEyear, CEstatisticalRectangle) %>%
+  summarise(CEnumberOfDominantTrips = sum(CEnumberOfDominantTrips)) %>%
+  mutate(pr= CEnumberOfDominantTrips/sum(CEnumberOfDominantTrips, na.rm = TRUE)*100,
+         analysis_type = 'sum',
+         type_of_threshold = 'none',
+         value_of_threshold = NA)-> df
+
+# map
+result = choroplethMap_func2(
+  df,
+  var_name = 'CEnumberOfDominantTrips',
+  var_spatial_name = 'CEstatisticalRectangle',
+  facet_name = 'CEyear',
+  spatial_dataset_name = 'StatRectshp',
+  spatial_dataset_var_name = 'ICESNAME',
+  spatial_dataset_labels = FALSE,
+  saveResults = FALSE,
+  outputPath,
+  displayInR = TRUE,
+  extraShp_name = 'FAOshp',
+  var_name_new = NA,
+  addToTitle = 'Below 10 meters',
+  RCGregion = 'BA'
+)
+
+result[[1]]
+```
+
 ### 10 meteres and above
 
 ## Appendix A. Dates of data extraction
