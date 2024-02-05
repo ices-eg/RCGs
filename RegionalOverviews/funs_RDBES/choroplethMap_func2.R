@@ -343,10 +343,13 @@ if(!exists(spatial_dataset_name)){
         linetype = 'dashed',
         size = 0.5
       ),
-      strip.text = element_text(size = ifelse(length(unique(df_spatial_toMap$facet))==1,10,6)),
-      axis.text.x = element_text(size = ifelse(length(unique(df_spatial_toMap$facet))==1,9,7)),
-      axis.text.y = element_text(size = ifelse(length(unique(df_spatial_toMap$facet))==1,9,7)),
-      plot.caption = element_text(size=5)
+      strip.text = element_text(size = ifelse(length(unique(df_spatial_toMap$facet))==1,7,6)),
+      axis.text.x = element_text(size = ifelse(length(unique(df_spatial_toMap$facet))==1,7,7)),
+      axis.text.y = element_text(size = ifelse(length(unique(df_spatial_toMap$facet))==1,7,7)),
+      axis.title = element_text(size=7),
+      legend.title=element_text(size=8),
+      plot.caption = element_text(size=5),
+      plot.title = element_text(size=10)
     ) -> choropleth_map
   
   # if (plot_labels == TRUE) { <--------------------------------------------------------------------------------------- to do
