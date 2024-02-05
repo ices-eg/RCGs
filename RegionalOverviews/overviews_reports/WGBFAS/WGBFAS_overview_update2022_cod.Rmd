@@ -16,8 +16,8 @@ Plots and graphs presented in this document have been created based on the WGBFA
 
 #If running outside knitr, then set wd. When knitting the wd is set to the folder where the .rmd is stored
 #setwd("D:/RCGs/RegionalOverviews")
-#setwd("C:/Users/acfernandes/Documents/2022/000_RCG_Interssessional Work/ISSG Catch Effort Sampling Overviews_old/ISSG CESOv/RegionalOverviews/")
-setwd("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/")
+#setwd("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/")
+setwd("C:/Dateien/Workshops und Fortbildungen/RCG Baltic/RCG Github/RCGs/RegionalOverviews")
 
 #Parameters
 
@@ -27,19 +27,29 @@ years <- c(2021)
 species_code <- 126436 # Gadus morhua
 Region <- "BS"
 
-figures <- "yes" #yes / no - all figures outputtet to a folder
-tables <- "yes" #yes / no - all tables outputtet to a folder
+figures <- "yes" #yes / no - all figures outputted to a folder
+tables <- "yes" #yes / no - all tables outputted to a folder
 
 #data_dir <- paste("../../data/002_prepared/", target_region, "/", sep = '') 
 #data_dir <- paste("C:/Users/acfernandes/Documents/2022/000_RCG_Interssessional Work/ISSG Catch Effort Sampling Overviews_old/ISSG CESOv/RegionalOverviews/input data/", target_region, "/", sep = '') 
+#data_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/input_data/2021/", target_region, "/", sep = '') 
 
-data_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/input_data/2021/", target_region, "/", sep = '') 
+data_dir <- paste("C:/Dateien/Workshops und Fortbildungen/RCG Baltic/RCG Github/RCGs/RegionalOverviews/input_data/2021/", target_region, "/", sep = '') 
 period <- "2021"
+
 #Folder for figures and tables
  #table_dir <- paste("../../overviews_reports/WGBFAS/outputs/tables/", sep = "")
-  table_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/overviews_reports/WGBFAS/outputs/tables/", sep = "")
+# table_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/overviews_reports/WGBFAS/outputs/tables/", sep = "")
+
+table_dir <- paste("C:/Dateien/Workshops und Fortbildungen/RCG Baltic/RCG Github/RCGs/RegionalOverviews/overviews_reports/WGBFAS/outputs/tables/", sep = "")
+
+
+
  #figur_dir <- paste("../../overviews_reports/WGBFAS/outputs/figures/", sep = "")
-  figur_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/overviews_reports/WGBFAS/outputs/figures/", sep = "")
+#figur_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/overviews_reports/WGBFAS/outputs/figures/", sep = "")
+figur_dir <- paste("C:/Dateien/Workshops und Fortbildungen/RCG Baltic/RCG Github/RCGs/RegionalOverviews/overviews_reports/WGBFAS/outputs/figures/", sep = "")
+    
+  
 ```
 
 ```{r 2_setup_lib, include = F}
@@ -81,7 +91,8 @@ subchunkify <- function(g, chunk_name = chunk_name, fig_height=7, fig_width=5) {
 colour_table <-
      read.table(
          #"D:/RCGs/RegionalOverviews/data/aux_colours.txt",
-        "D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/data/aux_colours.txt",  
+         # "D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/data/aux_colours.txt",  
+        "C:/Dateien/Workshops und Fortbildungen/RCG Baltic/RCG Github/RCGs/RegionalOverviews//data/aux_colours.txt",
          header = T,
          sep = "\t",
          colClasses = "character",
