@@ -8,8 +8,7 @@ choroplethMap_func2 = function(df,
                               saveResults = FALSE,
                               outputPath,
                               displayInR = TRUE,
-                              addExtraShp = FALSE,
-                              extraShp_dir = NA,
+                              extraShp_name = NA,
                               var_name_new = NA,
                               addToTitle = NA,
                               RCGregion = NA
@@ -77,6 +76,13 @@ if(!exists(spatial_dataset_name)){
   ))
 }
 
+if(!is.na(extraShp_name)) {
+  if (!exists(extraShp_name)) {
+    stop(paste(extraShp_name,
+               '<--- was not found'))
+  }
+}
+
 ######################################
 # transform names into symbols - to use it inside tidyverse
 ######################################
@@ -86,6 +92,9 @@ if(!exists(spatial_dataset_name)){
 
   spatial_dataset <- eval_tidy(as.symbol(spatial_dataset_name))
   spatial_dataset_var <- as.symbol(spatial_dataset_var_name)
+  
+  extraShp <- eval_tidy(as.symbol(extraShp_name))
+  
   
   if(!is.na(facet_name)){
     facet = as.symbol(facet_name)  
@@ -295,24 +304,24 @@ if(!exists(spatial_dataset_name)){
       name = ifelse(is.na(var_name_new), var_name, var_name_new)
     ) -> base_choropleth_map
   
-  # if(addExtraShp==TRUE){ <-------------------------------------------------------------------------------------- to do
-  #   plot+
-  #     geom_sf(data = extraShp,
-  #             fill = NA, 
-  #             na.rm = TRUE,
-  #             size = 0.5,
-  #             color = gray(.3)
-  #             #         )+
-  #             # geom_sf_text(data = extraShp, aes(label = F_CODE),
-  #             #              color = 'grey22',
-  #             #              size = 3,
-  #             #              fontface = "italic",
-  #             #              check_overlap = TRUE
-  #     )-> plot
-  # }
+  if(!is.na(extraShp_name)){ #<-------------------------------------------------------------------------------------- to do
+    base_choropleth_map+
+      geom_sf(data = extraShp,
+              fill = NA,
+              na.rm = TRUE,
+              linewidth = 0.5,
+              color = gray(.3)
+              #         )+
+              # geom_sf_text(data = extraShp, aes(label = F_CODE),
+              #              color = 'grey22',
+              #              size = 3,
+              #              fontface = "italic",
+              #              check_overlap = TRUE
+      )-> base_choropleth_map
+  }
   
   base_choropleth_map +
-    geom_sf(data = ne_countries,  fill = "antiquewhite") +
+    geom_sf(data = ne_countries,  fill = "antiquewhite" , linewidth = 0.5) +
     coord_sf(
       crs = "+init=epsg:4326",
       xlim = c(unlist(limits["xmin"]), unlist(limits["xmax"])),
