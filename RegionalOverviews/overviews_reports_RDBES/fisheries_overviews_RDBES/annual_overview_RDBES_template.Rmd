@@ -69,14 +69,14 @@ source("../../funs_RDBES/choroplethMap_func2.R", local = knitr::knit_global())
 
 ```
 
-```{r mapDataBA, echo=FALSE, eval=eval_region_BA}
+```{r mapDataBA, include = F, eval=eval_region_BA}
 # LOAD PREPARE DATA NEEDED FOR MAPS (shp, rdata, ...) ONLY FOR RCG BA
 StatRectshp  = sf::st_read("../../data/shapefiles/RCG_BA_ICESrect.shp")# for BA maps on DIVISIONS level -> WATCH OUT ...28.1/...28.2
 
 FAOshp  = sf::st_read("../../data/shapefiles/RCG_BA_FAOareas.shp") %>% filter(F_LEVEL == 'SUBDIVISION') # for BA maps on DIVISIONS level -> WATCH OUT ...28.1/...28.2
 ```
 
-```{r mapDataNA, echo=FALSE, eval=eval_region_NA}
+```{r mapDataNA,include = F, eval=eval_region_NA}
 # LOAD DATA NEEDED FOR MAPS (shp, rdata, ...) ONLY FOR RCG NA
 StatRectshp  = sf::st_read("../../data/shapefiles/RCG_NA_ICESrect.shp")
 
@@ -84,7 +84,7 @@ FAOshp  = sf::st_read("../../data/shapefiles/RCG_NA_FAOareas.shp") %>% filter(F_
 
 ```
 
-```{r mapDataNSEA, echo=FALSE, eval=eval_region_NSEA}
+```{r mapDataNSEA, include = F, eval=eval_region_NSEA}
 # LOAD DATA NEEDED FOR MAPS (shp, rdata, ...) ONLY FOR RCG NSEA
 StatRectshp  = sf::st_read("../../data/shapefiles/RCG_NSEA_ICESrect.shp")
 
@@ -95,7 +95,7 @@ FAOshp  = sf::st_read("../../data/shapefiles/RCG_NSEA_FAOareas.shp") %>%  filter
 
 ```
 
-```{r mapDataPrepare, echo=FALSE}
+```{r mapDataPrepare, echo=FALSE, warning = FALSE, message = FALSE}
 # PREPARE DATA NEEDED FOR MAPS (shp, rdata, ...)
 #StatRectshp %>% mutate(StatisticalRectangle = ICESNAME) -> StatRectshp
 StatRectshp = cbind(StatRectshp,  sf::st_coordinates(sf::st_centroid(StatRectshp$geometry))) %>% rename(lon = X, lat = Y)
