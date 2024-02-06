@@ -54,7 +54,7 @@ Plots and graphs presented in this document have been created based on the WGBFA
 ```{r 3_setup_param_dir, include = F}
 
 #If running outside knitr, then set wd. When knitting the wd is set to the folder where the .rmd is stored
-setwd("D:/RCGs/RegionalOverviews")
+#setwd("C:/Dateien/Workshops und Fortbildungen/RCG Baltic/RCG Github/RCGs/RegionalOverviews")
 
 #Paramters
 
@@ -101,7 +101,7 @@ subchunkify <- function(g, chunk_name = chunk_name, fig_height=7, fig_width=5) {
 }
 colour_table <-
      read.table(
-         "D:/RCGs/RegionalOverviews/data/aux_colours.txt",
+         "C:/Dateien/Workshops und Fortbildungen/RCG Baltic/RCG Github/RCGs/RegionalOverviews/data/aux_colours.txt",
          header = T,
          sep = "\t",
          colClasses = "character",

@@ -17,12 +17,12 @@ Plots and graphs presented in this document have been created based on the WGBFA
 #If running outside knitr, then set wd. When knitting the wd is set to the folder where the .rmd is stored
 #setwd("D:/RCGs/RegionalOverviews")
 #setwd("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/")
-setwd("C:/Dateien/Workshops und Fortbildungen/RCG Baltic/RCG Github/RCGs/RegionalOverviews")
+#setwd("C:/Dateien/Workshops und Fortbildungen/RCG Baltic/RCG Github/RCGs/RegionalOverviews")
 
 #Parameters
 
 target_region <- "RCG_BA"  #"RCG_NA", "RCG_NSEA", "RCG_BA"
-years <- c(2021)
+years <- c(2022)
 
 species_code <- 126436 # Gadus morhua
 Region <- "BS"
@@ -34,8 +34,8 @@ tables <- "yes" #yes / no - all tables outputted to a folder
 #data_dir <- paste("C:/Users/acfernandes/Documents/2022/000_RCG_Interssessional Work/ISSG Catch Effort Sampling Overviews_old/ISSG CESOv/RegionalOverviews/input data/", target_region, "/", sep = '') 
 #data_dir <- paste("D:/Documents/PNAB/2022/000_RCG_InterssessionalWork/ISSG_Catch_Effort_Sampling_overviews/ISSG_overviews/RegionalOverviews/input_data/2021/", target_region, "/", sep = '') 
 
-data_dir <- paste("C:/Dateien/Workshops und Fortbildungen/RCG Baltic/RCG Github/RCGs/RegionalOverviews/input_data/2021/", target_region, "/", sep = '') 
-period <- "2021"
+data_dir <- paste("C:/Dateien/Workshops und Fortbildungen/RCG Baltic/RCG Github/RCGs/RegionalOverviews/input_data/2022/", target_region, "/", sep = '') 
+period <- "2022"
 
 #Folder for figures and tables
  #table_dir <- paste("../../overviews_reports/WGBFAS/outputs/tables/", sep = "")
@@ -149,13 +149,13 @@ if (target_region == "RCG_BA") {
 if (target_region == "RCG_BA")
 {
   load(
-    paste(data_dir, "RDB_RCG_BA_CL_2009_2021_prepared_20220422.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_BA_CL_2009_2022_prepared_20230414.Rdata", sep = "")
   )
   load(
-    paste(data_dir, "RDB_RCG_BA_CE_2009_2021_prepared_20220422.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_BA_CE_2009_2022_prepared_20230414.Rdata", sep = "")
   )
   load(
-    paste(data_dir, "RDB_RCG_BA_CS_all_2021_2021_prepared_202204211940.Rdata", sep = "")
+    paste(data_dir, "RDB_RCG_BA_CS_all_2022_2022_prepared_202304141601.Rdata", sep = "")
   )
 }
 
