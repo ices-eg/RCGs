@@ -3,20 +3,21 @@ title: "WGBFAS - `r params$Species_param`"
 author: "RCG ISSG on catch, effort and sampling overviews"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
-  word_document
+  html_document:
+    df_print: paged
 params:
   Year_param:
     label: 'Year:'
     value: 2022
   Species_param:
     choices:
-    - "Gadus morhua"
-    - "Clupea harengus"
-    - "Pleuronectes platessa"
-    - "Sprattus sprattus"
+    - Gadus morhua
+    - Clupea harengus
+    - Pleuronectes platessa
+    - Sprattus sprattus
     input: select
     label: 'Species:'
-    value: "Gadus morhua"
+    value: Gadus morhua
 ---
 
 ```{r 1_setup_lib, include = F}
@@ -88,13 +89,11 @@ subchunkify <- function(g, chunk_name = chunk_name, fig_height=7, fig_width=5) {
     function() {g}
   ), collapse = '')
   
-  sub_chunk <- paste0("
-  `","``{r fig_", chunk_name, ", fig.height=", fig_height, ", fig.width=", fig_width, ", echo=FALSE, result = \"asis\", warning = F, fig.pos = \"H\"}",
+  sub_chunk <- paste0("`","``{r fig_", chunk_name, ", fig.height=", fig_height, ", fig.width=", fig_width, ", echo=FALSE, result = \"asis\", warning = F, fig.pos = \"H\"}",
   "  \n (", 
     g_deparsed
     , ")()", "  \n ",
-  "  \n `","``
-  ")
+  "  \n `","``")
   
   cat(knitr::knit(text = knitr::knit_expand(text = sub_chunk), quiet = TRUE))
   
