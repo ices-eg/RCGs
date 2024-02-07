@@ -5,6 +5,8 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   html_document:
     df_print: paged
+  pdf_document: default
+  word_document: default
 params:
   Year_param:
     label: 'Year:'
@@ -52,6 +54,9 @@ Species_text<-case_when(
 
 Plots and graphs presented in this document have been created based on the WGBFAS request. This overview refers to `r params$Year_param` data for `r Species_text` and is only for use by WGBFAS. 
 
+More information on data usage and publication rights can be found under the 
+[ICES Data policy](https://www.ices.dk/data/guidelines-and-policy/pages/ices-data-policy.aspx "ICES Data Policy")
+
 ```{r 3_setup_param_dir, include = F}
 
 #If running outside knitr, then set wd. When knitting the wd is set to the folder where the .rmd is stored
@@ -65,8 +70,8 @@ years <- params$Year_param
 species_code <- Species_WORMS
 Region <- 'BS'
 
-figures <- "yes" #yes / no - all figures outputtet to a folder
-tables <- "yes" #yes / no - all tables outputtet to a folder
+figures <- "yes" #yes / no - all figure output to a folder
+tables <- "yes" #yes / no - all table output to a folder
 
 data_dir <- paste("../../data/002_prepared/", target_region, "/", sep = '') 
 period <- paste0("",params$Year_param,"")
@@ -150,6 +155,12 @@ if (target_region == "RCG_BA") {
 }
 
 ```
+
+---
+title: `r front_title`
+date: `r Sys.Date()`
+---
+
 
 ```{r data, include = F}
 
@@ -250,7 +261,7 @@ res <- choroplethMap_func(
             saveResults = FALSE,
             outputPath = NA,
             Catch_group_name = NA,
-            newVarName = "Landings (1000 t)",
+            newVarName = "Landings (in kt)",
             ICESRectangle = TRUE
             )
           subchunkify(res[[2]],"Figure_landings_y",  10, 9)
@@ -290,7 +301,7 @@ res <- choroplethMap_func(
             saveResults = FALSE,
             outputPath = NA,
             Catch_group_name = NA,
-            newVarName = 'Landings (1000 t)'
+            newVarName = 'Landings (in kt)'
             )
 
           subchunkify(res[[2]],'Figure_landings',  10, 9)
@@ -1144,7 +1155,7 @@ res <- choroplethMap_func(
             saveResults = FALSE,
             outputPath = NA,
             Catch_group_name = NA,
-            newVarName = "Landings (1000 t)",
+            newVarName = "Landings (in kt)",
             ICESRectangle = TRUE
             )
           subchunkify(res[[2]],paste0("Figure_landings_stock_",i),  10, 9)
@@ -1199,7 +1210,7 @@ cat('  \n')
              }
 
  cat('\n')
- cat(paste0("**Figure ",17+i,".**"),' Landings (1000 t) by Metier Level 5. \n ')
+ cat(paste0("**Figure ",17+i,".**"),' Landings (in kt) by Metier Level 5. \n ')
  cat('  \n')
 }
 
