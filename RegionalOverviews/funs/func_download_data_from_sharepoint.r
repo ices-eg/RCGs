@@ -1,7 +1,10 @@
 download_data_from_sharepoint<-function(sharepoint_address, filename_vector, dir_download_browser, dir_download_target, unzip = FALSE, delete_zip = FALSE){
-	# Nuno Prista, SLU, 2019 (project PanRegional SubGroup on Fisheries and Sampling Overviews)
+	# Author: Nuno Prista, SLU, 2019 (project PanRegional SubGroup on Fisheries and Sampling Overviews)
 		# improvement of function download_data_cs4, developed by Nuno Prista, IPMA, 2015 (project fishPi)
 	
+	# Contributor(s): 
+		# Eros Quesada, SLU, 2024
+
 	# Downloads data from e.g., ICES sharepoint into a dir_download_target in user's computer, unzips file upon request
 	
 	# Note: developed for Firefox: may (or may not) work on IE
@@ -21,8 +24,8 @@ download_data_from_sharepoint<-function(sharepoint_address, filename_vector, dir
 		# 2019-04-13: fixed another bug when downloads very fast (small files); simplified code
 		# 2019-04-13: added option to delete_zip
 		# 2019-04-13: fixed bug in saving (was saving large files too fast, with size==0)
+		# 2024-02-07: ensure overwriting when unzipping the file at the target directory 
 
-		
 	# function for press key (from "https://stackoverflow.com/questions/15272916/how-to-wait-for-a-keypress-in-r")
 	readkey <- function()
 	{
