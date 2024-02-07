@@ -1,6 +1,6 @@
 # based on the 001_read_and_prepare_data_rdb_2009_2021_CL_CE.r
 # script prepares datasets for further analysis
-
+setwd("Path to RCGs local repo")
 rm(list=ls())
 library(data.table)
 gc()
@@ -15,19 +15,19 @@ getwd()
 ################################################################################################################################################################
 ################################################################################################################################################################
 
-# ========================
-# set params
-# ======================== 
+## ========================
+## Set params
+## ======================== 
 
 target_region <- "RCG_NSEA" # RCG_BA, RCG_NA, RCG_NSEA
 year_start <- 2021
 year_end <- 2021
 time_tag<-format(Sys.time(), "%Y%m%d")
 
-# ====================== 
-# create directory structure
-# ====================== 
-#time_tag<-202006160931
+## ====================== 
+## Create directory structure
+## ====================== 
+
 dir_output_all<-paste("RegionalOverviews/data_RDBES/002_prepared/", time_tag, sep="")
 dir_output_rcg<-paste("RegionalOverviews/data_RDBES/002_prepared/", time_tag ,"/",target_region, sep="")
 
@@ -40,19 +40,25 @@ if (!dir.exists(dir_output_rcg)){
   dir.create(dir_output_rcg,recursive=TRUE, showWarnings=FALSE)
 }
 
-# ========================
-# downloads data from sharepoint
-# ======================== 
-
-# either download the data manually, or use the function below (some adjustment might be needed)
-# source("funs/func_download_data_from_sharepoint.r")
+## ========================
+## Downloads data from sharepoint
+## ======================== 
+## Here we obtain raw RDBES data. 
+#  The preferable choice is to use a function downloading the data from the SharePoint. Alternatively, data are to be manually downloaded. 
+source("RegionalOverviews/funs/func_download_data_from_sharepoint.r")
+download_data_from_sharepoint("https://community.ices.dk/ExternalSites/datacollection/Regional%20coordination%20meetings%202017/RCGIntersessionalWork/2022%20Meeting%20Documents/06.%20Data/Prepared_Data/RDBES_data/20240129", # Directory on SharePoint e.g. for a data version recent at moment of writing (should be modified to take the most recent)
+ filename_vector = paste0(target_region, ".zip"), 
+ dir_download_browser = "//storage-lk.slu.se/home$/erqu0001/Downloads", # Directory where browser downloads, e.g. on eros machine
+ dir_download_target = "Path to directory where data should be stored",  
+ unzip=TRUE
+ )
 
 # ========================
 # reads in data
 # ========================
 
 # reads aux_countries dataset
-aux_countries<-read.table("RegionalOverviews\\data\\aux_countries.txt", sep=",", header=T, colClasses="character", na.strings = "")
+aux_countries<-read.table("RegionalOverviews//data//aux_countries.txt", sep=",", header=T, colClasses="character", na.strings = "")
 
 # reads RDBES data
 RDBESdataPath = 'RegionalOverviews/data_RDBES/001_raw'
@@ -346,10 +352,10 @@ cl_rcg[is.na(CatchGroup),]
 file_info_cl<-file.info(file_cl)
 file_info_ce<-file.info(file_ce)
 
-save(cl_rcg, file_info_cl, file = paste(dir_output_rcg, paste("\\RDBES",target_region,"CL", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
-save(ce_rcg, file_info_ce, file = paste(dir_output_rcg, paste("\\RDBES",target_region,"CE", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
-save(cl, file_info_cl, file = paste(dir_output_all, paste("\\RDBES","All_Regions","CL", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
-save(ce, file_info_ce, file = paste(dir_output_all, paste("\\RDBES","All_Regions","CE", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))	
+save(cl_rcg, file_info_cl, file = paste(dir_output_rcg, paste("//RDBES",target_region,"CL", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
+save(ce_rcg, file_info_ce, file = paste(dir_output_rcg, paste("//RDBES",target_region,"CE", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
+save(cl, file_info_cl, file = paste(dir_output_all, paste("//RDBES","All_Regions","CL", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))
+save(ce, file_info_ce, file = paste(dir_output_all, paste("//RDBES","All_Regions","CE", year_start, year_end, "prepared",time_tag, sep="_"),".Rdata", sep=""))	
 
 
 
