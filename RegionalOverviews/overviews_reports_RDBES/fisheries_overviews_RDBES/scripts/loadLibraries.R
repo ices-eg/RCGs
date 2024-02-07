@@ -38,4 +38,5 @@ if(is_empty(warnings())){
   cat("\n")
   cat(green('       \u2713'), paste0(" - Completed")) 
   cat("\n")
+  cat("\n")
 } 

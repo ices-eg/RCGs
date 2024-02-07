@@ -24,12 +24,13 @@ download_data_from_sharepoint<-function(sharepoint_address, filename_vector, dir
 		# 2019-04-13: fixed another bug when downloads very fast (small files); simplified code
 		# 2019-04-13: added option to delete_zip
 		# 2019-04-13: fixed bug in saving (was saving large files too fast, with size==0)
-		# 2024-02-07: ensure overwriting when unzipping the file at the target directory 
+		# 2024-02-07: ensure overwriting when unzipping the file at the target directory and print to cat 
 
 	# function for press key (from "https://stackoverflow.com/questions/15272916/how-to-wait-for-a-keypress-in-r")
 	readkey <- function()
 	{
-		cat ("Press [enter] to continue")
+		cat ("       Press", magenta("[enter]"), "to continue")
+		cat("\n")
 		line <- readline()
 	}
 	
@@ -37,29 +38,38 @@ download_data_from_sharepoint<-function(sharepoint_address, filename_vector, dir
 	if(sum(grepl(filename_vector, pat=".txt") | grepl(filename_vector, pat=".png"))>0) stop("Sorry, not yet developed for '.txt' and '.png' files")
 
 	# opens connection
-	browseURL(sharepoint_address)
+	suppressMessages(
+		browseURL(sharepoint_address)
+	)
 
 	# waits for user and password
-	print("Press key when sharepoint is open (you may need to login if you have not already)")
+	cat("       Press", magenta("[key]"), "when sharepoint is open (you may need to login if you have not already)")
+	cat("\n")
 	readkey()
 
 	# loop to download files
 	for (filename in filename_vector){	
-		print(paste("Downloading",filename))
+		cat(paste("         Downloading",filename))
+		cat("\n")
 
 		# Check if file already exists at target location and, if so, delete it. (Otherwise it won´t unzip). 
 		if(any(list.files(dir_download_target) %in% filename)){ 
-			print(".pre-existing file with the same naming found at target directory, replacing...")
+			cat("           .pre-existing file with the same naming found at target directory, replacing...")
+			cat("\n")
 			unlink(paste(dir_download_target, filename, sep = "/"),recursive=TRUE)
 			if(any(list.files(dir_download_target) %in% filename)){ # Checking that the file is no more there.
-				stop("Unable to overwrite existing file")
+				stop("         Unable to overwrite existing file")
 			}
 		}
 
 		# prompts download file to dir_download_browser
-		browseURL(paste(sharepoint_address, filename, sep="/"))
+		suppressMessages(
+			browseURL(paste(sharepoint_address, filename, sep="/"))
+		)
 
-		Sys.sleep(5); print(".waiting 5 secs for download to start...")
+		Sys.sleep(5)
+		cat("           .waiting 5 secs for download to start...")
+		cat("\n")
 
 		# waits for file to be fully downloaded
 		files<-list.files(dir_download_browser);
@@ -68,37 +78,46 @@ download_data_from_sharepoint<-function(sharepoint_address, filename_vector, dir
 		while(
 			(grepl(filename, pat=".zip", fixed=T) & sum(grepl(files, pat=".part", fixed=T))>0) |  
 			(is.na(file.size(paste(dir_download_browser, filename, sep="/"))) & file.size(paste(dir_download_browser, paste0(filename, ".zip"), sep="/"))==0)){
-			Sys.sleep(2); print(".waiting 2 more secs for download to finish...")
+			Sys.sleep(2); cat("           .waiting 2 more secs for download to finish..."); cat("\n")
 			files<-list.files(dir_download_browser)
 			}
-		print("Download finished!!")	
-		print(paste("final file_size:", file.size(paste(dir_download_browser, filename, sep="/"))))
+		cat("\n")
+		cat("         Download finished!")	
+		cat(paste(" Final file_size:", file.size(paste(dir_download_browser, filename, sep="/")), "bytes"))
+		cat("\n")
 		# check
 		if(!file.exists(paste(dir_download_browser, filename, sep="/"))) stop ("file not downloaded!")
 	
 		# copies data from dir_download_browser to dir_download_target, removing from dir_download_browser
-		print(paste(".copying",filename,"from dir_download_browser to target.dir"))
+		cat("\n")
+		cat(paste("           .copying",filename,"from dir_download_browser to target.dir"))
+		cat("\n")
 		file.copy(from = paste(dir_download_browser,filename,sep="/"), to = dir_download_target)
-		print(paste(".removing",filename,"from dir_download_browser"))
+		cat(paste("           .removing",filename,"from dir_download_browser"))
+		cat("\n")
 		file.remove(paste(dir_download_browser, filename,sep="/"))
-
-		print("Done!")		
+		cat("           .done!"); cat("\n")		
 
 		if(unzip == TRUE){
 			if(grepl(filename, pat = ".zip", fixed=T)){
 				Sys.sleep(2)
-				print(".unzipping...")
+				cat("\n")
+				cat("           .unzipping...")
+				cat("\n")
 				unzip(zipfile = paste(dir_download_target, filename, sep="/"), exdir=dir_download_target)
-				print("Done!")
+				cat("           .done!")
+				cat("\n")
 			} 
 
 		if(delete_zip == TRUE){
-			print("Deleting zip...")
+			cat("\n")
+			cat("         Deleting zip...")
+			cat("\n")
 			file.remove(paste(dir_download_target, filename,sep="/"))
-			print("Done!")
+			cat("           .done!"); cat("\n")
 		}
 		} else {
-			print("att: zip options ignored - file extension is not zip")
+			cat("         att: zip options ignored - file extension is not zip"); cat("\n")
 		}
 	}
 }

@@ -21,6 +21,17 @@
 #
 ###################################################################
 
+if(downloadDataFromSP == 1){
+  cat("[5]    Load data")
+  cat("\n")
+} else{
+  cat("[4]    Load data")
+  cat("\n")
+}
+
+# Empty warnings from previous code
+assign("last.warning", NULL, envir = baseenv()) # Credits: https://stackoverflow.com/questions/5725106/r-how-to-clear-all-warnings
+
 ## Load data 
 # Load CL data
 load(
@@ -38,3 +49,11 @@ load(
 ######################
 cl <- cl[CLyear %in% params$year]
 ce <- ce[CEyear %in% params$year]
+
+# Print end message
+if(is_empty(warnings())){
+  cat("\n")
+  cat(green('       \u2713'), paste0(" - Completed")) 
+  cat("\n")
+  cat("\n")
+} 

@@ -52,7 +52,7 @@ download_data_from_sharepoint(
  dir_download_browser = "//storage-lk.slu.se/home$/erqu0001/Downloads", # Directory where browser downloads, e.g. on eros machine
  dir_download_target = "Path to directory where data should be stored",  
  unzip=TRUE
- )
+)
 
 # ========================
 # reads in data
