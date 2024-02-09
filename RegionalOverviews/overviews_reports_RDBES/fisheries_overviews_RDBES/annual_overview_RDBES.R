@@ -1,18 +1,59 @@
-# annual_overview_RDBES_template.Rmd - contains main structure of the overview, but to create a report, please use annual_overview_RDBES.R - 
-#   - it sources the .rmd file and additionally in annual_overview_RDBES.R you can define parameters to be used in the report
+###################################################################
+# Annual_overview_RDBES 
+###################################################################
+#
+# By specifying the user´s selection and sourcing relevant scripts,
+# this script produces the annual RDBES overview.  
+# 
+# The main structure of the overview is contained in 
+# 
+# "annual_overview_RDBES_template.Rmd"
+# 
+# But the following script should be considered the main source for 
+# the RDBES annual overview and should be used to create the
+# "annual_overview_RDBES.R" report. 
+# 
+###################################################################
+# Authors: 
+# - Marta Suska [first draft]
+# - Eros Quesada
+# 
+# Dev. notes: 
+#
+# - 20240130: Created  
+# - 20240207: Formatted, disassembled in scripts to be sourced. 
+#
+###################################################################
 
-params <- list(
-  year = 2021,
-  region = 'BA', #BA, NA, NSEA
-  logo_path = file.path("../../overviews_shiny/www/logo RCG BALTIC.PNG"), # move it to the rmd part <----------------- to do 
-  data_dir = '../../data_RDBES/002_prepared/20240129/RCG_BA',
-  CLfileName = 'RDBES_RCG_BA_CL_2021_2021_prepared_20240129',
-  CEfileName = 'RDBES_RCG_BA_CE_2021_2021_prepared_20240129',
-  RDBES_download_date = '01/01/2000'
-  
-)
+## Custom the overview
+# Make your selection 
+yearSelected = 2021
+regionSelected = 'NSEA'# One of: 'BA', 'NA', 'NSEA'
+downloadDataFromSP = 1 # One of: 1 (download from Share Point prepared data) or 0 (do not download and use data prepared locally - using "001_read_and_prepare_data_RDBES_CL_CE.R")
+dataprepDate = 20240129 # Date on which data where prepared. If prepared data are downloaded from ICES SP, then this is the date used for the data folder name on the ICES SP. 
+
+## Set wd 
+# setwd("//storage-lk.slu.se/home$/erqu0001/Desktop/HLab_GH/Public_Eros/RCGs") # eros machine
+setwd("Path to RCGs local repo")
+
+## Load functions 
+source("RegionalOverviews/overviews_reports_RDBES/fisheries_overviews_RDBES/scripts/loadFunctions.R")
+
+## Load libraries
+source("RegionalOverviews/overviews_reports_RDBES/fisheries_overviews_RDBES/scripts/loadLibraries.R")
+
+# Parameters are defined based on user selection
+source("RegionalOverviews/overviews_reports_RDBES/fisheries_overviews_RDBES/scripts/parametersDefinition.R")
+
+## Download prepared data from SP accordingly, if required. 
+# If the download is selected (downloadDataFromSP == 1), then prepared data are downloaded from Share Point. 
+source("RegionalOverviews/overviews_reports_RDBES/fisheries_overviews_RDBES/scripts/downloadPreparedData.R")
+
+## Load prepared data
+source("RegionalOverviews/overviews_reports_RDBES/fisheries_overviews_RDBES/scripts/loadData.R")
+
+## Source the .rmd file producing the overview
 rmdReport <- file.path("RegionalOverviews/overviews_reports_RDBES/fisheries_overviews_RDBES/annual_overview_RDBES_template.Rmd")
-
 rmarkdown::render(
   rmdReport,
   params = params,
