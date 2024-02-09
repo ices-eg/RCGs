@@ -16,7 +16,10 @@
 ###################################################################
 
 # Print start message
-cat("[1]    Loading functions")
+cat("[2]    Loading functions")
+
+# Empty warnings from previous code
+assign("last.warning", NULL, envir = baseenv()) # Credits: https://stackoverflow.com/questions/5725106/r-how-to-clear-all-warnings
 
 ## Specify the folder hosting the functions used needed for the generation of the annual RDBES overview. 
 fun_RDBES_dir <- "RegionalOverviews/funs_RDBES"

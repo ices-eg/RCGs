@@ -36,11 +36,11 @@ dataprepDate = 20240129 # Date on which data where prepared. If prepared data ar
 # setwd("//storage-lk.slu.se/home$/erqu0001/Desktop/HLab_GH/Public_Eros/RCGs") # eros machine
 setwd("Path to RCGs local repo")
 
-## Load functions 
-source("RegionalOverviews/overviews_reports_RDBES/fisheries_overviews_RDBES/scripts/loadFunctions.R")
-
 ## Load libraries
 source("RegionalOverviews/overviews_reports_RDBES/fisheries_overviews_RDBES/scripts/loadLibraries.R")
+
+## Load functions 
+source("RegionalOverviews/overviews_reports_RDBES/fisheries_overviews_RDBES/scripts/loadFunctions.R")
 
 # Parameters are defined based on user selection
 source("RegionalOverviews/overviews_reports_RDBES/fisheries_overviews_RDBES/scripts/parametersDefinition.R")

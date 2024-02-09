@@ -16,10 +16,7 @@
 ###################################################################
 
 # Print start message
-cat("[2]    Loading libraries")
-
-# Empty warnings from previous code
-assign("last.warning", NULL, envir = baseenv()) # Credits: https://stackoverflow.com/questions/5725106/r-how-to-clear-all-warnings
+cat("[1]    Loading libraries")
 
 ## Load libraries
 suppressPackageStartupMessages(library(data.table))
