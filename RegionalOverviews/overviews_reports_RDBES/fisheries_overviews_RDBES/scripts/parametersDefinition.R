@@ -28,7 +28,7 @@ params <- list(
   year = yearSelected,
   region = regionSelected, 
   logo_path = file.path("../../overviews_shiny/www/logo RCG BALTIC.PNG"), # move it to the rmd part <----------------- to do 
-  data_dir = paste0(getwd(), '/RegionalOverviews/data_RDBES/002_prepared/', dataprepDate, "/", regionSelected, '/RCG_', regionSelected),
+  data_dir = paste0(getwd(), '/RegionalOverviews/data_RDBES/002_prepared/', dataprepDate, '/RCG_', regionSelected),
   CLfileName = paste0('RDBES_RCG_', regionSelected, '_CL_2021_2021_prepared_', dataprepDate),
   CEfileName = paste0('RDBES_RCG_', regionSelected, '_CE_2021_2021_prepared_', dataprepDate),
   RDBES_download_date = '01/01/2000'
