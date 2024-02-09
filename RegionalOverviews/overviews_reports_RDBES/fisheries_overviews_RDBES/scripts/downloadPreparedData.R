@@ -58,7 +58,7 @@ if(downloadDataFromSP == 1){
 
   download_data_from_sharepoint(
     sharepoint_address = "Path to SharePoint",
-    filename_vector = paste0(target_region, ".zip"), 
+    filename_vector = paste0('RCG_',regionSelected, ".zip"), 
     dir_download_browser = "Path to directory where browser downloads",
     dir_download_target = "Path to directory where data should be stored",  
     unzip=TRUE
@@ -74,7 +74,7 @@ if(downloadDataFromSP == 1){
   #)
 
   # Finally we can delete the folder used for downloading the zipped file. 
-  unlink(paste(dir_output_rcg, paste0(target_region, ".zip"), sep = "/"))
+  unlink(paste(dir_output_rcg, paste0(regionSelected, ".zip"), sep = "/"))
 
 } else {
 
