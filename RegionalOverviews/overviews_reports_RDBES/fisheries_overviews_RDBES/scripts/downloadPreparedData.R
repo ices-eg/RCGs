@@ -44,7 +44,7 @@ if(downloadDataFromSP == 1){
 
   # First, make sure destination folder is available [from "001_read_and_prepare_data_RDBES_CL_CE.R"]
   dir_output_all <- paste("RegionalOverviews/data_RDBES/002_prepared/", dataprepDate, sep="")
-  dir_output_rcg <- paste("RegionalOverviews/data_RDBES/002_prepared/", dataprepDate, "/", regionSelected, sep="")
+  dir_output_rcg <- paste("RegionalOverviews/data_RDBES/002_prepared/", dataprepDate, sep="")
 
   if (!dir.exists(dir_output_all)){
     dir.create(dir_output_all,recursive=TRUE, showWarnings=FALSE)
