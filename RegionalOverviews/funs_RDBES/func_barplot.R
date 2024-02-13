@@ -1,8 +1,8 @@
 
 
 barplot <- function(data = data,
-                     x = "CLarea",
-                     y = "CLscientificWeight_1000ton", 
+                     x = "",
+                     y = "", 
                      group = "",
                      asPct = F,
                      titel = "",
@@ -65,7 +65,7 @@ barplot <- function(data = data,
     p <- p +
     scale_fill_manual(values = col)
   
-  if (group = "")
+  if (group == "")
     p + theme(legend.position="none")
   
   print(p)
