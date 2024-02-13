@@ -12,8 +12,8 @@ barplot <- function(data = data,
   
   
   #colour
-  col <- read.csv2("Q:/dfad/users/jostou/home/ISSG_Catch/RCGs/RegionalOverviews/data/colours2.csv")
-  country <- read.table("Q:/dfad/users/jostou/home/ISSG_Catch/RCGs/RegionalOverviews/data/aux_countries.txt", sep = ",", header = T)
+  col <- read.csv2("../../data/colours2.csv")
+  country <- read.table("../../data/aux_countries.txt", sep = ",", header = T)
   names(country)[1] <- "CountryName"
   
   col <- merge(col, country, by = "CountryName", all.x = T)

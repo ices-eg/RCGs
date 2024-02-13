@@ -1,0 +1,43 @@
+﻿Country;CountryName;colour1;colour2;colour3;colour4;colour5
+HS;High Sea;#ED57B2;#FF0000FF;#A6CEE3;#ffd8b1;#ffd8b1
+ADD;For administrative purpose only;#ED5E91;#FF5100FF;#1F78B4;#ffd8b1;#ffd8b1
+BEL;Belgium;#E6696A;#FFA100FF;#B2DF8A;#e6194B;#e6194B
+CAN;Canada;#DA7635;#FFF200FF;#33A02C;#ffd8b1;#ffd8b1
+CHA;Channel Islands;#CA8200;#BCFF00FF;#FB9A99;#3cb44b;#3cb44b
+CHL;Chile;#B58D00;#6BFF00FF;#E31A1C;#ffd8b1;#ffd8b1
+DEU;Germany;#9A9600;#1BFF00FF;#FDBF6F;#ffe119;#ffe119
+DNK;Denmark;#779F00;#00FF36FF;#FF7F00;#4363d8;#4363d8
+ENG;England;#3EA600;#00FF86FF;#CAB2D6;#f58231;#f58231
+ESP;Spain;#00AC3D;#00FFD7FF;#6A3D9A;#911eb4;#911eb4
+EST;Estonia;#00B06D;#00D7FFFF;#E5C494;#42d4f4;#42d4f4
+FIN;Finland;#00B191;#0086FFFF;#B15928;#f032e6;#f032e6
+FRA;France;#00B0B1;#0036FFFF;#FDDAEC;#bfef45;#bfef45
+FRO;Faroe Islands;#00ACCC;#1B00FFFF;#E7298A;#fabebe;#fabebe
+GBR;United Kingdom;#00A3E2;#6B00FFFF;#FFFFCC;#3cb44b;#3cb44b
+GRL;Greenland;#0096F0;#BC00FFFF;#FFED6F;#469990;#469990
+IMN;Isle of Man;#8185F5;#FF00F2FF;#F2F2F2;#3cb44b;#3cb44b
+IND;India;#B373F1;#FF00A1FF;#AAAAAA;#ffd8b1;#ffd8b1
+IRL;Ireland;#D362E3;#FF0051FF;#666666;#e6beff;#e6beff
+ISL;Iceland;;;;#9A6324;#9A6324
+ITA;Italy;;;;#ffd8b1;#ffd8b1
+LTU;Lithuania;;;;#fffac8;#fffac8
+LVA;Latvia;;;;#800000;#800000
+MAR;Morocco;;;;#ffd8b1;#ffd8b1
+MRT;Mauritania;;;;#ffd8b1;#ffd8b1
+MUS;Mauritius;;;;#ffd8b1;#ffd8b1
+NIR;Northern Ireland;;;;#aaffc3;#aaffc3
+NLD;Netherlands;;;;#808000;#808000
+NOR;Norway;;;;#000075;#000075
+POL;Poland;;;;#a9a9a9;#4D4D4D
+PRT;Portugal;;;;#ffffff;#CCCCCC
+RUS;Russia;;;;#ffd8b1;#ffd8b1
+SCT;Scotland;;;;#000000;#000000
+SWE;Sweden;;;;#00FF00;#00FF00
+URY;Uruguay;;;;#ffd8b1;#ffd8b1
+WLS;Wales;;;;#FF0000;#FF0000
+ZAF;South Africa;;;;#ffd8b1;#ffd8b1
+FLK;Falkland Islands;;;;#ffd8b1;#ffd8b1
+AGO;Angola;;;;#ffd8b1;#ffd8b1
+NAM;Namibia;;;;#ffd8b1;#ffd8b1
+BRA;Brazil;;;;#ffd8b1;#ffd8b1
+GAB;Gabon;;;;#ffd8b1;#ffd8b1
