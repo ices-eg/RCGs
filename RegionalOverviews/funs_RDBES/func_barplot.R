@@ -1,6 +1,3 @@
-#data
-load("Q:/dfad/users/jostou/home/ISSG_Catch/data/RDBES_All_Regions_CE_2021_2021_prepared_20240129.Rdata")
-load("Q:/dfad/users/jostou/home/ISSG_Catch/data/RDBES_All_Regions_Cl_2021_2021_prepared_20240129.Rdata")
 
 
 barplot <- function(data = data,
@@ -71,6 +68,6 @@ barplot <- function(data = data,
   if (group = "")
     p + theme(legend.position="none")
   
-  p
+  print(p)
 }
 
