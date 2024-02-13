@@ -44,6 +44,7 @@ library(rnaturalearth)
 # library(magrittr)
 # library(plotly)
 # library(leaflet)
+library(ggplot2)
 
  ## establish conditions  - can use it if for example some chunks should be run only for selected Regions, e.g. only Bal
  eval_region_BA <- params$region=='BA' # when added to the chunk header, the chunk will be run only for BA report
@@ -61,6 +62,9 @@ library(rnaturalearth)
 ```{r loadFunctions, echo=FALSE}
 # LOAD FUNCTIONS GENERATING PLOTS/MAPS
 source("../../funs_RDBES/choroplethMap_func2.R", local = knitr::knit_global())
+
+#load barplot fuction
+source("../../funs_RDBES/func_barplot.R", local = knitr::knit_global())
 
 ```
 
@@ -164,8 +168,43 @@ put some text here
 
 ### Landings by species {.tabset}
 #### species
-#### species and country
+```{r, echo = FALSE, warning = FALSE, message = FALSE, results = "asis", dpi=100, fig.width=6,fig.height=6}
 
+#species codes to names
+species_codes <- read.csv2("../../data/Species codes Worms and FAO.csv")
+cl$SpecWormsCode <- cl$CLspeciesCode
+cl <- merge(cl, species_codes, by = "SpecWormsCode") ## some sort of duplicate issue her
+
+######
+# some filter for which species to show?
+cl2 <- cl[cl$CLspeciesCode %in% c(105801L, 107649L, 125613L, 125909L, 126175L, 126395L, 126417L, 
+126421L, 126425L, 126426L, 126439L, 126444L, 126716L, 126822L, 
+127023L, 127139L, 127419L, 138998L, 140480L, 140733L, 151174L, 
+158962L, 273303L)]
+######
+
+barplot(data = cl2, #just to limeit the plots...
+      x = "SpecFAOScientificName",
+      y = "CLscientificWeight_1000ton",
+      titel = "Landings (1000 t) by Species",
+      ylab = "Sum of Landings (1000 t)")
+
+
+```
+
+#### species and country
+```{r, echo = FALSE, warning = FALSE, message = FALSE, results = "asis", dpi=100, fig.width=6,fig.height=6}
+
+barplot(data = cl2, #just to limeit the plots...
+      x = "SpecFAOScientificName",
+      y = "CLscientificWeight_1000ton",
+      group = "CLlandingCountry",
+      titel = "Landings (1000 t) by Species and Country",
+      ylab = "Proportion of Landings (1000 t)",
+      asPct = T)
+
+
+```
 
 ### Landings by catch_group {.tabset}
 #### catch group

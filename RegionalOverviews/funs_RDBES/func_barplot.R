@@ -25,7 +25,7 @@ barplot <- function(data = data,
   data$x <- data[, x]
   data$y <- data[, y]
   
-  if (substr(group, 1,2) %in% c("CL", "CE")) {
+  if (group != "") {
     data$grp <- as.factor(data[, group])
   } else {
     data$grp <- as.factor(data$x)
@@ -62,11 +62,10 @@ barplot <- function(data = data,
   }
   
   if (group %like% "Country")
-    p <- p +
-    scale_fill_manual(values = col)
+    p <- p + scale_fill_manual(values = col)
   
   if (group == "")
-    p + theme(legend.position="none")
+    p <- p + theme(legend.position="none")
   
   print(p)
 }
