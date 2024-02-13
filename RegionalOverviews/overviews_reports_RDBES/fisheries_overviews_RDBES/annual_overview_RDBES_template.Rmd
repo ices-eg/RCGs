@@ -171,9 +171,13 @@ put some text here
 ```{r, echo = FALSE, warning = FALSE, message = FALSE, results = "asis", dpi=100, fig.width=6,fig.height=6}
 
 #species codes to names
-species_codes <- read.csv2("../../data/Species codes Worms and FAO.csv")
-cl$SpecWormsCode <- cl$CLspeciesCode
-cl <- merge(cl, species_codes, by = "SpecWormsCode") ## some sort of duplicate issue her
+species_codes <- read.csv2("../../data/ASFIS_WoRMS_updt.csv")
+species_codes <- unique(species_codes[! is.na(species_codes$AphiaID) &
+                                        ! duplicated(species_codes$AphiaID), ]) 
+## some sort of duplicate issue her
+
+cl$AphiaID <- cl$CLspeciesCode
+cl <- merge(cl, species_codes, by = "AphiaID") 
 
 ######
 # some filter for which species to show?
@@ -183,8 +187,8 @@ cl2 <- cl[cl$CLspeciesCode %in% c(105801L, 107649L, 125613L, 125909L, 126175L, 1
 158962L, 273303L)]
 ######
 
-barplot(data = cl2, #just to limeit the plots...
-      x = "SpecFAOScientificName",
+barplot(data = cl2, 
+      x = "Scientific_name",
       y = "CLscientificWeight_1000ton",
       titel = "Landings (1000 t) by Species",
       ylab = "Sum of Landings (1000 t)")
@@ -196,7 +200,7 @@ barplot(data = cl2, #just to limeit the plots...
 ```{r, echo = FALSE, warning = FALSE, message = FALSE, results = "asis", dpi=100, fig.width=6,fig.height=6}
 
 barplot(data = cl2, #just to limeit the plots...
-      x = "SpecFAOScientificName",
+      x = "Scientific_name",
       y = "CLscientificWeight_1000ton",
       group = "CLlandingCountry",
       titel = "Landings (1000 t) by Species and Country",
@@ -210,6 +214,29 @@ barplot(data = cl2, #just to limeit the plots...
 #### catch group
 #### catch_group and country
 
+```{r, echo = FALSE, warning = FALSE, message = FALSE, results = "asis", dpi=100, fig.width=6,fig.height=6}
+
+## add the catch group
+catch_group <- read.table("../../data/Table_Species_Categ.txt", header = T, sep = "\t")
+cl <- merge(cl, catch_group, by = "ISSCAAP")
+
+barplot(data = cl, 
+      x = "RCM_NSEA_categ",
+      y = "CLscientificWeight_1000ton",
+      titel = "Landings (1000 t) by Species and Country",
+      ylab = "Proportion of Landings (1000 t)")
+
+barplot(data = cl, 
+      x = "RCM_NSEA_categ",
+      y = "CLscientificWeight_1000ton",
+      group = "CLlandingCountry",
+      titel = "Landings (1000 t) by Species and Country",
+      ylab = "Proportion of Landings (1000 t)",
+      asPct = T)
+
+```
+
+
 ### Landings by fleet
 
 ### Landings by area {.tabset}
@@ -220,6 +247,27 @@ barplot(data = cl2, #just to limeit the plots...
 ### Landings by metier {.tabset}
 #### metier lvl5
 #### metier lvl5 and country
+```{r, echo = FALSE, warning = FALSE, message = FALSE, results = "asis", dpi=100, fig.width=6,fig.height=6}
+
+## add metier lvl 5
+cl$CLmetier5 <- substr(cl$CLmetier6, 1, 7) #more filtration needed
+
+barplot(data = cl, 
+      x = "CLmetier5",
+      y = "CLscientificWeight_1000ton",
+      titel = "Landings (1000 t) by Species and Country",
+      ylab = "Proportion of Landings (1000 t)")
+
+barplot(data = cl, 
+      x = "CLmetier5",
+      y = "CLscientificWeight_1000ton",
+      group = "CLlandingCountry",
+      titel = "Landings (1000 t) by Species and Country",
+      ylab = "Proportion of Landings (1000 t)",
+      asPct = T)
+
+```
+
 #### metier lvl6
 #### metier lvl6 and country
 
