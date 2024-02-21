@@ -122,6 +122,70 @@ source('scripts/loadData.R', local = knitr::knit_global())
 
 ```{r fleetRegisterData, echo=FALSE}
 # LOAD AND PREPARE FLEET REGISTER DATA
+# fleet register
+# functions and packages
+	require(data.table)
+
+	fleetreg<-data.table()
+
+		# based on full history
+	
+		 dir<-paste("../../data/fleet_reg/output/", year,"/", sep = "") 
+		
+	for (ctry in c("BEL","DEU","DNK","ESP","EST","FIN","FRA","IRL","LTU","LVA","NLD","POL","PRT","SWE")) # no data for "GBR"
+		{
+		# print(ctry)
+		fleetreg<-rbind(fleetreg,fread(paste(dir,ctry,"_export.csv", sep = ""), sep = ";",stringsAsFactors=FALSE, verbose=FALSE))
+		}	
+
+	 		# subsets data - need to decide the number of years to include in the summary table... used 5 years for now.
+		fleetreg<-fleetreg[License_Ind=="Y",]
+			# creates status date date and combines data
+		fleetreg$V2023<-0
+		fleetreg$V2022<-0
+    fleetreg$V2021<-0
+		fleetreg$V2020<-0
+		fleetreg$V2019<-0
+		
+		fleetreg[Event_Start_Date<=20210101 & Event_End_Date>=20210101,V2021:=20210101,]
+		fleetreg[Event_Start_Date<=20200101 & Event_End_Date>=20200101,V2020:=20200101,]
+		fleetreg[Event_Start_Date<=20190101 & Event_End_Date>=20190101,V2019:=20190101,]		
+		fleetreg[Event_Start_Date<=20180101 & Event_End_Date>=20180101,V2018:=20180101,]
+		fleetreg[Event_Start_Date<=20170101 & Event_End_Date>=20170101,V2017:=20170101,]
+		fleetreg[Event_Start_Date<=20160101 & Event_End_Date>=20160101,V2016:=20160101,]
+	
+		fleetreg$Status_date<-0
+	
+		target_cols<-c("Country_Code","CFR","Event_Code","Event_Start_Date","Event_End_Date","License_Ind","Loa","Ton_Gt","Ton_Oth","Ton_Gts","Power_Main","Power_Aux","Status_date")
+
+		df2023<-as.data.frame(fleetreg[V2023==20230101,])
+		df2023$Status_date<-2023
+		df2023<-df2023[target_cols]
+
+    df2022<-as.data.frame(fleetreg[V2022==20220101,])
+		df2022$Status_date<-2022
+		df2022<-df2022[target_cols]
+
+    df2021<-as.data.frame(fleetreg[V2021==20210101,])
+		df2021$Status_date<-2021
+		df2021<-df2021[target_cols]
+		
+		df2020<-as.data.frame(fleetreg[V2020==20200101,])
+		df2020$Status_date<-2020
+		df2020<-df2020[target_cols]
+		
+		df2019<-as.data.frame(fleetreg[V2019==20190101,])
+		df2019$Status_date<-2019
+		df2019<-df2019[target_cols]
+		
+		fleetreg<-as.data.table(rbind(df2023, df2022, df2021, df2020, df2019))
+			
+		# a few formats and quality checks
+		fleetreg$Power_Main<-as.numeric(fleetreg$Power_Main)
+		fleetreg$Ton_Gt<-as.numeric(fleetreg$Ton_Gt)
+		# QCA: should yield 0
+#    	sum(is.na(fleetreg$Power_Main))
+# 		sum(is.na(fleetreg$Ton_Gt))
 
 ```
 
