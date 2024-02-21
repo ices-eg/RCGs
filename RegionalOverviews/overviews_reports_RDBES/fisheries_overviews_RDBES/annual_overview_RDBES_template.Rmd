@@ -125,11 +125,12 @@ source('scripts/loadData.R', local = knitr::knit_global())
 
 ```
 
-
-
-
 **Disclaimer**
-put some text here
+The tables and figures of the overviews presented in this document are made for the coordination of EU regional fisheries data collection purposes and are not designed for any other use. Data used for producing the outputs are extracted from the Regional Database and Estimating System (RDBES) and EU Fleet Register. Dates of data extractions are stated in Appendix A. Due to different aggregations and reporting authorities, data can differ from those used e.g. for assessments or technical reports. 
+
+Member States (MS) are responsible for uploading latest data and the latest year should be viewed as provisional. Data can be resubmitted by a MS for more than one previous year so there might be differences in earlier year reports, if countries update back in time. Responsibility for the quality of the data and comparability to other data sources lies with the MS that provided these data. The upload logs presented by MS regarding the data submitted to RDB can be found in the Share Point for Intersessional Work, under the folder "Data".
+
+The respective scripts and calculations used for data displaying are publicly available via the RCG GitHub (https://github.com/ices-eg/RCGs) and subject to change as the work of the group progresses.
 
 # Introduction
 put some text here
@@ -142,23 +143,34 @@ put some text here
 put some text here
 
 # Overall fleet evolution (All RCGs){.tabset}
+The tables included in this section present a summary of the information on licensed vessels from the European Union Fleet Register in the period 2021-2023.
 
 ## Number of vessels
-**Table 1.**put some text here
-```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
+**Table 1.** Number of vessels with fishing license, by flag country in the EU vessel
 
+```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
+res_fleetreg<-tapply(fleetreg$Country_Code,list(fleetreg$Country_Code,fleetreg$Status_date),length)
+ft<-theme_flextable(res_fleetreg)
+ft
 ```
 
-## Power
-**Table 2.** put some text here
+## Power 
+**Table 2.** Power (`1000*`kW) of the vessels with fishing license, by flag country in the EU vessel register.
+
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
+res_fleetreg_pwr<-round(tapply(fleetreg$Power_Main, list(fleetreg$Country_Code, fleetreg$Status_date), sum)/1000,1)
+ft<-theme_flextable(res_fleetreg_pwr)
+ft
 
 ```
 
 ## Gross tonnage
-**Table 3.** put some text here
-```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
+**Table 3.** Gross Tonnage (`1000*`GT) of the vessels with fishing license, by flag country in the EU vessel register.
 
+```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
+res_fleetreg_gt <- round(tapply(fleetreg$Ton_Gt, list(fleetreg$Country_Code, fleetreg$Status_date), sum)/1000,1)
+ft<-theme_flextable(res_fleetreg_gt)
+ft
 ```
 
 
@@ -190,7 +202,7 @@ cl2 <- cl[cl$CLspeciesCode %in% c(105801L, 107649L, 125613L, 125909L, 126175L, 1
 barplot(data = cl2, 
       x = "Scientific_name",
       y = "CLscientificWeight_1000ton",
-      titel = "Landings (1000 t) by Species",
+      title = "Landings (1000 t) by Species",
       ylab = "Sum of Landings (1000 t)")
 
 
@@ -203,7 +215,7 @@ barplot(data = cl2, #just to limeit the plots...
       x = "Scientific_name",
       y = "CLscientificWeight_1000ton",
       group = "CLlandingCountry",
-      titel = "Landings (1000 t) by Species and Country",
+      title = "Landings (1000 t) by Species and Country",
       ylab = "Proportion of Landings (1000 t)",
       asPct = T)
 
@@ -223,14 +235,14 @@ cl <- merge(cl, catch_group, by = "ISSCAAP")
 barplot(data = cl, 
       x = "RCM_NSEA_categ",
       y = "CLscientificWeight_1000ton",
-      titel = "Landings (1000 t) by Species and Country",
+      title = "Landings (1000 t) by Species and Country",
       ylab = "Proportion of Landings (1000 t)")
 
 barplot(data = cl, 
       x = "RCM_NSEA_categ",
       y = "CLscientificWeight_1000ton",
       group = "CLlandingCountry",
-      titel = "Landings (1000 t) by Species and Country",
+      title = "Landings (1000 t) by Species and Country",
       ylab = "Proportion of Landings (1000 t)",
       asPct = T)
 
@@ -255,14 +267,14 @@ cl$CLmetier5 <- substr(cl$CLmetier6, 1, 7) #more filtration needed
 barplot(data = cl, 
       x = "CLmetier5",
       y = "CLscientificWeight_1000ton",
-      titel = "Landings (1000 t) by Species and Country",
+      title = "Landings (1000 t) by Species and Country",
       ylab = "Proportion of Landings (1000 t)")
 
 barplot(data = cl, 
       x = "CLmetier5",
       y = "CLscientificWeight_1000ton",
       group = "CLlandingCountry",
-      titel = "Landings (1000 t) by Species and Country",
+      title = "Landings (1000 t) by Species and Country",
       ylab = "Proportion of Landings (1000 t)",
       asPct = T)
 
@@ -507,7 +519,7 @@ result = choroplethMap_func2(
 result[[1]]
 ```
 
-### 10 meteres and above
+### 10 meters and above
 
 ## Appendix A. Dates of data extraction
 ## Appendix B. Catch groups
