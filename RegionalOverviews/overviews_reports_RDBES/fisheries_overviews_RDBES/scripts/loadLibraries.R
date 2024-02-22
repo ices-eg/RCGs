@@ -8,10 +8,12 @@
 ###################################################################
 # Authors: 
 # - Eros Quesada [first draft] 
+# - Kasia Krakówka
 # 
 # Dev. notes: 
 # 
 # - 20240207: Created based on annual_overview_RDBES.R
+# - 20240222: Added flextable
 #
 ###################################################################
 
@@ -29,6 +31,7 @@ suppressPackageStartupMessages(library(rnaturalearth))
 suppressPackageStartupMessages(library(magrittr))
 suppressPackageStartupMessages(library(plotly))
 suppressPackageStartupMessages(library(crayon))
+suppressPackageStartupMessages(library(flextable))
 
 # Print end message
 if(is_empty(warnings())){
