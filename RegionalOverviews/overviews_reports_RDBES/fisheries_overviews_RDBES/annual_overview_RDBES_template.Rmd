@@ -159,7 +159,7 @@ ft
 ```
 
 ## Power 
-**Table 2.** put some text here
+**Table 2.** Power (1000*kW) of EU licensed vessels by flag country and vessel length class present in the EU fleet register (license indicator == “Y” in 1st January `r params$year`. Parentheses: variation relative to `r params$year-1`).
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 res_fleetreg_pwr<-tapply(Fleet$Power_Main, list(Fleet$vesLenCat,Fleet$Country_Code, Fleet$Status), sum)
 res_fleetreg_pwr[is.na(res_fleetreg_pwr)]<-0
@@ -172,7 +172,7 @@ ft
 
 
 ## Gross tonnage
-**Table 3.** put some text here
+**Table 3.** Gross Tonnage(1000*GT) of EU licensed vessels by flag country and vessel length class present in the EU fleet register (license indicator == “Y” in 1st January `r params$year`. Parentheses: variation relative to `r params$year-1`).
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 res_fleetreg_gt<-tapply(Fleet$Ton_Gt, list(Fleet$vesLenCat,Fleet$Country_Code, Fleet$Status), sum)  
 res_fleetreg_gt[is.na(res_fleetreg_gt)]<-0
