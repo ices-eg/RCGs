@@ -17,11 +17,13 @@
 # Authors: 
 # - Marta Suska [first draft]
 # - Eros Quesada
+# - Kasia Krakówka
 # 
 # Dev. notes: 
 #
 # - 20240130: Created  
 # - 20240207: Formatted, disassembled in scripts to be sourced. 
+# - 20240220: Added fleet register
 #
 ###################################################################
 
@@ -41,6 +43,7 @@ source("RegionalOverviews/overviews_reports_RDBES/fisheries_overviews_RDBES/scri
 
 ## Load functions 
 source("RegionalOverviews/overviews_reports_RDBES/fisheries_overviews_RDBES/scripts/loadFunctions.R")
+source("RegionalOverviews/overviews_reports_RDBES/fisheries_overviews_RDBES/scripts/loadFleetRegister.R")
 
 # Parameters are defined based on user selection
 source("RegionalOverviews/overviews_reports_RDBES/fisheries_overviews_RDBES/scripts/parametersDefinition.R")

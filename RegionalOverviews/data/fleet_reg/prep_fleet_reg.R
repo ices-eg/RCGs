@@ -10,11 +10,11 @@ year<-2023
 separator<-";"
 
 #check the date format in Event Start and Event End (e.g. "%Y-%m-%d", "%d/%m/%Y", other)
-format_start_date<-"%d/%m/%Y"
-format_end_date<-"%d/%m/%Y"
+format_start_date<-"%Y-%m-%d"
+format_end_date<-"%Y-%m-%d"
 
 #run the function which change the date format 
-source("D:/RCGs/RegionalOverviews/funs_RDBES/func_prep_fleet_register.R")
+source("../RCGs/RegionalOverviews/funs_RDBES/func_prep_fleet_register.R")
 prep_fleet_register(MS_country,
                     year,
                     separator,

@@ -11,6 +11,7 @@ params:
   year: 2021
   logo_path: "../../overviews_shiny/www/logo RCG BALTIC.PNG"
   data_dir: '../../data_RDBES/002_prepared/20240129/RCG_BA'
+  data_dir_fleet: '../../RegionalOverviews/data/fleet_reg/output/2021'
   RDBES_download_date: '01/01/2000'
   CLfileName: 'RDBES_RCG_BA_CL_2021_2021_prepared_20240129'
   CEfileName: 'RDBES_RCG_BA_CE_2021_2021_prepared_20240129'
@@ -146,26 +147,41 @@ put some text here
 The tables included in this section present a summary of the information on licensed vessels from the European Union Fleet Register.
 
 ## Number of vessels
-**Table 1.** 
-
+**Table 1.** Number of EU licensed vessels by flag country and vessel length class present in the EU fleet register (license indicator == “Y” in 1st January `r params$year`. Parentheses: variation relative to `r params$year-1`; red = number decreases; green = number increases; white = number maintains).
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
 
+res_fleetreg<-table(Fleet$vesLenCat, Fleet$Country_Code,Fleet$Status)
+pyear<-as.data.frame.matrix(rbind(res_fleetreg[,,1],apply(res_fleetreg[,,1],2,sum)))
+year<-as.data.frame.matrix(rbind(res_fleetreg[,,2],apply(res_fleetreg[,,2],2,sum)))
+year_pyear<-as.data.frame.matrix(rbind((res_fleetreg[,,2]-res_fleetreg[,,1]),apply((res_fleetreg[,,2]-res_fleetreg[,,1]),2,sum)))
+ft<-func_table2(year,year_pyear)
+ft
 ```
 
 ## Power 
-**Table 2.** 
-
+**Table 2.** Power (1000*kW) of EU licensed vessels by flag country and vessel length class present in the EU fleet register (license indicator == “Y” in 1st January `r params$year`. Parentheses: variation relative to `r params$year-1`).
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
-
+res_fleetreg_pwr<-tapply(Fleet$Power_Main, list(Fleet$vesLenCat,Fleet$Country_Code, Fleet$Status), sum)
+res_fleetreg_pwr[is.na(res_fleetreg_pwr)]<-0
+  pyear<-as.data.frame.matrix(round(rbind(res_fleetreg_pwr[,,1],apply(res_fleetreg_pwr[,,1],2,sum))/1000,1))
+  year<-as.data.frame.matrix(round(rbind(res_fleetreg_pwr[,,2],apply(res_fleetreg_pwr[,,2],2,sum))/1000,1))
+  year_pyear<-as.data.frame.matrix(round(rbind((res_fleetreg_pwr[,,2]-res_fleetreg_pwr[,,1]),apply((res_fleetreg_pwr[,,2]-res_fleetreg_pwr[,,1]),2,sum))/1000,1))
+ft<-func_table2(year,year_pyear)
+ft
 ```
+
 
 ## Gross tonnage
-**Table 3.** 
-
+**Table 3.** Gross Tonnage(1000*GT) of EU licensed vessels by flag country and vessel length class present in the EU fleet register (license indicator == “Y” in 1st January `r params$year`. Parentheses: variation relative to `r params$year-1`).
 ```{r echo=FALSE, message=FALSE, warning = FALSE, out.width="90%", out.height="90%"}
-
+res_fleetreg_gt<-tapply(Fleet$Ton_Gt, list(Fleet$vesLenCat,Fleet$Country_Code, Fleet$Status), sum)  
+res_fleetreg_gt[is.na(res_fleetreg_gt)]<-0
+pyear<-as.data.frame.matrix(round(rbind(res_fleetreg_gt[,,1],apply(res_fleetreg_gt[,,1],2,sum))/1000,1))
+  year<-as.data.frame.matrix(round(rbind(res_fleetreg_gt[,,2],apply(res_fleetreg_gt[,,2],2,sum))/1000,1))
+  year_pyear<-as.data.frame.matrix(round(rbind((res_fleetreg_gt[,,2]-res_fleetreg_gt[,,1]),apply((res_fleetreg_gt[,,2]-res_fleetreg_gt[,,1]),2,sum))/1000,1))
+ft<-func_table2(year,year_pyear)
+ft
 ```
-
 
 # Landings (CL)
 
