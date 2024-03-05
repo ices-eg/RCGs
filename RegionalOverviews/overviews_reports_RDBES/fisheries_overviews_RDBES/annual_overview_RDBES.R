@@ -43,7 +43,6 @@ source("RegionalOverviews/overviews_reports_RDBES/fisheries_overviews_RDBES/scri
 
 ## Load functions 
 source("RegionalOverviews/overviews_reports_RDBES/fisheries_overviews_RDBES/scripts/loadFunctions.R")
-source("RegionalOverviews/overviews_reports_RDBES/fisheries_overviews_RDBES/scripts/loadFleetRegister.R")
 
 # Parameters are defined based on user selection
 source("RegionalOverviews/overviews_reports_RDBES/fisheries_overviews_RDBES/scripts/parametersDefinition.R")
@@ -54,7 +53,7 @@ source("RegionalOverviews/overviews_reports_RDBES/fisheries_overviews_RDBES/scri
 
 ## Load prepared data
 source("RegionalOverviews/overviews_reports_RDBES/fisheries_overviews_RDBES/scripts/loadData.R")
-
+source("RegionalOverviews/overviews_reports_RDBES/fisheries_overviews_RDBES/scripts/loadFleetRegister.R")
 ## Source the .rmd file producing the overview
 rmdReport <- file.path("RegionalOverviews/overviews_reports_RDBES/fisheries_overviews_RDBES/annual_overview_RDBES_template.Rmd")
 rmarkdown::render(
