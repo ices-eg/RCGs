@@ -21,7 +21,7 @@ validateInputDataFormat(input.data)
 # Load reference lists
 url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/AreaRegionLookup.csv"
 area.list <- loadAreaList(url)
-url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/Metier%20Subgroup%20Species%202020.xlsx"
+url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/Metier%20Subgroup%20Species.xlsx"
 species.list <- loadSpeciesList(url)
 url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/RDB_ISSG_Metier_list.csv"
 metier.list <- loadMetierList(url)
