@@ -272,6 +272,8 @@ LDF,OTB_MCF_70-119_0_0,,,OTB_MCF,"Bottom otter trawl, Mixed cephalopod and demer
 LDF,OTB_MDD_>0_0_0,,,,,,OTB_MDD,"Bottom otter trawl, Mixed deep-water species and demersal species, see the code reg. mesh size and selectivity device",OT_MIX_DMF_BEN,20221214,To follow ISSG principles,,,,,,,,,,,,,,,,,,
 LDF,OTB_MDD_70-119_0_0,,,,,,OTB_MDD,"Bottom otter trawl, Mixed deep-water species and demersal species, see the code reg. mesh size and selectivity device",OT_MIX_DMF_BEN,20221214,To follow ISSG principles,,,,,,,,,,,,,,,,,,
 LDF,OTB_MDD_>=120_0_0,,,,,,OTB_MDD,"Bottom otter trawl, Mixed deep-water species and demersal species, see the code reg. mesh size and selectivity device",OT_MIX_DMF_BEN,20221214,Suggestion from Spain,,,,,,,,,,,,,,,,,,
+LDF,OTM_CRU_>0_0_0,,,,,,OTM_CRU,"Midwater otter trawl, Crustaceans, see the code reg. mesh size and selectivity device",,20240423,Suggestion from Norway,,,,,,,,,,,,,,,,,,
+LDF,OTM_CRU_16-31_0_0,,,,,,OTM_CRU,"Midwater otter trawl, Crustaceans, see the code reg. mesh size and selectivity device",,20240423,Suggestion from Norway,,,,,,,,,,,,,,,,,,
 LDF,OTM_LPF_>=120_0_0,,,,,,OTM_LPF,"Midwater otter trawl, Large pelagic fish, see the code reg. mesh size and selectivity device",,,,,,,,,,,,,,,,,,,,,
 LDF,OTM_LPF_>0_0_0,,,,,,OTM_LPF,"Midwater otter trawl, Large pelagic fish, see the code reg. mesh size and selectivity device",,,,,,,,,,,,,,,,,,,,,
 LDF,OTM_LPF_70-119_0_0,,,,,,OTM_LPF,"Midwater otter trawl, Large pelagic fish, see the code reg. mesh size and selectivity device",,,,,,,,,,,,,,,,,,,,,
