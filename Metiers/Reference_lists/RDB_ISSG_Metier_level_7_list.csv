@@ -44,3 +44,50 @@ LDF,PS_LPF_>=120_0_0_TRO,PS_LPF_>=120_0_0,PS_LPF,Skipjack tuna (Katsuwonus pelam
 MBS,PS_LPF_>0_0_0_BFT,PS_LPF_>0_0_0,PS_LPF,Bluefin tuna (Thunnus thynnus),20230127
 MBS,PS_LPF_<14_0_0_BFT,PS_LPF_<14_0_0,PS_LPF,Bluefin tuna (Thunnus thynnus),20230127
 MBS,PS_LPF_>=14_0_0_BFT,PS_LPF_>=14_0_0,PS_LPF,Bluefin tuna (Thunnus thynnus),20230127
+NSEA,GNS_DEF_>=220_0_0_LUM,GNS_DEF_>=220_0_0,GNS_DEF,Lumpfish(=Lumpsuker) (Cyclopterus lumpus),20250130
+NSEA,GNS_DEF_>=220_0_0_COD,GNS_DEF_>=220_0_0,GNS_DEF,Atlantic cod (Gadus morhua),20250130
+LDF,LHM_LPF_0_0_0_BFT_AF,LHM_LPF_0_0_0,LHM_LPF,Bluefin tuna (Thunnus thynnus) + Optional information about the School type/FADs,20250110
+LDF,LHM_LPF_0_0_0_BFT_DF,LHM_LPF_0_0_0,LHM_LPF,Bluefin tuna (Thunnus thynnus) + Optional information about the School type/FADs,20250110
+LDF,LHM_LPF_0_0_0_BFT_FS,LHM_LPF_0_0_0,LHM_LPF,Bluefin tuna (Thunnus thynnus) + Optional information about the School type/FADs,20250110
+LDF,LHP_LPF_0_0_0_ALB_AF,LHP_LPF_0_0_0,LHP_LPF,Albacore tuna (Thunnus alalunga) + Optional information about the School type/FADs,20250110
+LDF,LHP_LPF_0_0_0_ALB_DF,LHP_LPF_0_0_0,LHP_LPF,Albacore tuna (Thunnus alalunga) + Optional information about the School type/FADs,20250110
+LDF,LHP_LPF_0_0_0_ALB_FS,LHP_LPF_0_0_0,LHP_LPF,Albacore tuna (Thunnus alalunga) + Optional information about the School type/FADs,20250110
+LDF,LHP_LPF_0_0_0_BFT_AF,LHP_LPF_0_0_0,LHP_LPF,Bluefin tuna (Thunnus thynnus) + Optional information about the School type/FADs,20250110
+LDF,LHP_LPF_0_0_0_BFT_DF,LHP_LPF_0_0_0,LHP_LPF,Bluefin tuna (Thunnus thynnus) + Optional information about the School type/FADs,20250110
+LDF,LHP_LPF_0_0_0_BFT_FS,LHP_LPF_0_0_0,LHP_LPF,Bluefin tuna (Thunnus thynnus) + Optional information about the School type/FADs,20250110
+LDF,LHP_LPF_0_0_0_MSP_AF,LHP_LPF_0_0_0,LHP_LPF,Skipjack tuna (Katsuwonus pelamis) Bigeye tuna (Thunnus obesus) Yellowfin tuna (Thunnus albacares) Albacore tuna (Thunnus alalunga) Bluefin tuna (Thunnus thynnus + Optional information about the School type/FADs,20250110
+LDF,LHP_LPF_0_0_0_MSP_DF,LHP_LPF_0_0_0,LHP_LPF,Skipjack tuna (Katsuwonus pelamis) Bigeye tuna (Thunnus obesus) Yellowfin tuna (Thunnus albacares) Albacore tuna (Thunnus alalunga) Bluefin tuna (Thunnus thynnus + Optional information about the School type/FADs,20250110
+LDF,LHP_LPF_0_0_0_MSP_FS,LHP_LPF_0_0_0,LHP_LPF,Skipjack tuna (Katsuwonus pelamis) Bigeye tuna (Thunnus obesus) Yellowfin tuna (Thunnus albacares) Albacore tuna (Thunnus alalunga) Bluefin tuna (Thunnus thynnus + Optional information about the School type/FADs,20250110
+LDF,LHP_LPF_0_0_0_SWO_AF,LHP_LPF_0_0_0,LHP_LPF,Swordfish (Xiphias gladius) + Optional information about the School type/FADs,20250110
+LDF,LHP_LPF_0_0_0_SWO_DF,LHP_LPF_0_0_0,LHP_LPF,Swordfish (Xiphias gladius) + Optional information about the School type/FADs,20250110
+LDF,LHP_LPF_0_0_0_SWO_FS,LHP_LPF_0_0_0,LHP_LPF,Swordfish (Xiphias gladius) + Optional information about the School type/FADs,20250110
+LDF,LHP_LPF_0_0_0_TRO_AF,LHP_LPF_0_0_0,LHP_LPF,Skipjack tuna (Katsuwonus pelamis) Yellowfin tuna (Thunnus albacares) Bigeye tuna (Thunnus obesus) + Optional information about the School type/FADs,20250110
+LDF,LHP_LPF_0_0_0_TRO_DF,LHP_LPF_0_0_0,LHP_LPF,Skipjack tuna (Katsuwonus pelamis) Yellowfin tuna (Thunnus albacares) Bigeye tuna (Thunnus obesus) + Optional information about the School type/FADs,20250110
+LDF,LHP_LPF_0_0_0_TRO_FS,LHP_LPF_0_0_0,LHP_LPF,Skipjack tuna (Katsuwonus pelamis) Yellowfin tuna (Thunnus albacares) Bigeye tuna (Thunnus obesus) + Optional information about the School type/FADs,20250110
+LDF,LLD_LPF_0_0_0_ALB_AF,LLD_LPF_0_0_0,LLD_LPF,Albacore tuna (Thunnus alalunga) + Optional information about the School type/FADs,20250110
+LDF,LLD_LPF_0_0_0_ALB_DF,LLD_LPF_0_0_0,LLD_LPF,Albacore tuna (Thunnus alalunga) + Optional information about the School type/FADs,20250110
+LDF,LLD_LPF_0_0_0_ALB_FS,LLD_LPF_0_0_0,LLD_LPF,Albacore tuna (Thunnus alalunga) + Optional information about the School type/FADs,20250110
+LDF,LLD_LPF_0_0_0_BFT_AF,LLD_LPF_0_0_0,LLD_LPF,Bluefin tuna (Thunnus thynnus) + Optional information about the School type/FADs,20250110
+LDF,LLD_LPF_0_0_0_BFT_DF,LLD_LPF_0_0_0,LLD_LPF,Bluefin tuna (Thunnus thynnus) + Optional information about the School type/FADs,20250110
+LDF,LLD_LPF_0_0_0_BFT_FS,LLD_LPF_0_0_0,LLD_LPF,Bluefin tuna (Thunnus thynnus) + Optional information about the School type/FADs,20250110
+LDF,LLD_LPF_0_0_0_SWO_AF,LLD_LPF_0_0_0,LLD_LPF,Swordfish (Xiphias gladius) + Optional information about the School type/FADs,20250110
+LDF,LLD_LPF_0_0_0_SWO_DF,LLD_LPF_0_0_0,LLD_LPF,Swordfish (Xiphias gladius) + Optional information about the School type/FADs,20250110
+LDF,LLD_LPF_0_0_0_SWO_FS,LLD_LPF_0_0_0,LLD_LPF,Swordfish (Xiphias gladius) + Optional information about the School type/FADs,20250110
+LDF,LTL_LPF_0_0_0_ALB_AF,LTL_LPF_0_0_0,LTL_LPF,Albacore tuna (Thunnus alalunga) + Optional information about the School type/FADs,20250110
+LDF,LTL_LPF_0_0_0_ALB_DF,LTL_LPF_0_0_0,LTL_LPF,Albacore tuna (Thunnus alalunga) + Optional information about the School type/FADs,20250110
+LDF,LTL_LPF_0_0_0_ALB_FS,LTL_LPF_0_0_0,LTL_LPF,Albacore tuna (Thunnus alalunga) + Optional information about the School type/FADs,20250110
+LDF,PS_LPF_>=120_0_0_TRO_AF,PS_LPF_>=120_0_0,PS_LPF,Skipjack tuna (Katsuwonus pelamis) Yellowfin tuna (Thunnus albacares) Bigeye tuna (Thunnus obesus) + Optional information about the School type/FADs,20250110
+LDF,PS_LPF_>=120_0_0_TRO_DF,PS_LPF_>=120_0_0,PS_LPF,Skipjack tuna (Katsuwonus pelamis) Yellowfin tuna (Thunnus albacares) Bigeye tuna (Thunnus obesus) + Optional information about the School type/FADs,20250110
+LDF,PS_LPF_>=120_0_0_TRO_FS,PS_LPF_>=120_0_0,PS_LPF,Skipjack tuna (Katsuwonus pelamis) Yellowfin tuna (Thunnus albacares) Bigeye tuna (Thunnus obesus) + Optional information about the School type/FADs,20250110
+LDF,PS_LPF_>0_0_0_TRO_AF,PS_LPF_>0_0_0,PS_LPF,Skipjack tuna (Katsuwonus pelamis) Yellowfin tuna (Thunnus albacares) Bigeye tuna (Thunnus obesus) + Optional information about the School type/FADs,20250110
+LDF,PS_LPF_>0_0_0_TRO_DF,PS_LPF_>0_0_0,PS_LPF,Skipjack tuna (Katsuwonus pelamis) Yellowfin tuna (Thunnus albacares) Bigeye tuna (Thunnus obesus) + Optional information about the School type/FADs,20250110
+LDF,PS_LPF_>0_0_0_TRO_FS,PS_LPF_>0_0_0,PS_LPF,Skipjack tuna (Katsuwonus pelamis) Yellowfin tuna (Thunnus albacares) Bigeye tuna (Thunnus obesus) + Optional information about the School type/FADs,20250110
+LDF,PS_LPF_10-31_0_0_TRO_AF,PS_LPF_10-31_0_0,PS_LPF,Skipjack tuna (Katsuwonus pelamis) Yellowfin tuna (Thunnus albacares) Bigeye tuna (Thunnus obesus) + Optional information about the School type/FADs,20250110
+LDF,PS_LPF_10-31_0_0_TRO_DF,PS_LPF_10-31_0_0,PS_LPF,Skipjack tuna (Katsuwonus pelamis) Yellowfin tuna (Thunnus albacares) Bigeye tuna (Thunnus obesus) + Optional information about the School type/FADs,20250110
+LDF,PS_LPF_10-31_0_0_TRO_FS,PS_LPF_10-31_0_0,PS_LPF,Skipjack tuna (Katsuwonus pelamis) Yellowfin tuna (Thunnus albacares) Bigeye tuna (Thunnus obesus) + Optional information about the School type/FADs,20250110
+LDF,PS_LPF_32-69_0_0_TRO_AF,PS_LPF_32-69_0_0,PS_LPF,Skipjack tuna (Katsuwonus pelamis) Yellowfin tuna (Thunnus albacares) Bigeye tuna (Thunnus obesus) + Optional information about the School type/FADs,20250110
+LDF,PS_LPF_32-69_0_0_TRO_DF,PS_LPF_32-69_0_0,PS_LPF,Skipjack tuna (Katsuwonus pelamis) Yellowfin tuna (Thunnus albacares) Bigeye tuna (Thunnus obesus) + Optional information about the School type/FADs,20250110
+LDF,PS_LPF_32-69_0_0_TRO_FS,PS_LPF_32-69_0_0,PS_LPF,Skipjack tuna (Katsuwonus pelamis) Yellowfin tuna (Thunnus albacares) Bigeye tuna (Thunnus obesus) + Optional information about the School type/FADs,20250110
+LDF,PS_LPF_70-119_0_0_TRO_AF,PS_LPF_70-119_0_0,PS_LPF,Skipjack tuna (Katsuwonus pelamis) Yellowfin tuna (Thunnus albacares) Bigeye tuna (Thunnus obesus) + Optional information about the School type/FADs,20250110
+LDF,PS_LPF_70-119_0_0_TRO_DF,PS_LPF_70-119_0_0,PS_LPF,Skipjack tuna (Katsuwonus pelamis) Yellowfin tuna (Thunnus albacares) Bigeye tuna (Thunnus obesus) + Optional information about the School type/FADs,20250110
+LDF,PS_LPF_70-119_0_0_TRO_FS,PS_LPF_70-119_0_0,PS_LPF,Skipjack tuna (Katsuwonus pelamis) Yellowfin tuna (Thunnus albacares) Bigeye tuna (Thunnus obesus) + Optional information about the School type/FADs,20250110
