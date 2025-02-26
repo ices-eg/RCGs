@@ -6,10 +6,13 @@ output:
     toc: true
     toc_float: true
     toc_depth: 4
+params:
+  region: North Atlantic # Select between - North Sea and Eastern Artic; Baltic Sea; North Atlantic
+  year: 2021 # select the year of the data in the report
 knit: (function(inputFile, encoding) {
   rmarkdown::render(inputFile,
   encoding = encoding, 
-  output_file = file.path(dirname(inputFile), "BALT.html"))}) # <--- Change region here
+  output_file = file.path(dirname(inputFile), "NAtl.html"))}) # <--- Change region here
 ---
 
 
@@ -33,7 +36,7 @@ library(RColorBrewer)
 
 ```{r}
 # Set RCG region - NSEA, NAtl, BALT
-rr <- "BALT" # <---------- and here 
+rr <- "NAtl" # <---------- and here 
 
 if(rr %in% "NSEA"){
   title <- "North Sea and Eastern Arctic"
@@ -222,7 +225,15 @@ CLAREA5 <- filter(CLAREA4, CLmetier5 %in% unique(CEtop5$CEmetier5))
 CLAREA6 <- filter(CLAREA5, CLmetier6 %in% unique(CEtop6$CEmetier6))
 ```
 
-# All metier level 4 
+## Summary
+
+This report presents the description of the main metiers in the `r params$region`. The data used to produce the report is from the 'Commercial Landings' (CL) and 'Commercial Effort' (CE) tables submitted to the RDBES in `r params$year`. The description of the metiers includes information on official landings (weight and value) and official effort (number of fishing days and number of trips), by country, metier and vessel size range. The CL information presented in this report refers only to the catch category for the landings ('Lan'), ignoring the other possible options (e.g. 'BMS' and 'RegDis').
+The information is displayed in an hierarchical mode, from the lowest (level 4) to the highest (level 6) metier. The top 10 metiers at level 4 are selected according to the official effort in number of fishing days. The metiers at levels 5 and 6 presented in this report are the ones that have more than 5% of the total fishing days within the previous metier level. 
+It is important to note that if official landing weight was considered for selecting the main metiers (instead of the effort), probably other important metiers might also be included in these descriptions.
+
+## All metier level 4 
+
+The landings and effort overview of all metiers at level 4 present in the `r params$region` are displayed in the set of figures below. 
 
 ```{r}
 
@@ -348,7 +359,7 @@ CLAREA6 <- filter(CLAREA5, CLmetier6 %in% unique(CEtop6$CEmetier6))
 create_section4 <- function(met4, CEAREA, CLAREA) {
 
   # Header
-  pander::pandoc.header(met4, level = 2)
+  pander::pandoc.header(met4, level = 3)
   
   ### HOW TO ADD TEXT IN SUBSECTION 
    # pandoc.p("You can add text like this")
@@ -492,8 +503,8 @@ create_section4 <- function(met4, CEAREA, CLAREA) {
 create_section5 <- function(met5, CEAREA4, CLAREA4) {
 
    # Header
-   pander::pandoc.header(met5, level = 3)
-  
+   pander::pandoc.header(met5, level = 4)
+      pandoc.p("Summary table with information on the official landings and fishing effort of all the metiers at level 5, by flag country.")
   
   CLAREA4 <- filter(CLAREA4, CLmetier5 %in% met5)
   CEAREA4 <- filter(CEAREA4, CEmetier5 %in% met5)
@@ -694,7 +705,8 @@ create_section5 <- function(met5, CEAREA4, CLAREA4) {
 create_section6 <- function(met6, CEAREA6, CLAREA6) {
 
    # Header
-  pandoc.header(met6, level = 4)
+  pandoc.header(met6, level = 5)
+    pandoc.p("This section presents a description of the main species landed in weight and value for the metiers at level 6. The top 15 and all the other species grouped ('Other') are displayed in the first two figures below. The distribution of fishing effort (fishing days and number of trips) by flag country, vessel size length and by quarter are also shown. At the end of this section, it is displayed a map with the spatial distribution of the fishing days by ICES statistical rectangle.")
   
   CLAREA6 <- filter(CLAREA6, CLmetier6 %in% met6)
   CEAREA6 <- filter(CEAREA6, CEmetier6 %in% met6)
