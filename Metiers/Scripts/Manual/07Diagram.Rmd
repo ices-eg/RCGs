@@ -1,4 +1,4 @@
-# Workflow diagramm
+# Workflow diagram
 
 
 ```{r diagramTest, eval=FALSE, include=FALSE}

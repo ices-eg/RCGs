@@ -3,7 +3,8 @@
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy.opts=list(width.cutoff=60), tidy=TRUE)
 # Need to set the root directory because the working directory is forced for each chunk to the directory of the rmd
 # knitr::opts_knit$set(root.dir = "C:/Users/madamowicz/Documents/GitHub/RCGs/Metiers")
-knitr::opts_knit$set(root.dir = "C:/Users/molla004/OneDrive - Wageningen University & Research/Git/hub/RCGs/Metiers")
+#knitr::opts_knit$set(root.dir = "C:/Users/molla004/OneDrive - Wageningen University & Research/Git/hub/RCGs/Metiers")
+knitr::opts_knit$set(root.dir = "Q:/20-forskning/20-dfad/users/joeg/home/Metier")
 ```
 
 # Description of metier assignment script workflow
@@ -33,7 +34,7 @@ gc()
 ## Importing functions
 Import all functions from files located in the *Functions* folder.
 ```{r import_functions, results='hide'}
-for(f in list.files(path="./Scripts/Functions", full.names = T)){
+for(f in list.files(path="./Functions", full.names = T)){
   source(f)
 }
 rm(f)
@@ -72,7 +73,7 @@ The following code will import reference lists from the GitHub repository.
 ```{r reference_lists}
 url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/AreaRegionLookup.csv"
 area.list <- loadAreaList(url)
-url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/Metier%20Subgroup%20Species%202020.xlsx"
+url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/Metier%20Subgroup%20Species.xlsx"
 species.list <- loadSpeciesList(url)
 url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/RDB_ISSG_Metier_list.csv"
 metier.list <- loadMetierList(url)

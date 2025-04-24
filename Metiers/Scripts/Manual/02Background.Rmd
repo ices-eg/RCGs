@@ -1,3 +1,6 @@
+This document is a practical manual for using the scripts and reference codes created by the ISSG on Métier and transversal variables issues. First, the input data format for transversal data is described in Section 2. The reference lists used in the R-script for métier codes, species codes and area codes are described in Section 3. In Section 4 the metier assignment procedure is described and in Section 5 it is explained how to use the script. Finally, the Section 6 present a workflow diagram. The script and reference tables are updated when needed.
+
+
 # Background 
 
 
@@ -25,6 +28,6 @@ The RCG’s in 2019 recommended that the work was to be followed up and continue
 The reports from the 2018 workshop and the 2019, 2020 and 2021 RCG intersessional work can be found in [the RCG github repository](https://github.com/ices-eg/RCGs/tree/master/Metiers/Reports).
 
 
-This document is a practical manual for using the scripts and reference codes created by the ISSG on Métier issues. First, the input data format for transversal data is described in Section 2. The reference lists used in the R-script for métier codes, species codes and area codes are described in Section 3. In Section 4 the metier assignment procedure is described and in Section 5 it is explained how to use the script.
+
 
 

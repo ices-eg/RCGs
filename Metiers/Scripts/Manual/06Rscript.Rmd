@@ -1,8 +1,7 @@
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, tidy.opts=list(width.cutoff=60), tidy=TRUE)
-# Need to set the root directory because the working directory is forced for each chunk to the directory of the rmd
-knitr::opts_knit$set(root.dir = "C:/Users/molla004/OneDrive - Wageningen University & Research/Git/hub/RCGs/Metiers")
+
 ```
 
 
@@ -34,7 +33,7 @@ read.csv(file = data.file)
 # Load reference lists
 url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/AreaRegionLookup.csv"
 area.list <- loadAreaList(url)
-url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/Metier%20Subgroup%20Species%202020.xlsx"
+url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/Metier%20Subgroup%20Species.xlsx"
 species.list <- loadSpeciesList(url)
 url <- "https://github.com/ices-eg/RCGs/raw/master/Metiers/Reference_lists/RDB_ISSG_Metier_list.csv"
 metier.list <- loadMetierList(url)

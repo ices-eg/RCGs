@@ -10,9 +10,38 @@ The métiers reference list at DCF level6 (see “Metier_level6” column), to b
 
 The column “old_code” is a reference to the corresponding codes used in the previous métier list from the RDB. If they are marked with red in the excel file, the code has changed in the new métier list. The column “Use_by_country_in_RDB” lists the countries that have uploaded data with the considered métiers in the RDB for the 2009-2017 periods and  the column “Total_n_trips_RDB_2009t2017” present the sum of the total number of trips with the old codes uploaded to the RDB for 2009 to 2017.
 
+Furthermore, a harmonized metiers reference list at DCF level 7 has been developed to address specific requests from end-users, such as the RCG Large Pelagic fisheries. The reference list can be expanded as necessary. It is stored on Github along with other reference lists in the ‘Reference_lists’ folder. This list provides additional precision regarding the initial métier at DCF level6 referenced in the métier list (e.g., providing more details about the targeted species).
+
 **Procedure for adding new metiers to the list**
 
 If a metier code is missing in the list, it can be requested by sending an email to: Josefine Egekvist (jsv@aqua.dtu.dk) with the new metier code requested, the relevant RCG region (Baltic Sea, North Sea and Eastern Arctic, North Atlantic, Mediterranean, Distant Waters) and the species and fishery should be described. The suggestions will be evaluated at the next meeting within the RCG ISSG on Metier Issues, following the principles: harmonisation, non-overlapping mesh size ranges and not using general gear codes like LX or OT.
+
+
+These principles are linked with the general rules used initially to develop a harmonized and standardized métier codes reference list. Therefore, when a new code is requested by a MS, it needs to be checked if it follows the set of rules established by the group, and confirmed with the other contact persons, with a short deadline for reply. If it follows the rules, the new code can be accepted, otherwise the reasoning for such proposal should be discussed within the ISSG group, to agree on a final decision. 
+
+
+The set of rules established by the group is detailed hereunder:
+
+- Gear-target species assemblage combinations (métier level 5) follow, as far as possible, table 5 from EU-MAP commission delegated decision (EU 2021/1167).
+
+- Métier level 5 codes are identified by RCG region and should be added in all the RCG regions where they occur by the regions North Sea and Eastern Arctic (NSEA), Baltic Sea (BS), North Atlantic (NAtl), Long distance fisheries (LD) and Mediterranean and Black Sea (MBS).
+
+- Mesh size ranges  ensuring no overlapping mesh size ranges by using the standardized  mesh size ranges defined initially by RCG region and type of gear (active or passive).   
+
+  - The standards mesh size ranges have been defined by considering all the significant mesh size 'limits' arising from regulations or common fishing practices. The goal was to develop the smallest range of mesh sizes that covers all the relevant mesh size 'cuts' required to meet the regulations or common practices of the RCG region and the gear types considered (active or passive).
+
+
+
+ 
+-	'_0_0_0' for gears with no mesh size (e.g., longlines, hand lines, trolling lines), 
+
+- '>0_0_0' for unknown mesh size and for the following gears: traps, pots, beach seines and dredges (gears with mesh size but for which no mesh size ranges have been defined).
+
+-	Possibility of including relevant selection devices.
+
+-	Unknown gear/métier will be coded as "MIS_MIS_0_0_0", also allowed following codes e.g., "MIS_DEF_0_0_0", "MIS_CRU_0_0_0" etc. in case the catch composition is known from e.g., sales notes, but the gear is unknown.
+
+- Avoid using FIF (Finfish group) (not calculated from the R-script developed by the ISSG) but métiers codes have been made available with FIF for hooks and longlines, pots and beach seine fisheries for national needs.
 
 
 ## Species list

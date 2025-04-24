@@ -5,7 +5,8 @@ The script developed for assigning métier codes to transversal data reads a “
 ```{r inputdatatable, echo = FALSE}
 library(knitr)
 library(kableExtra)
-inpdat <- xlsx::read.xlsx(file = "./InputDataTable.xlsx",sheetIndex = 1)
+library(readxl)
+inpdat <- read_excel(path = "./InputDataTable.xlsx", sheet = 1)
 colnames(inpdat) <- c("Column Name", "Description","Example")
 # inpdat[,1] <- gsub("_", " ", inpdat[,1])
 inpdat[is.na(inpdat )] <- " "
