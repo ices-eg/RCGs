@@ -1,0 +1,839 @@
+---
+title: "Multi-year RDBES Metier Overview (2021–2024)"
+author: "ISSG"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_collapsed: true
+    toc_depth: 4
+    smoothScrollSpeed: "fast"
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile,
+  encoding = encoding, 
+  output_file = file.path(dirname(inputFile), "BALT_Multi.html"))}) # <--- Change region here
+---
+
+
+```{r setup, include=FALSE}
+
+# Global setups
+knitr::opts_chunk$set(
+  echo = FALSE, 
+  warning = FALSE, 
+  message = FALSE, 
+  comment = NA, 
+  fig.dim = c(14, 10)
+)
+options(scipen=999)
+
+# Adjust your working directory
+knitr::opts_knit$set(root.dir = "C:/Mariana/ISSG Metier and transversable variables/2025/Data")
+
+#C:\Mariana\ISSG Metier and transversable variables\2025
+
+# Load libraries
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(ggpubr)
+library(sf)
+library(rnaturalearth)
+library(data.table)
+library(RColorBrewer)
+library(pander)
+
+```
+
+```{r}
+# Set RCG region - NSEA, NAtl, BALT
+rr <- "BALT" # <---------- and here 
+rrr <- "Baltic"
+
+# Instead of a single year, define multiple years
+multi_years <- c("2021","2022","2023","2024")
+
+# For the title (North Sea and Eastern Arctic, North Atlantic, Baltic)
+title <- paste("Baltic -", paste(multi_years, collapse=","), "(4-year Overview)")
+```
+
+---
+title: "`r title`"
+---
+
+```{r}
+# Reference lists 
+## Scientific name 
+urls <- "https://raw.githubusercontent.com/ices-eg/RCGs/master/Metiers/Scripts/ICESVocabSpecies/ICESVocabAphiaIDScienName_2023.csv"
+ScienName <- read.csv(urls, header = TRUE)
+
+
+### Remove deprecated and invalid records 
+ScienName <- filter(ScienName, !Deprecated %in% c("", "True", "2020-09-16")) %>%
+  select(Code, Description) %>%
+  mutate(Code = as.numeric(Code))
+## Area - region (normal path gives back xml version)
+url <- "https://raw.githubusercontent.com/ices-eg/RCGs/master/Metiers/Reference_lists/AreaRegionLookup.csv"
+Area <- read.csv(url, header = TRUE)
+### Fix the extra space in rcg region code
+Area <- mutate(Area, Code = ifelse(Code %in% "NSEA                                    " , "NSEA",
+                             ifelse(Code %in% "NAtl                                      ", "NAtl", Code))) %>%
+  select(AreaCode, Code)
+
+### Shapefiles 
+### Need to source it from online - Can't open it
+# rect <- read_sf("https://raw.githubusercontent.com/ices-eg/RCGs/Metiers/Scripts/RectangleShapefiles/StatRec_map_Areas_Full_20170124.shp")
+
+#rect <- read_sf("C:/Users/molla004/OneDrive - Wageningen University & #Research/Git/hub/RCGs/Metiers/Scripts/RectangleShapefiles/StatRec_map_Areas_Full_20170124.shp")
+
+rect <- read_sf("./StatRec_map_Areas_Full_20170124.shp")
+world <- ne_countries(scale = "medium", returnclass = "sf")
+world <- st_set_crs(world, 4326)
+```
+
+
+```{r}
+# Read data 
+CL <- fread("./CommercialLanding.csv", quote = "")  
+CE <- fread("./CommercialEffort.csv", quote="")
+
+# Filter for multi_years
+CL <- filter(CL, CLyear %in% multi_years)
+CE <- filter(CE, CEyear %in% multi_years)
+
+```
+
+```{r}
+# Keep only area 27
+CL <- filter(CL, substr(CLarea, 1, 2) == "27")
+CE <- filter(CE, substr(CEarea, 1, 2) == "27")
+
+# Assign RCG region
+CL <- left_join(CL, Area, by = c("CLarea" = "AreaCode"))
+CL <- filter(CL, !is.na(Code))  # remove NAs
+CE <- left_join(CE, Area, by = c("CEarea" = "AreaCode"))
+CE <- filter(CE, !is.na(Code))
+
+#table(CE$Code, useNA = "always") # No NA's
+#table(CL$Code, useNA = "always") # No NA's
+```
+
+```{r}
+# Merge for scientific name 
+CL <- left_join(CL, ScienName, by = c("CLspeciesCode" = "Code"))
+```
+
+```{r}
+# Process
+
+## Year string 
+CL$CLyear <- as.character(CL$CLyear)
+CE$CEyear <- as.character(CE$CEyear)
+
+## Month factors 
+CL$CLmonth <- factor(CL$CLmonth, levels = as.character(c(1:12)))
+CE$CEmonth <- factor(CE$CEmonth, levels = as.character(c(1:12)))
+
+## Quarter factors 
+CL$CLquarter <- factor(CL$CLquarter, levels = as.character(c(1:4)))
+CE$CEquarter <- factor(CE$CEquarter, levels = as.character(c(1:4)))
+
+## Vessel length factors 
+CL$CLvesLenCat <- factor(CL$CLvesselLengthCategory, levels = c("VL0006","VL0608", "VL0810", "VL1012", "VL1215", "VL1518", "VL1824", "VL2440", "VL40XX", "NK"))
+CE$CEvesLenCat <- factor(CE$CEvesselLengthCategory, levels = c("VL0006","VL0608", "VL0810", "VL1012", "VL1215", "VL1518", "VL1824", "VL2440", "VL40XX", "NK"))
+
+## Country factors 
+CL$CLvesselFlagCountry <- factor(CL$CLvesselFlagCountry, levels = sort(unique(CL$CLvesselFlagCountry)))
+CE$CEvesselFlagCountry <- factor(CE$CEvesselFlagCountry, levels = sort(unique(CE$CEvesselFlagCountry)))
+
+
+## Get metier lvl 4 
+CL <- mutate(CL, CLmetier4 = str_extract(CLmetier6, "[^_]+"))
+CE <- mutate(CE, CEmetier4 = str_extract(CEmetier6, "[^_]+"))
+
+## Get metier lvl 5 
+CL <- mutate(CL, CLmetier5 = str_extract(CLmetier6,  "[^_]*_[^_]*"))
+CE <- mutate(CE, CEmetier5 = str_extract(CEmetier6,  "[^_]*_[^_]*"))
+
+
+# Weight kg to t 
+CL <- mutate(CL, CLscientificWeight = round(CLscientificWeight/1000, digits = 2))
+
+# Filter CatchCategory == Landings
+CL <- filter(CL, CLcatchCategory %in% "Lan")
+
+```
+
+```{r}
+# Filter by area 
+
+
+
+CLAREA <- filter(CL, Code %in% rr)
+
+CEAREA <- filter(CE, Code %in% rr)
+
+```
+
+```{r}
+# Set country colors
+ct.cols <- 14 
+myColors <- colorRampPalette(brewer.pal(8, "Set2"))(ct.cols)
+names(myColors) <- levels(CL$CLvesselFlagCountry)
+colScale <- scale_fill_manual(name = "CLvesselFlagCountry",values = myColors)
+
+```
+
+
+```{r r yearly-summaries}
+
+### Build yearly & 3‑year summaries
+CL_byYear <- CLAREA |>
+  group_by(CLyear, CLquarter, CLmetier4, CLmetier5, CLmetier6,
+           CLvesselFlagCountry, CLvesLenCat, Description) |>
+  summarise(scientificWeight = sum(CLscientificWeight, na.rm = TRUE),
+            landingsValue    = sum(as.numeric(CLlandingsValue), na.rm = TRUE),
+            .groups = "drop")
+
+CE_byYear <- CEAREA |>
+  group_by(CEyear, CEmetier4, CEmetier5, CEmetier6,
+           CEvesselFlagCountry, CEvesLenCat,
+           CEquarter, CEstatisticalRectangle) |>
+  summarise(scientificDaysAtSea = sum(CEscientificDaysAtSea, na.rm = TRUE),
+            numberOfTrips       = sum(CEnumberOfFractionalTrips, na.rm = TRUE),
+            .groups = "drop")
+
+# 3‑year collapsed ------------------------------------------------------------
+CL_3yr <- CL_byYear |>
+  group_by(CLmetier4, CLmetier5, CLmetier6) |>
+  summarise(scientificWeight = sum(scientificWeight),
+            landingsValue    = sum(landingsValue), .groups = "drop")
+
+CE_3yr <- CE_byYear |>
+  group_by(CEmetier4, CEmetier5, CEmetier6) |>
+  summarise(scientificDaysAtSea = sum(scientificDaysAtSea),
+            numberOfTrips       = sum(numberOfTrips), .groups = "drop")
+
+```
+
+```{r top10-driver}
+
+driver_tbl <- "effort"     # "effort" = scientificDaysAtSea  |
+                           # "weight" = scientificWeight
+driver_n   <- 10           # how many metiers to keep per level
+## ------------------------------------------------------------------
+
+if (driver_tbl == "effort") {
+  drv_tbl      <- CE_3yr
+  drv_col      <- "scientificDaysAtSea"
+  driver_label <- "scientific fishing days"
+  met4 <- "CEmetier4" ;  met5 <- "CEmetier5" ;  met6 <- "CEmetier6"
+} else {
+  drv_tbl      <- CL_3yr
+  drv_col      <- "scientificWeight"
+  driver_label <- "scientific landed weight"
+  met4 <- "CLmetier4" ;  met5 <- "CLmetier5" ;  met6 <- "CLmetier6"
+}
+
+## helper ----------------------------------------------------------------------
+get_topN <- function(tbl, met, n = driver_n){
+  tbl |>
+    group_by(.data[[met]]) |>
+    summarise(total = sum(.data[[drv_col]], na.rm = TRUE), .groups = "drop") |>
+    slice_max(total, n = n) |>
+    pull(.data[[met]])
+}
+
+## compute the three driver lists ---------------------------------------------
+top10_L4 <- get_topN(drv_tbl, met4)
+top10_L5 <- get_topN(drv_tbl, met5)
+top10_L6 <- get_topN(drv_tbl, met6)
+
+## FILTER the yearly & 3-year tables *once*  -----------------------------------
+CL_byYear_L4 <- CL_byYear |> filter(CLmetier4 %in% top10_L4)
+CL_byYear_L5 <- CL_byYear |> filter(CLmetier5 %in% top10_L5)
+CL_byYear_L6 <- CL_byYear |> filter(CLmetier6 %in% top10_L6)
+
+CE_byYear_L4 <- CE_byYear |> filter(CEmetier4 %in% top10_L4)
+CE_byYear_L5 <- CE_byYear |> filter(CEmetier5 %in% top10_L5)
+CE_byYear_L6 <- CE_byYear |> filter(CEmetier6 %in% top10_L6)
+
+CL_3yr_L4 <- CL_3yr |> filter(CLmetier4 %in% top10_L4)
+CL_3yr_L5 <- CL_3yr |> filter(CLmetier5 %in% top10_L5)
+CL_3yr_L6 <- CL_3yr |> filter(CLmetier6 %in% top10_L6)
+
+CE_3yr_L4 <- CE_3yr |> filter(CEmetier4 %in% top10_L4)
+CE_3yr_L5 <- CE_3yr |> filter(CEmetier5 %in% top10_L5)
+CE_3yr_L6 <- CE_3yr |> filter(CEmetier6 %in% top10_L6)
+
+```
+
+
+```{r}
+# ── annual totals (country-stacked bars) ───────────────────────────
+CL_year_country <- CL_byYear |>
+  group_by(CLyear, CLvesselFlagCountry) |>
+  summarise(TotWeight = sum(scientificWeight),                       # t
+            TotValue  = sum(as.numeric(landingsValue)), .groups="drop")
+
+CE_year_country <- CE_byYear |>
+  group_by(CEyear, CEvesselFlagCountry) |>
+  summarise(TotDays  = sum(scientificDaysAtSea),
+            TotTrips = sum(numberOfTrips), .groups = "drop")
+
+# ── quarterly totals (whole fleet) ─────────────────────────────────
+CL_quarter_total <- CL_byYear |>
+  group_by(CLyear, CLquarter) |>
+  summarise(TotWeight = sum(scientificWeight),
+            TotValue  = sum(as.numeric(landingsValue)), .groups = "drop")
+
+CE_quarter_total <- CE_byYear |>
+  group_by(CEyear, CEquarter) |>
+  summarise(TotDays  = sum(scientificDaysAtSea),
+            TotTrips = sum(numberOfTrips), .groups = "drop")
+```
+
+
+
+```{r, results='asis'}
+
+pandoc.header("Executive Summary", level = 1)
+
+pandoc.p(glue::glue("
+This report provides an overview of fishing activity in **{rrr}** over {paste(multi_years, collapse = '–')}, 
+drawing on **Commercial Landings** (CL) and **Commercial Effort** (CE) data submitted to the RDBES in 2025.  
+We consider only **landings** (catch category `'Lan'`) and express landings in scientific weight (t) and value (€), 
+and effort as scientific fishing days and number of trips, broken down by flag-state and vessel size class.
+
+To characterise dominant metiers at each level, we apply a Top-10 rule, independently at each tier:
+
+- **Level 4:** the ten L4 gears with the highest cumulative {driver_label}.  
+- **Level 5:** the ten L5 variants with the highest cumulative {driver_label}.  
+- **Level 6:** the ten L6 mesh-sizes with the highest cumulative {driver_label}.  
+
+Subsequent sections visualise whole-fleet annual and quarterly trends, followed by metier-level time series and rankings for the Top 10 at Levels 4–6.
+"))
+
+
+```
+
+
+```{r, results='asis'}
+
+pandoc.header("Annual trends", level=1)
+pandoc.p("
+Before selecting any metiers, these panels summarize *whole-fleet* annual changes 
+in landed weight, landed value, fishing days, and number of trips—stacked by flag-state.
+")
+
+vl1 <- ggplot(CL_year_country, aes(CLyear, TotWeight, fill = CLvesselFlagCountry)) +
+         geom_bar(stat = "identity") + theme_minimal() +
+         labs(x = "Year", y = "Weight (t)", fill = "Flag-state",
+              title = "Landed weight")
+
+vl2 <- ggplot(CL_year_country, aes(CLyear, TotValue,  fill = CLvesselFlagCountry)) +
+         geom_bar(stat = "identity") + theme_minimal() +
+         labs(x = "Year", y = "Value (€)",  fill = "Flag-state",
+              title = "Landed value (€)")
+
+vl3 <- ggplot(CE_year_country, aes(CEyear, TotDays,  fill = CEvesselFlagCountry)) +
+         geom_bar(stat = "identity") + theme_minimal() +
+         labs(x = "Year", y = "Days at sea", fill = "Flag-state",
+              title = "Fishing days")
+
+vl4 <- ggplot(CE_year_country, aes(CEyear, TotTrips, fill = CEvesselFlagCountry)) +
+         geom_bar(stat = "identity") + theme_minimal() +
+         labs(x = "Year", y = "Trips", fill = "Flag-state",
+              title = "Number of trips")
+
+vlf <- ggarrange(vl1, vl2, vl3, vl4, ncol = 2, nrow = 2)
+print(vlf)
+
+```
+
+
+
+```{r, results='asis'}
+pandoc.header("Quaterly trends", level=1)
+pandoc.p("
+These four panels show *whole-fleet* quarterly totals over three years for 
+landed weight (t), landed value (€), fishing days and number of trips. 
+Each bar is dodged by quarter to highlight intra-annual seasonality.
+")
+
+q1 <- ggplot(CL_quarter_total, aes(CLyear, TotWeight, fill = CLquarter)) +
+        geom_bar(stat = "identity", position = "dodge") + theme_minimal() +
+        labs(x = "Year", y = "Weight (t)", fill = "Quarter",
+             title = "Landed weight (t)")
+
+q2 <- ggplot(CL_quarter_total, aes(CLyear, TotValue,  fill = CLquarter)) +
+        geom_bar(stat = "identity", position = "dodge") + theme_minimal() +
+        labs(x = "Year", y = "Value (€)", fill = "Quarter",
+             title = "Landed value (€)")
+
+q3 <- ggplot(CE_quarter_total, aes(CEyear, TotDays,  fill = CEquarter)) +
+        geom_bar(stat = "identity", position = "dodge") + theme_minimal() +
+        labs(x = "Year", y = "Days at sea", fill = "Quarter",
+             title = "Fishing days")
+
+q4 <- ggplot(CE_quarter_total, aes(CEyear, TotTrips, fill = CEquarter)) +
+        geom_bar(stat = "identity", position = "dodge") + theme_minimal() +
+        labs(x = "Year", y = "Trips", fill = "Quarter",
+             title = "Number of trips")
+
+
+ggarrange(q1, q2, q3, q4, ncol = 2, nrow = 2)
+
+```
+
+
+```{r}
+
+## ──────── Level 4 ───────────────────────────────────────────────────
+# weight & value
+CL_year_topL4 <- CL_byYear_L4 |>
+  group_by(CLyear, CLmetier4) |>
+  summarise(TotWeight = sum(scientificWeight),
+            TotValue  = sum(as.numeric(landingsValue)), .groups = "drop")
+
+# effort
+CE_year_topL4 <- CE_byYear_L4 |>
+  group_by(CEyear, CEmetier4) |>
+  summarise(TotDays  = sum(scientificDaysAtSea),
+            TotTrips = sum(numberOfTrips), .groups = "drop")
+
+## ──────── Level 5 ───────────────────────────────────────────────────
+
+# weight & value
+CL_year_topL5 <- CL_byYear_L5 |>
+  group_by(CLyear, CLmetier5) |>
+  summarise(TotWeight = sum(scientificWeight),
+            TotValue  = sum(as.numeric(landingsValue)), .groups = "drop")
+
+# effort
+CE_year_topL5 <- CE_byYear_L5 |>
+  group_by(CEyear, CEmetier5) |>
+  summarise(TotDays  = sum(scientificDaysAtSea),
+            TotTrips = sum(numberOfTrips), .groups = "drop")
+
+## ──────── Level 6 ───────────────────────────────────────────────────
+
+# weight & value
+CL_year_topL6 <- CL_byYear_L6 |>
+  group_by(CLyear, CLmetier6) |>
+  summarise(TotWeight = sum(scientificWeight),
+            TotValue  = sum(as.numeric(landingsValue)), .groups = "drop")
+
+# effort
+CE_year_topL6 <- CE_byYear_L6 |>
+  group_by(CEyear, CEmetier6) |>
+  summarise(TotDays  = sum(scientificDaysAtSea),
+            TotTrips = sum(numberOfTrips), .groups = "drop")
+
+
+```
+
+
+```{r}
+
+## ── L4: build Δ table ────────────────────────────────────────────────────
+quick_delta_L4 <- function(df, yr_col, met_col, val_col, y1="2021", y2="2024") {
+  yr  <- enquo(yr_col)
+  met <- enquo(met_col)
+  val <- enquo(val_col)
+
+  df %>%
+    filter(!!yr %in% c(y1,y2), !!met %in% top10_L4) %>%
+    group_by(!!yr, !!met) %>%
+    summarise(total = sum(!!val, na.rm=TRUE), .groups="drop") %>%
+    pivot_wider(names_from  = !!yr,
+                values_from = total,
+                names_prefix = "Year_") %>%
+    mutate(
+  Delta    = .data[[paste0("Year_", y2)]] - .data[[paste0("Year_", y1)]],
+  PctDelta = 100 * Delta / .data[[paste0("Year_", y1)]]
+) %>%
+    select(-starts_with("Year_")) %>%          # <<< drop the duplicate Year_ cols here
+    rename(CLmetier4 = !!met)
+}
+
+## ── L4: rank + merge Δ ───────────────────────────────────────────────────
+rank_plus_delta_L4 <- function(data, yr_col, met_col, val_col, delta_tbl, metric_nm) {
+  yr_str  <- rlang::as_name(enquo(yr_col))
+  met_str <- rlang::as_name(enquo(met_col))
+  val_sym <- enquo(val_col)
+
+  data %>%
+    filter(.data[[met_str]] %in% top10_L4) %>%
+    group_by(.data[[yr_str]], .data[[met_str]]) %>%
+    summarise(total = sum(!!val_sym, na.rm=TRUE), .groups="drop") %>%
+    group_by(.data[[yr_str]]) %>%
+    mutate(Rank = dense_rank(desc(total))) %>%
+    pivot_wider(
+      id_cols    = all_of(met_str),
+      names_from = all_of(yr_str),
+      values_from = c(total, Rank),
+      names_glue = paste0("{.value}_{", yr_str, "}")
+    ) %>%
+    rename(CLmetier4 = all_of(met_str)) %>%
+    setNames(gsub("^total_", paste0(metric_nm, "_"), names(.))) %>%
+    left_join(delta_tbl, by = "CLmetier4") %>%
+    arrange(desc(.data[[paste0(metric_nm, "_2024")]]))
+}
+
+## ── L5: build Δ table ────────────────────────────────────────────────────
+quick_delta_L5 <- function(df, yr_col, met_col, val_col, y1="2021", y2="2024") {
+  yr  <- enquo(yr_col)
+  met <- enquo(met_col)
+  val <- enquo(val_col)
+
+  df %>%
+    filter(!!yr %in% c(y1,y2), !!met %in% top10_L5) %>%
+    group_by(!!yr, !!met) %>%
+    summarise(total = sum(!!val, na.rm=TRUE), .groups="drop") %>%
+    pivot_wider(names_from  = !!yr,
+                values_from = total,
+                names_prefix = "Year_") %>%
+    mutate(
+      Delta    = .data[[paste0("Year_", y2)]] - .data[[paste0("Year_", y1)]],
+      PctDelta = 100 * Delta / .data[[paste0("Year_", y1)]]
+    ) %>%
+    select(-starts_with("Year_")) %>% 
+    rename(CLmetier5 = !!met)
+}
+
+## ── L5: rank + merge Δ ───────────────────────────────────────────────────
+rank_plus_delta_L5 <- function(data, yr_col, met_col, val_col, delta_tbl, metric_nm) {
+  yr_str  <- rlang::as_name(enquo(yr_col))
+  met_str <- rlang::as_name(enquo(met_col))
+  val_sym <- enquo(val_col)
+
+  data %>%
+    filter(.data[[met_str]] %in% top10_L5) %>%
+    group_by(.data[[yr_str]], .data[[met_str]]) %>%
+    summarise(total = sum(!!val_sym, na.rm=TRUE), .groups="drop") %>%
+    group_by(.data[[yr_str]]) %>%
+    mutate(Rank = dense_rank(desc(total))) %>%
+    pivot_wider(
+      id_cols    = all_of(met_str),
+      names_from = all_of(yr_str),
+      values_from = c(total, Rank),
+      names_glue = paste0("{.value}_{", yr_str, "}")
+    ) %>%
+    rename(CLmetier5 = all_of(met_str)) %>%
+    setNames(gsub("^total_", paste0(metric_nm, "_"), names(.))) %>%
+    left_join(delta_tbl, by = "CLmetier5") %>%
+    arrange(desc(.data[[paste0(metric_nm, "_2024")]]))
+}
+
+
+## ── L6: build Δ table ────────────────────────────────────────────────────
+quick_delta_L6 <- function(df, yr_col, met_col, val_col, y1="2021", y2="2024") {
+  yr  <- enquo(yr_col)
+  met <- enquo(met_col)
+  val <- enquo(val_col)
+
+  df %>%
+    filter(!!yr %in% c(y1,y2), !!met %in% top10_L6) %>%
+    group_by(!!yr, !!met) %>%
+    summarise(total = sum(!!val, na.rm=TRUE), .groups="drop") %>%
+    pivot_wider(names_from  = !!yr,
+                values_from = total,
+                names_prefix = "Year_") %>%
+    mutate(
+      Delta    = .data[[paste0("Year_", y2)]] - .data[[paste0("Year_", y1)]],
+      PctDelta = 100 * Delta / .data[[paste0("Year_", y1)]]
+    ) %>%
+    select(-starts_with("Year_")) %>% 
+    rename(CEmetier6 = !!met)
+}
+
+## ── L6: rank + merge Δ ───────────────────────────────────────────────────
+rank_plus_delta_L6 <- function(data, yr_col, met_col, val_col, delta_tbl, metric_nm) {
+  yr_str  <- rlang::as_name(enquo(yr_col))
+  met_str <- rlang::as_name(enquo(met_col))
+  val_sym <- enquo(val_col)
+
+  data %>%
+    filter(.data[[met_str]] %in% top10_L6) %>%
+    group_by(.data[[yr_str]], .data[[met_str]]) %>%
+    summarise(total = sum(!!val_sym, na.rm=TRUE), .groups="drop") %>%
+    group_by(.data[[yr_str]]) %>%
+    mutate(Rank = dense_rank(desc(total))) %>%
+    pivot_wider(
+      id_cols    = all_of(met_str),
+      names_from = all_of(yr_str),
+      values_from = c(total, Rank),
+      names_glue = paste0("{.value}_{", yr_str, "}")
+    ) %>%
+    rename(CEmetier6 = all_of(met_str)) %>%
+    setNames(gsub("^total_", paste0(metric_nm, "_"), names(.))) %>%
+    left_join(delta_tbl, by = "CEmetier6") %>%
+    arrange(desc(.data[[paste0(metric_nm, "_2024")]]))
+}
+
+## ───── Level 4 ───────────────────────────────────────────────────────────────
+diff_weight_L4 <- quick_delta_L4(CL_byYear_L4, CLyear, CLmetier4,
+                              scientificWeight)
+
+diff_value_L4  <- quick_delta_L4(CL_byYear_L4, CLyear, CLmetier4,
+                              landingsValue)
+
+diff_days_L4   <- quick_delta_L4(CE_byYear_L4, CEyear, CEmetier4,
+                              scientificDaysAtSea)
+
+diff_trips_L4  <- quick_delta_L4(CE_byYear_L4, CEyear, CEmetier4,
+                              numberOfTrips)
+
+rank_weight_L4<- rank_plus_delta_L4(CL_byYear_L4, CLyear, CLmetier4,
+                                        scientificWeight, diff_weight_L4,
+                                        "TotWeight")
+
+rank_value_L4  <- rank_plus_delta_L4(CL_byYear_L4, CLyear, CLmetier4,
+                                        landingsValue,    diff_value_L4,
+                                        "TotValue")
+
+rank_days_L4   <- rank_plus_delta_L4(CE_byYear_L4, CEyear, CEmetier4,
+                                        scientificDaysAtSea, diff_days_L4,
+                                        "TotDays")
+
+rank_trips_L4  <- rank_plus_delta_L4(CE_byYear_L4, CEyear, CEmetier4,
+                                        numberOfTrips, diff_trips_L4,
+                                        "TotTrips")
+
+
+## ───── Level 5 ───────────────────────────────────────────────────────────────
+diff_weight_L5 <- quick_delta_L5(CL_byYear_L5, CLyear, CLmetier5,
+                              scientificWeight)
+
+diff_value_L5  <- quick_delta_L5(CL_byYear_L5, CLyear, CLmetier5,
+                              landingsValue)
+
+diff_days_L5   <- quick_delta_L5(CE_byYear_L5, CEyear, CEmetier5,
+                              scientificDaysAtSea)
+
+diff_trips_L5  <- quick_delta_L5(CE_byYear_L5, CEyear, CEmetier5,
+                              numberOfTrips)
+
+rank_weight_L5 <- rank_plus_delta_L5(CL_byYear_L5, CLyear, CLmetier5,
+                                  scientificWeight, diff_weight_L5,
+                                  "TotWeight")
+
+rank_value_L5  <- rank_plus_delta_L5(CL_byYear_L5, CLyear, CLmetier5,
+                                  landingsValue,    diff_value_L5,
+                                  "TotValue")
+
+rank_days_L5   <- rank_plus_delta_L5(CE_byYear_L5, CEyear, CEmetier5,
+                                  scientificDaysAtSea, diff_days_L5,
+                                  "TotDays")
+
+rank_trips_L5  <- rank_plus_delta_L5(CE_byYear_L5, CEyear, CEmetier5,
+                                  numberOfTrips,    diff_trips_L5,
+                                  "TotTrips")
+
+## ───── Level 6 ───────────────────────────────────────────────────────────────
+
+diff_weight_L6 <- quick_delta_L6(CL_byYear_L6, CLyear, CLmetier6,
+                              scientificWeight)
+
+diff_value_L6  <- quick_delta_L6(CL_byYear_L6, CLyear, CLmetier6,
+                              landingsValue)
+
+diff_days_L6   <- quick_delta_L6(CE_byYear_L6, CEyear, CEmetier6,
+                              scientificDaysAtSea)
+
+diff_trips_L6  <- quick_delta_L6(CE_byYear_L6, CEyear, CEmetier6,
+                              numberOfTrips)
+
+rank_weight_L6 <- rank_plus_delta_L6(CL_byYear_L6, CLyear, CLmetier6,
+                                  scientificWeight, diff_weight_L6,
+                                  "TotWeight")
+
+rank_value_L6  <- rank_plus_delta_L6(CL_byYear_L6, CLyear, CLmetier6,
+                                  landingsValue,    diff_value_L6,
+                                  "TotValue")
+
+rank_days_L6   <- rank_plus_delta_L6(CE_byYear_L6, CEyear, CEmetier6,
+                                  scientificDaysAtSea, diff_days_L6,
+                                  "TotDays")
+
+rank_trips_L6  <- rank_plus_delta_L6(CE_byYear_L6, CEyear, CEmetier6,
+                                  numberOfTrips,    diff_trips_L6,
+                                  "TotTrips")
+
+```
+
+
+```{r, results='asis'}
+
+pandoc.header("Trends top 10 metier level 4", level=1)
+pandoc.p(glue::glue(
+  "Over {paste(multi_years, collapse = '–')}, we ranked the Top-{driver_n} Level-4 gears by total {driver_label}. ",
+  "The four plots below display, for each of these metiers and by year, their landed weight, landed value, total fishing days and number of trips, ",
+  "allowing to track increases or declines across metrics and compare performance year-to-year."
+))
+
+pandoc.header("Annual variation top 10 metier level 4", level=2)
+
+p1 <- ggplot(CL_year_topL4, aes(reorder(CLmetier4, -TotWeight), TotWeight, fill = CLyear)) +
+        geom_bar(stat = "identity", position = "dodge") + theme_minimal() +
+        labs(x = "Metier L4", y = "Weight (t)", title = "Landed weight") +
+        theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+p2 <- ggplot(CL_year_topL4, aes(reorder(CLmetier4, -TotValue),  TotValue,  fill = CLyear)) +
+        geom_bar(stat = "identity", position = "dodge") + theme_minimal() +
+        labs(x = "Metier L4", y = "Value (€)", title = "Landed value (€)") +
+        theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+p3 <- ggplot(CE_year_topL4, aes(reorder(CEmetier4, -TotDays),  TotDays,  fill = CEyear)) +
+        geom_bar(stat = "identity", position = "dodge") + theme_minimal() +
+        labs(x = "Metier L4", y = "Days at sea", title = "Fishing days") +
+        theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+p4 <- ggplot(CE_year_topL4, aes(reorder(CEmetier4, -TotTrips), TotTrips, fill = CEyear)) +
+        geom_bar(stat = "identity", position = "dodge") + theme_minimal() +
+        labs(x = "Metier L4", y = "Trips", title = "Trips") +
+        theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+l <- ggarrange(p1, p2, p3, p4, ncol = 2, nrow = 2)
+print(l)
+
+```
+
+
+```{r, results='asis'}
+
+pandoc.header("Rank of Top-10 metiers L4", level = 2)
+pandoc.p("
+This table ranks the same Top‐{driver_n} L4 gears by their three-year total 
+landed weight, and then shows their rank in each individual year for weight, value, days and trips.  
+Columns `Delta` and `%Delta` report the absolute and relative change from 2021 to 2024.
+")
+
+kbl(rank_weight_L4,
+    caption = "Landed weight") %>% kable_styling()
+
+kbl(rank_value_L4,
+    caption = "Landed value (€)") %>% kable_styling()
+
+kbl(rank_days_L4,
+    caption = "Fishing days") %>% kable_styling()
+
+kbl(rank_trips_L4,
+    caption = "Number of trips") %>% kable_styling()
+
+```
+
+
+
+```{r, results='asis'}
+
+pandoc.header("Trends top 10 metier level 5", level=1)
+pandoc.p(glue::glue("
+These panels show annual trends for the Top-10 L5 metiers (by cumulative {driver_label}), 
+regardless of their parent L4 gear.  
+We plot landed weight, landed value, fishing days and number of trips by year.
+"))
+
+pandoc.header("Annual variation top 10 metier level 5", level=2)
+
+p1 <- ggplot(CL_year_topL5, aes(reorder(CLmetier5, -TotWeight), TotWeight, fill = CLyear)) +
+        geom_bar(stat = "identity", position = "dodge") + theme_minimal() +
+        labs(x = "Metier L5", y = "Weight (t)", title = "Landed weight") +
+        theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+p2 <- ggplot(CL_year_topL5, aes(reorder(CLmetier5, -TotValue),  TotValue,  fill = CLyear)) +
+        geom_bar(stat = "identity", position = "dodge") + theme_minimal() +
+        labs(x = "Metier L5", y = "Value (€)", title = "Landed value (€)") +
+        theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+p3 <- ggplot(CE_year_topL5, aes(reorder(CEmetier5, -TotDays),  TotDays,  fill = CEyear)) +
+        geom_bar(stat = "identity", position = "dodge") + theme_minimal() +
+        labs(x = "Metier L5", y = "Days at sea", title = "Fishing days") +
+        theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+p4 <- ggplot(CE_year_topL5, aes(reorder(CEmetier5, -TotTrips), TotTrips, fill = CEyear)) +
+        geom_bar(stat = "identity", position = "dodge") + theme_minimal() +
+        labs(x = "Metier L5", y = "Trips", title = "Trips") +
+        theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+l <- ggarrange(p1, p2, p3, p4, ncol = 2, nrow = 2)
+print(l)
+
+```
+
+```{r, results='asis'}
+
+pandoc.header("Rank of Top-10 metiers L5", level=2)
+
+kbl(rank_weight_L5,
+    caption = "Landed weight (t)") %>% kable_styling()
+
+kbl(rank_value_L5,
+    caption = "Landed value (€)") %>% kable_styling()
+
+kbl(rank_days_L5,
+    caption = "Fishing days") %>% kable_styling()
+
+kbl(rank_trips_L5,
+    caption = "Number of trips") %>% kable_styling()
+
+```
+
+
+```{r, results='asis'}
+pandoc.header("Trends top 10 metier level 6", level=1)
+pandoc.p(glue::glue("
+These panels show annual trends for the flat Top-10 L6 metiers (by cumulative {driver_label}), 
+regardless of their parent L5 variant.  
+We plot landed weight, landed value, fishing days and number of trips by year.
+"))
+
+pandoc.header("Annual variation top 10 metier level 6", level=2)
+
+p1 <- ggplot(CL_year_topL6, aes(reorder(CLmetier6, -TotWeight), TotWeight, fill = CLyear)) +
+        geom_bar(stat = "identity", position = "dodge") + theme_minimal() +
+        labs(x = "Metier L6", y = "Weight (t)", title = "Landed weight") +
+        theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+p2 <- ggplot(CL_year_topL6, aes(reorder(CLmetier6, -TotValue),  TotValue,  fill = CLyear)) +
+        geom_bar(stat = "identity", position = "dodge") + theme_minimal() +
+        labs(x = "Metier L6", y = "Value (€)", title = "Landed value (€)") +
+        theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+p3 <- ggplot(CE_year_topL6, aes(reorder(CEmetier6, -TotDays),  TotDays,  fill = CEyear)) +
+        geom_bar(stat = "identity", position = "dodge") + theme_minimal() +
+        labs(x = "Metier L6", y = "Days at sea", title = "Fishing days") +
+        theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+p4 <- ggplot(CE_year_topL6, aes(reorder(CEmetier6, -TotTrips), TotTrips, fill = CEyear)) +
+        geom_bar(stat = "identity", position = "dodge") + theme_minimal() +
+        labs(x = "Metier L6", y = "Trips", title = "Trips") +
+        theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+l <- ggarrange(p1, p2, p3, p4, ncol = 2, nrow = 2)
+print(l)
+
+```
+
+
+```{r, results='asis'}
+
+pandoc.header("Rank of Top 10 Metier level 6", level=2)
+
+kbl(rank_weight_L6,
+    caption = "Landed weight (t)") %>% kable_styling()
+
+kbl(rank_value_L6,
+    caption = "Landed value (€)") %>% kable_styling()
+
+kbl(rank_days_L6,
+    caption = "Fishing days") %>% kable_styling()
+
+kbl(rank_trips_L6,
+    caption = "Number of trips") %>% kable_styling()
+
+```
+
+

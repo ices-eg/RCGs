@@ -1,0 +1,467 @@
+---
+title: "Data_Check"
+author: "Mariana"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+
+# Global setups
+knitr::opts_chunk$set(
+  echo = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  comment = NA, 
+  fig.dim = c(14, 10)
+)
+options(scipen=999)
+
+# Adjust your working directory
+knitr::opts_knit$set(root.dir = "C:/Mariana/ISSG Metier and transversable variables/2025")
+
+knitr::opts_chunk$set(error = TRUE)
+
+# Load libraries
+library(data.table)
+library(knitr)
+library(kableExtra)
+library(tibble)   # for rownames_to_column()
+library(dplyr)
+library(tidyverse)
+library(sf)
+library(rnaturalearth)
+
+
+```
+
+
+
+```{r, echo=FALSE}
+# Reference lists 
+## Scientific name 
+urls <- "https://raw.githubusercontent.com/ices-eg/RCGs/master/Metiers/Scripts/ICESVocabSpecies/ICESVocabAphiaIDScienName_2023.csv"
+ScienName <- read.csv(urls, header = TRUE)
+
+
+### Remove deprecated and invalid records 
+ScienName <- filter(ScienName, !Deprecated %in% c("", "True", "2020-09-16")) %>%
+  select(Code, Description) %>%
+  mutate(Code = as.numeric(Code))
+## Area - region (normal path gives back xml version)
+url <- "https://raw.githubusercontent.com/ices-eg/RCGs/master/Metiers/Reference_lists/AreaRegionLookup.csv"
+Area <- read.csv(url, header = TRUE)
+### Fix the extra space in rcg region code
+Area <- mutate(Area, Code = ifelse(Code %in% "NSEA                                    " , "NSEA",
+                             ifelse(Code %in% "NAtl                                      ", "NAtl", Code))) %>%
+  select(AreaCode, Code)
+
+
+```
+
+```{r, echo=FALSE}
+setwd("C:/Mariana/ISSG Metier and transversable variables/2024/Data")
+
+CL_old <- fread("./CommercialLanding.csv", quote = "")  
+CE_old <- fread("./CommercialEffort.csv", quote="")
+
+```
+
+```{r, echo=FALSE}
+setwd("C:/Mariana/ISSG Metier and transversable variables/2025/Data")
+
+CL <- fread("./CommercialLanding.csv", quote = "")  
+CE <- fread("./CommercialEffort.csv", quote="")
+
+```
+
+
+```{r, echo=FALSE}
+
+# Keep only area 27
+CL <- filter(CL, substr(CLarea, 1, 2) == "27")
+CE <- filter(CE, substr(CEarea, 1, 2) == "27")
+
+CL_old <- filter(CL_old, substr(CLarea, 1, 2) == "27")
+CE_old <- filter(CE_old, substr(CEarea, 1, 2) == "27")
+
+# Assign RCG region
+CL <- left_join(CL, Area, by = c("CLarea" = "AreaCode"))
+CL <- filter(CL, !is.na(Code))  # remove NAs
+CE <- left_join(CE, Area, by = c("CEarea" = "AreaCode"))
+CE <- filter(CE, !is.na(Code))
+
+CL_old <- left_join(CL_old, Area, by = c("CLarea" = "AreaCode"))
+CL_old <- filter(CL_old, !is.na(Code))  # remove NAs
+CE_old <- left_join(CE_old, Area, by = c("CEarea" = "AreaCode"))
+CE_old <- filter(CE_old, !is.na(Code))
+
+```
+
+
+```{r, echo=FALSE}
+# Merge for scientific name 
+CL <- left_join(CL, ScienName, by = c("CLspeciesCode" = "Code"))
+CL_old <- left_join(CL_old, ScienName, by = c("CLspeciesCode" = "Code"))
+```
+
+
+```{r, echo=FALSE}
+# Process
+
+## Year string 
+CL$CLyear <- as.character(CL$CLyear)
+CE$CEyear <- as.character(CE$CEyear)
+
+CL_old$CLyear <- as.character(CL_old$CLyear)
+CE_old$CEyear <- as.character(CE_old$CEyear)
+
+## Month factors 
+CL$CLmonth <- factor(CL$CLmonth, levels = as.character(c(1:12)))
+CE$CEmonth <- factor(CE$CEmonth, levels = as.character(c(1:12)))
+
+CL_old$CLmonth <- factor(CL_old$CLmonth, levels = as.character(c(1:12)))
+CE_old$CEmonth <- factor(CE_old$CEmonth, levels = as.character(c(1:12)))
+
+## Quarter factors 
+CL$CLquarter <- factor(CL$CLquarter, levels = as.character(c(1:4)))
+CE$CEquarter <- factor(CE$CEquarter, levels = as.character(c(1:4)))
+
+CL_old$CLquarter <- factor(CL_old$CLquarter, levels = as.character(c(1:4)))
+CE_old$CEquarter <- factor(CE_old$CEquarter, levels = as.character(c(1:4)))
+
+## Vessel length factors 
+CL$CLvesLenCat <- factor(CL$CLvesselLengthCategory, levels = c("VL0006","VL0608", "VL0810", "VL1012", "VL1215", "VL1518", "VL1824", "VL2440", "VL40XX", "NK"))
+CE$CEvesLenCat <- factor(CE$CEvesselLengthCategory, levels = c("VL0006","VL0608", "VL0810", "VL1012", "VL1215", "VL1518", "VL1824", "VL2440", "VL40XX", "NK"))
+
+CL_old$CLvesLenCat <- factor(CL_old$CLvesselLengthCategory, levels = c("VL0006","VL0608", "VL0810", "VL1012", "VL1215", "VL1518", "VL1824", "VL2440", "VL40XX", "NK"))
+CE_old$CEvesLenCat <- factor(CE_old$CEvesselLengthCategory, levels = c("VL0006","VL0608", "VL0810", "VL1012", "VL1215", "VL1518", "VL1824", "VL2440", "VL40XX", "NK"))
+
+## Country factors 
+CL$CLvesselFlagCountry <- factor(CL$CLvesselFlagCountry, levels = sort(unique(CL$CLvesselFlagCountry)))
+CE$CEvesselFlagCountry <- factor(CE$CEvesselFlagCountry, levels = sort(unique(CE$CEvesselFlagCountry)))
+
+CL_old$CLvesselFlagCountry <- factor(CL_old$CLvesselFlagCountry, levels = sort(unique(CL_old$CLvesselFlagCountry)))
+CE_old$CEvesselFlagCountry <- factor(CE_old$CEvesselFlagCountry, levels = sort(unique(CE_old$CEvesselFlagCountry)))
+
+## Get metier lvl 4 
+CL <- mutate(CL, CLmetier4 = str_extract(CLmetier6, "[^_]+"))
+CE <- mutate(CE, CEmetier4 = str_extract(CEmetier6, "[^_]+"))
+
+CL_old <- mutate(CL_old, CLmetier4 = str_extract(CLmetier6, "[^_]+"))
+CE_old <- mutate(CE_old, CEmetier4 = str_extract(CEmetier6, "[^_]+"))
+
+## Get metier lvl 5 
+CL <- mutate(CL, CLmetier5 = str_extract(CLmetier6,  "[^_]*_[^_]*"))
+CE <- mutate(CE, CEmetier5 = str_extract(CEmetier6,  "[^_]*_[^_]*"))
+
+CL_old <- mutate(CL_old, CLmetier5 = str_extract(CLmetier6,  "[^_]*_[^_]*"))
+CE_old <- mutate(CE_old, CEmetier5 = str_extract(CEmetier6,  "[^_]*_[^_]*"))
+
+
+# Weight kg to t 
+CL <- mutate(CL, CLscientificWeight = round(CLscientificWeight/1000, digits = 2))
+
+CL_old <- mutate(CL_old, CLscientificWeight = round(CLscientificWeight/1000, digits = 2))
+
+# Filter CatchCategory == Landings
+CL <- filter(CL, CLcatchCategory %in% "Lan")
+
+CL_old <- filter(CL_old, CLcatchCategory %in% "Lan")
+
+```
+
+
+```{r, echo=FALSE}
+# Filter by area 
+
+# Set RCG region - NSEA, NAtl, BALT
+rr <- "BALT"
+
+CLAREA_BALT <- filter(CL, Code %in% rr)
+CEAREA_BALT <- filter(CE, Code %in% rr)
+
+CLAREA_BALT_old <- filter(CL_old, Code %in% rr)
+CEAREA_BALT_old <- filter(CE_old, Code %in% rr)
+
+```
+
+
+```{r, echo=FALSE}
+# Set RCG region - NSEA, NAtl, BALT
+rr <- "NSEA"
+
+CLAREA_NSEA <- filter(CL, Code %in% rr)
+CEAREA_NSEA <- filter(CE, Code %in% rr)
+
+CLAREA_NSEA_old <- filter(CL_old, Code %in% rr)
+CEAREA_NSEA_old <- filter(CE_old, Code %in% rr)
+```
+
+
+```{r, echo=FALSE}
+# Set RCG region - NSEA, NAtl, BALT
+rr <- "NAtl"
+
+CLAREA_NAtl <- filter(CL, Code %in% rr)
+CEAREA_NAtl <- filter(CE, Code %in% rr)
+
+CLAREA_NAtl_old <- filter(CL_old, Code %in% rr)
+CEAREA_NAtl_old <- filter(CE_old, Code %in% rr)
+```
+
+
+```{r, results='asis'}
+# ----------  helpers ---------------------------------------------------------
+
+nice_tab <- function(df, caption){
+  kable(df,
+        caption   = caption,
+        booktabs  = TRUE,
+        align     = c("l", rep("r", ncol(df) - 1))) |>
+    kable_styling(full_width = FALSE, position = "left")
+}
+
+paired_counts <- function(new_dat, old_dat,
+                          flag_col, year_col,
+                          caption){
+  # contingency tables (matrix)
+  new_tab <- table(new_dat[[flag_col]], new_dat[[year_col]])
+  old_tab <- table(old_dat[[flag_col]], old_dat[[year_col]])
+
+  # convert to data-frames and add suffixes
+  new_df <- new_tab |>
+    as.data.frame.matrix() |>
+    rownames_to_column("Country") |>
+    rename_with(~ paste0(.x, "_NEW"), -Country)
+
+  old_df <- old_tab |>
+    as.data.frame.matrix() |>
+    rownames_to_column("Country") |>
+    rename_with(~ paste0(.x, "_OLD"), -Country)
+
+  # join and print
+  full_join(new_df, old_df, by = "Country") |>
+    arrange(Country) |>
+    nice_tab(caption)
+}
+
+# ----------  1. ALL-REGIONS tables -------------------------------------------
+
+paired_counts(CE,  CE_old,
+              "CEvesselFlagCountry", "CEyear",
+              "ALL – Effort NEW vs OLD")
+
+paired_counts(CL,  CL_old,
+              "CLvesselFlagCountry", "CLyear",
+              "ALL – Landings NEW vs OLD")
+
+# ----------  2. REGIONAL tables ----------------------------------------------
+
+regs <- list(
+  BALT = list(eff_new = CEAREA_BALT,  eff_old = CEAREA_BALT_old,
+              lan_new = CLAREA_BALT,  lan_old = CLAREA_BALT_old),
+  NSEA = list(eff_new = CEAREA_NSEA,  eff_old = CEAREA_NSEA_old,
+              lan_new = CLAREA_NSEA,  lan_old = CLAREA_NSEA_old),
+  NAtl = list(eff_new = CEAREA_NAtl,  eff_old = CEAREA_NAtl_old,
+              lan_new = CLAREA_NAtl,  lan_old = CLAREA_NAtl_old)
+)
+
+for(r in names(regs)){
+  paired_counts(regs[[r]]$eff_new, regs[[r]]$eff_old,
+                "CEvesselFlagCountry", "CEyear",
+                sprintf("%s – Effort NEW vs OLD", r))
+
+  paired_counts(regs[[r]]$lan_new, regs[[r]]$lan_old,
+                "CLvesselFlagCountry", "CLyear",
+                sprintf("%s – Landings NEW vs OLD", r))
+}
+
+for (r in names(regs)) {
+
+  # ------- Effort ------------------------------------------------------------
+  print(
+    paired_counts(regs[[r]]$eff_new, regs[[r]]$eff_old,
+                  "CEvesselFlagCountry", "CEyear",
+                  sprintf("%s – Effort NEW vs OLD", r))
+  )
+
+  # ------- Landings ----------------------------------------------------------
+  print(
+    paired_counts(regs[[r]]$lan_new, regs[[r]]$lan_old,
+                  "CLvesselFlagCountry", "CLyear",
+                  sprintf("%s – Landings NEW vs OLD", r))
+  )
+}
+```
+
+
+```{r, results='asis'}
+
+# ----------  1. helpers -------------------------------------------------------
+
+## tidy summaries --------------------------------------------------------------
+landings_sum <- function(dat){
+  dat %>%
+    group_by(Country = CLvesselFlagCountry, Year = CLyear) %>%
+    summarise(
+      Weight_t  = round(sum(CLscientificWeight,     na.rm = TRUE), 2),
+      Value_EUR = round(sum(as.numeric(CLlandingsValue), na.rm = TRUE), 0),
+      .groups   = "drop"
+    )
+}
+
+effort_sum <- function(dat){
+  dat %>%
+    group_by(Country = CEvesselFlagCountry, Year = CEyear) %>%
+    summarise(
+      DaysAtSea = sum(CEscientificDaysAtSea,          na.rm = TRUE),
+      Trips     = sum(CEnumberOfFractionalTrips,      na.rm = TRUE),
+      .groups   = "drop"
+    )
+}
+
+## merge NEW + OLD side-by-side -------------------------------------------------
+paired_tab <- function(new_df, old_df, sum_fun){
+  new <- sum_fun(new_df) %>% rename_with(~ paste0(., "_NEW"), -c(Country, Year))
+  old <- sum_fun(old_df) %>% rename_with(~ paste0(., "_OLD"), -c(Country, Year))
+  full_join(new, old, by = c("Country", "Year")) %>% arrange(Country, Year)
+}
+
+## pretty print ----------------------------------------------------------------
+nice_tab <- function(df, caption){
+  kable(df, caption   = caption, booktabs = TRUE,
+             align     = c("l", "r", "r", "r", "r", "r")) |>
+    kable_styling(full_width = FALSE, position = "left")
+}
+
+# ----------  2. region data frames -------------------------------------------
+regs <- list(
+  BALT = list( land_new = CLAREA_BALT,
+               land_old = CLAREA_BALT_old,
+               eff_new  = CEAREA_BALT,
+               eff_old  = CEAREA_BALT_old),
+
+  NSEA = list( land_new = CLAREA_NSEA,
+               land_old = CLAREA_NSEA_old,
+               eff_new  = CEAREA_NSEA,
+               eff_old  = CEAREA_NSEA_old),
+
+  NAtl = list( land_new = CLAREA_NAtl,
+               land_old = CLAREA_NAtl_old,
+               eff_new  = CEAREA_NAtl,
+               eff_old  = CEAREA_NAtl_old)
+)
+
+# ----------  3. loop & print --------------------------------------------------
+for(r in names(regs)){
+
+  # ----- landings -------------------------------------------------------------
+  nice_tab(
+    paired_tab(regs[[r]]$land_new, regs[[r]]$land_old, landings_sum),
+    sprintf("%s – Landings NEW vs OLD", r)
+  )
+
+  # ----- effort ---------------------------------------------------------------
+  nice_tab(
+    paired_tab(regs[[r]]$eff_new, regs[[r]]$eff_old, effort_sum),
+    sprintf("%s – Effort NEW vs OLD", r)
+  )
+}
+
+for (r in names(regs)) {
+  print(
+    paired_tab(regs[[r]]$land_new, regs[[r]]$land_old, landings_sum) |>
+      nice_tab(sprintf("%s – Landings NEW vs OLD", r))
+  )
+
+  print(
+    paired_tab(regs[[r]]$eff_new, regs[[r]]$eff_old, effort_sum) |>
+      nice_tab(sprintf("%s – Effort NEW vs OLD", r))
+  )
+}
+
+```
+
+
+```{r, echo=FALSE}
+
+# helper to melt a table() into a long df
+melt_counts <- function(dat, flag_col, year_col, source_label){
+  as.data.frame.matrix(table(dat[[flag_col]], dat[[year_col]])) %>%
+    rownames_to_column(flag_col) %>%
+    pivot_longer(-1, names_to="Year", values_to="Count") %>%
+    mutate(Source = source_label)
+}
+
+# ALL Effort
+eff_all <- bind_rows(
+  melt_counts(CE,     "CEvesselFlagCountry", "CEyear", "NEW"),
+  melt_counts(CE_old, "CEvesselFlagCountry", "CEyear", "OLD")
+)
+
+
+# ALL Landings
+lan_all <- bind_rows(
+  melt_counts(CL,     "CLvesselFlagCountry", "CLyear", "NEW"),
+  melt_counts(CL_old, "CLvesselFlagCountry", "CLyear", "OLD")
+)
+
+
+
+
+```
+
+
+```{r}
+ggplot(eff_all, aes(x=CEvesselFlagCountry, y=Count, fill=Source)) +
+  geom_col(position="dodge") +
+  facet_wrap(~Year) +
+  labs(title="ALL Effort: NEW vs OLD by Flag & Year", x="Flag Country") +
+  theme(axis.text.x = element_text(angle=45, hjust=1))
+
+ggplot(lan_all, aes(x=CLvesselFlagCountry, y=Count, fill=Source)) +
+  geom_col(position="dodge") +
+  facet_wrap(~Year) +
+  labs(title="ALL Landings: NEW vs OLD by Flag & Year", x="Flag Country") +
+  theme(axis.text.x = element_text(angle=45, hjust=1))
+
+# Then by region…
+for (r in names(regs)) {
+  # Effort
+  tab_e <- table(regs[[r]]$eff_new$CEvesselFlagCountry,
+                 regs[[r]]$eff_new$CEyear)
+  if (ncol(tab_e) > 0) {
+    eff_all <- bind_rows(
+      melt_counts(regs[[r]]$eff_new, "CEvesselFlagCountry","CEyear","NEW"),
+      melt_counts(regs[[r]]$eff_old, "CEvesselFlagCountry","CEyear","OLD")
+    )
+    print(
+      ggplot(eff_all, aes(x=CEvesselFlagCountry, y=Count, fill=Source)) +
+        geom_col(position="dodge") +
+        facet_wrap(~Year) +
+        labs(title=sprintf("%s Effort: NEW vs OLD", r)) +
+        theme(axis.text.x = element_text(angle=45, hjust=1))
+    )
+  }
+
+  # Landings
+  tab_l <- table(regs[[r]]$lan_new$CLvesselFlagCountry,
+                 regs[[r]]$lan_new$CLyear)
+  if (ncol(tab_l) > 0) {
+    lan_all <- bind_rows(
+      melt_counts(regs[[r]]$lan_new, "CLvesselFlagCountry","CLyear","NEW"),
+      melt_counts(regs[[r]]$lan_old, "CLvesselFlagCountry","CLyear","OLD")
+    )
+    print(
+      ggplot(lan_all, aes(x=CLvesselFlagCountry, y=Count, fill=Source)) +
+        geom_col(position="dodge") +
+        facet_wrap(~Year) +
+        labs(title=sprintf("%s Landings: NEW vs OLD", r)) +
+        theme(axis.text.x = element_text(angle=45, hjust=1))
+    )
+  }
+}
+
+```
