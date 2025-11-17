@@ -15,5 +15,12 @@ detailedMetiersLvl6ForLvl5 <-function(input.data,level,sequence.def){
     }
   }
   input.data.to.process<-merge(input.data.to.process,data.with.metiers,all.x=T,by=level)
+  
+  # insert empty columns if no detailed metiers were assigned
+  for(c in cols.to.remove){
+    if(!c %in% colnames(input.data.to.process)){
+      input.data.to.process[,c(c):=NA]
+    }
+  }
   return(rbind(input.data.to.process,input.data.processed,fill=T))
 }
