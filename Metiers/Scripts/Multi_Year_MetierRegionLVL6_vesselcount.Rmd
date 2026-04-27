@@ -1,0 +1,1487 @@
+---
+title: "Multi-year RDBES Metier Overview (2021–2025)"
+author: "ISSG"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_collapsed: true
+    toc_depth: 4
+    smoothScrollSpeed: "fast"
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile,
+  encoding = encoding, 
+  output_file = file.path(dirname(inputFile), "NAtl_Multi.html"))}) # <--- Change region here
+---
+
+
+```{r setup, include=FALSE}
+
+# Global setups
+knitr::opts_chunk$set(
+  echo = FALSE, 
+  warning = FALSE, 
+  message = FALSE, 
+  comment = NA, 
+  fig.dim = c(14, 10)
+)
+options(scipen=999)
+
+# Adjust your working directory
+knitr::opts_knit$set(root.dir = "H:/c-users/RDBES/CE_CL_2025")
+
+#C:\Mariana\ISSG Metier and transversable variables\2025
+
+# Load libraries
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(ggpubr)
+library(data.table)
+library(RColorBrewer)
+library(pander)
+
+quick_delta <- function(df, year_col, value_col, group_col) {
+  df %>%
+    group_by(.data[[group_col]], .data[[year_col]]) %>%
+    summarise(
+      value = sum(.data[[value_col]], na.rm = TRUE),
+      .groups = "drop"
+    ) %>%
+    pivot_wider(
+      names_from   = .data[[year_col]],
+      values_from = value,
+      names_prefix = "Year_"
+    ) %>%
+    rowwise() %>%
+    mutate(
+      delta = {
+        yr_vals <- c_across(starts_with("Year_"))
+        last(yr_vals) - first(yr_vals)
+      }
+    ) %>%
+    ungroup() %>%
+    select(-starts_with("Year_"))
+}
+
+rank_plus_delta <- function(df, year_col, metier_col, value_col, delta_tbl) {
+
+  wide <- df |>
+    group_by(.data[[year_col]], .data[[metier_col]]) |>
+    summarise(
+      total = sum(.data[[value_col]], na.rm = TRUE),
+      .groups = "drop"
+    ) |>
+    pivot_wider(
+      names_from  = .data[[year_col]],
+      values_from = total,
+      names_prefix = "Year_"
+    )
+
+  # identify last year column robustly
+  year_cols <- grep("^Year_", names(wide), value = TRUE)
+  last_year <- year_cols[length(year_cols)]
+
+  wide |>
+    mutate(
+      Rank = dense_rank(desc(.data[[last_year]]))
+    ) |>
+    left_join(delta_tbl, by = metier_col) |>
+    arrange(Rank)
+}
+
+```
+
+```{r}
+# Set RCG region - NSEA, NAtl, BALT
+rr <- "NAtl" # <---------- and here 
+rrr <- "North Atlantic"
+
+# Instead of a single year, define multiple years
+multi_years <- c("2021","2022","2023","2024","2025")
+
+# For the title (North Sea and Eastern Arctic, North Atlantic, Baltic)
+title <- paste("North Atlantic -", paste(multi_years, collapse=","), "(5-year Overview)")
+
+vessel_limit <- 3
+```
+
+---
+title: "`r title`"
+---
+
+```{r}
+# Reference lists 
+## Scientific name 
+urls <- "https://raw.githubusercontent.com/ices-eg/RCGs/master/Metiers/Scripts/ICESVocabSpecies/ICESVocabAphiaIDScienName_2023.csv"
+ScienName <- read.csv(urls, header = TRUE)
+
+### Remove deprecated and invalid records 
+ScienName <- filter(ScienName, !Deprecated %in% c("", "True", "2020-09-16")) %>%
+  select(Code, Description) %>%
+  mutate(Code = as.numeric(Code))
+## Area - region (normal path gives back xml version)
+url <- "https://raw.githubusercontent.com/ices-eg/RCGs/master/Metiers/Reference_lists/AreaRegionLookup.csv"
+Area <- read.csv(url, header = TRUE)
+### Fix the extra space in rcg region code
+Area <- mutate(Area, Code = ifelse(Code %in% "NSEA                                    " , "NSEA",
+                             ifelse(Code %in% "NAtl                                      ", "NAtl", Code))) %>%
+  select(AreaCode, Code)
+
+# ---------------------------
+# Confidentiality parameters
+# ---------------------------
+
+apply_confidentiality <- function(raw_data,
+                                  agg_data,
+                                  group_vars,      # character vector
+                                  value_vars,      # character vector
+                                  vessel_id,
+                                  vessel_limit = 3) {
+
+  # 1. Count vessels from RAW data
+  vessel_counts <- raw_data |>
+    tidyr::separate_rows({{ vessel_id }}, sep = "\\s*;\\s*|\\s*/\\s*") |>
+    dplyr::group_by(across(all_of(group_vars))) |>
+    dplyr::summarise(
+      n_vessels = n_distinct({{ vessel_id }}),
+      .groups = "drop"
+    )
+
+  # 2. Join vessel counts onto AGGREGATED data
+  agg_conf <- agg_data |>
+    left_join(vessel_counts, by = group_vars) |>
+    mutate(n_vessels = tidyr::replace_na(n_vessels, 0L))
+
+  # 3. Totals before
+  totals_before <- agg_conf |>
+    summarise(across(all_of(value_vars),
+                     ~ sum(as.numeric(.x), na.rm = TRUE)))
+
+  # 4. Apply confidentiality rule
+  agg_after <- agg_conf |>
+    filter(n_vessels >= vessel_limit)
+
+  # 5. Totals after
+  totals_after <- agg_after |>
+    summarise(across(all_of(value_vars),
+                     ~ sum(as.numeric(.x), na.rm = TRUE)))
+
+  # 6. % removed
+  removed_pct <- tibble::tibble(
+    Metric = value_vars,
+    Percent_removed =
+      round(
+        100 * (as.numeric(totals_before) - as.numeric(totals_after)) /
+          as.numeric(totals_before),
+        1
+      )
+  ) |>
+    tidyr::pivot_wider(
+      names_from = Metric,
+      values_from = Percent_removed
+    )
+
+  list(
+    data_filtered = agg_after |> select(-n_vessels),
+    removed_table = removed_pct
+  )
+}
+
+print_removed_table <- function(x, caption) {
+
+  html <- paste0(
+    "<p><strong>", caption, "</strong></p>",
+    knitr::kable(
+      x,
+      format = "html",
+      digits = 1
+    ) |>
+      kableExtra::kable_styling(
+        full_width = FALSE,
+        position = "left"
+      )
+  )
+
+  cat(html)
+}
+
+```
+
+
+
+```{r}
+# Read data 
+#CL <- fread("H:/RDBES/2026/HCL_BS/CommercialLanding.csv", quote = "")  
+#CE <- fread("H:/RDBES/2026/HCE_BS/CommercialEffort.csv", quote="")
+
+CL <- fread("H:/RDBES/2026/HCL_NANSEA_2021_2026/CommercialLanding.csv", quote = "")  
+CE <- fread("H:/RDBES/2026/HCE_NANSEA/CommercialEffort.csv", quote="")
+
+# Filter for multi_years
+CL <- filter(CL, CLyear %in% multi_years)
+CE <- filter(CE, CEyear %in% multi_years)
+
+```
+
+```{r}
+# Keep only area 27
+CL <- filter(CL, substr(CLarea, 1, 2) == "27")
+CE <- filter(CE, substr(CEarea, 1, 2) == "27")
+
+# Assign RCG region
+CL <- left_join(CL, Area, by = c("CLarea" = "AreaCode"))
+CL <- filter(CL, !is.na(Code))  # remove NAs
+CE <- left_join(CE, Area, by = c("CEarea" = "AreaCode"))
+CE <- filter(CE, !is.na(Code))
+
+#table(CE$Code, useNA = "always") # No NA's
+#table(CL$Code, useNA = "always") # No NA's
+```
+
+```{r}
+# Merge for scientific name 
+CL <- left_join(CL, ScienName, by = c("CLspeciesCode" = "Code"))
+```
+
+```{r}
+# Process
+## Year string 
+CL$CLyear <- as.character(CL$CLyear)
+CE$CEyear <- as.character(CE$CEyear)
+
+## Month factors 
+CL$CLmonth <- factor(CL$CLmonth, levels = as.character(c(1:12)))
+CE$CEmonth <- factor(CE$CEmonth, levels = as.character(c(1:12)))
+
+## Quarter factors 
+CL$CLquarter <- factor(CL$CLquarter, levels = as.character(c(1:4)))
+CE$CEquarter <- factor(CE$CEquarter, levels = as.character(c(1:4)))
+
+## Vessel length factors 
+CL$CLvesLenCat <- factor(CL$CLvesselLengthCategory, levels = c("VL0006","VL0608", "VL0810", "VL1012", "VL1215", "VL1518", "VL1824", "VL2440", "VL40XX", "NK"))
+CE$CEvesLenCat <- factor(CE$CEvesselLengthCategory, levels = c("VL0006","VL0608", "VL0810", "VL1012", "VL1215", "VL1518", "VL1824", "VL2440", "VL40XX", "NK"))
+
+## Country factors 
+CL$CLvesselFlagCountry <- factor(CL$CLvesselFlagCountry, levels = sort(unique(CL$CLvesselFlagCountry)))
+CE$CEvesselFlagCountry <- factor(CE$CEvesselFlagCountry, levels = sort(unique(CE$CEvesselFlagCountry)))
+
+## Get metier lvl 4 
+CL <- mutate(CL, CLmetier4 = str_extract(CLmetier6, "[^_]+"))
+CE <- mutate(CE, CEmetier4 = str_extract(CEmetier6, "[^_]+"))
+
+## Get metier lvl 5 
+CL <- mutate(CL, CLmetier5 = str_extract(CLmetier6,  "[^_]*_[^_]*"))
+CE <- mutate(CE, CEmetier5 = str_extract(CEmetier6,  "[^_]*_[^_]*"))
+
+
+# Weight kg to t 
+CL <- mutate(CL, CLscientificWeight = round(CLscientificWeight/1000, digits = 2))
+
+# Filter CatchCategory == Landings
+CL <- filter(CL, CLcatchCategory %in% "Lan")
+
+CL <- CL |>
+  mutate(
+    CLlandingsValue = suppressWarnings(as.numeric(CLlandingsValue))
+  )
+
+```
+
+```{r, message=FALSE, results='asis', echo=FALSE}
+# Filter by area 
+CLAREA <- filter(CL, Code %in% rr)
+CEAREA <- filter(CE, Code %in% rr)
+
+```
+
+```{r}
+# Set country colors
+ct.cols <- 14 
+myColors <- colorRampPalette(brewer.pal(8, "Set2"))(ct.cols)
+names(myColors) <- levels(CL$CLvesselFlagCountry)
+
+```
+
+
+```{r r yearly-summaries, results='asis', echo=FALSE}
+### Build yearly summaries
+CL_byYear <- CLAREA |>
+  group_by(CLyear, CLquarter, CLmetier4, CLmetier5, CLmetier6,
+           CLvesselFlagCountry, CLvesLenCat, Description) |>
+  summarise(
+    scientificWeight = sum(CLscientificWeight, na.rm = TRUE),
+    landingsValue    = sum(CLlandingsValue, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+CE_byYear <- CEAREA |>
+  group_by(CEyear, CEmetier4, CEmetier5, CEmetier6,
+           CEvesselFlagCountry, CEvesLenCat,
+           CEquarter, CEstatisticalRectangle) |>
+  summarise(
+    scientificDaysAtSea = sum(CEscientificDaysAtSea, na.rm = TRUE),
+    numberOfTrips       = sum(CEnumberOfFractionalTrips, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+conf_CL_byYear <- apply_confidentiality(
+  raw_data   = CLAREA,
+  agg_data   = CL_byYear,
+  group_vars = c(
+    "CLyear", "CLquarter", "CLmetier4", "CLmetier5", "CLmetier6",
+    "CLvesselFlagCountry", "CLvesLenCat", "Description"
+  ),
+  value_vars = c("scientificWeight", "landingsValue"),
+  vessel_id  = CLencryptedVesselIds,
+  vessel_limit = vessel_limit
+)
+
+CL_byYear_conf <- conf_CL_byYear$data_filtered
+
+conf_CE_byYear <- apply_confidentiality(
+  raw_data   = CEAREA,
+  agg_data   = CE_byYear,
+  group_vars = c(
+    "CEyear", "CEmetier4", "CEmetier5", "CEmetier6",
+    "CEvesselFlagCountry", "CEvesLenCat",
+    "CEquarter", "CEstatisticalRectangle"
+  ),
+  value_vars = c("scientificDaysAtSea", "numberOfTrips"),
+  vessel_id  = CEencryptedVesselIds,
+  vessel_limit = vessel_limit
+)
+
+CE_byYear_conf <- conf_CE_byYear$data_filtered
+
+# 3‑year collapsed ------------------------------------------------------------
+
+CL_3yr_conf <- CL_byYear_conf |>
+  group_by(CLmetier4, CLmetier5, CLmetier6) |>
+  summarise(
+    scientificWeight = sum(scientificWeight, na.rm = TRUE),
+    landingsValue    = sum(landingsValue, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+CE_3yr_conf <- CE_byYear_conf |>
+  group_by(CEmetier4, CEmetier5, CEmetier6) |>
+  summarise(
+    scientificDaysAtSea = sum(scientificDaysAtSea, na.rm = TRUE),
+    numberOfTrips       = sum(numberOfTrips, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+CL_3yr_raw <- CL_byYear |>
+  group_by(CLmetier4, CLmetier5, CLmetier6) |>
+  summarise(
+    scientificWeight = sum(scientificWeight, na.rm = TRUE),
+    landingsValue    = sum(landingsValue,    na.rm = TRUE),
+    .groups = "drop"
+  )
+
+CE_3yr_raw <- CE_byYear |>
+  group_by(CEmetier4, CEmetier5, CEmetier6) |>
+  summarise(
+    scientificDaysAtSea = sum(scientificDaysAtSea, na.rm = TRUE),
+    numberOfTrips       = sum(numberOfTrips,       na.rm = TRUE),
+    .groups = "drop"
+  )
+
+```
+
+```{r top10-driver, results='asis', echo=FALSE}
+
+driver_tbl <- "effort"     # "effort" | "weight"
+driver_n   <- 10
+
+## ------------------------------------------------------------------
+
+if (driver_tbl == "effort") {
+
+  drv_tbl      <- CE_3yr_raw
+  drv_col      <- "scientificDaysAtSea"
+  driver_label <- "scientific fishing days"
+
+  met4 <- "CEmetier4"
+  met5 <- "CEmetier5"
+  met6 <- "CEmetier6"
+
+} else {
+
+  drv_tbl      <- CL_3yr_raw
+  drv_col      <- "scientificWeight"
+  driver_label <- "scientific landed weight"
+
+  met4 <- "CLmetier4"
+  met5 <- "CLmetier5"
+  met6 <- "CLmetier6"
+}
+
+## helper ----------------------------------------------------------------------
+get_topN <- function(tbl, met, val, n = driver_n) {
+  tbl |>
+    group_by(.data[[met]]) |>
+    summarise(total = sum(.data[[val]], na.rm = TRUE), .groups = "drop") |>
+    slice_max(total, n = n) |>
+    pull(.data[[met]])
+}
+
+
+## compute the three driver lists ---------------------------------------------
+top10_L4 <- get_topN(drv_tbl, met4, drv_col)
+top10_L5 <- get_topN(drv_tbl, met5, drv_col)
+top10_L6 <- get_topN(drv_tbl, met6, drv_col)
+
+## FILTER the yearly & 3-year tables *once*  -----------------------------------
+CL_byYear_L4 <- CL_byYear_conf |> filter(CLmetier4 %in% top10_L4)
+CL_byYear_L5 <- CL_byYear_conf |> filter(CLmetier5 %in% top10_L5)
+CL_byYear_L6 <- CL_byYear_conf |> filter(CLmetier6 %in% top10_L6)
+
+CE_byYear_L4 <- CE_byYear_conf |> filter(CEmetier4 %in% top10_L4)
+CE_byYear_L5 <- CE_byYear_conf |> filter(CEmetier5 %in% top10_L5)
+CE_byYear_L6 <- CE_byYear_conf |> filter(CEmetier6 %in% top10_L6)
+
+```
+
+
+```{r, results='asis', echo=FALSE}
+# ── annual totals (country-stacked bars) ───────────────────────────
+conf_CL_year_country <- apply_confidentiality(
+  raw_data = CLAREA,
+  agg_data = CL_byYear_conf |>
+    group_by(CLyear, CLvesselFlagCountry) |>
+    summarise(
+      TotWeight = sum(scientificWeight, na.rm = TRUE),
+      TotValue  = sum(landingsValue, na.rm = TRUE),
+      .groups = "drop"
+    ),
+  group_vars = c("CLyear", "CLvesselFlagCountry"),
+  value_vars = c("TotWeight", "TotValue"),
+  vessel_id  = CLencryptedVesselIds,
+  vessel_limit = vessel_limit
+)
+
+CL_year_country <- conf_CL_year_country$data_filtered
+
+conf_CE_year_country <- apply_confidentiality(
+  raw_data = CEAREA,
+  agg_data = CE_byYear_conf |>
+    group_by(CEyear, CEvesselFlagCountry) |>
+    summarise(
+      TotDays  = sum(scientificDaysAtSea, na.rm = TRUE),
+      TotTrips = sum(numberOfTrips, na.rm = TRUE),
+      .groups = "drop"
+    ),
+  group_vars = c("CEyear", "CEvesselFlagCountry"),
+  value_vars = c("TotDays", "TotTrips"),
+  vessel_id  = CEencryptedVesselIds,
+  vessel_limit = vessel_limit
+)
+
+CE_year_country <- conf_CE_year_country$data_filtered
+
+# ── quarterly totals (whole fleet) ─────────────────────────────────
+
+conf_CL_quarter_total <- apply_confidentiality(
+  raw_data = CLAREA,
+  agg_data = CL_byYear_conf |>
+    group_by(CLyear, CLquarter) |>
+    summarise(
+      TotWeight = sum(scientificWeight, na.rm = TRUE),
+      TotValue  = sum(landingsValue, na.rm = TRUE),
+      .groups = "drop"
+    ),
+  group_vars = c("CLyear", "CLquarter"),
+  value_vars = c("TotWeight", "TotValue"),
+  vessel_id  = CLencryptedVesselIds,
+  vessel_limit = vessel_limit
+)
+
+CL_quarter_total <- conf_CL_quarter_total$data_filtered
+
+conf_CE_quarter_total <- apply_confidentiality(
+  raw_data = CEAREA,
+  agg_data = CE_byYear_conf |>
+    group_by(CEyear, CEquarter) |>
+    summarise(
+      TotDays  = sum(scientificDaysAtSea, na.rm = TRUE),
+      TotTrips = sum(numberOfTrips, na.rm = TRUE),
+      .groups = "drop"
+    ),
+  group_vars = c("CEyear", "CEquarter"),
+  value_vars = c("TotDays", "TotTrips"),
+  vessel_id  = CEencryptedVesselIds,
+  vessel_limit = vessel_limit
+)
+
+CE_quarter_total <- conf_CE_quarter_total$data_filtered
+
+```
+
+
+
+```{r, results='asis', echo=FALSE}
+
+pandoc.header("Executive Summary", level = 1)
+
+pandoc.p(glue::glue("
+This report provides an overview of fishing activity in **{rrr}** over {paste(multi_years, collapse = '–')}, 
+drawing on **Commercial Landings** (CL) and **Commercial Effort** (CE) data submitted to the RDBES in 2025.  
+We consider only **landings** (catch category `'Lan'`) and express landings in scientific weight (t) and value (€), 
+and effort as scientific fishing days and number of trips, broken down by flag-state and vessel size class.
+
+To characterise dominant metiers at each level, we apply a Top-10 rule, independently at each tier:
+
+- **Level 4:** the ten L4 gears with the highest cumulative {driver_label}.  
+- **Level 5:** the ten L5 variants with the highest cumulative {driver_label}.  
+- **Level 6:** the ten L6 mesh-sizes with the highest cumulative {driver_label}.  
+
+Subsequent sections visualise whole-fleet annual and quarterly trends, followed by metier-level time series and rankings for the Top 10 at Levels 4–6.
+
+**Update in 2026: All tables and graphs have been filtered so that it only shows data where there are at least 3 vessels. In connection to plots and tables, a supplementary table indicates the percentage of data removed due to appliation of confidentiality rules.**
+"))
+
+```
+
+
+
+```{r, results='asis',  echo=FALSE}
+pandoc.header("Annual trends", level = 1)
+pandoc.p("
+Before selecting any métiers, these panels summarise whole‑fleet annual changes
+in landed weight, landed value, fishing days, and number of trips, stacked by flag state.
+")
+
+# ---- CL: annual totals by country (confidentiality-safe) ---------------------
+
+CL_year_country_raw <- CLAREA |>
+  group_by(CLyear, CLvesselFlagCountry) |>
+  summarise(
+    TotWeight = sum(CLscientificWeight, na.rm = TRUE),
+    TotValue  = sum(CLlandingsValue,    na.rm = TRUE),
+    .groups = "drop"
+  )
+
+CE_year_country_raw <- CEAREA |>
+  group_by(CEyear, CEvesselFlagCountry) |>
+  summarise(
+    TotDays  = sum(CEscientificDaysAtSea, na.rm = TRUE),
+    TotTrips = sum(CEnumberOfFractionalTrips, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+conf_CL_year_country <- apply_confidentiality(
+  raw_data   = CLAREA,
+  agg_data   = CL_year_country_raw,
+  group_vars = c("CLyear", "CLvesselFlagCountry"),
+  value_vars = c("TotWeight", "TotValue"),
+  vessel_id  = CLencryptedVesselIds,
+  vessel_limit = vessel_limit
+)
+
+conf_CE_year_country <- apply_confidentiality(
+  raw_data   = CEAREA,
+  agg_data   = CE_year_country_raw,
+  group_vars = c("CEyear", "CEvesselFlagCountry"),
+  value_vars = c("TotDays", "TotTrips"),
+  vessel_id  = CEencryptedVesselIds,
+  vessel_limit = vessel_limit
+)
+
+# Confidentiality-safe datasets for plotting
+CL_year_country_conf <- conf_CL_year_country$data_filtered
+CE_year_country_conf <- conf_CE_year_country$data_filtered
+
+# ---- plots ------------------------------------------------------------------
+
+vl1 <- ggplot(
+  CL_year_country_conf,
+  aes(CLyear, TotWeight, fill = CLvesselFlagCountry)
+) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(x = "Year", y = "Weight (t)", fill = "Flag state",
+       title = "Landed weight")
+
+vl2 <- ggplot(
+  CL_year_country_conf,
+  aes(CLyear, TotValue, fill = CLvesselFlagCountry)
+) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(x = "Year", y = "Value (€)", fill = "Flag state",
+       title = "Landed value")
+
+vl3 <- ggplot(
+  CE_year_country_conf,
+  aes(CEyear, TotDays, fill = CEvesselFlagCountry)
+) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(x = "Year", y = "Days at sea", fill = "Flag state",
+       title = "Fishing days")
+
+vl4 <- ggplot(
+  CE_year_country_conf,
+  aes(CEyear, TotTrips, fill = CEvesselFlagCountry)
+) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(x = "Year", y = "Trips", fill = "Flag state",
+       title = "Number of trips")
+
+print(ggarrange(vl1, vl2, vl3, vl4, ncol = 2, nrow = 2))
+
+# ---- % removed tables -------------------------------------------------------
+
+conf_annual_country_wide <- dplyr::bind_cols(
+  conf_CL_year_country$removed_table,
+  conf_CE_year_country$removed_table
+)
+
+print_removed_table(
+  conf_annual_country_wide,
+  "Percentage of data removed due to confidentiality rules (annual totals by country)."
+)
+
+```
+
+
+
+```{r, results='asis', echo=FALSE}
+pandoc.header("Quarterly trends", level = 1)
+pandoc.p("
+These panels show whole‑fleet quarterly totals for landed weight, landed value,
+fishing days and number of trips, highlighting seasonal patterns.
+")
+
+# ---- CL quarterly totals -----------------------------------------------------
+
+CL_quarter_total_raw <- CLAREA |>
+  group_by(CLyear, CLquarter) |>
+  summarise(
+    TotWeight = sum(CLscientificWeight, na.rm = TRUE),
+    TotValue  = sum(CLlandingsValue,    na.rm = TRUE),
+    .groups = "drop"
+  )
+
+CE_quarter_total_raw <- CEAREA |>
+  group_by(CEyear, CEquarter) |>
+  summarise(
+    TotDays  = sum(CEscientificDaysAtSea, na.rm = TRUE),
+    TotTrips = sum(CEnumberOfFractionalTrips, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+conf_CL_quarter_total <- apply_confidentiality(
+  raw_data   = CLAREA,
+  agg_data   = CL_quarter_total_raw,
+  group_vars = c("CLyear", "CLquarter"),
+  value_vars = c("TotWeight", "TotValue"),
+  vessel_id  = CLencryptedVesselIds,
+  vessel_limit = vessel_limit
+)
+
+conf_CE_quarter_total <- apply_confidentiality(
+  raw_data   = CEAREA,
+  agg_data   = CE_quarter_total_raw,
+  group_vars = c("CEyear", "CEquarter"),
+  value_vars = c("TotDays", "TotTrips"),
+  vessel_id  = CEencryptedVesselIds,
+  vessel_limit = vessel_limit
+)
+
+# Confidentiality‑safe data for plotting
+CL_quarter_total_conf <- conf_CL_quarter_total$data_filtered
+CE_quarter_total_conf <- conf_CE_quarter_total$data_filtered
+
+# ---- plots ------------------------------------------------------------------
+
+q1 <- ggplot(
+  CL_quarter_total_conf,
+  aes(CLyear, TotWeight, fill = CLquarter)
+) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal() +
+  labs(x = "Year", y = "Weight (t)", fill = "Quarter",
+       title = "Landed weight")
+
+q2 <- ggplot(
+  CL_quarter_total_conf,
+  aes(CLyear, TotValue, fill = CLquarter)
+) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal() +
+  labs(x = "Year", y = "Value (€)", fill = "Quarter",
+       title = "Landed value")
+
+q3 <- ggplot(
+  CE_quarter_total_conf,
+  aes(CEyear, TotDays, fill = CEquarter)
+) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal() +
+  labs(x = "Year", y = "Days at sea", fill = "Quarter",
+       title = "Fishing days")
+
+q4 <- ggplot(
+  CE_quarter_total_conf,
+  aes(CEyear, TotTrips, fill = CEquarter)
+) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal() +
+  labs(x = "Year", y = "Trips", fill = "Quarter",
+       title = "Number of trips")
+
+print(ggarrange(q1, q2, q3, q4, ncol = 2, nrow = 2))
+
+
+conf_quarter_total_wide <- dplyr::bind_cols(
+  conf_CL_quarter_total$removed_table,
+  conf_CE_quarter_total$removed_table
+)
+
+print_removed_table(
+  conf_quarter_total_wide,
+  "Percentage of data removed due to confidentiality rules (quarterly totals)."
+)
+
+```
+
+
+```{r}
+## ──────── Level 4 ───────────────────────────────────────────────────
+CL_year_topL4_raw <- CLAREA |>
+  filter(CLmetier4 %in% top10_L4) |>
+  group_by(CLyear, CLmetier4) |>
+  summarise(
+    TotWeight = sum(CLscientificWeight, na.rm = TRUE),
+    TotValue  = sum(CLlandingsValue,    na.rm = TRUE),
+    .groups = "drop"
+  )
+
+CE_year_topL4_raw <- CEAREA |>
+  filter(CEmetier4 %in% top10_L4) |>
+  group_by(CEyear, CEmetier4) |>
+  summarise(
+    TotDays  = sum(CEscientificDaysAtSea, na.rm = TRUE),
+    TotTrips = sum(CEnumberOfFractionalTrips, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+
+conf_CL_year_topL4 <- apply_confidentiality(
+  raw_data   = CLAREA,
+  agg_data   = CL_year_topL4_raw,
+  group_vars = c("CLyear", "CLmetier4"),
+  value_vars = c("TotWeight", "TotValue"),
+  vessel_id  = CLencryptedVesselIds,
+  vessel_limit = vessel_limit
+)
+
+conf_CE_year_topL4 <- apply_confidentiality(
+  raw_data   = CEAREA,
+  agg_data   = CE_year_topL4_raw,
+  group_vars = c("CEyear", "CEmetier4"),
+  value_vars = c("TotDays", "TotTrips"),
+  vessel_id  = CEencryptedVesselIds,
+  vessel_limit = vessel_limit
+)
+
+CL_year_topL4 <- conf_CL_year_topL4$data_filtered
+CE_year_topL4 <- conf_CE_year_topL4$data_filtered
+
+## ──────── Level 5 ───────────────────────────────────────────────────
+CL_year_topL5_raw <- CLAREA |>
+  filter(CLmetier5 %in% top10_L5) |>
+  group_by(CLyear, CLmetier5) |>
+  summarise(
+    TotWeight = sum(CLscientificWeight, na.rm = TRUE),
+    TotValue  = sum(CLlandingsValue,    na.rm = TRUE),
+    .groups = "drop"
+  )
+
+
+# ---- DIAGNOSTIC: vessel counts for Level‑5 (RAW) ------------------
+
+#CLAREA |>
+#  filter(CLmetier5 %in% top10_L5) |>
+#  tidyr::separate_rows(CLencryptedVesselIds, sep = "\\s*;\\s*|\\s*/\\s*") |>
+#  group_by(CLyear, CLmetier5) |>
+#  summarise(
+#    n_vessels = n_distinct(CLencryptedVesselIds),
+#    .groups = "drop"
+#  ) |>
+#  summarise(
+#    min_vessels = min(n_vessels),
+#    max_vessels = max(n_vessels)
+#  )
+
+CE_year_topL5_raw <- CEAREA |>
+  filter(CEmetier5 %in% top10_L5) |>
+  group_by(CEyear, CEmetier5) |>
+  summarise(
+    TotDays  = sum(CEscientificDaysAtSea, na.rm = TRUE),
+    TotTrips = sum(CEnumberOfFractionalTrips, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+conf_CL_year_topL5 <- apply_confidentiality(
+  raw_data   = CLAREA,
+  agg_data   = CL_year_topL5_raw,
+  group_vars = c("CLyear", "CLmetier5"),
+  value_vars = c("TotWeight", "TotValue"),
+  vessel_id  = CLencryptedVesselIds,
+  vessel_limit = vessel_limit
+)
+
+conf_CE_year_topL5 <- apply_confidentiality(
+  raw_data   = CEAREA,
+  agg_data   = CE_year_topL5_raw,
+  group_vars = c("CEyear", "CEmetier5"),
+  value_vars = c("TotDays", "TotTrips"),
+  vessel_id  = CEencryptedVesselIds,
+  vessel_limit = vessel_limit
+)
+
+CL_year_topL5 <- conf_CL_year_topL5$data_filtered
+CE_year_topL5 <- conf_CE_year_topL5$data_filtered
+
+## ──────── Level 6 ───────────────────────────────────────────────────
+CL_year_topL6_raw <- CLAREA |>
+  filter(CLmetier6 %in% top10_L6) |>
+  group_by(CLyear, CLmetier6) |>
+  summarise(
+    TotWeight = sum(CLscientificWeight, na.rm = TRUE),
+    TotValue  = sum(CLlandingsValue,    na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# ---- DIAGNOSTIC: vessel counts for Level‑6 (RAW) ------------------
+
+#CLAREA |>
+#  filter(CLmetier6 %in% top10_L6) |>
+#  tidyr::separate_rows(CLencryptedVesselIds, sep = "\\s*;\\s*|\\s*/\\s*") |>
+#  group_by(CLyear, CLmetier6) |>
+#  summarise(
+#    n_vessels = n_distinct(CLencryptedVesselIds),
+#    .groups = "drop"
+#  ) |>
+#  summarise(
+#    min_vessels = min(n_vessels),
+#    max_vessels = max(n_vessels)
+ # )
+
+CE_year_topL6_raw <- CEAREA |>
+  filter(CEmetier6 %in% top10_L6) |>
+  group_by(CEyear, CEmetier6) |>
+  summarise(
+    TotDays  = sum(CEscientificDaysAtSea, na.rm = TRUE),
+    TotTrips = sum(CEnumberOfFractionalTrips, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+conf_CL_year_topL6 <- apply_confidentiality(
+  raw_data   = CLAREA,
+  agg_data   = CL_year_topL6_raw,
+  group_vars = c("CLyear", "CLmetier6"),
+  value_vars = c("TotWeight", "TotValue"),
+  vessel_id  = CLencryptedVesselIds,
+  vessel_limit = vessel_limit
+)
+
+conf_CE_year_topL6 <- apply_confidentiality(
+  raw_data   = CEAREA,
+  agg_data   = CE_year_topL6_raw,
+  group_vars = c("CEyear", "CEmetier6"),
+  value_vars = c("TotDays", "TotTrips"),
+  vessel_id  = CEencryptedVesselIds,
+  vessel_limit = vessel_limit
+)
+
+CL_year_topL6 <- conf_CL_year_topL6$data_filtered
+CE_year_topL6 <- conf_CE_year_topL6$data_filtered
+
+```
+
+
+```{r, results='asis', echo=FALSE}
+## ───── Level 4 ─────────────────────────────────────────────────────
+diff_weight_L4 <- quick_delta(
+  CL_year_topL4,
+  year_col  = "CLyear",
+  value_col = "TotWeight",
+  group_col="CLmetier4"
+)
+
+diff_value_L4 <- quick_delta(
+  CL_year_topL4,
+  year_col  = "CLyear",
+  value_col = "TotValue",
+  group_col="CLmetier4"
+)
+
+diff_days_L4 <- quick_delta(
+  CE_year_topL4,
+  year_col  = "CEyear",     
+  value_col = "TotDays",
+  group_col="CEmetier4"
+)
+
+diff_trips_L4 <- quick_delta(
+  CE_year_topL4,
+  year_col  = "CEyear",
+  value_col = "TotTrips",
+  group_col="CEmetier4"
+)
+
+rank_weight_L4 <- rank_plus_delta(
+  CL_year_topL4,
+  year_col   = "CLyear",
+  metier_col = "CLmetier4",
+  value_col  = "TotWeight",
+  delta_tbl  = diff_weight_L4
+)
+
+rank_value_L4 <- rank_plus_delta(
+  CL_year_topL4,
+  year_col   = "CLyear",
+  metier_col = "CLmetier4",
+  value_col  = "TotValue",
+  delta_tbl  = diff_value_L4
+)
+
+rank_days_L4 <- rank_plus_delta(
+  CE_year_topL4,
+  year_col   = "CEyear",
+  metier_col = "CEmetier4",
+  value_col  = "TotDays",
+  delta_tbl  = diff_days_L4
+)
+
+rank_trips_L4 <- rank_plus_delta(
+  CE_year_topL4,
+  year_col   = "CEyear",
+  metier_col = "CEmetier4",
+  value_col  = "TotTrips",
+  delta_tbl  = diff_trips_L4
+)
+
+## ───── Level 5 ─────────────────────────────────────────────────────
+diff_weight_L5 <- quick_delta(
+  CL_year_topL5,
+  year_col  = "CLyear",
+  value_col = "TotWeight",
+  group_col="CLmetier5"
+  
+)
+
+diff_value_L5 <- quick_delta(
+  CL_year_topL5,
+  year_col  = "CLyear",
+  value_col = "TotValue",
+  group_col="CLmetier5"
+)
+
+diff_days_L5 <- quick_delta(
+  CE_year_topL5,
+  year_col  = "CEyear",
+  value_col = "TotDays",
+  group_col="CEmetier5"
+)
+
+diff_trips_L5 <- quick_delta(
+  CE_year_topL5,
+  year_col  = "CEyear",
+  value_col = "TotTrips",
+  group_col="CEmetier5"
+)
+
+rank_weight_L5 <- rank_plus_delta(
+  CL_year_topL5,
+  year_col   = "CLyear",
+  metier_col = "CLmetier5",
+  value_col  = "TotWeight",
+  delta_tbl  = diff_weight_L5
+)
+
+rank_value_L5 <- rank_plus_delta(
+  CL_year_topL5,
+  year_col   = "CLyear",
+  metier_col = "CLmetier5",
+  value_col  = "TotValue",
+  delta_tbl  = diff_value_L5
+)
+
+rank_days_L5 <- rank_plus_delta(
+  CE_year_topL5,
+  year_col   = "CEyear",
+  metier_col = "CEmetier5",
+  value_col  = "TotDays",
+  delta_tbl  = diff_days_L5
+)
+
+rank_trips_L5 <- rank_plus_delta(
+  CE_year_topL5,
+  year_col   = "CEyear",
+  metier_col = "CEmetier5",
+  value_col  = "TotTrips",
+  delta_tbl  = diff_trips_L5
+)
+
+## ───── Level 6 ─────────────────────────────────────────────────────
+
+diff_weight_L6 <- quick_delta(
+  CL_year_topL6,
+  year_col  = "CLyear",
+  value_col = "TotWeight",
+  group_col="CLmetier6"
+)
+
+diff_value_L6 <- quick_delta(
+  CL_year_topL6,
+  year_col  = "CLyear",
+  value_col = "TotValue",
+  group_col="CLmetier6"
+)
+
+diff_days_L6 <- quick_delta(
+  CE_year_topL6,
+  year_col  = "CEyear",
+  value_col = "TotDays",
+  group_col="CEmetier6"
+)
+
+diff_trips_L6 <- quick_delta(
+  CE_year_topL6,
+  year_col  = "CEyear",
+  value_col = "TotTrips",
+  group_col="CEmetier6"
+)
+
+rank_weight_L6 <- rank_plus_delta(
+  CL_year_topL6,
+  year_col   = "CLyear",
+  metier_col = "CLmetier6",
+  value_col  = "TotWeight",
+  delta_tbl  = diff_weight_L6
+)
+
+rank_value_L6 <- rank_plus_delta(
+  CL_year_topL6,
+  year_col   = "CLyear",
+  metier_col = "CLmetier6",
+  value_col  = "TotValue",
+  delta_tbl  = diff_value_L6
+)
+
+rank_days_L6 <- rank_plus_delta(
+  CE_year_topL6,
+  year_col   = "CEyear",
+  metier_col = "CEmetier6",
+  value_col  = "TotDays",
+  delta_tbl  = diff_days_L6
+)
+
+rank_trips_L6 <- rank_plus_delta(
+  CE_year_topL6,
+  year_col   = "CEyear",
+  metier_col = "CEmetier6",
+  value_col  = "TotTrips",
+  delta_tbl  = diff_trips_L6
+)
+
+```
+
+
+```{r, results='asis',  echo=FALSE}
+
+pandoc.header("Trends top 10 métier level 4", level = 1)
+pandoc.p(glue::glue(
+  "Over {paste(multi_years, collapse = '–')}, we ranked the Top-{driver_n} Level‑4 gears ",
+  "by cumulative {driver_label}. The four panels below show annual trends in landed weight, ",
+  "landed value, fishing days and number of trips for these métiers."
+))
+
+pandoc.header("Annual variation top 10 métier level 4", level = 2)
+
+# ---- Guard: no data after confidentiality -----------------------------------
+if (nrow(CL_year_topL4) == 0 && nrow(CE_year_topL4) == 0) {
+
+  pandoc.p(
+    "After applying confidentiality rules (n < 3 vessels), no Level‑4 métiers remain for the selected years."
+  )
+
+} else {
+
+  # ---- Plots ---------------------------------------------------------------
+
+  p1 <- ggplot(CL_year_topL4,
+               aes(reorder(CLmetier4, -TotWeight), TotWeight, fill = CLyear)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    theme_minimal() +
+    labs(x = "Métier L4", y = "Weight (t)", title = "Landed weight") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+  p2 <- ggplot(CL_year_topL4,
+               aes(reorder(CLmetier4, -TotValue), TotValue, fill = CLyear)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    theme_minimal() +
+    labs(x = "Métier L4", y = "Value (€)", title = "Landed value (€)") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+  p3 <- ggplot(CE_year_topL4,
+               aes(reorder(CEmetier4, -TotDays), TotDays, fill = CEyear)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    theme_minimal() +
+    labs(x = "Métier L4", y = "Days at sea", title = "Fishing days") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+  p4 <- ggplot(CE_year_topL4,
+               aes(reorder(CEmetier4, -TotTrips), TotTrips, fill = CEyear)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    theme_minimal() +
+    labs(x = "Métier L4", y = "Trips", title = "Number of trips") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+  print(ggarrange(p1, p2, p3, p4, ncol = 2, nrow = 2))
+
+  # ---- Confidentiality reporting (ONE wide table) --------------------------
+
+  conf_L4_annual_wide <- dplyr::bind_cols(
+    conf_CL_year_topL4$removed_table,
+    conf_CE_year_topL4$removed_table
+  )
+
+  print_removed_table(
+    conf_L4_annual_wide,
+    "Percentage of data removed due to confidentiality rules (Level‑4 annual trends)."
+  )
+}
+
+```
+
+
+
+```{r, results='asis', echo=FALSE}
+
+
+pandoc.header("Rank of Top‑10 métiers L4", level = 2)
+
+pandoc.p(glue::glue(
+  "This section ranks the Top‑{driver_n} Level‑4 métiers by their cumulative ",
+  "{driver_label} over {paste(multi_years, collapse = '–')}. ",
+  "For each métier, the tables show annual ranks for landed weight, landed value, ",
+  "fishing days and number of trips. Columns *Delta* report the change between ",
+  "the first and last year."
+))
+
+# ---- Guard: no data after confidentiality -----------------------------------
+
+if (nrow(rank_weight_L4) == 0 &&
+    nrow(rank_value_L4)  == 0 &&
+    nrow(rank_days_L4)   == 0 &&
+    nrow(rank_trips_L4)  == 0) {
+
+  pandoc.p(
+    "After applying confidentiality rules (n < 3 vessels), no Level‑4 métiers remain for ranking."
+  )
+
+} else {
+
+  # ---- Ranking tables -------------------------------------------------------
+
+  print(kbl(rank_weight_L4,
+      caption = "Landed weight",
+      digits = 1) |>
+    kable_styling())
+
+  print(kbl(rank_value_L4,
+      caption = "Landed value (€)",
+      digits = 1) |>
+    kable_styling())
+
+  print(kbl(rank_days_L4,
+      caption = "Fishing days",
+      digits = 1) |>
+    kable_styling())
+
+  print(kbl(rank_trips_L4,
+      caption = "Number of trips",
+      digits = 1) |>
+    kable_styling())
+
+
+}
+
+
+```
+
+
+```{r, results='asis',  echo=FALSE}
+
+
+pandoc.header("Trends top 10 métier level 5", level = 1)
+
+pandoc.p(glue::glue(
+  "These panels show annual trends for the Top‑{driver_n} Level‑5 métiers ",
+  "(ranked by cumulative {driver_label}), regardless of their parent Level‑4 gear. ",
+  "We display landed weight, landed value, fishing days and number of trips by year."
+))
+
+pandoc.header("Annual variation top 10 métier level 5", level = 2)
+
+# ---- Guard: no data after confidentiality -----------------------------------
+
+if (nrow(CL_year_topL5) == 0 && nrow(CE_year_topL5) == 0) {
+
+  pandoc.p(
+    "After applying confidentiality rules (n < 3 vessels), no Level‑5 métiers remain for the selected years."
+  )
+
+} else {
+
+
+  # ---- Plots ---------------------------------------------------------------
+
+  p1 <- ggplot(CL_year_topL5,
+               aes(reorder(CLmetier5, -TotWeight), TotWeight, fill = CLyear)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    theme_minimal() +
+    labs(x = "Métier L5", y = "Weight (t)", title = "Landed weight") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+  p2 <- ggplot(CL_year_topL5,
+               aes(reorder(CLmetier5, -TotValue), TotValue, fill = CLyear)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    theme_minimal() +
+    labs(x = "Métier L5", y = "Value (€)", title = "Landed value (€)") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+  p3 <- ggplot(CE_year_topL5,
+               aes(reorder(CEmetier5, -TotDays), TotDays, fill = CEyear)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    theme_minimal() +
+    labs(x = "Métier L5", y = "Days at sea", title = "Fishing days") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+  p4 <- ggplot(CE_year_topL5,
+               aes(reorder(CEmetier5, -TotTrips), TotTrips, fill = CEyear)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    theme_minimal() +
+    labs(x = "Métier L5", y = "Trips", title = "Number of trips") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+  print(ggarrange(p1, p2, p3, p4, ncol = 2, nrow = 2))
+
+  # ---- Confidentiality reporting (ONE wide table) --------------------------
+
+  conf_L5_annual_wide <- dplyr::bind_cols(
+    conf_CL_year_topL5$removed_table,
+    conf_CE_year_topL5$removed_table
+  )
+
+  print_removed_table(
+    conf_L5_annual_wide,
+    "Percentage of data removed due to confidentiality rules (Level‑5 annual trends)."
+  )
+}
+
+
+```
+
+
+```{r, results='asis',  echo=FALSE}
+
+
+pandoc.header("Rank of Top‑10 métiers L5", level = 2)
+
+pandoc.p(glue::glue(
+  "This section ranks the Top‑{driver_n} Level‑5 métiers by their cumulative ",
+  "{driver_label} over {paste(multi_years, collapse = '–')}. ",
+  "For each métier, the tables show annual ranks for landed weight, landed value, ",
+  "fishing days and number of trips. Columns *Delta* report the change between ",
+  "the first and last year."
+))
+
+# ---- Guard: no data after confidentiality -----------------------------------
+
+if (nrow(rank_weight_L5) == 0 &&
+    nrow(rank_value_L5)  == 0 &&
+    nrow(rank_days_L5)   == 0 &&
+    nrow(rank_trips_L5)  == 0) {
+
+  pandoc.p(
+    "After applying confidentiality rules (n < 3 vessels), no Level‑5 métiers remain for ranking."
+  )
+
+} else {
+
+  # ---- Ranking tables -------------------------------------------------------
+
+  print(kbl(rank_weight_L5,
+      caption = "Landed weight (t)",
+      digits = 1) |>
+    kable_styling())
+
+  print(kbl(rank_value_L5,
+      caption = "Landed value (€)",
+      digits = 1) |>
+    kable_styling())
+
+  print(kbl(rank_days_L5,
+      caption = "Fishing days",
+      digits = 1) |>
+    kable_styling())
+
+  print(kbl(rank_trips_L5,
+      caption = "Number of trips",
+      digits = 1) |>
+    kable_styling())
+
+}
+
+
+```
+
+
+
+```{r, results='asis', echo=FALSE}
+
+pandoc.header("Trends top 10 métier level 6", level = 1)
+
+pandoc.p(glue::glue(
+  "These panels show annual trends for the flat Top‑{driver_n} Level‑6 métiers ",
+  "(ranked by cumulative {driver_label}), regardless of their parent Level‑5 variant. ",
+  "We display landed weight, landed value, fishing days and number of trips by year."
+))
+
+pandoc.header("Annual variation top 10 métier level 6", level = 2)
+
+# ---- Guard: no data after confidentiality -----------------------------------
+
+if (nrow(CL_year_topL6) == 0 && nrow(CE_year_topL6) == 0) {
+
+  pandoc.p(
+    "After applying confidentiality rules (n < 3 vessels), no Level‑6 métiers remain for the selected years."
+  )
+
+} else {
+
+  # ---- Plots ---------------------------------------------------------------
+
+  p1 <- ggplot(CL_year_topL6,
+               aes(reorder(CLmetier6, -TotWeight), TotWeight, fill = CLyear)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    theme_minimal() +
+    labs(x = "Métier L6", y = "Weight (t)", title = "Landed weight") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+  p2 <- ggplot(CL_year_topL6,
+               aes(reorder(CLmetier6, -TotValue), TotValue, fill = CLyear)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    theme_minimal() +
+    labs(x = "Métier L6", y = "Value (€)", title = "Landed value (€)") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+  p3 <- ggplot(CE_year_topL6,
+               aes(reorder(CEmetier6, -TotDays), TotDays, fill = CEyear)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    theme_minimal() +
+    labs(x = "Métier L6", y = "Days at sea", title = "Fishing days") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+  p4 <- ggplot(CE_year_topL6,
+               aes(reorder(CEmetier6, -TotTrips), TotTrips, fill = CEyear)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    theme_minimal() +
+    labs(x = "Métier L6", y = "Trips", title = "Number of trips") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+  print(ggarrange(p1, p2, p3, p4, ncol = 2, nrow = 2))
+
+  # ---- Confidentiality reporting (ONE wide table) --------------------------
+
+  conf_L6_annual_wide <- dplyr::bind_cols(
+    conf_CL_year_topL6$removed_table,
+    conf_CE_year_topL6$removed_table
+  )
+
+  print_removed_table(
+    conf_L6_annual_wide,
+    "Percentage of data removed due to confidentiality rules (Level‑6 annual trends)."
+  )
+}
+
+
+
+```
+
+
+
+```{r, results='asis',  echo=FALSE}
+
+
+pandoc.header("Rank of Top‑10 métiers L6", level = 2)
+
+pandoc.p(glue::glue(
+  "This section ranks the Top‑{driver_n} Level‑6 métiers by their cumulative ",
+  "{driver_label} over {paste(multi_years, collapse = '–')}. ",
+  "For each métier, the tables show annual ranks for landed weight, landed value, ",
+  "fishing days and number of trips. Columns *Delta* report the change between ",
+  "the first and last year."
+))
+
+# ---- Guard: no data after confidentiality -----------------------------------
+
+if (nrow(rank_weight_L6) == 0 &&
+    nrow(rank_value_L6)  == 0 &&
+    nrow(rank_days_L6)   == 0 &&
+    nrow(rank_trips_L6)  == 0) {
+
+  pandoc.p(
+    "After applying confidentiality rules (n < 3 vessels), no Level‑6 métiers remain for ranking."
+  )
+
+} else {
+
+  # ---- Ranking tables ------------------------------------------------------
+
+ 
+  print(
+    kbl(rank_weight_L6,
+        caption = "Landed weight (t)",
+        digits = 1) |>
+      kable_styling()
+  )
+
+  print(
+    kbl(rank_value_L6,
+        caption = "Landed value (€)",
+        digits = 1) |>
+      kable_styling()
+  )
+
+  print(
+    kbl(rank_days_L6,
+        caption = "Fishing days",
+        digits = 1) |>
+      kable_styling()
+  )
+
+  print(
+    kbl(rank_trips_L6,
+        caption = "Number of trips",
+        digits = 1) |>
+      kable_styling()
+  )
+
+
+  
+}
+
+```
+
+
