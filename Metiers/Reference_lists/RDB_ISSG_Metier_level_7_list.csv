@@ -29,7 +29,9 @@ NAtl,LLD_LPF_0_0_0_BFT,LLD_LPF_0_0_0,LLD_LPF,Bluefin tuna (Thunnus thynnus),2023
 NSEA,LLD_LPF_0_0_0_BFT,LLD_LPF_0_0_0,LLD_LPF,Bluefin tuna (Thunnus thynnus),20230127
 LDF,LLD_LPF_0_0_0_SWO,LLD_LPF_0_0_0,LLD_LPF,Swordfish (Xiphias gladius),20230127
 MBS,LLD_LPF_0_0_0_SWO,LLD_LPF_0_0_0,LLD_LPF,Swordfish (Xiphias gladius),20230127
+MBS,LLD_LPF_0_6_TPL_SWO,LLD_LPF_0_6_TPL,LLD_LPF,Swordfish (Xiphias gladius),20261013
 NAtl,LLD_LPF_0_0_0_SWO,LLD_LPF_0_0_0,LLD_LPF,Swordfish (Xiphias gladius),20230127
+NAtl,LLD_LPF_0_6_TPL_SWO,LLD_LPF_0_6_TPL,LLD_LPF,Swordfish (Xiphias gladius),20261013
 NSEA,LLD_LPF_0_0_0_SWO,LLD_LPF_0_0_0,LLD_LPF,Swordfish (Xiphias gladius),20230127
 MBS,LLS_LPF_0_0_0_SWO,LLS_LPF_0_0_0,LLS_LPF,Swordfish (Xiphias gladius),20240311
 LDF,LTL_LPF_0_0_0_ALB,LTL_LPF_0_0_0,LTL_LPF,Albacore tuna (Thunnus alalunga),20230127
